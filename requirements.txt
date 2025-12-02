@@ -1,0 +1,24 @@
+# Python version
+python>=3.12.0
+
+# Core LLM & agent libs
+langchain>=0.1.20
+langgraph>=0.0.8
+
+
+# Validation / data
+pydantic>=2.7
+
+# Testing
+pytest>=8.0
+
+# Misc
+python-dotenv
+
+langchain-google-genai>=0.1
+google-generativeai>=0.8.0,<1.0
+
+# Vector database & semantic search
+qdrant-client>=1.7.0
+sentence-transformers>=2.2.0
+requests>=2.31.0
