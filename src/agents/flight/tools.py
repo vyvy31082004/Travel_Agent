@@ -75,44 +75,74 @@ def book_flight(
     num_tickets: int,
 ) -> str:
     """
-    Book a flight. This will generate the booking and tickets.
-    Returns the booking ID and list of generated ticket numbers.
-    After booking, you should ask the user for passenger details for each ticket using update_ticket_passenger.
+    Book a flight for multiple passengers. This will:
+    1. Create a booking with the specified number of tickets
+    2. Generate ticket IDs (e.g., T001, T002, T003) for each passenger
+    3. Each ticket will have passenger_id=None initially
+
+    After booking, you MUST ask the user for passenger details for each ticket
+    using the provide_passenger_details tool.
+
+    Args:
+        flight_id: The flight ID to book
+        seat_type: Seat type (eco, business, first)
+        num_tickets: Number of tickets/passengers
+
+    Returns:
+        Booking confirmation with booking_id and list of ticket_ids
     """
     return book_flight_from_api(
         flight_id=flight_id,
         seat_type=seat_type,
-        passengers=num_tickets
+        num_tickets=num_tickets
     )
 
 @tool
 def provide_passenger_details(
     ticket_id: str,
-    passenger_name: str,
-    date_of_birth: str,
+    full_name: str,
+    dob: str,
     id_type: str,
     id_number: str,
     nationality: str,
 ) -> str:
     """
     Provide passenger details for a specific ticket.
+
+    This tool will:
+    1. Check if passenger already exists (by id_type + id_number)
+    2. If passenger exists, use existing passenger_id
+    3. If passenger doesn't exist, create new passenger in database
+    4. Update the ticket's passenger_id
+
+    Args:
+        ticket_id: The ticket ID (e.g., T001, T002)
+        full_name: Full name of the passenger (e.g., "Nguyễn Văn An")
+        dob: Date of birth (e.g., "1990-05-12")
+        id_type: Type of ID document (e.g., "CCCD", "Passport")
+        id_number: ID document number (e.g., "079123456789")
+        nationality: Nationality (e.g., "Vietnam")
+
+    Returns:
+        Confirmation message with passenger assignment status
     """
     if not ticket_id:
         return "Please provide a ticket_id."
-    if not passenger_name:
-        return "Please provide a passenger_name."
-    if not date_of_birth:
-        return "Please provide a date_of_birth."
+    if not full_name:
+        return "Please provide full_name."
+    if not dob:
+        return "Please provide dob (date of birth)."
     if not id_type:
-        return "Please provide a id_type."
+        return "Please provide id_type (e.g., CCCD, Passport)."
     if not id_number:
-        return "Please provide a id_number."
+        return "Please provide id_number."
     if not nationality:
-        return "Please provide a nationality."
+        return "Please provide nationality."
+
     return update_ticket_passenger_from_api(
         ticket_id=ticket_id,
-        passenger_name=passenger_name,
-        date_of_birth=date_of_birth,
+        full_name=full_name,
+        dob=dob,
         id_type=id_type,
         id_number=id_number,
         nationality=nationality
