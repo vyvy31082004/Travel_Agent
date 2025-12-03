@@ -3,7 +3,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 from langgraph.prebuilt import tools_condition
 from langgraph.prebuilt import ToolNode
-from agents.flight.tools import search_flights
+from agents.flight.tools import search_flights, search_flight_price
 from prompts.prompt import flight_prompts
 from agents.flight.state import State
 
@@ -14,7 +14,7 @@ llm = ChatGoogleGenerativeAI(
     temperature = 0.2,
 )
 
-flight_tools = [search_flights]
+flight_tools = [search_flights, search_flight_price]
 flight_runnable = flight_prompts|llm.bind_tools(flight_tools )
 tool_node = ToolNode(flight_tools)
 

@@ -221,131 +221,131 @@ def _index_data_to_qdrant(data):
                 print(f"Warning: Could not index new flight prices: {e}")
 
 
-    # # --- Index Passengers ---
-    # collection_name_passengers = "passengers"
-    # try:
-    #     existing_passengers_points = client.scroll(
-    #         collection_name=collection_name_passengers,
-    #         limit=10000,  
-    #         with_payload=False,
-    #         with_vectors=False
-    #     )[0]
-    #     existing_passengers_ids = {point.id for point in existing_passengers_points}
-    #     print(f"Found {len(existing_passengers_ids)} existing passengers points in Qdrant.")
-    # except Exception as e:
-    #     print(f"Could not fetch existing passengers points (collection might be new): {e}")
-    #     existing_passengers_ids = set()
+    # --- Index Passengers ---
+    collection_name_passengers = "passengers"
+    try:
+        existing_passengers_points = client.scroll(
+            collection_name=collection_name_passengers,
+            limit=10000,  
+            with_payload=False,
+            with_vectors=False
+        )[0]
+        existing_passengers_ids = {point.id for point in existing_passengers_points}
+        print(f"Found {len(existing_passengers_ids)} existing passengers points in Qdrant.")
+    except Exception as e:
+        print(f"Could not fetch existing passengers points (collection might be new): {e}")
+        existing_passengers_ids = set()
 
 
-    # passengers = data.get("passengers", [])
-    # new_passengers = [
-    #     p for p in passengers
-    #     if str(uuid.uuid5(NAMESPACE_UUID, p.get('passenger_id'))) not in existing_passengers_ids
-    # ]
+    passengers = data.get("passengers", [])
+    new_passengers = [
+        p for p in passengers
+        if str(uuid.uuid5(NAMESPACE_UUID, p.get('passenger_id'))) not in existing_passengers_ids
+    ]
    
-    # if not new_passengers:
-    #     print(" Qdrant (Passengers) is up-to-date. No new passengers to index.")
-    # else:
-    #     print(f"⏳ Found {len(new_passengers)} new passengers to index...")
-    #     passenger_points = []
-    #     for p in new_passengers:
-    #         text = f"{p.get('passenger_id')} {p.get('passenger_name')} {p.get('contact_data')}"
-    #         vector = embedder.encode(text).tolist()
-    #         point_id = str(uuid.uuid5(NAMESPACE_UUID, p.get('passenger_id')))
-    #         passenger_points.append(PointStruct(id=point_id, vector=vector, payload=p))
+    if not new_passengers:
+        print(" Qdrant (Passengers) is up-to-date. No new passengers to index.")
+    else:
+        print(f"⏳ Found {len(new_passengers)} new passengers to index...")
+        passenger_points = []
+        for p in new_passengers:
+            text = f"{p.get('passenger_id')} {p.get('passenger_name')} {p.get('contact_data')}"
+            vector = embedder.encode(text).tolist()
+            point_id = str(uuid.uuid5(NAMESPACE_UUID, p.get('passenger_id')))
+            passenger_points.append(PointStruct(id=point_id, vector=vector, payload=p))
        
-    #     if passenger_points:
-    #         try:
-    #             client.upsert(collection_name=collection_name_passengers, points=passenger_points)
-    #             print(f" Successfully indexed {len(passenger_points)} new passengers to Qdrant.")
-    #         except Exception as e:
-    #             print(f"Warning: Could not index new passengers: {e}")
+        if passenger_points:
+            try:
+                client.upsert(collection_name=collection_name_passengers, points=passenger_points)
+                print(f" Successfully indexed {len(passenger_points)} new passengers to Qdrant.")
+            except Exception as e:
+                print(f"Warning: Could not index new passengers: {e}")
 
 
-    # # --- Index Bookings ---
-    # collection_name_bookings = "bookings"
-    # try:
-    #     existing_bookings_points = client.scroll(
-    #         collection_name=collection_name_bookings,
-    #         limit=10000,
-    #         with_payload=False,
-    #         with_vectors=False
-    #     )[0]
-    #     existing_bookings_ids = {point.id for point in existing_bookings_points}
-    #     print(f"Found {len(existing_bookings_ids)} existing bookings points in Qdrant.")
-    # except Exception as e:
-    #     print(f"Could not fetch existing bookings points (collection might be new): {e}")
-    #     existing_bookings_ids = set()
+    # --- Index Bookings ---
+    collection_name_bookings = "bookings"
+    try:
+        existing_bookings_points = client.scroll(
+            collection_name=collection_name_bookings,
+            limit=10000,
+            with_payload=False,
+            with_vectors=False
+        )[0]
+        existing_bookings_ids = {point.id for point in existing_bookings_points}
+        print(f"Found {len(existing_bookings_ids)} existing bookings points in Qdrant.")
+    except Exception as e:
+        print(f"Could not fetch existing bookings points (collection might be new): {e}")
+        existing_bookings_ids = set()
 
 
-    # bookings = data.get("bookings", [])
-    # new_bookings = [
-    #     b for b in bookings
-    #     if str(uuid.uuid5(NAMESPACE_UUID, str(b.get('book_ref')))) not in existing_bookings_ids
-    # ]
+    bookings = data.get("bookings", [])
+    new_bookings = [
+        b for b in bookings
+        if str(uuid.uuid5(NAMESPACE_UUID, str(b.get('book_ref')))) not in existing_bookings_ids
+    ]
 
 
-    # if not new_bookings:
-    #     print(" Qdrant (Bookings) is up-to-date. No new bookings to index.")
-    # else:
-    #     print(f"⏳ Indexing {len(new_bookings)} bookings...")
-    #     booking_points = []
-    #     for booking in new_bookings:
-    #         text = f"Booking reference {booking.get('book_ref')} on {booking.get('book_date')} for total amount {booking.get('total_amount')}"
-    #         vector = embedder.encode(text).tolist()
-    #         point_id = str(uuid.uuid5(NAMESPACE_UUID, str(booking.get('book_ref'))))
-    #         booking_points.append(PointStruct(id=point_id, vector=vector, payload=booking))
+    if not new_bookings:
+        print(" Qdrant (Bookings) is up-to-date. No new bookings to index.")
+    else:
+        print(f"⏳ Indexing {len(new_bookings)} bookings...")
+        booking_points = []
+        for booking in new_bookings:
+            text = f"Booking reference {booking.get('book_ref')} on {booking.get('book_date')} for total amount {booking.get('total_amount')}"
+            vector = embedder.encode(text).tolist()
+            point_id = str(uuid.uuid5(NAMESPACE_UUID, str(booking.get('book_ref'))))
+            booking_points.append(PointStruct(id=point_id, vector=vector, payload=booking))
 
 
-    #     if booking_points:
-    #         try:
-    #             client.upsert(collection_name=collection_name_bookings, points=booking_points)
-    #             print(f" Successfully indexed {len(booking_points)} bookings to Qdrant.")
-    #         except Exception as e:
-    #             print(f"Warning: Could not index new bookings: {e}")
+        if booking_points:
+            try:
+                client.upsert(collection_name=collection_name_bookings, points=booking_points)
+                print(f" Successfully indexed {len(booking_points)} bookings to Qdrant.")
+            except Exception as e:
+                print(f"Warning: Could not index new bookings: {e}")
 
 
-    # # --- Index Tickets ---
-    # collection_name_tickets = "tickets"
-    # try:
-    #     existing_tickets_points = client.scroll(
-    #         collection_name=collection_name_tickets,
-    #         limit=10000,
-    #         with_payload=False,
-    #         with_vectors=False
-    #     )[0]
-    #     existing_tickets_ids = {point.id for point in existing_tickets_points}
-    #     print(f"Found {len(existing_tickets_ids)} existing tickets points in Qdrant.")
-    # except Exception as e:
-    #     print(f"Could not fetch existing tickets points (collection might be new): {e}")
-    #     existing_tickets_ids = set()
+    # --- Index Tickets ---
+    collection_name_tickets = "tickets"
+    try:
+        existing_tickets_points = client.scroll(
+            collection_name=collection_name_tickets,
+            limit=10000,
+            with_payload=False,
+            with_vectors=False
+        )[0]
+        existing_tickets_ids = {point.id for point in existing_tickets_points}
+        print(f"Found {len(existing_tickets_ids)} existing tickets points in Qdrant.")
+    except Exception as e:
+        print(f"Could not fetch existing tickets points (collection might be new): {e}")
+        existing_tickets_ids = set()
 
 
-    # tickets = data.get("tickets", [])
-    # new_tickets = [
-    #     t for t in tickets
-    #     if str(uuid.uuid5(NAMESPACE_UUID, t.get('ticket_no'))) not in existing_tickets_ids
-    # ]
+    tickets = data.get("tickets", [])
+    new_tickets = [
+        t for t in tickets
+        if str(uuid.uuid5(NAMESPACE_UUID, t.get('ticket_no'))) not in existing_tickets_ids
+    ]
 
 
-    # if not new_tickets:
-    #     print(" Qdrant (Tickets) is up-to-date. No new tickets to index.")
-    # else:
-    #     print(f"⏳ Indexing {len(new_tickets)} tickets...")
-    #     ticket_points = []
-    #     for ticket in new_tickets:
-    #         text = f"Ticket number {ticket.get('ticket_no')} for passenger {ticket.get('passenger_id')}"
-    #         vector = embedder.encode(text).tolist()
-    #         point_id = str(uuid.uuid5(NAMESPACE_UUID, ticket.get('ticket_no')))
-    #         ticket_points.append(PointStruct(id=point_id, vector=vector, payload=ticket))
+    if not new_tickets:
+        print(" Qdrant (Tickets) is up-to-date. No new tickets to index.")
+    else:
+        print(f"⏳ Indexing {len(new_tickets)} tickets...")
+        ticket_points = []
+        for ticket in new_tickets:
+            text = f"Ticket number {ticket.get('ticket_no')} for passenger {ticket.get('passenger_id')}"
+            vector = embedder.encode(text).tolist()
+            point_id = str(uuid.uuid5(NAMESPACE_UUID, ticket.get('ticket_no')))
+            ticket_points.append(PointStruct(id=point_id, vector=vector, payload=ticket))
 
 
-    #     if ticket_points:
-    #         try:
-    #             client.upsert(collection_name=collection_name_tickets, points=ticket_points)
-    #             print(f" Successfully indexed {len(ticket_points)} tickets to Qdrant.")
-    #         except Exception as e:
-    #             print(f"Warning: Could not index new tickets: {e}")
+        if ticket_points:
+            try:
+                client.upsert(collection_name=collection_name_tickets, points=ticket_points)
+                print(f" Successfully indexed {len(ticket_points)} tickets to Qdrant.")
+            except Exception as e:
+                print(f"Warning: Could not index new tickets: {e}")
 
 
 
@@ -534,3 +534,270 @@ def _search_flight_exact(data,  departure_airport_code, arrival_airport_code, de
     print(f"Exact search (flights): Found {len(filtered)} results")
     return filtered
 
+
+def fetch_flight_price_from_api(flight_id: str | None = None, seat_type: str | None = None) -> dict:
+    """
+    Fetch a flight price based on flight_id and seat_type.
+    """
+    data = _load_data()
+    if not USE_QDRANT:
+        return _fetch_flight_price_exact(data, flight_id, seat_type)
+    if not flight_id:
+        return "Please provide a flight_id."
+    if not seat_type:
+        return "Please provide seat type you want to fetch."
+    try:
+        client = _get_qdrant_client()
+        embedder = _get_embedder()
+        query_vector = embedder.encode(seat_type).tolist()
+        must_conditions = [FieldCondition(key="flight_id", match=MatchValue(value=flight_id))]
+        search_result = client.search(
+            collection_name="flight_prices",
+            query_vector=query_vector,
+            query_filter=Filter(must=must_conditions) if must_conditions else None,
+            limit=1,
+            score_threshold=0.7,
+        )
+        if search_result:
+            best_match = search_result[0]
+            return best_match.payload
+        return {}
+    except Exception as e:
+        print(f" Qdrant search failed: {e}, falling back to exact search")
+        return _fetch_flight_price_exact(data, flight_id, seat_type)
+
+def _fetch_flight_price_exact(data, flight_id, seat_type):
+    """Fallback: Exact search with list comprehension (optimized single-pass)"""
+    results = data.get("flight_prices", [])
+    filtered = [
+        fp for fp in results
+        if (not flight_id or fp.get('flight_id') == flight_id)
+        and (not seat_type or seat_type in (fp.get('seat_type') or '').lower())
+    ]
+    print(f"Exact search (flight prices): Found {len(filtered)} results")
+    return filtered
+
+
+def search_flight_price_from_api(
+    flight_id: str | None = None,
+    seat_type: str | None = None,
+) -> list[dict]:
+    """
+    Search for flight prices based on flight_id anf seat_types (eco, business, first). if seat_type is not provided, return all seat types.
+    """
+    data = _load_data()
+    if not USE_QDRANT:
+        return _search_flight_price_exact(data, flight_id, seat_type)
+    
+    if not flight_id:
+        return "Please provide a flight_id."
+    
+    try:
+        client = _get_qdrant_client()
+        embedder = _get_embedder()
+        query_parts = []
+        if seat_type:
+            query_parts.append(seat_type)
+        query_text = " ".join(query_parts)
+        
+        query_vector = embedder.encode(query_text).tolist()
+        
+        must_conditions = []
+        if flight_id:
+            must_conditions.append(
+                FieldCondition(key="flight_id", match=MatchValue(value=flight_id))
+            )
+        search_result = client.search(
+            collection_name="flight_prices",
+            query_vector=query_vector,
+            query_filter=Filter(must=must_conditions) if must_conditions else None,
+            limit=50  
+        )
+        
+        results = [hit.payload for hit in search_result]
+        
+        print(f" Qdrant semantic search: Found {len(results)} results")
+        return results
+    except Exception as e:
+        print(f" Qdrant search failed: {e}, falling back to exact search")
+        return _search_flight_price_exact(data, flight_id, seat_type)
+
+
+def _search_flight_price_exact(data, flight_id, seat_type):
+    """Fallback: Exact search with list comprehension (optimized single-pass)"""
+    results = data.get("flight_prices", [])
+    filtered = [
+        fp for fp in results
+        if (not flight_id or fp.get('flight_id') == flight_id)
+        and (not seat_type or seat_type in (fp.get('seat_type') or '').lower())
+    ]
+    print(f"Exact search (flight prices): Found {len(filtered)} results")
+    return filtered
+
+
+def generate_next_booking_id(bookings: list[dict], prefix="BKG") -> str:
+    """
+    Tạo booking_id tiếp theo theo định dạng 'BKG001', 'BKG002',...
+    """
+    if not bookings:
+        return f"{prefix}001"
+    
+    max_num = 0
+    # Lặp qua các booking để tìm số lớn nhất
+    for b in bookings:
+        booking_id = b.get('booking_id')
+        if isinstance(booking_id, str) and booking_id.startswith(prefix):
+            try:
+                num_part = int(booking_id[len(prefix):])
+                if num_part > max_num:
+                    max_num = num_part
+            except (ValueError, TypeError):
+                # Bỏ qua nếu phần số không hợp lệ
+                continue
+        elif isinstance(booking_id, int):
+            # Xử lý trường hợp booking_id cũ là số nguyên
+            if booking_id > max_num:
+                max_num = booking_id
+
+    next_num = max_num + 1
+    # Định dạng số với 3 chữ số, ví dụ: 1 -> "001", 12 -> "012"
+    return f"{prefix}{next_num:03d}"
+
+
+
+
+
+def generate_next_ticket_no(tickets: list[dict], prefix="T") -> str:
+    """
+    Generate the next ticket number.
+    """
+    if not tickets:
+        return f"{prefix}001"
+    
+    max_num = 0
+    for t in tickets:
+        ticket_id = t.get('ticket_id')
+        if isinstance(ticket_id, str) and ticket_id.startswith(prefix):
+            try:
+                num_part = int(ticket_id[len(prefix):])
+                if num_part > max_num:
+                    max_num = num_part
+            except (ValueError, TypeError):
+                continue
+    
+    next_num = max_num + 1
+    return f"{prefix}{next_num:03d}"
+
+def  book_flight_from_api(
+    flight_id: str | None = None,
+    seat_type: str | None = None,
+    passengers: int | None = None
+) -> str:
+    """
+    Book a flight based on flight_id and seat_type, passengers and price_per_person.
+    If passengers is not provided, book 1 passenger.
+    """
+
+    price = fetch_flight_price_from_api(flight_id, seat_type)
+    if not price:
+        return "Please provide a valid flight_id and seat_type."
+    total_price = price * passengers
+    if not total_price:
+        return "Please provide a valid passengers."
+    data = _load_data()
+    bookings = data.get("booking", [])
+    tickets = data.get("tickets", [])
+
+    new_booking_id = generate_next_booking_id(bookings)
+    
+    new_booking = {
+        "booking_id": new_booking_id,
+        "total_price": total_price,
+        "booking_status": "confirmed",
+        "flight_id": flight_id,
+        "book_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    bookings.append(new_booking)
+    data["booking"] = bookings
+    
+    # Generate tickets
+    created_tickets = []
+    for _ in range(passengers):
+        new_ticket_no = generate_next_ticket_no(tickets)
+        new_ticket = {
+            "ticket_no": new_ticket_no,
+            "book_ref": new_booking_id,
+            "flight_id": flight_id,
+            "seat_type": seat_type,
+            "passenger_id": None, # To be updated later
+            "passenger_name": None # To be updated later
+        }
+        tickets.append(new_ticket)
+        created_tickets.append(new_ticket_no)
+    
+    data["tickets"] = tickets
+    
+    _save_data(data)
+    
+    return f"Booking confirmed with ID {new_booking_id}. Tickets created: {', '.join(created_tickets)}. Please provide passenger details for each ticket."
+
+
+def fetch_passenger_from_api(id_type: str, id_number: str) -> dict:
+    """
+    Fetch a passenger from the API.
+    """
+    data = _load_data()
+    passengers = data.get("passengers", [])
+    client = _get_qdrant_client()
+    embedder = _get_embedder()
+    query_vector = embedder.encode(f"{id_type}").tolist()
+    must_conditions = [FieldCondition(key="id_number", match=MatchValue(value=id_number))]
+    search_result = client.search(
+        collection_name="passengers",
+        query_vector=query_vector,
+        query_filter=Filter(must=must_conditions) if must_conditions else None,
+        limit=1,    
+    )
+    if not search_result:
+        return None
+    return search_result[0].payload
+
+def update_ticket_passenger_from_api(ticket_no: str, passenger_name: str, passenger_id: str = None, date_of_birth: str = None, id_type: str = None, id_number: str = None, nationality: str = None) -> str:
+    """
+    Update passenger details for a specific ticket.
+
+    """
+    data = _load_data()
+    tickets = data.get("tickets", [])
+    client = _get_qdrant_client()
+    embedder = _get_embedder()
+    passenger_info = fetch_passenger_from_api(id_type, id_number)
+    if not passenger_info:
+        return f"Passenger {id_type} {id_number} not found."
+    ticket = next((t for t in tickets if t.get("ticket_no") == ticket_no), None)
+    if not ticket:
+        return f"Ticket {ticket_no} not found."
+    ticket["passenger_id"] = passenger_info.get("passenger_id")
+    
+    passengers = data.get("passengers", [])
+    if not passenger_id and not ticket.get("passenger_id"):
+        passenger_id = generate_next_passenger_id(passengers)
+        ticket["passenger_id"] = passenger_id
+        
+        # Add to passengers list
+        new_passenger = {
+            "passenger_id": new_p_id,
+            "passenger_name": passenger_name,
+            "dob": to_date(date_of_birth).isoformat(),
+            "id_type": id_type,
+            "id_number": id_number,
+            "nationality": nationality
+        }
+        passengers.append(new_passenger)
+        data["passengers"] = passengers
+    
+    # Save
+    data["tickets"] = tickets
+    _save_data(data)
+    
+    return f"Ticket {ticket_no} updated with passenger {passenger_name}."
