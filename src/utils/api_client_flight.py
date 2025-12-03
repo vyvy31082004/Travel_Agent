@@ -667,13 +667,13 @@ def generate_next_booking_id(bookings: list[dict], prefix="BKG") -> str:
 
 
 
-def generate_next_ticket_no(tickets: list[dict], prefix="T") -> str:
+def generate_next_ticket_id(tickets: list[dict], prefix="T") -> str:
     """
-    Generate the next ticket number.
+    Generate the next ticket_id in format T001, T002, etc.
     """
     if not tickets:
         return f"{prefix}001"
-    
+
     max_num = 0
     for t in tickets:
         ticket_id = t.get('ticket_id')
@@ -684,120 +684,191 @@ def generate_next_ticket_no(tickets: list[dict], prefix="T") -> str:
                     max_num = num_part
             except (ValueError, TypeError):
                 continue
-    
+
     next_num = max_num + 1
     return f"{prefix}{next_num:03d}"
 
-def  book_flight_from_api(
+
+def generate_next_passenger_id(passengers: list[dict], prefix="P") -> str:
+    """
+    Generate the next passenger_id in format P001, P002, etc.
+    """
+    if not passengers:
+        return f"{prefix}001"
+
+    max_num = 0
+    for p in passengers:
+        passenger_id = p.get('passenger_id')
+        if isinstance(passenger_id, str) and passenger_id.startswith(prefix):
+            try:
+                num_part = int(passenger_id[len(prefix):])
+                if num_part > max_num:
+                    max_num = num_part
+            except (ValueError, TypeError):
+                continue
+
+    next_num = max_num + 1
+    return f"{prefix}{next_num:03d}"
+
+def book_flight_from_api(
     flight_id: str | None = None,
     seat_type: str | None = None,
-    passengers: int | None = None
+    num_tickets: int | None = None
 ) -> str:
     """
-    Book a flight based on flight_id and seat_type, passengers and price_per_person.
-    If passengers is not provided, book 1 passenger.
+    Book a flight based on flight_id and seat_type.
+    Creates a booking with num_tickets tickets.
+    Each ticket will have passenger_id=None initially - to be updated later with provide_passenger_details.
     """
+    if not num_tickets or num_tickets < 1:
+        return "Please provide a valid number of tickets (at least 1)."
 
-    price = fetch_flight_price_from_api(flight_id, seat_type)
-    if not price:
-        return "Please provide a valid flight_id and seat_type."
-    total_price = price * passengers
-    if not total_price:
-        return "Please provide a valid passengers."
+    # Get price info
+    price_info = fetch_flight_price_from_api(flight_id, seat_type)
+    if not price_info or not isinstance(price_info, dict):
+        return "Could not find price for the specified flight and seat type."
+
+    price_per_ticket = price_info.get('price', 0)
+    if not price_per_ticket:
+        return "Price information not available for this flight."
+
+    total_price = price_per_ticket * num_tickets
+
     data = _load_data()
     bookings = data.get("booking", [])
     tickets = data.get("tickets", [])
 
+    # Generate new booking
     new_booking_id = generate_next_booking_id(bookings)
-    
+
     new_booking = {
         "booking_id": new_booking_id,
         "total_price": total_price,
         "booking_status": "confirmed",
-        "flight_id": flight_id,
-        "book_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "num_ticket": num_tickets,
+        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M")
     }
     bookings.append(new_booking)
     data["booking"] = bookings
-    
-    # Generate tickets
-    created_tickets = []
-    for _ in range(passengers):
-        new_ticket_no = generate_next_ticket_no(tickets)
+
+    # Generate n tickets
+    created_ticket_ids = []
+    for _ in range(num_tickets):
+        new_ticket_id = generate_next_ticket_id(tickets)
         new_ticket = {
-            "ticket_no": new_ticket_no,
-            "book_ref": new_booking_id,
+            "ticket_id": new_ticket_id,
             "flight_id": flight_id,
             "seat_type": seat_type,
-            "passenger_id": None, # To be updated later
-            "passenger_name": None # To be updated later
+            "passenger_id": None,  # To be updated later with provide_passenger_details
+            "booking_id": new_booking_id
         }
         tickets.append(new_ticket)
-        created_tickets.append(new_ticket_no)
-    
+        created_ticket_ids.append(new_ticket_id)
+
     data["tickets"] = tickets
-    
+
     _save_data(data)
-    
-    return f"Booking confirmed with ID {new_booking_id}. Tickets created: {', '.join(created_tickets)}. Please provide passenger details for each ticket."
+
+    return f"Booking confirmed with ID {new_booking_id}. {num_tickets} ticket(s) created: {', '.join(created_ticket_ids)}. Please provide passenger details for each ticket using provide_passenger_details."
 
 
-def fetch_passenger_from_api(id_type: str, id_number: str) -> dict:
+def fetch_passenger_by_id_number(id_type: str, id_number: str) -> dict | None:
     """
-    Fetch a passenger from the API.
+    Fetch a passenger by id_type and id_number.
+    Returns passenger dict if found, None otherwise.
     """
     data = _load_data()
     passengers = data.get("passengers", [])
-    client = _get_qdrant_client()
-    embedder = _get_embedder()
-    query_vector = embedder.encode(f"{id_type}").tolist()
-    must_conditions = [FieldCondition(key="id_number", match=MatchValue(value=id_number))]
-    search_result = client.search(
-        collection_name="passengers",
-        query_vector=query_vector,
-        query_filter=Filter(must=must_conditions) if must_conditions else None,
-        limit=1,    
-    )
-    if not search_result:
-        return None
-    return search_result[0].payload
 
-def update_ticket_passenger_from_api(ticket_no: str, passenger_name: str, passenger_id: str = None, date_of_birth: str = None, id_type: str = None, id_number: str = None, nationality: str = None) -> str:
+    # First try exact match from local data
+    for p in passengers:
+        if p.get("id_type") == id_type and p.get("id_number") == id_number:
+            return p
+
+    # If Qdrant is enabled, also try semantic search
+    if USE_QDRANT:
+        try:
+            client = _get_qdrant_client()
+            embedder = _get_embedder()
+            query_vector = embedder.encode(f"{id_type} {id_number}").tolist()
+            must_conditions = [FieldCondition(key="id_number", match=MatchValue(value=id_number))]
+            search_result = client.search(
+                collection_name="passengers",
+                query_vector=query_vector,
+                query_filter=Filter(must=must_conditions),
+                limit=1,
+            )
+            if search_result:
+                return search_result[0].payload
+        except Exception as e:
+            print(f"Qdrant search failed: {e}")
+
+    return None
+
+
+def update_ticket_passenger_from_api(
+    ticket_id: str,
+    full_name: str,
+    dob: str,
+    id_type: str,
+    id_number: str,
+    nationality: str
+) -> str:
     """
     Update passenger details for a specific ticket.
 
+    Flow:
+    1. Find ticket by ticket_id
+    2. Check if passenger already exists (by id_type + id_number)
+    3. If passenger exists, use existing passenger_id
+    4. If passenger doesn't exist, create new passenger with generated passenger_id
+    5. Update ticket's passenger_id
     """
     data = _load_data()
     tickets = data.get("tickets", [])
-    client = _get_qdrant_client()
-    embedder = _get_embedder()
-    passenger_info = fetch_passenger_from_api(id_type, id_number)
-    if not passenger_info:
-        return f"Passenger {id_type} {id_number} not found."
-    ticket = next((t for t in tickets if t.get("ticket_no") == ticket_no), None)
-    if not ticket:
-        return f"Ticket {ticket_no} not found."
-    ticket["passenger_id"] = passenger_info.get("passenger_id")
-    
     passengers = data.get("passengers", [])
-    if not passenger_id and not ticket.get("passenger_id"):
-        passenger_id = generate_next_passenger_id(passengers)
+
+    # Find ticket
+    ticket = next((t for t in tickets if t.get("ticket_id") == ticket_id), None)
+    if not ticket:
+        return f"Ticket {ticket_id} not found."
+
+    # Check if ticket already has a passenger assigned
+    if ticket.get("passenger_id"):
+        return f"Ticket {ticket_id} already has passenger {ticket['passenger_id']} assigned."
+
+    # Check if passenger already exists
+    existing_passenger = fetch_passenger_by_id_number(id_type, id_number)
+
+    if existing_passenger:
+        # Use existing passenger
+        passenger_id = existing_passenger.get("passenger_id")
         ticket["passenger_id"] = passenger_id
-        
-        # Add to passengers list
+        data["tickets"] = tickets
+        _save_data(data)
+        return f"Ticket {ticket_id} updated with existing passenger {passenger_id} ({full_name})."
+    else:
+        # Create new passenger
+        new_passenger_id = generate_next_passenger_id(passengers)
+
+        # Parse dob
+        parsed_dob = to_date(dob)
+        dob_str = parsed_dob.isoformat() if parsed_dob else dob
+
         new_passenger = {
-            "passenger_id": new_p_id,
-            "passenger_name": passenger_name,
-            "dob": to_date(date_of_birth).isoformat(),
+            "passenger_id": new_passenger_id,
+            "full_name": full_name,
+            "dob": dob_str,
             "id_type": id_type,
             "id_number": id_number,
             "nationality": nationality
         }
         passengers.append(new_passenger)
         data["passengers"] = passengers
-    
-    # Save
-    data["tickets"] = tickets
-    _save_data(data)
-    
-    return f"Ticket {ticket_no} updated with passenger {passenger_name}."
+
+        # Update ticket
+        ticket["passenger_id"] = new_passenger_id
+        data["tickets"] = tickets
+
+        _save_data(data)
+        return f"New passenger {new_passenger_id} ({full_name}) created and assigned to ticket {ticket_id}."
