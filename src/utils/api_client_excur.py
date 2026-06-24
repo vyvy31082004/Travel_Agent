@@ -5,10 +5,14 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct, Filter, FieldCondition, MatchValue, Range
 from sentence_transformers import SentenceTransformer
 import uuid
-from utils.utils import to_date
+from utils.utils import to_date, convert_to_vnd
 # Load environment variables from .env file
 load_dotenv()
-
+from functools import lru_cache
+from datetime import date, datetime
+from typing import Optional
+import unicodedata 
+from utils.excur_helper import _normalize_text_for_search, _get_review_text, _extract_review_items , _match_tour_name, _find_url_recursive, _parse_date
 # Get credentials from environment variables
 BIN_ID_EXCUR = os.getenv("BIN_ID_EXCUR")
 API_KEY_EXCUR = os.getenv("API_KEY")
@@ -127,7 +131,7 @@ def _index_data_to_qdrant(data):
         print(f"Could not fetch existing bookings points (collection might be new): {e}")
         existing_bookings_ids = set()
 
-    bookings = data.get("TRIP_BOOKINGS", [])
+    bookings = data.get("tourBookings", [])
     new_bookings = [booking for booking in bookings if booking.get('booking_id') not in existing_bookings_ids]
 
     if not new_bookings:
@@ -179,12 +183,9 @@ def _save_data(data):
     response = requests.put(API_URL, json=data, headers=HEADERS)
     response.raise_for_status()
     
-    # Critical step: Invalidate the cache after a successful write operation.
-    # This ensures the next _load_data() call will fetch the fresh data.
     _cache = None
-    _qdrant_initialized = False  # Re-index after save
+    _qdrant_initialized = False  
     
-    # Re-index vào Qdrant
     if USE_QDRANT:
         _index_data_to_qdrant(data)
 
@@ -197,116 +198,540 @@ def _normalize_number(value, value_type="float"):
         return None
     
     try:
-        # Convert to string and replace comma with dot
         normalized = str(value).replace(',', '.')
         
         if value_type == "int":
-            return int(float(normalized))  # float first to handle "5.0" -> 5
+            return int(float(normalized))  
         else:
             return float(normalized)
     except (ValueError, TypeError):
         return None
 
+BOOKING_HOST = os.getenv("BOOKING_RAPIDAPI_HOST", "booking-com15.p.rapidapi.com")
+BOOKING_BASE_URL = f"https://{BOOKING_HOST}/api/v1"
+BOOKING_LANGUAGE_CODE = os.getenv("BOOKING_LANGUAGE_CODE", "vi")
+BOOKING_CURRENCY_CODE = os.getenv("BOOKING_CURRENCY_CODE", "VND")
+RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
 
-def search_trip_from_api(
-location: str | None = None, 
-name: str | None = None,
-keywords: str | None = None, 
-details: str | None = None,
-price: int | None = None, 
-price_min: int | None = None, 
-price_max: int | None = None) -> list[dict]:
-    """
-    Hybrid search: Kết hợp semantic search (Qdrant) với exact filters.
-    - Nếu có 'name' hoặc 'location' hoặc 'keywords' → dùng semantic search
-    - Luôn apply exact filters (price, price_min, price_max)
-    """
-    data = _load_data()
+# def search_trip_from_api(
+# location: str | None = None, 
+# name: str | None = None,
+# keywords: str | None = None, 
+# details: str | None = None,
+# price: int | None = None, 
+# price_min: int | None = None, 
+# price_max: int | None = None) -> list[dict]:
+#     """
+#     Hybrid search: Kết hợp semantic search (Qdrant) với exact filters.
+#     - Nếu có 'name' hoặc 'location' hoặc 'keywords' → dùng semantic search
+#     - Luôn apply exact filters (price, price_min, price_max)
+#     """
+#     data = _load_data()
     
-    # Nếu không bật Qdrant hoặc không có query text → fallback về list comprehension
-    if not USE_QDRANT or (not name and not location and not keywords and not details):
-        return _search_trip_exact(data, location, name, keywords, details, price, price_min, price_max)
+#     if not USE_QDRANT or (not name and not location and not keywords and not details):
+#         return _search_trip_exact(data, location, name, keywords, details, price, price_min, price_max)
     
-    # --- Semantic Search với Qdrant ---
-    try:
-        client = _get_qdrant_client()
-        embedder = _get_embedder()
+#     # --- Semantic Search với Qdrant ---
+#     try:
+#         client = _get_qdrant_client()
+#         embedder = _get_embedder()
         
-        # Tạo query text từ các tham số
-        query_parts = []
-        if name:
-            query_parts.append(name)
-        if location:
-            query_parts.append(location)
-        if keywords:
-            query_parts.append(keywords)
-        if details:
-            query_parts.append(details)
-        query_text = " ".join(query_parts)
+#         query_parts = []
+#         if name:
+#             query_parts.append(name)
+#         if location:
+#             query_parts.append(location)
+#         if keywords:
+#             query_parts.append(keywords)
+#         if details:
+#             query_parts.append(details)
+#         query_text = " ".join(query_parts)
         
-        query_vector = embedder.encode(query_text).tolist()
+#         query_vector = embedder.encode(query_text).tolist()
         
-        # Build Qdrant filters cho exact match
-        must_conditions = []
-        if price:
-            must_conditions.append(
-                FieldCondition(key="price", range=Range(lte=price))
-            )
-        if price_min:
-            must_conditions.append(
-                FieldCondition(key="price", range=Range(gte=price_min))
-            )
-        if price_max:
-            must_conditions.append(
-                FieldCondition(key="price", range=Range(lte=price_max))
-            )
-        # Search trong Qdrant
-        search_result = client.search(
-            collection_name="trips",
-            query_vector=query_vector,
-            query_filter=Filter(must=must_conditions) if must_conditions else None,
-            limit=50  # Lấy top 50 kết quả
-        )
+#         must_conditions = []
+#         if price:
+#             must_conditions.append(
+#                 FieldCondition(key="price", range=Range(lte=price))
+#             )
+#         if price_min:
+#             must_conditions.append(
+#                 FieldCondition(key="price", range=Range(gte=price_min))
+#             )
+#         if price_max:
+#             must_conditions.append(
+#                 FieldCondition(key="price", range=Range(lte=price_max))
+#             )
+#         search_result = client.search(
+#             collection_name="trips",
+#             query_vector=query_vector,
+#             query_filter=Filter(must=must_conditions) if must_conditions else None,
+#             limit=50  
+#         )
         
-        # Extract payloads
-        results = [hit.payload for hit in search_result]
+#         results = [hit.payload for hit in search_result]
         
-        print(f" Qdrant semantic search: Found {len(results)} results")
-        return results
+#         print(f" Qdrant semantic search: Found {len(results)} results")
+#         return results
         
-    except Exception as e:
-        print(f" Qdrant search failed: {e}, falling back to exact search")
-        return _search_trip_exact(data, location, name, keywords, details, price, price_min, price_max)
+#     except Exception as e:
+#         print(f" Qdrant search failed: {e}, falling back to exact search")
+#         return _search_trip_exact(data, location, name, keywords, details, price, price_min, price_max)
 
-def _search_trip_exact(data, location, name, keywords, details, price, price_min, price_max):
-    """Fallback: Exact search với list comprehension (optimized single-pass)"""
-    results = data.get("tours", [])
-    
-    # Normalize rating if provided
-    price_float = _normalize_number(price, "float") if price else None
-    price_min_float = _normalize_number(price_min, "float") if price_min else None
-    price_max_float = _normalize_number(price_max, "float") if price_max else None
-    if price and price_float is None:
-        print(f" Warning: Could not parse price '{price}'")
-    if price_min and price_min_float is None:
-        print(f" Warning: Could not parse price_min '{price_min}'")
-    if price_max and price_max_float is None:
-        print(f" Warning: Could not parse price_max '{price_max}'")
-    
-    # Single-pass filter
-    filtered = [
-        r for r in results
-        if (not location or location.lower() in r.get('location', '').lower())
-        and (not name or name.lower() in r.get('name', '').lower())
-        and (not keywords or keywords.lower() in (r.get('name', '') + ' ' + r.get('location', '')).lower())
-        and (not details or details.lower() in r.get('details', '').lower())
-        and (not price_float or r.get('price', 0) <= price_float)
-        and (not price_min_float or r.get('price', 0) >= price_min_float)
-        and (not price_max_float or r.get('price', 0) <= price_max_float)       
+
+
+def _booking_headers() -> dict:
+    if not RAPIDAPI_KEY:
+        raise RuntimeError("Thiếu RAPIDAPI_KEY trong file .env")
+
+    return {
+        "X-RapidAPI-Key": RAPIDAPI_KEY,
+        "X-RapidAPI-Host": BOOKING_HOST,
+    }
+
+
+def _booking_get(path: str, params: dict) -> dict | list:
+    url = f"{BOOKING_BASE_URL}{path}"
+
+    clean_params = {
+        key: value
+        for key, value in params.items()
+        if value is not None and value != ""
+    }
+
+    print("CALL API:", url)
+    print("PARAMS:", clean_params)
+
+    response = requests.get(
+        url,
+        headers=_booking_headers(),
+        params=clean_params,
+        timeout=20,
+    )
+
+    print("FINAL URL:", response.url)
+
+    if response.status_code == 429:
+        raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
+
+    response.raise_for_status()
+    payload = response.json()
+
+    if isinstance(payload, dict) and payload.get("status") is False:
+        raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
+
+    if isinstance(payload, dict):
+        return payload.get("data", payload)
+
+    return payload
+
+
+def _parse_date(value: Optional[str]) -> Optional[str]:
+    """
+    Validate date dạng YYYY-MM-DD.
+    Không tự default ngày.
+    """
+    if not value:
+        return None
+
+    parsed = datetime.strptime(value, "%Y-%m-%d").date()
+
+    if parsed < date.today():
+        raise ValueError("Ngày tìm attraction phải từ hôm nay trở về sau.")
+
+    return parsed.isoformat()
+
+
+def _get_first_list(data: dict | list, keys: list[str]) -> list:
+    """
+    Response của RapidAPI đôi khi thay đổi cấu trúc.
+    Hàm này giúp lấy list an toàn từ nhiều key khác nhau.
+    """
+    if isinstance(data, list):
+        return data
+
+    if not isinstance(data, dict):
+        return []
+
+    for key in keys:
+        value = data.get(key)
+        if isinstance(value, list):
+            return value
+
+    # Trường hợp data lồng thêm 1 lớp
+    nested_data = data.get("data")
+    if isinstance(nested_data, dict):
+        for key in keys:
+            value = nested_data.get(key)
+            if isinstance(value, list):
+                return value
+
+    if isinstance(nested_data, list):
+        return nested_data
+
+    return []
+
+
+def _pick_first_location(data: dict | list) -> dict | None:
+    """
+    searchLocation có thể trả destinations hoặc products.
+    Theo docs, id có thể nằm trong products hoặc destinations.
+    """
+    candidates = _get_first_list(
+        data,
+        keys=["destinations", "products", "locations", "results"],
+    )
+
+    if candidates:
+        return candidates[0]
+
+    if isinstance(data, dict) and data.get("id"):
+        return data
+
+    return None
+
+
+def _extract_price(product: dict) -> tuple[float | None, str | None]:
+    """
+    Cố gắng lấy giá từ nhiều cấu trúc response khác nhau.
+    """
+    price_candidates = [
+        product.get("representativePrice"),
+        product.get("price"),
+        product.get("priceInfo"),
+        product.get("pricing"),
     ]
+
+    for price_obj in price_candidates:
+        if isinstance(price_obj, dict):
+            value = (
+                price_obj.get("value")
+                or price_obj.get("amount")
+                or price_obj.get("price")
+                or price_obj.get("publicAmount")
+            )
+
+            currency = (
+                price_obj.get("currency")
+                or price_obj.get("currencyCode")
+                or price_obj.get("currency_code")
+            )
+
+            if value is not None:
+                return float(value), currency
+
+        elif isinstance(price_obj, (int, float)):
+            return float(price_obj), None
+
+    return None, None
+
+
+def _normalize_attraction(product: dict) -> dict:
+    price, currency = _extract_price(product)
+    price, currency = convert_to_vnd(price, currency)
+
+    image = None
+    image_obj = product.get("primaryPhoto") or product.get("image") or product.get("photo")
+
+    if isinstance(image_obj, dict):
+        image = (
+            image_obj.get("small")
+            or image_obj.get("medium")
+            or image_obj.get("large")
+            or image_obj.get("url")
+        )
+    elif isinstance(image_obj, str):
+        image = image_obj
+
+    # Lấy mã product/tour/attraction từ nhiều field có thể có
+    product_id = (
+        product.get("id")
+        or product.get("productId")
+        or product.get("attractionId")
+    )
+
+    # Lấy rating từ nhiều field có thể có
+    rating = (
+        product.get("reviewScore")
+        or product.get("rating")
+        or product.get("averageRating")
+        or product.get("score")
+    )
+
+    review_count = (
+        product.get("reviewCount")
+        or product.get("reviewsCount")
+        or product.get("numberOfReviews")
+    )
+
+    return {
+        "source": "booking_com15_rapidapi",
+
+        # ID chính của product/tour/attraction
+        # Dùng ID này để gọi getAttractionReviews
+        "product_id": product_id,
+        "external_attraction_id": product_id,
+
+        # Slug dùng cho getAttractionDetails và getAvailability
+        "slug": (
+            product.get("slug")
+            or product.get("productSlug")
+        ),
+
+        "name": (
+            product.get("name")
+            or product.get("title")
+            or product.get("displayName")
+        ),
+
+        "description": (
+            product.get("shortDescription")
+            or product.get("description")
+            or product.get("summary")
+        ),
+
+        "category": (
+            product.get("category")
+            or product.get("type")
+        ),
+
+        "rating": rating,
+        "review_count": review_count,
+
+        "price": price,
+        "currency": currency,
+
+        "image": image,
+
+        "duration": (
+            product.get("duration")
+            or product.get("durationLabel")
+        ),
+
+        "location": (
+            product.get("city")
+            or product.get("location")
+            or product.get("ufiName")
+        ),
+
+        # Giữ raw để debug nếu cần
+        "raw": product,
+    }
+
+
+@lru_cache(maxsize=256)
+def search_attraction_location_from_api(
+    query: str,
+    languagecode: str = BOOKING_LANGUAGE_CODE,
+) -> dict:
+    """
+    Search địa điểm cho attraction.
+    Ví dụ: Hà Nội, Đà Lạt, Tokyo, Bangkok.
+    """
+    try:
+        data = _booking_get(
+            "/attraction/searchLocation",
+            {
+                "query": query,
+                "languagecode": languagecode,
+            },
+        )
+
+        location = _pick_first_location(data)
+
+        if not location:
+            return {
+                "error": f"Không tìm thấy địa điểm attraction phù hợp với '{query}'.",
+                "raw": data,
+            }
+
+        return {
+            "id": location.get("id"),
+            "name": (
+                location.get("name")
+                or location.get("title")
+                or location.get("displayName")
+            ),
+            "product_slug": location.get("productSlug") or location.get("slug"),
+            "raw": location,
+        }
+
+    except Exception as e:
+        return {
+            "error": f"Lỗi khi search attraction location: {str(e)}"
+        }
+
+
+def search_attractions_from_api(
+    location: str,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    sort_by: str = "trending",
+    page: int = 1,
+    currency_code: str = BOOKING_CURRENCY_CODE,
+    languagecode: str = BOOKING_LANGUAGE_CODE,
+    type_filters: Optional[str] = None,
+    price_filters: Optional[str] = None,
+    ufi_filters: Optional[str] = None,
+    label_filters: Optional[str] = None,
+    limit: int = 10,
+) -> list[dict]:
+    """
+    Search attractions / activities / tours theo địa điểm.
+
+    Flow:
+    1. location -> /attraction/searchLocation -> lấy id
+    2. id -> /attraction/searchAttractions -> lấy danh sách attraction
+
+    Không tự gán ngày mặc định.
+    Nếu có start_date/end_date thì API có thể lọc theo ngày.
+    """
+
+    if not location:
+        return [
+            {
+                "error": "Bạn cần cung cấp location để tìm attraction."
+            }
+        ]
+
+    try:
+        parsed_start_date = _parse_date(start_date)
+        parsed_end_date = _parse_date(end_date)
+
+        if parsed_start_date and parsed_end_date:
+            if parsed_end_date < parsed_start_date:
+                return [
+                    {
+                        "error": "end_date phải sau hoặc bằng start_date."
+                    }
+                ]
+
+        location_info = search_attraction_location_from_api(
+            location,
+            languagecode,
+        )
+
+        if location_info.get("error"):
+            return [location_info]
+
+        location_id = location_info.get("id")
+
+        if not location_id:
+            return [
+                {
+                    "error": f"Không lấy được attraction location id cho '{location}'.",
+                    "raw": location_info,
+                }
+            ]
+
+        data = _booking_get(
+            "/attraction/searchAttractions",
+            {
+                "id": location_id,
+                "startDate": parsed_start_date,
+                "endDate": parsed_end_date,
+                "sortBy": sort_by,
+                "page": page,
+                "currency_code": currency_code,
+                "languagecode": languagecode,
+                "typeFilters": type_filters,
+                "priceFilters": price_filters,
+                "ufiFilters": ufi_filters,
+                "labelFilters": label_filters,
+            },
+        )
+
+        products = _get_first_list(
+            data,
+            keys=["products", "attractions", "results", "items"],
+        )
+
+        attractions = [
+            _normalize_attraction(product)
+            for product in products
+        ]
+
+        return attractions[:limit]
+
+    except Exception as e:
+        return [
+            {
+                "error": f"Lỗi khi gọi searchAttractions: {str(e)}"
+            }
+        ]
+
+
+
+def fetch_attraction_details_from_api(
+    slug: str,
+    languagecode: str = BOOKING_LANGUAGE_CODE,
+) -> dict:
+    """
+    Lấy chi tiết attraction.
+    slug lấy từ field productSlug/slug của searchAttractions.
+    """
+    if not slug:
+        return {
+            "error": "Bạn cần cung cấp slug của attraction."
+        }
+
+    try:
+        data = _booking_get(
+            "/attraction/getAttractionDetails",
+            {
+                "slug": slug,
+                "languagecode": languagecode,
+            },
+        )
+
+        booking_url = _find_url_recursive(data)
+
+        return {
+            "source": "booking_com15_rapidapi",
+            "slug": slug,
+            "booking_url": booking_url,
+            "details": data,
+        }
+
+    except Exception as e:
+        return {
+            "error": f"Lỗi khi lấy attraction details: {str(e)}"
+        }
+
+
+
+
+
+
+# def _search_trip_exact(data, location, name, keywords, details, price, price_min, price_max):
+#     """Fallback: Exact search với list comprehension (optimized single-pass)"""
+#     results = data.get("tours", [])
     
-    print(f"🔍 Exact search (tours): Found {len(filtered)} results")
-    return filtered
+#     # Normalize rating if provided
+#     price_float = _normalize_number(price, "float") if price else None
+#     price_min_float = _normalize_number(price_min, "float") if price_min else None
+#     price_max_float = _normalize_number(price_max, "float") if price_max else None
+#     if price and price_float is None:
+#         print(f" Warning: Could not parse price '{price}'")
+#     if price_min and price_min_float is None:
+#         print(f" Warning: Could not parse price_min '{price_min}'")
+#     if price_max and price_max_float is None:
+#         print(f" Warning: Could not parse price_max '{price_max}'")
+    
+#     # Single-pass filter
+#     filtered = [
+#         r for r in results
+#         if (not location or location.lower() in r.get('location', '').lower())
+#         and (not name or name.lower() in r.get('name', '').lower())
+#         and (not keywords or keywords.lower() in (r.get('name', '') + ' ' + r.get('location', '')).lower())
+#         and (not details or details.lower() in r.get('details', '').lower())
+#         and (not price_float or r.get('price', 0) <= price_float)
+#         and (not price_min_float or r.get('price', 0) >= price_min_float)
+#         and (not price_max_float or r.get('price', 0) <= price_max_float)       
+#     ]
+    
+#     print(f"🔍 Exact search (tours): Found {len(filtered)} results")
+#     return filtered
 
 def fetch_excursion_info_from_api(tour_name: str) -> int | None:
     """Lấy id của đại lý cho thuê xe từ tên (từ API cloud)."""
@@ -325,26 +750,26 @@ def fetch_excursion_info_from_api(tour_name: str) -> int | None:
 
 def book_excursion_in_api(
     excur_id: int,
-    date: str,
+    tour_date: str,
     people: int,
     total_price: int,
 ) -> dict:
     """Book an excursion and save it to the cloud API."""
     data = _load_data()
-    tour_bookings = data.get("TRIP_BOOKINGS", [])
+    tour_bookings = data.get("tourBookings", [])
 
     new_booking_id = (max([b.get('booking_id', 0) for b in tour_bookings]) + 1) if tour_bookings else 1
     
     new_booking = {
         "booking_id": new_booking_id,
         "excur_id": excur_id,
-        "date": to_date(date).isoformat() if to_date(date) else None,
+        "date": to_date(tour_date).isoformat() if to_date(tour_date) else None,
         "people": people,
         "total_price": total_price,
         "status": "confirmed"
     }
     tour_bookings.append(new_booking)
-    data["TRIP_BOOKINGS"] = tour_bookings
+    data["tourBookings"] = tour_bookings
     
     _save_data(data)
     
@@ -354,7 +779,7 @@ def book_excursion_in_api(
 def cancel_tour_booking_in_api(booking_id: int) -> bool:
     """Cancel a tour booking in the cloud API."""
     all_data = _load_data()
-    tour_bookings = all_data.get("TRIP_BOOKINGS", [])
+    tour_bookings = all_data.get("tourBookings", [])
     
     if not booking_id:
         return "Please provide a booking id."
@@ -397,7 +822,7 @@ def update_tour_booking_in_api(booking_id: int, new_people: int | None = None, n
     if not (new_people or new_date):
         return "Please provide a new people or new date."
     data = _load_data()
-    bookings = data.get("TRIP_BOOKINGS", [])
+    bookings = data.get("tourBookings", [])
     new_booking = next((b for b in bookings if b.get('booking_id') == booking_id), None)
     if not new_booking:
         return "Please provide a valid booking id."
@@ -406,7 +831,7 @@ def update_tour_booking_in_api(booking_id: int, new_people: int | None = None, n
     if new_date:
         new_booking['date'] = to_date(new_date).isoformat() if to_date(new_date) else None
     
-    data["TRIP_BOOKINGS"] = bookings
+    data["tourBookings"] = bookings
     _save_data(data)
     return "Cập nhật thành công cho mã đặt tour {booking_id}."
 

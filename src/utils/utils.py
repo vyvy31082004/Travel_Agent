@@ -1,3 +1,4 @@
+import os
 from datetime import datetime,date
 from pydantic import BaseModel
 from langgraph.prebuilt import ToolNode
@@ -19,6 +20,7 @@ def to_date(date_string: str) -> Optional[date]:
     formats_to_try = [
         "%d/%m/%Y",  # For user inputs like "dd/mm/yyyy"
         "%Y-%m-%d",  # For dates from database or ISO format
+        '%Y-%m-%d %H:%M:%S' 
     ]
     
     for fmt in formats_to_try:
@@ -51,3 +53,41 @@ class CompleteOrEscalate(BaseModel):
     """Công cụ để đánh dấu nhiệm vụ hiện tại là đã hoàn thành và/hoặc chuyển quyền kiểm soát hộp thoại cho primary agent."""
     cancel: bool = True
     reason: str
+
+_CURRENCY_TO_VND_DEFAULTS = {
+    "USD": 25_000,
+    "EUR": 27_000,
+}
+
+
+def convert_to_vnd(
+    amount: float | int | None,
+    currency: str | None,
+) -> tuple[int | None, str]:
+    """
+    Đổi giá từ USD/EUR (hoặc tiền tệ khác) sang VND.
+    Tỷ giá cấu hình qua env: USD_TO_VND, EUR_TO_VND, ...
+    """
+    if amount is None:
+        return None, "VND"
+
+    if currency is None or str(currency).upper().strip() == "VND":
+        return round(float(amount)), "VND"
+
+    code = str(currency).upper().strip()
+    env_rate = os.getenv(f"{code}_TO_VND")
+    rate = None
+
+    if env_rate:
+        try:
+            rate = float(env_rate)
+        except ValueError:
+            rate = None
+
+    if rate is None:
+        rate = _CURRENCY_TO_VND_DEFAULTS.get(code)
+
+    if rate is None:
+        return round(float(amount)), code
+
+    return round(float(amount) * rate), "VND"

@@ -65,6 +65,18 @@ number_of_people: int,
     Book a car rental. You must provide the rental name, car name, start date, end date, and number of people.
     First, find the rental_id and car_id, then check capacity and price before booking.
     """
+    if not start_date or not end_date:
+        return "Bạn cần cung cấp ngày nhận xe và ngày trả xe."
+    if not number_of_people:
+        return "Bạn cần cung cấp số lượng người."
+    if not rental_name or not car_name:
+        return "Bạn cần cung cấp tên đại lý cho thuê xe và tên xe."
+    if to_date(start_date) > to_date(end_date):
+        return "Ngày nhận xe phải trước ngày trả xe."
+    if to_date(start_date) < date.today():
+        return "Ngày nhận xe phải sau ngày hiện tại."
+    if to_date(end_date) < date.today():
+        return "Ngày trả xe phải sau ngày hiện tại."
     rental_id = fetch_car_rental_info_from_api(rental_name)
     if not rental_id:
         return f"Không tìm thấy đại lý cho thuê xe nào có tên '{rental_name}'."
@@ -124,6 +136,14 @@ end_date: Optional[str] = None,
     #         return f"Không tìm thấy mã đặt xe {booking_id} để cập nhật."
     # except Exception as e:
     #     return f"Đã xảy ra lỗi khi cập nhật: {e}"
+    if not start_date or not end_date:
+        return "Bạn cần cung cấp ngày nhận xe và ngày trả xe."
+    if to_date(start_date) > to_date(end_date):
+        return "Ngày nhận xe phải trước ngày trả xe."
+    if to_date(start_date) < date.today():
+        return "Ngày nhận xe phải sau ngày hiện tại."
+    if to_date(end_date) < date.today():
+        return "Ngày trả xe phải sau ngày hiện tại."
     booking_status = fetch_car_booking_info_from_api(booking_id)["status"]
     if booking_status == "cancelled":
         return f"Không thể cập nhật mã đặt xe {booking_id} vì đã bị hủy."

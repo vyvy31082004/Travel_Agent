@@ -1,227 +1,229 @@
 import os
 import requests
 from dotenv import load_dotenv
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct, Filter, FieldCondition, MatchValue, Range
-from sentence_transformers import SentenceTransformer
+# from qdrant_client import QdrantClient
+# from qdrant_client.models import Distance, VectorParams, PointStruct, Filter, FieldCondition, MatchValue, Range
+#from sentence_transformers import SentenceTransformer
 import uuid
-from utils.utils import to_date
+from utils.utils import to_date, convert_to_vnd
+from datetime import date, datetime, timedelta
+from functools import lru_cache
 # Load environment variables from .env file
 load_dotenv()
 
-# Get credentials from environment variables
-BIN_ID_HOTEL = os.getenv("BIN_ID_HOTEL")
-API_KEY = os.getenv("API_KEY")
-USE_QDRANT = os.getenv("USE_QDRANT", "true").lower() == "true"  
-API_URL = f'https://api.jsonbin.io/v3/b/{BIN_ID_HOTEL}'
-HEADERS = {
-  'Content-Type': 'application/json',
-  'X-Master-Key': API_KEY
-}
+# # Get credentials from environment variables
+# BIN_ID_HOTEL = os.getenv("BIN_ID_HOTEL")
+# API_KEY = os.getenv("API_KEY")
+# USE_QDRANT = os.getenv("USE_QDRANT", "true").lower() == "true"  
+# API_URL = f'https://api.jsonbin.io/v3/b/{BIN_ID_HOTEL}'
+# HEADERS = {
+#   'Content-Type': 'application/json',
+#   'X-Master-Key': API_KEY
+# }
 
-# --- Caching Mechanism ---
-# This cache will hold the data in memory to avoid repeated API calls.
-_cache = None
-_qdrant_client = None
-_embedder = None
-_qdrant_initialized = False
+# # --- Caching Mechanism ---
+# # This cache will hold the data in memory to avoid repeated API calls.
+# _cache = None
+# _qdrant_client = None
+# _embedder = None
+# _qdrant_initialized = False
 
-def _get_qdrant_client():
-    """Khởi tạo Qdrant client (kết nối tới instance persistent)"""
-    global _qdrant_client
-    if _qdrant_client is None:
-        # Kết nối tới Qdrant chạy trên Docker
-        _qdrant_client = QdrantClient(host="localhost", port=6333)
-    return _qdrant_client
+# def _get_qdrant_client():
+#     """Khởi tạo Qdrant client (kết nối tới instance persistent)"""
+#     global _qdrant_client
+#     if _qdrant_client is None:
+#         # Kết nối tới Qdrant chạy trên Docker
+#         _qdrant_client = QdrantClient(host="localhost", port=6333)
+#     return _qdrant_client
 
-def _get_embedder():
-    """Khởi tạo sentence transformer model (multilingual)"""
-    global _embedder
-    if _embedder is None:
-        # Model hỗ trợ tiếng Việt, nhẹ, nhanh
-        _embedder = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
-    return _embedder
+# def _get_embedder():
+#     """Khởi tạo sentence transformer model (multilingual)"""
+#     global _embedder
+#     if _embedder is None:
+#         # Model hỗ trợ tiếng Việt, nhẹ, nhanh
+#         _embedder = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+#     return _embedder
 
-def _init_qdrant_collections():
-    """Tạo các collection trong Qdrant nếu chưa tồn tại."""
-    global _qdrant_initialized
-    if _qdrant_initialized:
-        return
+# def _init_qdrant_collections():
+#     """Tạo các collection trong Qdrant nếu chưa tồn tại."""
+#     global _qdrant_initialized
+#     if _qdrant_initialized:
+#         return
     
-    client = _get_qdrant_client()
-    embedder = _get_embedder()
+#     client = _get_qdrant_client()
+#     embedder = _get_embedder()
     
-    vector_size = embedder.get_sentence_embedding_dimension()
-    collection_names = ["hotels", "rooms", "hotel_bookings"]
+#     vector_size = embedder.get_sentence_embedding_dimension()
+#     collection_names = ["hotels", "rooms", "hotelBookings"]
     
-    for collection_name in collection_names:
-        try:
-            client.get_collection(collection_name=collection_name)
-            print(f"Collection '{collection_name}' already exists. Skipping creation.")
-        except Exception:
-            print(f"Collection '{collection_name}' not found. Creating...")
-            try:
-                client.create_collection(
-                    collection_name=collection_name,
-                    vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
-                )
-                print(f" Collection '{collection_name}' created successfully.")
-            except Exception as e:
-                print(f"Error: Could not create collection '{collection_name}': {e}")
+#     for collection_name in collection_names:
+#         try:
+#             client.get_collection(collection_name=collection_name)
+#             print(f"Collection '{collection_name}' already exists. Skipping creation.")
+#         except Exception:
+#             print(f"Collection '{collection_name}' not found. Creating...")
+#             try:
+#                 client.create_collection(
+#                     collection_name=collection_name,
+#                     vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
+#                 )
+#                 print(f" Collection '{collection_name}' created successfully.")
+#             except Exception as e:
+#                 print(f"Error: Could not create collection '{collection_name}': {e}")
     
-    _qdrant_initialized = True
+#     _qdrant_initialized = True
 
-def _index_data_to_qdrant(data):
-    """
-    Index chỉ những dữ liệu mới vào Qdrant.
-    Hàm này sẽ kiểm tra các ID đã có và chỉ nạp những hotels/rooms chưa tồn tại.
-    """
-    if not USE_QDRANT:
-        return
+# def _index_data_to_qdrant(data):
+#     """
+#     Index chỉ những dữ liệu mới vào Qdrant.
+#     Hàm này sẽ kiểm tra các ID đã có và chỉ nạp những hotels/rooms chưa tồn tại.
+#     """
+#     if not USE_QDRANT:
+#         return
     
-    client = _get_qdrant_client()
-    embedder = _get_embedder()
-    _init_qdrant_collections()
+#     client = _get_qdrant_client()
+#     embedder = _get_embedder()
+#     _init_qdrant_collections()
 
-    # --- Index Hotels ---
-    collection_name_hotels = "hotels"
-    try:
-        existing_hotel_points = client.scroll(
-            collection_name=collection_name_hotels,
-            limit=10000,  
-            with_payload=False,
-            with_vectors=False
-        )[0]
-        existing_hotel_ids = {point.id for point in existing_hotel_points}
-        print(f"Found {len(existing_hotel_ids)} existing hotel points in Qdrant.")
-    except Exception as e:
-        print(f"Could not fetch existing hotel points (collection might be new): {e}")
-        existing_hotel_ids = set()
+#     # --- Index Hotels ---
+#     collection_name_hotels = "hotels"
+#     try:
+#         existing_hotel_points = client.scroll(
+#             collection_name=collection_name_hotels,
+#             limit=10000,  
+#             with_payload=False,
+#             with_vectors=False
+#         )[0]
+#         existing_hotel_ids = {point.id for point in existing_hotel_points}
+#         print(f"Found {len(existing_hotel_ids)} existing hotel points in Qdrant.")
+#     except Exception as e:
+#         print(f"Could not fetch existing hotel points (collection might be new): {e}")
+#         existing_hotel_ids = set()
 
-    hotels = data.get("hotels", [])
-    new_hotels = [hotel for hotel in hotels if hotel.get('id') not in existing_hotel_ids]
+#     hotels = data.get("hotels", [])
+#     new_hotels = [hotel for hotel in hotels if hotel.get('id') not in existing_hotel_ids]
     
-    if not new_hotels:
-        print(" Qdrant (Hotels) is up-to-date. No new hotels to index.")
-    else:
-        print(f"⏳ Found {len(new_hotels)} new hotels to index...")
-        hotel_points = []
-        for hotel in new_hotels:
-            text = f"{hotel.get('name', '')} {hotel.get('location', '')} {hotel.get('price_tier', '')} {hotel.get('rating', '')}"
-            vector = embedder.encode(text).tolist()
-            hotel_points.append(PointStruct(id=hotel.get('id'), vector=vector, payload=hotel))
+#     if not new_hotels:
+#         print(" Qdrant (Hotels) is up-to-date. No new hotels to index.")
+#     else:
+#         print(f"⏳ Found {len(new_hotels)} new hotels to index...")
+#         hotel_points = []
+#         for hotel in new_hotels:
+#             text = f"{hotel.get('name', '')} {hotel.get('location', '')} {hotel.get('price_tier', '')} {hotel.get('rating', '')}"
+#             vector = embedder.encode(text).tolist()
+#             hotel_points.append(PointStruct(id=hotel.get('id'), vector=vector, payload=hotel))
         
-        if hotel_points:
-            try:
-                client.upsert(collection_name=collection_name_hotels, points=hotel_points)
-                print(f" Successfully indexed {len(hotel_points)} new hotels to Qdrant.")
-            except Exception as e:
-                print(f"Warning: Could not index new hotels: {e}")
+#         if hotel_points:
+#             try:
+#                 client.upsert(collection_name=collection_name_hotels, points=hotel_points)
+#                 print(f" Successfully indexed {len(hotel_points)} new hotels to Qdrant.")
+#             except Exception as e:
+#                 print(f"Warning: Could not index new hotels: {e}")
 
-    # --- Index Rooms ---
-    collection_name_rooms = "rooms"
-    try:
-        existing_room_points = client.scroll(
-            collection_name=collection_name_rooms,
-            limit=10000,
-            with_payload=False,
-            with_vectors=False
-        )[0]
-        existing_room_ids = {point.id for point in existing_room_points}
-        print(f"Found {len(existing_room_ids)} existing room points in Qdrant.")
-    except Exception as e:
-        print(f"Could not fetch existing room points (collection might be new): {e}")
-        existing_room_ids = set()
+#     # --- Index Rooms ---
+#     collection_name_rooms = "rooms"
+#     try:
+#         existing_room_points = client.scroll(
+#             collection_name=collection_name_rooms,
+#             limit=10000,
+#             with_payload=False,
+#             with_vectors=False
+#         )[0]
+#         existing_room_ids = {point.id for point in existing_room_points}
+#         print(f"Found {len(existing_room_ids)} existing room points in Qdrant.")
+#     except Exception as e:
+#         print(f"Could not fetch existing room points (collection might be new): {e}")
+#         existing_room_ids = set()
 
-    rooms = data.get("rooms", [])
-    new_rooms = [room for room in rooms if room.get('room_id') not in existing_room_ids]
+#     rooms = data.get("rooms", [])
+#     new_rooms = [room for room in rooms if room.get('room_id') not in existing_room_ids]
 
-    if not new_rooms:
-        print(" Qdrant (Rooms) is up-to-date. No new rooms to index.")
-    else:
-        print(f"⏳ Found {len(new_rooms)} new rooms to index...")
-        room_points = []
-        for room in new_rooms:
-            text = f"{room.get('room_type', '')}"
-            vector = embedder.encode(text).tolist()
-            room_points.append(PointStruct(id=room.get('room_id'), vector=vector, payload=room))
+#     if not new_rooms:
+#         print(" Qdrant (Rooms) is up-to-date. No new rooms to index.")
+#     else:
+#         print(f"⏳ Found {len(new_rooms)} new rooms to index...")
+#         room_points = []
+#         for room in new_rooms:
+#             text = f"{room.get('room_type', '')}"
+#             vector = embedder.encode(text).tolist()
+#             room_points.append(PointStruct(id=room.get('room_id'), vector=vector, payload=room))
 
-        if room_points:
-            try:
-                client.upsert(collection_name=collection_name_rooms, points=room_points)
-                print(f" Successfully indexed {len(room_points)} new rooms to Qdrant.")
-            except Exception as e:
-                print(f"Warning: Could not index new rooms: {e}")
+#         if room_points:
+#             try:
+#                 client.upsert(collection_name=collection_name_rooms, points=room_points)
+#                 print(f" Successfully indexed {len(room_points)} new rooms to Qdrant.")
+#             except Exception as e:
+#                 print(f"Warning: Could not index new rooms: {e}")
 
-    # --- Index Bookings ---
-    collection_name_bookings = "hotel_bookings"
-    try:
-        existing_booking_points = client.scroll(
-            collection_name=collection_name_bookings,
-            limit=10000,
-            with_payload=False,
-            with_vectors=False
-        )[0]
-        existing_booking_ids = {point.id for point in existing_booking_points}
-        print(f"Found {len(existing_booking_ids)} existing booking points in Qdrant.")
-    except Exception as e:
-        print(f"Could not fetch existing booking points (collection might be new): {e}")
-        existing_booking_ids = set()
+#     # --- Index Bookings ---
+#     collection_name_bookings = "hotelBookings"
+#     try:
+#         existing_booking_points = client.scroll(
+#             collection_name=collection_name_bookings,
+#             limit=10000,
+#             with_payload=False,
+#             with_vectors=False
+#         )[0]
+#         existing_booking_ids = {point.id for point in existing_booking_points}
+#         print(f"Found {len(existing_booking_ids)} existing booking points in Qdrant.")
+#     except Exception as e:
+#         print(f"Could not fetch existing booking points (collection might be new): {e}")
+#         existing_booking_ids = set()
 
-    bookings = data.get("HOTEL_BOOKINGS", [])
-    # Always upsert all bookings to ensure updates (like status changes) are reflected in Qdrant.
-    # The previous logic only handled new additions, not modifications.
-    if not bookings:
-        print(" Qdrant (Bookings) is up-to-date. No bookings to index.")
-    else:
-        print(f"⏳ Indexing {len(bookings)} bookings...")
-        booking_points = []
-        for booking in bookings:
-            # Lấy thông tin chi tiết để tạo vector giàu ngữ nghĩa
-            text = f" {booking.get('status')}"
-            vector = embedder.encode(text).tolist()
-            booking_points.append(PointStruct(id=booking.get('booking_id'), vector=vector, payload=booking))
+#     bookings = data.get("hotelBookings", [])
+#     # Always upsert all bookings to ensure updates (like status changes) are reflected in Qdrant.
+#     # The previous logic only handled new additions, not modifications.
+#     if not bookings:
+#         print(" Qdrant (Bookings) is up-to-date. No bookings to index.")
+#     else:
+#         print(f"⏳ Indexing {len(bookings)} bookings...")
+#         booking_points = []
+#         for booking in bookings:
+#             # Lấy thông tin chi tiết để tạo vector giàu ngữ nghĩa
+#             text = f" {booking.get('status')}"
+#             vector = embedder.encode(text).tolist()
+#             booking_points.append(PointStruct(id=booking.get('booking_id'), vector=vector, payload=booking))
 
-        if booking_points:
-            try:
-                client.upsert(collection_name=collection_name_bookings, points=booking_points)
-                print(f" Successfully indexed {len(booking_points)} bookings to Qdrant.")
-            except Exception as e:
-                print(f"Warning: Could not index new bookings: {e}")
+#         if booking_points:
+#             try:
+#                 client.upsert(collection_name=collection_name_bookings, points=booking_points)
+#                 print(f" Successfully indexed {len(booking_points)} bookings to Qdrant.")
+#             except Exception as e:
+#                 print(f"Warning: Could not index new bookings: {e}")
 
 
-def _load_data():
-    global _cache
-    if _cache:
-        return _cache
+# def _load_data():
+#     global _cache
+#     if _cache:
+#         return _cache
 
-    if not BIN_ID_HOTEL or not API_KEY:
-        raise ValueError("BIN_ID và API_KEY chưa    được thiết lập trong file .env")
+#     if not BIN_ID_HOTEL or not API_KEY:
+#         raise ValueError("BIN_ID và API_KEY chưa    được thiết lập trong file .env")
     
-    response = requests.get(f"{API_URL}/latest", headers=HEADERS)
-    response.raise_for_status() 
+#     response = requests.get(f"{API_URL}/latest", headers=HEADERS)
+#     response.raise_for_status() 
     
-    data = response.json()['record']
-    _cache = data  
+#     data = response.json()['record']
+#     _cache = data  
     
-    if USE_QDRANT:
-        _index_data_to_qdrant(data)
+#     if USE_QDRANT:
+#         _index_data_to_qdrant(data)
     
-    return data
+#     return data
 
-def _save_data(data):
-    global _cache, _qdrant_initialized
-    if not BIN_ID_HOTEL or not API_KEY:
-        raise ValueError("BIN_ID và API_KEY chưa được thiết lập trong file .env")
+# def _save_data(data):
+#     global _cache, _qdrant_initialized
+#     if not BIN_ID_HOTEL or not API_KEY:
+#         raise ValueError("BIN_ID và API_KEY chưa được thiết lập trong file .env")
 
-    response = requests.put(API_URL, json=data, headers=HEADERS)
-    response.raise_for_status()
+#     response = requests.put(API_URL, json=data, headers=HEADERS)
+#     response.raise_for_status()
     
-    _cache = None
-    _qdrant_initialized = False  
+#     _cache = None
+#     _qdrant_initialized = False  
     
-    if USE_QDRANT:
-        _index_data_to_qdrant(data)
+#     if USE_QDRANT:
+#         _index_data_to_qdrant(data)
 
 # def _normalize_number(value, value_type="float"):
 #     if value is None:
@@ -237,335 +239,958 @@ def _save_data(data):
 #     except (ValueError, TypeError):
 #         return None
 
-def search_hotel_from_api(
-location: str | None = None, 
-name: str | None = None,
-price_tier: str | None = None,
-rating: float | None = None) -> list[dict]:
-    """
-    Hybrid search: Combine semantic search (Qdrant) with exact filters.
-    - If 'name' or 'location' or 'price_tier' is provided, use semantic search
-    - Always apply exact filters (price_tier, rating)
-    """
-    data = _load_data()
-    if not USE_QDRANT or (not name and not location and not price_tier):
-        return _search_hotel_exact(data, location, name, price_tier, rating)
+# def search_hotel_from_api(
+# location: str | None = None, 
+# name: str | None = None,
+# price_tier: str | None = None,
+# rating: float | None = None) -> list[dict]:
+#     """
+#     Hybrid search: Combine semantic search (Qdrant) with exact filters.
+#     - If 'name' or 'location' or 'price_tier' is provided, use semantic search
+#     - Always apply exact filters (price_tier, rating)
+#     """
+#     data = _load_data()
+#     if not USE_QDRANT or (not name and not location and not price_tier):
+#         return _search_hotel_exact(data, location, name, price_tier, rating)
     
-    try:
-        client = _get_qdrant_client()
-        embedder = _get_embedder()
-        query_parts = []
-        if name:
-            query_parts.append(name)
-        if location:
-            query_parts.append(location)
-        if price_tier:
-            query_parts.append(price_tier)
-        query_text = " ".join(query_parts)
+#     try:
+#         client = _get_qdrant_client()
+#         embedder = _get_embedder()
+#         query_parts = []
+#         if name:
+#             query_parts.append(name)
+#         if location:
+#             query_parts.append(location)
+#         if price_tier:
+#             query_parts.append(price_tier)
+#         query_text = " ".join(query_parts)
         
-        query_vector = embedder.encode(query_text).tolist()
+#         query_vector = embedder.encode(query_text).tolist()
         
-        must_conditions = []
-        if rating:
-            must_conditions.append(
-                FieldCondition(key="rating", range=Range(gt=rating))
-            )
-        if location:
-            must_conditions.append(
-                FieldCondition(key="location", match=MatchValue(value=location))
-            )
-        search_result = client.search(
-            collection_name="hotels",
-            query_vector=query_vector,
-            query_filter=Filter(must=must_conditions) if must_conditions else None,
-            limit=50  
-        )
+#         must_conditions = []
+#         if rating:
+#             must_conditions.append(
+#                 FieldCondition(key="rating", range=Range(gt=rating))
+#             )
+#         if location:
+#             must_conditions.append(
+#                 FieldCondition(key="location", match=MatchValue(value=location))
+#             )
+#         search_result = client.search(
+#             collection_name="hotels",
+#             query_vector=query_vector,
+#             query_filter=Filter(must=must_conditions) if must_conditions else None,
+#             limit=50  
+#         )
         
-        results = [hit.payload for hit in search_result]
+#         results = [hit.payload for hit in search_result]
         
-        print(f" Qdrant semantic search: Found {len(results)} results")
-        return results
+#         print(f" Qdrant semantic search: Found {len(results)} results")
+#         return results
         
-    except Exception as e:
-        print(f" Qdrant search failed: {e}, falling back to exact search")
-        return _search_hotel_exact(data, location, name, price_tier, rating)
+#     except Exception as e:
+#         print(f" Qdrant search failed: {e}, falling back to exact search")
+#         return _search_hotel_exact(data, location, name, price_tier, rating)
 
-def _search_hotel_exact(data, location, name, price_tier, rating):
 
-    results = data.get("hotels", [])
-    filtered = [
-        r for r in results
-        if (not location or location.lower() in r.get('location', '').lower())
-        and (not name or name.lower() in r.get('name', '').lower())
-        and (not price_tier or price_tier.lower() == r.get('price_tier', '').lower())
-        and (not rating or r.get('rating', 0) > rating)
-    ]
-    
-    print(f" Exact search (hotels): Found {len(filtered)} results")
-    return filtered
 
-def fetch_hotel_info_from_api(hotel_name: str) -> dict | None:
-    try:
-        client = _get_qdrant_client()
-        embedder = _get_embedder()
-        query_vector=embedder.encode(hotel_name).tolist()
+BOOKING_HOST = os.getenv("BOOKING_RAPIDAPI_HOST", "booking-com15.p.rapidapi.com")
+BOOKING_BASE_URL = f"https://{BOOKING_HOST}/api/v1"
+BOOKING_LANGUAGE_CODE = os.getenv("BOOKING_LANGUAGE_CODE", "vi")
+BOOKING_CURRENCY_CODE = os.getenv("BOOKING_CURRENCY_CODE", "VND")
+RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
 
-        search_result = client.search(
-            collection_name="hotels",
-            query_vector=query_vector,
-            limit=1,
-            score_threshold=0.7,
-        )
-        if search_result:
-            return search_result[0].payload
-    except Exception as e:
-        print(f" Qdrant search failed: {e}, falling back to exact search")
-        data = _load_data()
-        results = data.get("hotels", [])
-        hotel = next((h for h in results if hotel_name.lower() in h.get('name', '').lower()), None)
-        return hotel
 
-def search_hotel_rooms_from_api(hotel_name, room_type, price, price_max, price_min, capacity):
-    if not hotel_name:
-        return "Please provide a hotel name."
-    hotel = fetch_hotel_info_from_api(hotel_name)
-    if not hotel:
-        return f"Không tìm thấy khách sạn '{hotel_name}'."
-    hotel_id = hotel.get('id')
-    if not hotel_id:
-        return None 
-    try:
-        client = _get_qdrant_client()
-        embedder = _get_embedder()
-        query_parts = []
-        if room_type:
-            query_parts.append(room_type)
-        query_text = " ".join(query_parts)
-        
-        query_vector = embedder.encode(query_text).tolist()
-        
-        must_conditions = []
-        if price:
-            must_conditions.append(
-                FieldCondition(key="price", range=Range(gt=price))
-            )
-        if price_max:
-            must_conditions.append(
-                FieldCondition(key="price", range=Range(lte=price_max))
-            )
-        if price_min:
-            must_conditions.append(
-                FieldCondition(key="price", range=Range(gte=price_min))
-            )
-        if capacity:
-            must_conditions.append(
-                FieldCondition(key="capacity", range=Range(gte=capacity))
-            )   
-        must_conditions.append(
-            FieldCondition(key="hotel_id", match=MatchValue(value=hotel_id))
-        )
-        search_result = client.search(
-            collection_name="rooms",
-            query_vector=query_vector,
-            query_filter=Filter(must=must_conditions) if must_conditions else None,
-            limit=50
-        )
-        return [hit.payload for hit in search_result]
-    except Exception as e:
-        print(f" Qdrant search failed: {e}, falling back to exact search")
-        data = _load_data()
-        return search_room_exact(data, room_type, price, price_max, price_min, capacity)
-        
-def search_room_exact(data, room_type, price, price_max, price_min, capacity):
-    rooms = data.get("rooms", [])
-    filtered = [
-        r for r in rooms
-        if (not room_type or room_type.lower() in r.get('room_type', '').lower())
-        and (not price or r.get('price', 0) > price)
-        and (not price_max or r.get('price', 0) <= price_max)
-        and (not price_min or r.get('price', 0) >= price_min)
-        and (not capacity or r.get('capacity', 0) >= capacity)
-    ]
-    return filtered
+def _booking_headers() -> dict:
+    if not RAPIDAPI_KEY:
+        raise RuntimeError("Thiếu RAPIDAPI_KEY trong file .env")
 
-def fetch_hotel_room_info_from_api(hotel_name: str , room_type: str, room_id: int ):
-    data = _load_data()
-    rooms = data.get("rooms", [])
-    if  hotel_name and  room_type and not room_id:
-        hotel = fetch_hotel_info_from_api(hotel_name)
-        if not hotel:
-            return None 
-        hotel_id = hotel.get('id')
-        try:
-            client = _get_qdrant_client()
-            embedder = _get_embedder()
-            query_vector = embedder.encode(room_type).tolist()
-            must_conditions = [FieldCondition(key="hotel_id", match=MatchValue(value=hotel_id))]
-            search_result = client.search(
-                collection_name="rooms",
-                query_vector=query_vector,
-                query_filter=Filter(must=must_conditions) if must_conditions else None,
-                score_threshold=0.6,
-                limit=1,
-            )
-            if search_result:
-                return search_result[0].payload
-        except Exception as e:
-            print(f" Qdrant search failed: {e}, falling back to exact search")
-            room = next((r for r in rooms if room_type.lower() in r.get('room_type', '').lower() and r.get('hotel_id') == hotel_id), None)
-            return room
-    elif room_id:
-        room = None
-        if USE_QDRANT:
-            try:
-                client = _get_qdrant_client()
-                # Retrieve the point directly by its ID for high efficiency
-                points = client.retrieve(
-                    collection_name="rooms",
-                    ids=[room_id],
-                    with_payload=True
-                )
-                if points:
-                    room = points[0].payload
-            except Exception as e:
-                print(f" Qdrant retrieve failed: {e}, falling back to exact search")
-
-        # Fallback if Qdrant is disabled, fails, or finds nothing
-        if not room:
-            room = next((r for r in rooms if r.get('room_id') == room_id), None)
-        
-        if room:
-            return room
-        else:
-            return None 
-    return None 
-
-def check_realse_room_from_api(aim, booking_id, room_id, checkin_date, checkout_date):
-    if not aim:
-        return "Please provide a valid aim."
-    if not checkin_date:
-        return "Please provide a checkin date."
-    if not checkout_date:
-        return "Please provide a checkout date."
-    data = _load_data()
-    bookings = data.get("HOTEL_BOOKINGS", [])   
-    checkin_date = to_date(checkin_date)
-    checkout_date = to_date(checkout_date)
-    if aim == "book":
-        if not room_id:
-            return "Please provide a room id."
-        unavailable_rooms = [
-            b for b in bookings
-            if (b.get('room_id') == room_id) 
-            and ( b.get('status') != "cancelled" )
-            and not (((to_date(b.get('checkin_date')) > checkin_date) 
-            and (checkout_date <= to_date(b.get('checkin_date')))) or  checkin_date 
-            >= to_date(b.get('checkout_date')) )
-        ]
-    elif aim == 'update':
-        if not booking_id:
-            return "Please provide a booking id."
-        
-        unavailable_rooms = [
-            b for b in bookings
-            if (b.get('booking_id') != booking_id) 
-            and ( b.get('status') != "cancelled" )
-            and not (((to_date(b.get('checkin_date')) > checkin_date) 
-            and (checkout_date <= to_date(b.get('checkin_date')))) or  checkin_date 
-            >= to_date(b.get('checkout_date')) )
-        ]
-    else:
-        return "Please provide a valid aim."
-    
-    return unavailable_rooms if unavailable_rooms else None
-
-def book_hotel_room_from_api(room_id, hotel_id, checkin_date, checkout_date, total_price):
-    if not room_id:
-        return "Please provide a room id."
-    if not hotel_id:
-        return "Please provide a hotel id."
-    if not checkin_date:
-        return "Please provide a checkin date."
-    if not checkout_date:
-        return "Please provide a checkout date."
-    data = _load_data()
-    bookings = data.get("HOTEL_BOOKINGS", [])
-
-    new_booking_id = (max([b.get('booking_id', 0) for b in bookings]) + 1) if bookings else 1
-    
-    new_booking = {
-        "booking_id": new_booking_id,
-        "room_id": room_id,
-        "hotel_id": hotel_id,
-        "checkin_date": checkin_date,
-        "checkout_date": checkout_date,
-        "total_price": total_price,
-        "status": "confirmed"
+    return {
+        "X-RapidAPI-Key": RAPIDAPI_KEY,
+        "X-RapidAPI-Host": BOOKING_HOST,
     }
-    bookings.append(new_booking)
-    data["HOTEL_BOOKINGS"] = bookings
-    
-    _save_data(data)
-    
-    return new_booking
-
-def fetch_booking_info_from_api(booking_id):
-    if USE_QDRANT:
-        try:
-            client = _get_qdrant_client()
-            points = client.retrieve(
-                collection_name="hotel_bookings",
-                ids=[booking_id],
-                with_payload=True
-            )
-            if points:
-                print("Using qrant: ")
-                return points[0].payload
-        except Exception as e:
-            print(f" Qdrant retrieve for booking failed: {e}, falling back to exact search")
-    
-    # Fallback to linear search
-    data = _load_data()
-    bookings = data.get("HOTEL_BOOKINGS", [])
-    booking = next((b for b in bookings if b.get('booking_id') == booking_id), None)
-    
-    if not booking:
-        return "Please provide a valid booking id."
-    return booking
 
 
+def _booking_get(path: str, params: dict) -> dict:
+    url = f"{BOOKING_BASE_URL}{path}"
 
-def update_hotel_booking_from_api(booking_id, checkin_date, checkout_date, total_price):
-    if not booking_id:
-        return "Please provide a booking id."
-    if not checkin_date:
-        return "Please provide a checkin date."
-    if not checkout_date:
-        return "Please provide a checkout date."
-    data = _load_data()
-    bookings = data.get("HOTEL_BOOKINGS", [])
-    booking_to_update = next((b for b in bookings if b.get('booking_id') == booking_id), None)
-    if not booking_to_update:
-        return "Please provide a valid booking id."
+    clean_params = {
+        key: value
+        for key, value in params.items()
+        if value is not None and value != ""
+    }
+
+    response = requests.get(
+        url,
+        headers=_booking_headers(),
+        params=clean_params,
+        timeout=20,
+    )
+
+    if response.status_code == 429:
+        raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
+
+    response.raise_for_status()
+    payload = response.json()
+
+    if isinstance(payload, dict) and payload.get("status") is False:
+        raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
+
+    if isinstance(payload, dict):
+        return payload.get("data", payload)
+
+    return payload
+
+
+# def _parse_search_date(value: str | None) -> date:
+#     if value is None:
+#         raise ValueError("Ngày không được để trống.")
+
+#     if isinstance(value, date):
+#         return value
+
+#     return datetime.strptime(value, "%Y-%m-%d").date()
+
+
+def _resolve_search_dates(
+    checkin_date: str | None,
+    checkout_date: str | None,
+) -> tuple[str, str, int]:
+    """
+    Nếu user không nhập ngày thì mặc định:
+    checkin = ngày mai
+    checkout = ngày kia
+    """
     if checkin_date:
-        booking_to_update['checkin_date'] = checkin_date
-    if checkout_date:
-        booking_to_update['checkout_date'] = checkout_date
-    if total_price:
-        booking_to_update['total_price'] = total_price
-    _save_data(data)
-    return f"Cập nhật thành công cho mã đặt phòng {booking_id}."
+        checkin = to_date(checkin_date)
+    else:
+        checkin = date.today() + timedelta(days=1)
 
-def cancel_hotel_booking_from_api(booking_id):
-    if not booking_id:
-        return "Please provide a booking id."
-    data = _load_data()
-    bookings = data.get("HOTEL_BOOKINGS", [])
-    booking_to_cancel = next((b for b in bookings if b.get('booking_id') == booking_id), None)
-    if not booking_to_cancel:
-        return "Please provide a valid booking id."
-    if booking_to_cancel['status'] == "confirmed":
-        booking_to_cancel['status'] = "cancelled"
-    _save_data(data)
-    return f"Đã hủy thành công mã đặt phòng {booking_id}."
+    if checkout_date:
+        checkout = to_date(checkout_date)
+    else:
+        checkout = checkin + timedelta(days=1)
+
+    if checkin < date.today():
+        raise ValueError("Ngày nhận phòng phải từ hôm nay trở về sau.")
+
+    if checkout <= checkin:
+        raise ValueError("Ngày trả phòng phải sau ngày nhận phòng.")
+
+    nights = (checkout - checkin).days
+
+    return checkin.isoformat(), checkout.isoformat(), nights
+
+
+@lru_cache(maxsize=256)
+def _search_booking_destination(query: str, languagecode: str = BOOKING_LANGUAGE_CODE) -> dict | None:
+    """
+    Booking.com15 cần gọi searchDestination trước để lấy dest_id và search_type.
+    """
+    data = _booking_get(
+        "/hotels/searchDestination",
+        {
+            "query": query,
+            "languagecode": languagecode,
+        },
+    )
+
+    if isinstance(data, list) and len(data) > 0:
+        return data[0]
+
+    return None
+
+
+def _normalize_price_tier(price_tier: str | None) -> str | None:
+    if not price_tier:
+        return None
+
+    text = price_tier.lower().strip()
+
+    mapping = {
+        "cheap": "budget",
+        "budget": "budget",
+        "low": "budget",
+        "giá rẻ": "budget",
+        "gia re": "budget",
+        "rẻ": "budget",
+        "re": "budget",
+
+        "mid": "mid",
+        "medium": "mid",
+        "trung bình": "mid",
+        "trung binh": "mid",
+        "vừa phải": "mid",
+        "vua phai": "mid",
+        "hợp lý": "mid",
+        "hop ly": "mid",
+
+        "luxury": "luxury",
+        "cao cấp": "luxury",
+        "cao cap": "luxury",
+        "sang trọng": "luxury",
+        "sang trong": "luxury",
+    }
+
+    return mapping.get(text, text)
+
+
+def _infer_price_tier(price_per_night: float | int | None) -> str | None:
+    """
+    Chia tier demo theo VND/đêm.
+    Bạn có thể chỉnh lại theo logic project.
+    """
+    if price_per_night is None:
+        return None
+
+    price = float(price_per_night)
+
+    if price < 700_000:
+        return "budget"
+
+    if price < 1_500_000:
+        return "mid"
+
+    return "luxury"
+
+
+def _normalize_booking_hotel(raw_hotel: dict, nights: int) -> dict:
+    prop = raw_hotel.get("property", {}) or {}
+    # priceBreakdown nằm TRONG property, không phải nằm ngoài raw_hotel
+    price_breakdown = prop.get("priceBreakdown", {}) or {}
+
+    gross_price = price_breakdown.get("grossPrice", {}) or {}
+    total_price = gross_price.get("value")
+    currency = gross_price.get("currency")
+    total_price, currency = convert_to_vnd(total_price, currency)
+
+    price_per_night = None
+    if total_price is not None and nights > 0:
+        price_per_night = round(float(total_price) / nights)
+
+    photo_urls = prop.get("photoUrls") or []
+
+    return {
+        "source": "booking_com15_rapidapi",
+
+        # ID ngoài Booking.com, không phải hotel_id nội bộ DB của bạn
+        "external_hotel_id": raw_hotel.get("hotel_id"),
+
+        "name": prop.get("name"),
+        "location": (
+            prop.get("wishlistName")
+            or prop.get("city")
+            or prop.get("countryCode")
+        ),
+
+        "rating": prop.get("reviewScore"),
+        "rating_word": prop.get("reviewScoreWord"),
+        "review_count": prop.get("reviewCount"),
+        "star": prop.get("propertyClass"),
+
+        # price = giá trung bình mỗi đêm để agent dễ lọc/rank
+        "price": price_per_night,
+        "price_per_night": price_per_night,
+        "total_price": total_price,
+        "currency": currency,
+        "price_tier": _infer_price_tier(price_per_night),
+
+        "latitude": prop.get("latitude"),
+        "longitude": prop.get("longitude"),
+        "photo": photo_urls[0] if photo_urls else None,
+
+        "raw": raw_hotel,
+    }
+
+
+def search_hotel_from_api(
+    location: str | None = None,
+    name: str | None = None,
+    price_tier: str | None = None,
+    price: int | None = None,
+    rating: float | None = None,
+    checkin_date: str | None = None,
+    checkout_date: str | None = None,
+    adults: int = 2,
+    children_age: str | None = None,
+    room_qty: int = 1,
+    price_min: int | None = None,
+    price_max: int | None = None,
+    limit: int = 10,
+) -> list[dict]:
+    """
+    Search hotel realtime.
+
+    Flow:
+    1. location/name -> searchDestination
+    2. dest_id + ngày nhận/trả phòng -> searchHotels
+    3. Chuẩn hóa response cho agent dùng
+
+    Lưu ý:
+    - Nếu không truyền checkin_date/checkout_date, mặc định search ngày mai -> ngày kia.
+    - external_hotel_id là ID từ Booking.com, không phải hotel_id trong DB nội bộ.
+    """
+
+    query = location or name
+
+    if not query:
+        return [
+            {
+                "error": "Bạn cần cung cấp location hoặc name để tìm khách sạn."
+            }
+        ]
+
+    try:
+        checkin, checkout, nights = _resolve_search_dates(
+            checkin_date,
+            checkout_date,
+        )
+
+        destination = _search_booking_destination(query)
+
+        if not destination:
+            return [
+                {
+                    "error": f"Không tìm thấy điểm đến phù hợp với '{query}'."
+                }
+            ]
+
+        data = _booking_get(
+            "/hotels/searchHotels",
+            {
+                "dest_id": destination.get("dest_id"),
+                "search_type": destination.get("search_type"),
+                "arrival_date": checkin,
+                "departure_date": checkout,
+                "adults": adults,
+                "children_age": children_age,
+                "room_qty": room_qty,
+                "page_number": 1,
+                "price_min": price_min,
+                "price_max": price_max,
+                "languagecode": BOOKING_LANGUAGE_CODE,
+                "currency_code": BOOKING_CURRENCY_CODE,
+            },
+        )
+
+        raw_hotels = data.get("hotels", []) if isinstance(data, dict) else []
+
+        hotels = [
+            _normalize_booking_hotel(raw_hotel, nights)
+            for raw_hotel in raw_hotels
+        ]
+
+        # Lọc theo tên nếu user nhập tên khách sạn cụ thể
+        if name:
+            name_lower = name.lower()
+            hotels = [
+                hotel
+                for hotel in hotels
+                if hotel.get("name")
+                and name_lower in hotel["name"].lower()
+            ]
+
+        # Lọc rating >= yêu cầu
+        if rating is not None:
+            hotels = [
+                hotel
+                for hotel in hotels
+                if hotel.get("rating") is not None
+                and float(hotel["rating"]) >= float(rating)
+            ]
+
+        if price is not None:
+            hotels = [
+                hotel
+                for hotel in hotels
+                if hotel.get("total_price") is not None
+                and float(hotel["total_price"]) <= float(price)
+            ]
+
+        if price_min is not None:
+            hotels = [
+                hotel
+                for hotel in hotels
+                if hotel.get("total_price") is not None
+                and float(hotel["total_price"]) >= float(price_min)
+            ]
+        
+        if price_max is not None:
+            hotels = [
+                hotel
+                for hotel in hotels
+                if hotel.get("total_price") is not None
+                and float(hotel["total_price"]) <= float(price_max)
+            ]
+
+        # Lọc phân khúc giá
+        normalized_tier = _normalize_price_tier(price_tier)
+
+        if normalized_tier:
+            hotels = [
+                hotel
+                for hotel in hotels
+                if hotel.get("price_tier") == normalized_tier
+            ]
+
+        return hotels[:limit]
+
+    except Exception as e:
+        return [
+            {
+                "error": f"Lỗi khi gọi Booking.com15 RapidAPI: {str(e)}"
+            }
+        ]
+
+
+
+
+# def _extract_room_blocks(data) -> list[dict]:
+#     """Lấy danh sách block phòng từ nhiều kiểu response Booking có thể trả."""
+#     if not data:
+#         return []
+
+#     if isinstance(data, list):
+#         blocks = []
+#         for item in data:
+#             if isinstance(item, dict):
+#                 blocks.extend(item.get("block") or item.get("blocks") or [])
+#                 if item.get("block_id") or item.get("room_id"):
+#                     blocks.append(item)
+#         return blocks
+
+#     if isinstance(data, dict):
+#         for key in ("block", "blocks", "room_list", "rooms", "available_rooms"):
+#             value = data.get(key)
+#             if isinstance(value, list) and value:
+#                 return value
+
+#         # Một số response bọc thêm 1 lớp data
+#         nested = data.get("data")
+#         if nested and nested is not data:
+#             return _extract_room_blocks(nested)
+
+#     return []
+
+
+def _extract_room_blocks(data) -> list[dict]:
+    """Lấy danh sách block phòng từ nhiều kiểu response Booking có thể trả."""
+    if not data:
+        return []
+
+    if isinstance(data, list):
+        blocks = []
+        for item in data:
+            if isinstance(item, dict):
+                blocks.extend(item.get("block") or item.get("blocks") or [])
+                if item.get("block_id") or item.get("room_id"):
+                    blocks.append(item)
+        return blocks
+
+    if isinstance(data, dict):
+        for key in ("block", "blocks", "room_list", "rooms", "available_rooms"):
+            value = data.get(key)
+            if isinstance(value, list) and value:
+                return value
+
+        # Một số response bọc thêm 1 lớp data
+        nested = data.get("data")
+        if nested and nested is not data:
+            return _extract_room_blocks(nested)
+
+    return []
+def _normalize_booking_room(raw_block: dict, nights: int, hotel_id: str | int) -> dict:
+    meta = raw_block.get("_room_meta") or {}
+    name = meta.get("name") or raw_block.get("room_name") or raw_block.get("name")
+
+    price_breakdown = (
+        raw_block.get("product_price_breakdown")
+        or raw_block.get("priceBreakdown")
+        or {}
+    )
+
+    total_price = None
+    currency = raw_block.get("currency")
+
+    # Chỉ dùng các key là giá TỔNG thực sự (không dùng discount/tax/strikethrough)
+    for key in (
+        "all_inclusive_amount",
+        "all_inclusive_amount_hotel_currency",
+        "gross_amount",
+        "gross_amount_hotel_currency",
+        "net_amount",
+        "grossPrice",
+        "all_inclusive_price",
+    ):
+        amount_obj = price_breakdown.get(key) or {}
+        if amount_obj.get("value") is not None:
+            total_price = amount_obj["value"]
+            currency = amount_obj.get("currency") or currency
+            break
+
+    if total_price is None:
+        total_price = raw_block.get("amount_unrounded") or raw_block.get("amount_rounded")
+
+    total_price, currency = convert_to_vnd(total_price, currency)
+
+    price_per_night = None
+    if total_price is not None and nights > 0:
+        price_per_night = round(float(total_price) / nights)
+
+    # Giá gốc (trước giảm giá)
+    original_price = None
+    sp = price_breakdown.get("strikethrough_amount") or {}
+    if sp.get("value") is not None:
+        original_price, _ = convert_to_vnd(sp["value"], sp.get("currency") or currency)
+
+    # Số tiền được giảm
+    discount_amount = None
+    da = price_breakdown.get("discounted_amount") or {}
+    if da.get("value") is not None:
+        discount_amount, _ = convert_to_vnd(da["value"], da.get("currency") or currency)
+
+    # Ưu tiên bản đã điền sẵn
+    policy_details = raw_block.get("policy_display_details") or {}
+    cancellation = policy_details.get("cancellation") or {}
+    title = cancellation.get("title_details") or {}
+    cancellation_policy = title.get("translation")
+
+    # Fallback: template từ transactional_policy_objects
+    if not cancellation_policy:
+        for p in raw_block.get("transactional_policy_objects") or []:
+            if p.get("key") == "FreeCancellationKey":
+                cancellation_policy = p.get("text")
+                break
+
+    # # Chính sách hủy phòng
+    # policies = raw_block.get("transactional_policy_objects") or []
+    # cancellation_policy = None
+    # for p in policies:
+    #     if isinstance(p, dict) and p.get("key") == "FreeCancellationKey":
+    #         cancellation_policy = p.get("text")
+    #         break
+
+    # Gói kèm (parking, wifi...)
+    bundle = raw_block.get("bundle_extras") or {}
+    bundle_name = bundle.get("highlighted_text") or bundle.get("generated_name")
+
+    # Ảnh: ưu tiên lấy từ room_meta, fallback về block
+    photos = (
+        meta.get("photos")
+        or raw_block.get("photos")
+        or raw_block.get("roomPhotos")
+        or []
+    )
+    photo = None
+    if photos:
+        first = photos[0]
+        photo = first.get("url_original") or first.get("url") if isinstance(first, dict) else first
+
+    return {
+        "source": "booking_com15_rapidapi",
+        "external_hotel_id": hotel_id,
+        "block_id": raw_block.get("block_id") or raw_block.get("id"),
+        "room_id": raw_block.get("room_id"),
+        "name": name,
+        "description": meta.get("description"),
+        "rate_name": raw_block.get("name"),
+        "room_surface_m2": raw_block.get("room_surface_in_m2") or meta.get("room_surface_in_m2"),
+        "max_occupancy": raw_block.get("max_occupancy") or meta.get("max_persons") or raw_block.get("nr_adults"),
+        "adults": raw_block.get("nr_adults"),
+        "children": raw_block.get("nr_children"),
+        "smoking": bool(raw_block.get("smoking")),
+        "all_inclusive": bool(raw_block.get("all_inclusive")),
+        "is_dormitory": bool(raw_block.get("is_dormitory")),
+        "is_block_fit": raw_block.get("is_block_fit"),
+        "fit_status": raw_block.get("fit_status"),
+        "refundable": raw_block.get("refundable"),
+        "breakfast_included": raw_block.get("breakfast_included"),
+        "mealplan": raw_block.get("mealplan"),
+        "room_count_available": raw_block.get("room_count_available") or raw_block.get("room_count"),
+        "cancellation_policy": cancellation_policy,
+        "bundle_extras": bundle_name,
+        "price": price_per_night,
+        "price_per_night": price_per_night,
+        "total_price": total_price,
+        "original_price": original_price,
+        "discount_amount": discount_amount,
+        "currency": currency,
+        "photo": photo,
+    }
+
+
+def get_hotel_room_list_from_api(
+    hotel_id: str | int,
+    checkin_date: str,
+    checkout_date: str,
+    adults: int = 2,
+    children_age: str | None = None,
+    room_qty: int = 1,
+    price: int | None = None,
+    price_max: int | None = None,
+    price_min: int | None = None,
+    limit: int = 20,
+) -> list[dict]:
+    """
+    Lấy danh sách phòng của 1 khách sạn qua Booking.com15 getRoomList.
+
+    hotel_id = external_hotel_id từ searchHotels.
+    """
+    if not hotel_id:
+        return [{"error": "Bạn cần cung cấp hotel_id (external_hotel_id)."}]
+
+    if not checkin_date or not checkout_date:
+        return [{"error": "Bạn cần cung cấp checkin_date và checkout_date."}]
+
+    try:
+        checkin, checkout, nights = _resolve_search_dates(checkin_date, checkout_date)
+
+        data = _booking_get(
+            "/hotels/getRoomList",
+            {
+                "hotel_id": str(hotel_id),
+                "arrival_date": checkin,
+                "departure_date": checkout,
+                "adults": adults,
+                "children_age": children_age,
+                "room_qty": room_qty,
+                "units": "metric",
+                "temperature_unit": "c",
+                "languagecode": BOOKING_LANGUAGE_CODE,
+                "currency_code": BOOKING_CURRENCY_CODE,
+            },
+        )
+        # Lấy room metadata (tên phòng, mô tả, ảnh...)
+        rooms_meta = {}
+        if isinstance(data, dict):
+            rooms_raw = data.get("rooms") or {}
+            if isinstance(rooms_raw, dict):
+                rooms_meta = rooms_raw  # keyed by room_id
+        raw_blocks = _extract_room_blocks(data)
+
+        # Merge room metadata vào từng block
+        for block in raw_blocks:
+            room_id = str(block.get("room_id", ""))
+            if room_id in rooms_meta:
+                block["_room_meta"] = rooms_meta[room_id]
+        rooms = [
+            _normalize_booking_room(block, nights, hotel_id)
+            for block in raw_blocks
+            if isinstance(block, dict)
+        ]
+
+        # Nếu API trả fit_status → chỉ giữ fit_status=2 (recommended hoàn toàn)
+        # Nếu API không trả fit_status → lấy hết, không lọc
+        has_fit_status = any(
+            r.get("fit_status") not in (None, "")
+            for r in rooms
+        )
+        if has_fit_status:
+            recommended = [r for r in rooms if r.get("fit_status") == 2]
+            if recommended:
+                rooms = recommended
+
+        if price is not None:
+            rooms = [
+                r for r in rooms
+                if r.get("total_price") is not None
+                and float(r["total_price"]) <= float(price)
+            ]
+
+        if price_min is not None:
+            rooms = [
+                r for r in rooms
+                if r.get("total_price") is not None
+                and float(r["total_price"]) >= float(price_min)
+            ]
+
+        if price_max is not None:
+            rooms = [
+                r for r in rooms
+                if r.get("total_price") is not None
+                and float(r["total_price"]) <= float(price_max)
+            ]
+
+        return rooms[:limit]
+
+    except Exception as e:
+        return [{"error": f"Lỗi khi gọi getRoomList: {str(e)}"}]
+
+
+
+# def _search_hotel_exact(data, location, name, price_tier, rating):
+
+#     results = data.get("hotels", [])
+#     filtered = [
+#         r for r in results
+#         if (not location or location.lower() in r.get('location', '').lower())
+#         and (not name or name.lower() in r.get('name', '').lower())
+#         and (not price_tier or price_tier.lower() == r.get('price_tier', '').lower())
+#         and (not rating or r.get('rating', 0) > rating)
+#     ]
+    
+#     print(f" Exact search (hotels): Found {len(filtered)} results")
+#     return filtered
+
+# def fetch_hotel_info_from_api(hotel_name: str) -> dict | None:
+#     try:
+#         client = _get_qdrant_client()
+#         embedder = _get_embedder()
+#         query_vector=embedder.encode(hotel_name).tolist()
+
+#         search_result = client.search(
+#             collection_name="hotels",
+#             query_vector=query_vector,
+#             limit=1,
+#             score_threshold=0.7,
+#         )
+#         if search_result:
+#             return search_result[0].payload
+#     except Exception as e:
+#         print(f" Qdrant search failed: {e}, falling back to exact search")
+#         data = _load_data()
+#         results = data.get("hotels", [])
+#         hotel = next((h for h in results if hotel_name.lower() in h.get('name', '').lower()), None)
+#         return hotel
+
+# def search_hotel_rooms_from_api(hotel_name, room_type, price, price_max, price_min, capacity):
+#     if not hotel_name:
+#         return "Please provide a hotel name."
+#     hotel = fetch_hotel_info_from_api(hotel_name)
+#     if not hotel:
+#         return f"Không tìm thấy khách sạn '{hotel_name}'."
+#     hotel_id = hotel.get('id')
+#     if not hotel_id:
+#         return None 
+#     try:
+#         client = _get_qdrant_client()
+#         embedder = _get_embedder()
+#         query_parts = []
+#         if room_type:
+#             query_parts.append(room_type)
+#         query_text = " ".join(query_parts)
+        
+#         query_vector = embedder.encode(query_text).tolist()
+        
+#         must_conditions = []
+#         if price:
+#             must_conditions.append(
+#                 FieldCondition(key="price", range=Range(gt=price))
+#             )
+#         if price_max:
+#             must_conditions.append(
+#                 FieldCondition(key="price", range=Range(lte=price_max))
+#             )
+#         if price_min:
+#             must_conditions.append(
+#                 FieldCondition(key="price", range=Range(gte=price_min))
+#             )
+#         if capacity:
+#             must_conditions.append(
+#                 FieldCondition(key="capacity", range=Range(gte=capacity))
+#             )   
+#         must_conditions.append(
+#             FieldCondition(key="hotel_id", match=MatchValue(value=hotel_id))
+#         )
+#         search_result = client.search(
+#             collection_name="rooms",
+#             query_vector=query_vector,
+#             query_filter=Filter(must=must_conditions) if must_conditions else None,
+#             limit=50
+#         )
+#         return [hit.payload for hit in search_result]
+#     except Exception as e:
+#         print(f" Qdrant search failed: {e}, falling back to exact search")
+#         data = _load_data()
+#         return search_room_exact(data, room_type, price, price_max, price_min, capacity)
+        
+# def search_room_exact(data, room_type, price, price_max, price_min, capacity):
+#     rooms = data.get("rooms", [])
+#     filtered = [
+#         r for r in rooms
+#         if (not room_type or room_type.lower() in r.get('room_type', '').lower())
+#         and (not price or r.get('price', 0) > price)
+#         and (not price_max or r.get('price', 0) <= price_max)
+#         and (not price_min or r.get('price', 0) >= price_min)
+#         and (not capacity or r.get('capacity', 0) >= capacity)
+#     ]
+#     return filtered
+
+# def fetch_hotel_room_info_from_api(hotel_name: str , room_type: str, room_id: int ):
+#     data = _load_data()
+#     rooms = data.get("rooms", [])
+#     if  hotel_name and  room_type and not room_id:
+#         hotel = fetch_hotel_info_from_api(hotel_name)
+#         if not hotel:
+#             return None 
+#         hotel_id = hotel.get('id')
+#         try:
+#             client = _get_qdrant_client()
+#             embedder = _get_embedder()
+#             query_vector = embedder.encode(room_type).tolist()
+#             must_conditions = [FieldCondition(key="hotel_id", match=MatchValue(value=hotel_id))]
+#             search_result = client.search(
+#                 collection_name="rooms",
+#                 query_vector=query_vector,
+#                 query_filter=Filter(must=must_conditions) if must_conditions else None,
+#                 score_threshold=0.6,
+#                 limit=1,
+#             )
+#             if search_result:
+#                 return search_result[0].payload
+#         except Exception as e:
+#             print(f" Qdrant search failed: {e}, falling back to exact search")
+#             room = next((r for r in rooms if room_type.lower() in r.get('room_type', '').lower() and r.get('hotel_id') == hotel_id), None)
+#             return room
+#     elif room_id:
+#         room = None
+#         if USE_QDRANT:
+#             try:
+#                 client = _get_qdrant_client()
+#                 # Retrieve the point directly by its ID for high efficiency
+#                 points = client.retrieve(
+#                     collection_name="rooms",
+#                     ids=[room_id],
+#                     with_payload=True
+#                 )
+#                 if points:
+#                     room = points[0].payload
+#             except Exception as e:
+#                 print(f" Qdrant retrieve failed: {e}, falling back to exact search")
+
+#         if not room:
+#             room = next((r for r in rooms if r.get('room_id') == room_id), None)
+        
+#         if room:
+#             return room
+#         else:
+#             return None 
+#     return None 
+
+# def check_realse_room_from_api(aim, booking_id, room_id, checkin_date, checkout_date):
+#     if not aim:
+#         return "Please provide a valid aim."
+#     if not checkin_date:
+#         return "Please provide a checkin date."
+#     if not checkout_date:
+#         return "Please provide a checkout date."
+#     data = _load_data()
+#     bookings = data.get("hotelBookings", [])   
+#     checkin_date = to_date(checkin_date)
+#     checkout_date = to_date(checkout_date)
+#     if aim == "book":
+#         if not room_id:
+#             return "Please provide a room id."
+#         unavailable_rooms = [
+#             b for b in bookings
+#             if (b.get('room_id') == room_id) 
+#             and ( b.get('status') != "cancelled" )
+#             and not (((to_date(b.get('checkin_date')) > checkin_date) 
+#             and (checkout_date <= to_date(b.get('checkin_date')))) or  checkin_date 
+#             >= to_date(b.get('checkout_date')) )
+#         ]
+#     elif aim == 'update':
+#         if not booking_id:
+#             return "Please provide a booking id."
+        
+#         unavailable_rooms = [
+#             b for b in bookings
+#             if (b.get('booking_id') != booking_id) 
+#             and ( b.get('status') != "cancelled" )
+#             and not (((to_date(b.get('checkin_date')) > checkin_date) 
+#             and (checkout_date <= to_date(b.get('checkin_date')))) or  checkin_date 
+#             >= to_date(b.get('checkout_date')) )
+#         ]
+#     else:
+#         return "Please provide a valid aim."
+    
+#     return unavailable_rooms if unavailable_rooms else None
+
+# def book_hotel_room_from_api(room_id, hotel_id, checkin_date, checkout_date, total_price):
+#     if not room_id:
+#         return "Please provide a room id."
+#     # if not hotel_id:
+#     #     return "Please provide a hotel id."
+#     if not checkin_date:
+#         return "Please provide a checkin date."
+#     if not checkout_date:
+#         return "Please provide a checkout date."
+#     data = _load_data()
+#     bookings = data.get("hotelBookings", [])
+
+#     new_booking_id = (max([b.get('booking_id', 0) for b in bookings]) + 1) if bookings else 1
+    
+#     new_booking = {
+#         "booking_id": new_booking_id,
+#         "room_id": room_id,
+#         "checkin_date": checkin_date,
+#         "checkout_date": checkout_date,
+#         "total_price": total_price,
+#         "status": "confirmed"
+#     }
+#     bookings.append(new_booking)
+#     data["hotelBookings"] = bookings
+    
+#     _save_data(data)
+    
+#     return new_booking
+
+# def fetch_booking_info_from_api(booking_id):
+#     if USE_QDRANT:
+#         try:
+#             client = _get_qdrant_client()
+#             points = client.retrieve(
+#                 collection_name="hotelBookings",
+#                 ids=[booking_id],
+#                 with_payload=True
+#             )
+#             if points:
+#                 print("Using qrant: ")
+#                 return points[0].payload
+#         except Exception as e:
+#             print(f" Qdrant retrieve for booking failed: {e}, falling back to exact search")
+    
+#     data = _load_data()
+#     bookings = data.get("hotelBookings", [])
+#     booking = next((b for b in bookings if b.get('booking_id') == booking_id), None)
+    
+#     if not booking:
+#         return "Please provide a valid booking id."
+#     return booking
+
+
+
+# def update_hotel_booking_from_api(booking_id, checkin_date, checkout_date, total_price):
+#     if not booking_id:
+#         return "Please provide a booking id."
+#     if not checkin_date:
+#         return "Please provide a checkin date."
+#     if not checkout_date:
+#         return "Please provide a checkout date."
+#     data = _load_data()
+#     bookings = data.get("hotelBookings", [])
+#     booking_to_update = next((b for b in bookings if b.get('booking_id') == booking_id), None)
+#     if not booking_to_update:
+#         return "Please provide a valid booking id."
+#     if checkin_date:
+#         booking_to_update['checkin_date'] = checkin_date
+#     if checkout_date:
+#         booking_to_update['checkout_date'] = checkout_date
+#     if total_price:
+#         booking_to_update['total_price'] = total_price
+#     _save_data(data)
+#     return f"Cập nhật thành công cho mã đặt phòng {booking_id}."
+
+# def cancel_hotel_booking_from_api(booking_id):
+#     if not booking_id:
+#         return "Please provide a booking id."
+#     data = _load_data()
+#     bookings = data.get("hotelBookings", [])
+#     booking_to_cancel = next((b for b in bookings if b.get('booking_id') == booking_id), None)
+#     if not booking_to_cancel:
+#         return "Please provide a valid booking id."
+#     if booking_to_cancel['status'] == "confirmed":
+#         booking_to_cancel['status'] = "cancelled"
+#     _save_data(data)
+#     return f"Đã hủy thành công mã đặt phòng {booking_id}."
 

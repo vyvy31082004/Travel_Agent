@@ -15,6 +15,7 @@ from utils.utils import create_tool_node_with_fallback, CompleteOrEscalate
 from agents.car.agent import car_graph
 from agents.hotel.agent import hotel_graph
 from agents.excursion.agent import excursion_graph
+from agents.flight.agent import flight_graph
 from typing import Optional
 warnings.filterwarnings("ignore")
 load_dotenv()
@@ -72,10 +73,21 @@ class ToExcursionAssistant(BaseModel):
     """Chuyển công việc cho excursion agent để xử lý việc tìm thông tin cho các chuyến dã ngoại"""
         # location: Optional[str] = Field(None, description="The location where the user wants to book a recommended trip.")
         # request: Optional[str] = Field(None, description="Any additional information or requests from the user regarding the trip recommendation.")
+
+class ToFlightAssistant(BaseModel):
+    """Chuyển công việc cho flight agent để xử lý việc tìm thông tin cho các chuyến bay"""
+        # departure_airport_code: Optional[str] = Field(None, description="The departure airport code.")
+        # arrival_airport_code: Optional[str] = Field(None, description="The arrival airport code.")
+        # departure_time: Optional[str] = Field(None, description="The departure time.")
+        # arrival_time: Optional[str] = Field(None, description="The arrival time.")
+        # city_depart: Optional[str] = Field(None, description="The departure city.")
+        # city_arrive: Optional[str] = Field(None, description="The arrival city.")
+        # flight_no: Optional[str] = Field(None, description="The flight number.")
+        # request: Optional[str] = Field(None, description="Any additional information or requests from the user regarding the flight.")
  
 # LLM + tool schemas
 primary_runnable = primary_prompts | llm.bind_tools(
-    [ ToCarRentalAssistant, ToHotelAssistant, ToExcursionAssistant]
+    [ ToCarRentalAssistant, ToHotelAssistant, ToExcursionAssistant, ToFlightAssistant]
 )
  
 def primary_chat(state: dict, config: RunnableConfig) -> dict:
@@ -98,12 +110,12 @@ def primary_chat(state: dict, config: RunnableConfig) -> dict:
 # LangGraph
 builder = StateGraph(State)
  
-def user_info(state: State):
-    # return {"user_info": fetch_user_flight_information.invoke({})}
-    return {"user_info": "1234567890"}
+# def user_info(state: State):
+#     # return {"user_info": fetch_user_flight_information.invoke({})}
+#     return {"user_info": "1234567890"}
  
-builder.add_node("fetch_user_info", user_info)
-builder.add_edge(START, "fetch_user_info")
+# builder.add_node("fetch_user_info", user_info)
+
  
 # Flight
 # builder.add_node(
@@ -164,19 +176,41 @@ def route_book_excursion(state: State):
         return "excursion_assistant"
     return "leave_skill"
 builder.add_edge("excursion_assistant", "leave_skill")
+
+
+#flight 
+builder.add_node(
+    "flight_assistant",
+    RunnableLambda(lambda s: generic_assistant_entry(s, "Flight Booking Assistant", "flight_assistant")) | flight_graph
+)
+def route_book_flight(state: State):
+    tool_calls = state["messages"][-1].tool_calls
+    if tool_calls:
+        did_cancel = any(tc["name"] == CompleteOrEscalate.__name__ for tc in tool_calls)
+        if did_cancel:
+            return "leave_skill"
+        return "flight_assistant"
+    return "leave_skill"
+builder.add_edge("flight_assistant", "leave_skill")
  
 def pop_dialog_state(state: State) -> dict:
     messages = []
     # Đóng tool-call đang active (nếu có)
     active_tcid = state.get("tool_call_id")
     if active_tcid:
+        # Lấy message cuối cùng để làm nội dung phản hồi cho tool call
+        last_message = state["messages"][-1]
+        content = "Task completed."
+        if hasattr(last_message, "content") and last_message.content:
+            content = f"Result from assistant: {last_message.content}"
+            
         messages.append(ToolMessage(
-            content="Task completed. Returning to the host assistant.",
+            content=content,
             tool_call_id=active_tcid,
         ))
         # Xóa để tránh tái kích hoạt
         state["tool_call_id"] = None
- 
+
     queue = list(state.get("tool_queue", []))
     if queue:
         next_tc = queue.pop(0)
@@ -203,6 +237,8 @@ def route_primary_assistant(state: State):
             return "hotel_assistant"
         if name == ToExcursionAssistant.__name__:
             return "excursion_assistant"
+        if name == ToFlightAssistant.__name__:
+            return "flight_assistant"
         return "primary_tools"
     return END
  
@@ -210,14 +246,15 @@ def route_primary_assistant(state: State):
 builder.add_node("leave_skill", pop_dialog_state)
 builder.add_edge("leave_skill", "primary_assistant")
 builder.add_node("primary_assistant", primary_chat)
+builder.add_edge(START, "primary_assistant")
 # builder.add_node("primary_tools", create_tool_node_with_fallback(primary_tools))
 # builder.add_edge("primary_tools", "primary_assistant")
 builder.add_conditional_edges(
     "primary_assistant",
     route_primary_assistant,
-    ["car_rental_assistant", "hotel_assistant", "excursion_assistant", END],
+    ["car_rental_assistant", "hotel_assistant", "excursion_assistant", "flight_assistant", END],
 )
-builder.add_edge("fetch_user_info", "primary_assistant")
+#builder.add_edge("fetch_user_info", "primary_assistant")
  
 memory = InMemorySaver()
 primary_graph = builder.compile(checkpointer=memory)

@@ -95,7 +95,7 @@ def _index_data_to_qdrant(data):
         print(f"Could not fetch existing car rentals points (collection might be new): {e}")
         existing_car_rentals_ids = set()
 
-    car_rentals = data.get("CAR_RENTALS", [])
+    car_rentals = data.get("carRentals", [])
     new_car_rentals = [car_rental for car_rental in car_rentals if car_rental.get('id') not in existing_car_rentals_ids]
     
     if not new_car_rentals:
@@ -117,7 +117,7 @@ def _index_data_to_qdrant(data):
 
     collection_name_bookings = "car_bookings"
 
-    details = data.get("CAR_DETAILS", [])
+    details = data.get("carDetails", [])
     collection_name_car_details = "car_details"
     try:
         existing_car_details_points = client.scroll(
@@ -150,7 +150,7 @@ def _index_data_to_qdrant(data):
                 print(f"Warning: Could not index new car details: {e}")
 
 
-    bookings = data.get("CAR_BOOKINGS", [])
+    bookings = data.get("carBookings", [])
 
     # Always upsert ALL bookings so status updates (e.g., cancelled) are reflected
     if not bookings:
@@ -304,7 +304,7 @@ def search_car_rentals_from_api(
 
 def _search_car_rentals_exact(data, location, name, price_tier, rating):
     """Fallback: Exact search với list comprehension (optimized single-pass)"""
-    results = data.get("CAR_RENTALS", [])
+    results = data.get("carRentals", [])
     
     rating_float = _normalize_number(rating, "float") if rating else None
     if rating and rating_float is None:
@@ -446,7 +446,7 @@ def search_cars_from_api(
 
 def _search_cars_exact(data, rental_id, car_type, price, capacity):
     """Fallback: Exact search cho cars"""
-    results = data.get("CAR_DETAILS", [])
+    results = data.get("carDetails", [])
     
     # Normalize numeric values
     price_float = _normalize_number(price, "float") if price else None
@@ -489,7 +489,7 @@ def fetch_car_rental_info_from_api(car_rental_name: str) -> int | None:
     except Exception as e:
         print(f" Qdrant search failed: {e}, falling back to exact search")
         data = _load_data()
-        results = data.get("car_rentals", [])
+        results = data.get("carRentals", [])
         car_rental = next((cr for cr in results if car_rental_name.lower() in cr.get('name', '').lower()), None)
         return car_rental['id'] if car_rental else None
 
@@ -534,7 +534,7 @@ def fetch_car_info_from_api(car_name: str, car_rental_id: int) -> dict:
     except Exception as e:
         print(f" Qdrant search failed: {e}, falling back to exact search")
         data = _load_data()
-        results = data.get("CAR_DETAILS", [])
+        results = data.get("carDetails", [])
         car = next((c for c in results if car_name.lower() in c.get('car_name', '').lower() and str(c.get('rental_id')) == str(car_rental_id)), None)
         if not car:
             return {}
@@ -554,7 +554,7 @@ def check_realse_car_from_api(aim, booking_id, car_id, start_date, end_date):
     if not end_date:
         return "Please provide a end date."
     data = _load_data()
-    bookings = data.get("CAR_BOOKINGS", [])   
+    bookings = data.get("carBookings", [])   
     start_date = to_date(start_date)
     end_date = to_date(end_date)
     if aim == "book":
@@ -601,13 +601,12 @@ def book_car_rental_in_api(
 ) -> dict:
     """Book a car rental and save it to the cloud API."""
     all_data = _load_data()
-    car_bookings = all_data.get("CAR_BOOKINGS", [])
+    car_bookings = all_data.get("carBookings", [])
 
     new_booking_id = (max([b.get('booking_id', 0) for b in car_bookings]) + 1) if car_bookings else 1
     
     new_booking = {
         "booking_id": new_booking_id,
-        "rental_id": rental_id,
         "car_id": car_id,
         "start_date": start_date,
         "end_date": end_date,
@@ -616,7 +615,7 @@ def book_car_rental_in_api(
         "status": "confirmed"
     }
     car_bookings.append(new_booking)
-    all_data["CAR_BOOKINGS"] = car_bookings
+    all_data["carBookings"] = car_bookings
     
     _save_data(all_data)
     
@@ -625,7 +624,7 @@ def book_car_rental_in_api(
 def update_car_booking_in_api(booking_id: int, new_start_date: str | None = None, new_end_date: str | None = None, total_price: float | None = None) -> dict | None:
     """Update a car booking in the cloud API."""
     all_data = _load_data()
-    car_bookings = all_data.get("CAR_BOOKINGS", [])
+    car_bookings = all_data.get("carBookings", [])
     
     booking_to_update = next((b for b in car_bookings if b.get('booking_id') == booking_id), None)
     
@@ -658,7 +657,7 @@ def fetch_car_booking_info_from_api(booking_id: int) -> dict:
     
     # Fallback to linear search
     data = _load_data()
-    bookings = data.get("CAR_BOOKINGS", [])
+    bookings = data.get("carBookings", [])
     booking = next((b for b in bookings if b.get('booking_id') == booking_id), None)
     
     if not booking:
@@ -670,7 +669,7 @@ def cancel_car_booking_in_api(booking_id: int) -> bool:
     if not booking_id:
         return "Please provide a booking id."
     data = _load_data()
-    bookings = data.get("CAR_BOOKINGS", [])
+    bookings = data.get("carBookings", [])
     booking_to_cancel = next((b for b in bookings if b.get('booking_id') == booking_id), None)
     if not booking_to_cancel:
         return "Please provide a valid booking id."

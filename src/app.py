@@ -12,49 +12,21 @@ def index():
 def chat():
     data = request.get_json()
     user_message = data.get("msg")
-    thread_id = data.get("thread_id")
-    if not thread_id:
-        thread_id = str(uuid.uuid4())
-    config = {
-        "configurable": {
-            "passenger_id": "8149 604011",  # Hardcoded passenger_id for demonstration
-            "thread_id": thread_id,
-        }
-    }
+    thread_id = data.get("thread_id") or str(uuid.uuid4())
+    config = {"configurable": {"thread_id": thread_id}}
+    snapshot = primary_graph.get_state(config)
+    old_count = len(snapshot.values.get("messages", [])) if snapshot.values else 0
+    result = primary_graph.invoke({"messages": ("user", user_message)}, config)
+    new_messages = result["messages"][old_count:]
+    ai_responses = []
+    for msg in new_messages:
+        if msg.type in ("ai", "assistant") and msg.content:
+
+            if "Proceeding with the next requested task" not in msg.content:
+                ai_responses.append(msg.content)
     
-    final_state = None
-    events = primary_graph.stream(
-        {"messages": ("user", user_message)}, config, stream_mode="values"
-    )
-    for event in events:
-        final_state = event
-
-    ai_message = None
-    # Cố gắng lấy message AI cuối cùng có nội dung
-    if final_state and "messages" in final_state and final_state["messages"]:
-        for msg in reversed(final_state["messages"]):
-            msg_type = getattr(msg, "type", "")
-            msg_content = getattr(msg, "content", "")
-            if msg_type in ("ai", "assistant") and msg_content:
-                ai_message = msg_content
-                break
-
-    # Fallback: nếu vẫn chưa tìm được thì dùng phần tử cuối cùng
-    if ai_message is None and final_state and "messages" in final_state and final_state["messages"]:
-        last_msg = final_state["messages"][-1]
-        ai_message = getattr(last_msg, "content", "")
-
-    # Đảm bảo luôn có nội dung trả về
-    if not ai_message:
-        ai_message = "Sorry, I couldn't get a response from the agent."
-
-    # Chuẩn hóa về string
-    if isinstance(ai_message, list):
-        ai_message = " ".join(str(part) for part in ai_message)
-    else:
-        ai_message = str(ai_message)
-
-    return jsonify({"response": ai_message, "thread_id": thread_id})
+    response = "\n\n".join(ai_responses) if ai_responses else "Sorry, I couldn't get a response."
+    return jsonify({"response": response, "thread_id": thread_id})
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True, port=5000)

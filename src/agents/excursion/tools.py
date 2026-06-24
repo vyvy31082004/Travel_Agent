@@ -3,13 +3,18 @@ from langchain_core.tools import tool
 from typing import Optional
 from utils.constant import RANGE_PRICE_TRIP
 from dotenv import load_dotenv
+from datetime import date, datetime
 # Import all necessary functions from the new api_client
 from utils.api_client_excur import (
-    search_trip_from_api,
+    #search_trip_from_api
     fetch_excursion_info_from_api,
     book_excursion_in_api,
     cancel_tour_booking_in_api,
-    update_tour_booking_in_api
+    update_tour_booking_in_api,
+    search_attractions_from_api,
+    fetch_attraction_details_from_api,
+    # fetch_attraction_availability_from_api,
+    # fetch_attraction_reviews_from_api
     # cancel_excursion_in_api,
     # fetch_excursion_info_from_api,
     # fetch_excursion_booking_info_from_api,
@@ -20,90 +25,96 @@ from utils.utils import to_date
 
 load_dotenv()
 
-# def calculate_total_price(price: int, people: int) -> float:
-#     return price * people
 
-# def fetch_excursion_info(trip_id : int) -> dict:
-#     """
-#         Return information of trip.
-#     """
-#     conn = sqlite3.connect(DB_PATH)
-#     curr = conn.cursor()
-#     # Lấy booking
-#     curr.execute("""
-#         SELECT name, location, keywords, price
-#         FROM trip_recommendations
-#         WHERE id = ?
-#     """, (trip_id,))
-#     trip = curr.fetchone()
-#     if not trip:
-#         conn.close()
-#         return {}
-#     name, location, keywords, price = trip
-#     return {
-#         "name": name,
-#         "location": location,
-#         "keywords": keywords,
-#         "price": price
-#     }
-
-# def fetch_excursion_booking_info(booking_id: int) -> dict:
-#     """
-#     Return information of booking excursion and information of trip.
-
-#     """
-#     conn = sqlite3.connect(DB_PATH)
-#     curr = conn.cursor()
-
-#     # Lấy booking
-#     curr.execute("""
-#         SELECT trip_id, date, people, total_price
-#         FROM trip_bookings
-#         WHERE booking_id = ?
-#     """, (booking_id,))
-#     booking = curr.fetchone()
-#     if not booking:
-#         conn.close()
-#         return {}
-#     trip_id, date_str, people, total_price = booking
-#     result = {
-#             "booking_id": booking_id,
-#             "trip_id": trip_id,
-#             "date": date_str,
-#             "people": people,
-#             "total_price": total_price if total_price is not None else None,
-#         }
-#     details = fetch_excursion_info(trip_id)
-#     if details:
-#         result.update({
-#                 "name": details["name"],
-#                 "location": details["location"],
-#                 "keywords": details["keywords"],
-#                 "price": details["price"]
-#             })
-#     return result
     
+# @tool
+# def search_trip(
+#     location: Optional[str] = None,
+#     name: Optional[str] = None,
+#     keywords: Optional[str] = None,
+#     details: Optional[str] = None,
+#     price: Optional[int] = None,
+#     price_min: Optional[int] = None,
+#     price_max: Optional[int] = None
+# ) -> list[dict]:
+#     """
+#     Find trips based on location, name, and keywords, details, price, price min, price max.
+
+#     """
+#     return search_trip_from_api(location, name, keywords, details, price, price_min, price_max)
+
 @tool
 def search_trip(
-    location: Optional[str] = None,
-    name: Optional[str] = None,
-    keywords: Optional[str] = None,
-    details: Optional[str] = None,
-    price: Optional[int] = None,
-    price_min: Optional[int] = None,
-    price_max: Optional[int] = None
+    location: str,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    sort_by: str = "trending",
+    page: int = 1,
+    type_filters: Optional[str] = None,
+    price_filters: Optional[str] = None,
+    limit: int = 3,
 ) -> list[dict]:
     """
-    Find trips based on location, name, and keywords, details, price, price min, price max.
+    Search attractions, activities, experiences, tickets, or tours by location.
 
     """
-    return search_trip_from_api(location, name, keywords, details, price, price_min, price_max)
+    return search_attractions_from_api(
+        location=location,
+        start_date=start_date,
+        end_date=end_date,
+        sort_by=sort_by,
+        page=page,
+        type_filters=type_filters,
+        price_filters=price_filters,
+        limit=limit,
+    )
+
+
+@tool
+def get_trip_details(
+    slug: str,
+) -> dict:
+    """
+    Get detailed information of an attraction.
+    Use slug returned by search_trip.
+    """
+    return fetch_attraction_details_from_api(slug)
+
+
+# @tool
+# def get_trip_availability(
+#     slug: str,
+#     date_value: Optional[str] = None,
+# ) -> dict:
+#     """
+#     Get attraction availability by date.
+#     Use slug returned by search_trip.
+#     """
+#     return fetch_attraction_availability_from_api(
+#         slug=slug,
+#         date_value=date_value,
+#     )
+
+
+# @tool
+# def get_trip_reviews(
+#     attraction_id: str,
+#     page: int = 1,
+# ) -> dict:
+#     """
+#     Get attraction reviews.
+#     Use external_attraction_id returned by search_trip.
+#     """
+#     return fetch_attraction_reviews_from_api(
+#         attraction_id=attraction_id,
+#         page=page,
+#     )
     
 
 
 @tool
 def book_excursion(
-    date: str,
+    tour_date: str,
     people : int,
     trip_name : str,
     ) -> str:
@@ -111,7 +122,14 @@ def book_excursion(
     Book an excursion by trip id, trip name, date, number of people.
 
     """
-
+    if not tour_date:
+        return "Bạn cần cung cấp ngày đặt tour."
+    if not people:
+        return "Bạn cần cung cấp số lượng người."
+    if not trip_name:
+        return "Bạn cần cung cấp tên tour."
+    if to_date(tour_date) < date.today():
+        return "Ngày đặt tour phải sau ngày hiện tại."
     excur_info = fetch_excursion_info_from_api(trip_name)
     if not excur_info:
         return f"Không tìm thấy tour '{trip_name}'."
@@ -121,7 +139,7 @@ def book_excursion(
     try:
         booking_result = book_excursion_in_api(
             excur_id=excur_info["id"],
-            date=date,
+            tour_date=tour_date,
             people=people,
             total_price=excur_price * people,
         )
@@ -133,12 +151,20 @@ def book_excursion(
 def update_tour(
     booking_id: int,
     people: Optional[int] = None, 
-    date: Optional[str] = None,
+    tour_date: Optional[str] = None,
     ) -> str:
     """
     Update booking tour about number of people and/or date tour by booking id.
 
     """
+    if not tour_date:
+        return "Bạn cần cung cấp ngày đặt tour."
+    if not people:
+        return "Bạn cần cung cấp số lượng người."
+    if to_date(tour_date) < date.today():
+        return "Ngày đặt tour phải sau ngày hiện tại."
+    if not booking_id:
+        return "Bạn cần cung cấp mã đặt tour."
     try:
         new_booking = update_tour_booking_in_api(booking_id, new_people=people, new_date=date)
         if new_booking:
@@ -151,6 +177,8 @@ def update_tour(
 @tool
 def cancel_tour(booking_id: int) -> str:
     """Cancel a tour booking using its booking ID."""
+    if not booking_id:
+        return "Bạn cần cung cấp mã đặt tour."
     try:
         success = cancel_tour_booking_in_api(booking_id)
         if success:

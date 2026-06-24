@@ -3,18 +3,34 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 from langgraph.prebuilt import tools_condition
 from langgraph.prebuilt import ToolNode
-from agents.flight.tools import search_flights, search_flight_price
+from agents.flight.tools import (
+    search_flight, 
+    # search_flight_price, 
+    # book_flight, 
+    # provide_passenger_details,
+    # get_booking_tickets,
+    # batch_update_passengers,
+    # cancel_booking
+)
 from prompts.prompt import flight_prompts
 from agents.flight.state import State
 
 load_dotenv()
 
 llm = ChatGoogleGenerativeAI(
-    model = "gemini-2.5-flash",
-    temperature = 0.2,
+    model="gemini-2.5-flash",
+    temperature=0.2,
 )
 
-flight_tools = [search_flights, search_flight_price]
+flight_tools = [
+    search_flight
+    # search_flight_price, 
+    # book_flight, 
+    # provide_passenger_details,
+    # get_booking_tickets,
+    # batch_update_passengers,
+    # cancel_booking
+]
 flight_runnable = flight_prompts|llm.bind_tools(flight_tools )
 tool_node = ToolNode(flight_tools)
 
