@@ -55,8 +55,8 @@ class CompleteOrEscalate(BaseModel):
     reason: str
 
 _CURRENCY_TO_VND_DEFAULTS = {
-    "USD": 25_000,
-    "EUR": 27_000,
+    "USD": 26300,
+    "EUR": 29960,
 }
 
 

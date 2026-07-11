@@ -5,6 +5,9 @@ from typing import Optional
 from utils.api_client_hotel import (
     search_hotel_from_api,
     get_hotel_room_list_from_api,
+    get_hotel_reviews_from_api,
+    get_hotel_facility_from_api,
+    get_hotel_policy_from_api,
     # book_hotel_room_from_api,
     # cancel_hotel_booking_from_api,
 )
@@ -69,6 +72,32 @@ def get_hotel_room_list(
         price_min=price_min,
         price_max=price_max,
         limit=limit,
+    )
+
+def get_hotel_reviews(
+    hotel_id: str,
+    page_number: int = 1,
+    sort_option_id: str = "sort_most_relevant",
+    limit: int = 10,
+) -> dict:
+    return get_hotel_reviews_from_api(
+        hotel_id=hotel_id,
+        page_number=page_number,
+        sort_option_id=sort_option_id,
+        limit=limit,
+    )
+
+def get_hotel_facility(
+    hotel_id: str,
+) -> dict:
+    return get_hotel_facility_from_api(
+        hotel_id=hotel_id,)
+
+def get_hotel_policy(
+    hotel_id: str,
+) -> dict:
+    return get_hotel_policy_from_api(
+        hotel_id=hotel_id,
     )
 # def search_hotel_rooms(
 #     hotel_name: Optional[str] = None,

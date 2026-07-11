@@ -69,7 +69,15 @@ async def get_hotel_tools():
             }
         }
     )
-    return await client.get_tools()
+    tools = await client.get_tools()
+    hotel_tool_names = {
+        "search_hotels_tool",
+        "get_hotel_room_list_tool",
+        "get_hotel_reviews_tool",
+        "get_hotel_facility_tool",
+        "get_hotel_policy_tool",
+    }
+    return [tool for tool in tools if tool.name in hotel_tool_names]
 
 # @tool
 # def search_hotel_rooms(

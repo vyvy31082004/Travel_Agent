@@ -3,6 +3,9 @@ from typing import Optional
 from services.hotel_service import (
     search_hotels,
     get_hotel_room_list,
+    get_hotel_reviews,
+    get_hotel_facility,
+    get_hotel_policy,
     # search_hotel_rooms,
     # book_hotel_room,
     # cancel_hotel_booking,
@@ -97,44 +100,34 @@ def register_hotel_tools(mcp):
             price_max=price_max,
             limit=limit,
         )
-
-    # @mcp.tool()
-    # def search_hotel_rooms_tool(
-    #     hotel_name: Optional[str] = None,
-    #     room_type: Optional[str] = None,
-    #     price: Optional[int] = None,
-    #     price_max: Optional[int] = None,
-    #     price_min: Optional[int] = None,
-    #     capacity: Optional[int] = None,
-    # ):
-    #     """Search hotel rooms by hotel name, room type, price and capacity."""
-    #     return search_hotel_rooms(
-    #         hotel_name=hotel_name,
-    #         room_type=room_type,
-    #         price=price,
-    #         price_max=price_max,
-    #         price_min=price_min,
-    #         capacity=capacity,
-    #     )
-
-    # @mcp.tool()
-    # def book_hotel_room_tool(
-    #     room_id: int,
-    #     hotel_id: int,
-    #     checkin_date: str,
-    #     checkout_date: str,
-    #     total_price: int,
-    # ) -> dict:
-    #     """Book a hotel room."""
-    #     return book_hotel_room(
-    #         room_id=room_id,
-    #         hotel_id=hotel_id,
-    #         checkin_date=checkin_date,
-    #         checkout_date=checkout_date,
-    #         total_price=total_price,
-    #     )
-
-    # @mcp.tool()
-    # def cancel_hotel_booking_tool(booking_id: int):
-    #     """Cancel hotel booking by booking_id."""
-    #     return cancel_hotel_booking(booking_id)
+    @mcp.tool()
+    def get_hotel_reviews_tool(
+        hotel_id: str,
+        page_number: int = 1,
+        sort_option_id: str = "sort_most_relevant",
+        limit: int = 10,
+    ) -> dict:
+        """Get hotel reviews by hotel id."""
+        
+        return get_hotel_reviews(
+            hotel_id=hotel_id,
+            page_number=page_number,
+            sort_option_id=sort_option_id,            
+            limit=limit,
+        )
+    @mcp.tool()
+    def get_hotel_facility_tool(
+        hotel_id: str,
+    ) -> dict:
+        """Get hotel facilities by hotel id."""
+        return get_hotel_facility(
+            hotel_id=hotel_id,
+        )
+    @mcp.tool()
+    def get_hotel_policy_tool(
+        hotel_id: str,
+    ) -> dict:
+        """Get hotel policies by hotel id."""
+        return get_hotel_policy(
+            hotel_id=hotel_id,
+        )

@@ -1,16 +1,29 @@
-from typing import Annotated, Literal, Optional, List, Any, Dict 
-from typing_extensions import TypedDict
+﻿from typing import Annotated, Any, Dict, Literal, Optional
+
 from langgraph.graph.message import AnyMessage, add_messages
+from typing_extensions import TypedDict
+
 
 def update_dialog_stack(left: list[str], right: Optional[str]) -> list[str]:
-    """Cập nhật stack trạng thái hội thoại. """
+    """Cập nhật stack trạng thái hội thoại."""
     if right is None:
         return left
     if right == "pop":
         return left[:-1]
     return left + [right]
 
-class State(TypedDict):
+
+def merge_dicts(left: dict, right: Optional[dict]) -> dict:
+    if right is None:
+        return left
+    return {**left, **right}
+
+
+def keep_latest(left: Any, right: Any) -> Any:
+    return right if right is not None else left
+
+
+class State(TypedDict, total=False):
     messages: Annotated[list[AnyMessage], add_messages]
     user_info: str
     dialog_state: Annotated[
@@ -18,13 +31,13 @@ class State(TypedDict):
             Literal[
                 "primary_assistant",
                 "multi_dispatch",
-                # "flight_assistant",
-                "car_rental_assistant",
+                "flight_assistant",
                 "hotel_assistant",
                 "excursion_assistant",
             ]
         ],
         update_dialog_stack,
     ]
-    tool_call_id: Optional[str]
-    tool_queue: List[Dict[str, Any]]
+    tool_call_id: Annotated[Optional[str], keep_latest]
+    active_assistant: Annotated[Optional[str], keep_latest]
+    flight_token_map: Annotated[Dict[str, Any], merge_dicts]

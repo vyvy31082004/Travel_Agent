@@ -1,4 +1,5 @@
 from langgraph.graph import StateGraph, START
+from langchain_core.runnables import RunnableConfig
 from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 from langgraph.prebuilt import tools_condition
@@ -40,8 +41,8 @@ async def build_hotel_graph():
     hotel_runnable = hotel_prompts | llm.bind_tools(hotel_tools)
     tool_node = ToolNode(hotel_tools)
 
-    async def hotel_chat(state: dict):
-        response = await hotel_runnable.ainvoke(state)
+    async def hotel_chat(state: dict, config: RunnableConfig):
+        response = await hotel_runnable.ainvoke(state, config=config)
         if isinstance(response, list):
             return {"messages": response}
         return {"messages": [response]}
@@ -52,6 +53,6 @@ async def build_hotel_graph():
     graph_builder.add_edge(START, "hotel_chat")
     graph_builder.add_conditional_edges("hotel_chat", tools_condition)
     graph_builder.add_edge("tools", "hotel_chat")
-    return graph_builder.compile()
+    return graph_builder.compile(name="hotel_agent")
 
 # hotel_graph = await build_hotel_graph()

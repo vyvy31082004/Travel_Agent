@@ -1,23 +1,17 @@
 import os
 import requests
 from dotenv import load_dotenv
-from qdrant_client import QdrantClient, models
-from qdrant_client.models import Distance, VectorParams, PointStruct, Filter, FieldCondition, MatchValue, Range
-from sentence_transformers import SentenceTransformer
 import uuid
 import unicodedata
 from utils.utils import to_date
 # Load environment variables from .env file
 from datetime import datetime, timedelta
+from utils.utils import to_date, convert_to_vnd
 load_dotenv()
 from functools import lru_cache
 from datetime import date, datetime
 from typing import Any, Optional
-import unicodedata 
 
-# =========================
-# BOOKING / RAPIDAPI CONFIG
-# =========================
 
 BOOKING_HOST = os.getenv(
     "BOOKING_RAPIDAPI_HOST",
@@ -26,46 +20,42 @@ BOOKING_HOST = os.getenv(
 BOOKING_BASE_URL = f"https://{BOOKING_HOST}/api/v1"
 BOOKING_LANGUAGE_CODE = os.getenv("BOOKING_LANGUAGE_CODE", "vi")
 BOOKING_CURRENCY_CODE = os.getenv("BOOKING_CURRENCY_CODE", "VND")
+COUNTRY_CODE = os.getenv("COUNTRY_CODE", "VN")
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
 
-
+GOOGLE_FLIGHT_HOST = os.getenv("GOOGLE_FLIGHT_RAPIDAPI_HOST", "google-flights4.p.rapidapi.com")
+GOOGLE_FLIGHT_BASE_URL = f"https://{GOOGLE_FLIGHT_HOST}"
 # =========================
 # FLIGHT ENDPOINTS
 # Nếu endpoint trên RapidAPI khác, chỉ sửa 3 dòng này
 # =========================
 
-FLIGHT_LOCATION_ENDPOINT = "/flights/searchDestination"
-FLIGHT_SEARCH_ENDPOINT = "/flights/searchFlights"
-FLIGHT_DETAILS_ENDPOINT = "/flights/getFlightDetails"
+# FLIGHT_LOCATION_ENDPOINT = "/flights/searchAirport"
+# FLIGHT_SEARCH_ENDPOINT = "/flights/searchFlights"
+# FLIGHT_DETAILS_ENDPOINT = "/flights/getFlightDetails"
 
 
-# =========================
-# COMMON HELPERS
-# =========================
-
-def _compact_params(params: dict[str, Any]) -> dict[str, Any]:
-    """
-    Bỏ các param None, "", [] để tránh gửi query rỗng lên API.
-    """
-    return {
-        key: value
-        for key, value in params.items()
-        if value is not None and value != "" and value != []
-    }
 
 
-def _booking_headers() -> dict:
+def _get_headers(header: str) -> dict:
     if not RAPIDAPI_KEY:
         raise RuntimeError("Thiếu RAPIDAPI_KEY trong file .env")
-
+    if header == "booking":
+        return {
+            "X-RapidAPI-Key": RAPIDAPI_KEY,
+            "X-RapidAPI-Host": BOOKING_HOST,
+        }
     return {
-        "X-RapidAPI-Key": RAPIDAPI_KEY,
-        "X-RapidAPI-Host": BOOKING_HOST,
+        "X-RapidAPI-Key": RAPIDAPI_KEY, 
+        "X-RapidAPI-Host": GOOGLE_FLIGHT_HOST,
     }
 
 
-def _booking_get(path: str, params: dict) -> dict | list:
-    url = f"{BOOKING_BASE_URL}{path}"
+def _booking_get(header: str, path: str, params: dict, retries: int = 2) -> dict | list:
+    if header == "booking":
+        url = f"{BOOKING_BASE_URL}{path}"
+    else:
+        url = f"{GOOGLE_FLIGHT_BASE_URL}{path}"
 
     clean_params = {
         key: value
@@ -76,28 +66,50 @@ def _booking_get(path: str, params: dict) -> dict | list:
     print("CALL API:", url)
     print("PARAMS:", clean_params)
 
-    response = requests.get(
-        url,
-        headers=_booking_headers(),
-        params=clean_params,
-        timeout=20,
-    )
+    last_exc: Exception = RuntimeError("Unknown error")
+    for attempt in range(1, retries + 2):
+        try:
+            response = requests.get(
+                url,
+                headers=_get_headers(header),
+                params=clean_params,
+                timeout=40,
+            )
 
-    print("FINAL URL:", response.url)
+            print("FINAL URL:", response.url)
 
-    if response.status_code == 429:
-        raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
+            if response.status_code == 429:
+                raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
 
-    response.raise_for_status()
-    payload = response.json()
+            response.raise_for_status()
+            payload = response.json()
 
-    if isinstance(payload, dict) and payload.get("status") is False:
-        raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
+            if isinstance(payload, dict) and payload.get("status") is False:
+                raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
 
-    if isinstance(payload, dict):
-        return payload.get("data", payload)
+            if isinstance(payload, dict):
+                return payload.get("data", payload)
 
-    return payload
+            return payload
+
+        except requests.exceptions.Timeout as exc:
+            last_exc = exc
+            print(f"Timeout on attempt {attempt}/{retries + 1}, retrying...")
+            continue
+        except requests.exceptions.HTTPError as exc:
+            if response.status_code == 400:
+                try:
+                    error_data = response.json()
+                    return {"error": error_data.get("message", "Lỗi từ API")}
+                except Exception:
+                    pass
+            last_exc = exc
+            print(f"HTTPError on attempt {attempt}/{retries + 1}: {exc}")
+            continue
+        except RuntimeError:
+            raise
+
+    raise last_exc
 
 
 def _parse_date(value: Optional[str]) -> Optional[str]:
@@ -116,113 +128,23 @@ def _parse_date(value: Optional[str]) -> Optional[str]:
     return parsed.isoformat()
 
 
-def _pick_first_value(data: Any, keys: list[str], default: Any = None) -> Any:
+def remove_vietnamese_accents(text: str) -> str:
+    text = text.replace("Đ", "D").replace("đ", "d")
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(
+        char for char in text
+        if unicodedata.category(char) != "Mn"
+    )
+    return text
+
+def _pick_first_airport(data: dict) -> dict |  None:
     """
-    Lấy giá trị đầu tiên tồn tại trong dict.
+    searchLocation có thể trả destinations hoặc products.
+    Theo docs, id có thể nằm trong products hoặc destinations.
     """
-    if not isinstance(data, dict):
-        return default
-
-    for key in keys:
-        value = data.get(key)
-        if value is not None:
-            return value
-
-    return default
-
-
-def _get_first_list(data: Any, keys: list[str]) -> list:
-    """
-    Lấy list từ response có cấu trúc thay đổi.
-    Chỉ tìm ở level hiện tại và data level.
-    """
-    if isinstance(data, list):
-        return data
-
-    if not isinstance(data, dict):
-        return []
-
-    for key in keys:
-        value = data.get(key)
-        if isinstance(value, list):
-            return value
-
-    nested_data = data.get("data")
-
-    if isinstance(nested_data, list):
-        return nested_data
-
-    if isinstance(nested_data, dict):
-        for key in keys:
-            value = nested_data.get(key)
-            if isinstance(value, list):
-                return value
-
-    return []
-
-
-def _find_first_list_recursive(data: Any, keys: list[str]) -> list:
-    """
-    Tìm list trong response JSON, kể cả khi list nằm sâu nhiều lớp.
-    """
-    if isinstance(data, dict):
-        for key in keys:
-            value = data.get(key)
-            if isinstance(value, list):
-                return value
-
-        for value in data.values():
-            result = _find_first_list_recursive(value, keys)
-            if result:
-                return result
-
-    elif isinstance(data, list):
-        for item in data:
-            result = _find_first_list_recursive(item, keys)
-            if result:
-                return result
-
-    return []
-
-
-def _find_url_recursive(data: Any) -> Optional[str]:
-    """
-    Tìm booking_url/url/deeplink trong response.
-    """
-    url_keys = [
-        "url",
-        "booking_url",
-        "bookingUrl",
-        "deeplink",
-        "deepLink",
-        "shareUrl",
-        "share_url",
-        "link",
-    ]
-
-    if isinstance(data, dict):
-        for key in url_keys:
-            value = data.get(key)
-            if isinstance(value, str) and value.startswith("http"):
-                return value
-
-        for value in data.values():
-            result = _find_url_recursive(value)
-            if result:
-                return result
-
-    elif isinstance(data, list):
-        for item in data:
-            result = _find_url_recursive(item)
-            if result:
-                return result
-
-    return None
-
-
-# =========================
-# FLIGHT LOCATION
-# =========================
+    if isinstance(data,list) and len(data) > 0:
+        return data[0]
+    return None 
 
 def search_flight_location_from_api(
     query: str,
@@ -230,12 +152,6 @@ def search_flight_location_from_api(
 ) -> dict:
     """
     Tìm airport/city id cho flight.
-
-    Ví dụ:
-    - query = "Ho Chi Minh"
-    - query = "SGN"
-    - query = "Da Nang"
-    - query = "DAD"
     """
 
     if not query:
@@ -243,91 +159,39 @@ def search_flight_location_from_api(
             "error": "Bạn cần cung cấp điểm đi hoặc điểm đến."
         }
 
+    query = remove_vietnamese_accents(query)
     try:
         data = _booking_get(
-            FLIGHT_LOCATION_ENDPOINT,
-            _compact_params(
-                {
-                    "query": query,
-                    "languagecode": languagecode,
-                }
-            ),
+            "booking",
+            "/flights/searchDestination",
+            {
+                "query": query,
+                "language_code": languagecode,
+                "country_code": COUNTRY_CODE,
+            },
         )
 
-        locations = _find_first_list_recursive(
-            data,
-            keys=[
-                "data",
-                "results",
-                "items",
-                "airports",
-                "destinations",
-                "locations",
-            ],
-        )
+        airport  = _pick_first_airport(data)
 
-        if not locations:
+        if not airport:
             return {
                 "error": f"Không tìm được flight location cho '{query}'.",
                 "raw": data,
             }
-
-        best = locations[0]
-
-        location_id = _pick_first_value(
-            best,
-            [
-                "id",
-                "dest_id",
-                "destination_id",
-                "airport_id",
-                "city_id",
-                "code",
-                "iataCode",
-                "iata",
-            ],
-        )
-
-        code = _pick_first_value(
-            best,
-            [
-                "code",
-                "iataCode",
-                "iata",
-                "airportCode",
-            ],
-        )
-
+        airport_id = airport.get("id")
+        airport_code = airport.get("code")
+        airport_name = airport.get("name")
+        city = airport.get("city")
+        country = airport.get("country")
         return {
             "source": "booking_com15_rapidapi",
             "query": query,
-            "id": location_id,
-            "code": code,
-            "name": _pick_first_value(
-                best,
-                [
-                    "name",
-                    "displayName",
-                    "cityName",
-                    "airportName",
-                    "label",
-                ],
-            ),
-            "city": _pick_first_value(
-                best,
-                [
-                    "city",
-                    "cityName",
-                ],
-            ),
-            "country": _pick_first_value(
-                best,
-                [
-                    "country",
-                    "countryName",
-                ],
-            ),
-            "raw": best,
+            "id": airport_id,
+            "code": airport_code,
+            "name": airport_name,
+            "city": city,
+            "country": country,
+            "raw": airport,
         }
 
     except Exception as e:
@@ -336,1600 +200,719 @@ def search_flight_location_from_api(
         }
 
 
-# =========================
-# NORMALIZE FLIGHT RESULT
-# =========================
 
-def _normalize_flight_segment(segment: Any) -> dict:
-    """
-    Chuẩn hóa từng chặng bay nhỏ.
-    Ví dụ: SGN -> HAN.
-    """
 
-    if not isinstance(segment, dict):
-        return {
-            "raw": segment
+def _normalize_flight_offer(choice: 1|2, flight_offers: list[dict], retun_assign: True|False) -> list[dict]:
+    """
+    Chuẩn hóa flight offers từ Google Flights2 API.
+
+    Cấu trúc thực tế của API:
+    - price, detailToken, airlineCode, airlineNames ở cấp offer
+    - segments[]: mỗi leg có departureAirportCode/Name, arrivalAirportCode/Name,
+                  departureTime (HH:MM), arrivalTime, durationMinutes,
+                  airline.flightNumber, aircraftName, overnight
+    choice = 1 -> one way
+    choice = 2 -> round way
+    """
+    if not flight_offers:
+        return []
+    if not choice:
+        return [{"error": "Bạn cần chọn loại chuyến bay: 1 -> one way, 2 -> round way"}]
+    if choice not in [1, 2]:
+        return [{"error": "Bạn cần chọn loại chuyến bay: 1 -> one way, 2 -> round way"}]
+    result = []
+    for offer in flight_offers:
+        segments = offer.get("segments") or []
+        if not segments:
+            continue
+        # first_seg = segments[0]
+        # last_seg = segments[-1]
+        # first_airline = first_seg.get("airline") or {}
+        normalized_segments = [
+                {
+                    "departure_airport_code": seg.get("departureAirportCode"),
+                    "departure_airport_name": seg.get("departureAirportName"),
+                    "arrival_airport_code": seg.get("arrivalAirportCode"),
+                    "arrival_airport_name": seg.get("arrivalAirportName"),
+                    "departure_time": seg.get("departureTime"),
+                    "departure_date": seg.get("departureDate"),
+                    "arrival_time": seg.get("arrivalTime"),
+                    "arrival_date": seg.get("arrivalDate"),
+                    "cabin_class": seg.get("cabinClass"),
+                    "duration_minutes": seg.get("durationMinutes"),
+                    "flight_number": (seg.get("airline") or {}).get("flightNumber"),
+                    "airline_code": (seg.get("airline") or {}).get("airlineCode"),
+                    "airline_name": (seg.get("airline") or {}).get("airlineName"),
+                    "aircraftName": seg.get("aircraftName"),
+                    "flight_ID": seg.get("flightId"),
+                    "seat_width": seg.get("seatWidth"),
+                }
+                for seg in segments
+            ]
+        flight_info = {}
+        if choice == 1:
+            if retun_assign == False:
+                offer_id = f"FL-{uuid.uuid4().hex[:6].upper()}"
+                flight_info["Offer_ID"] = offer_id
+            flight_info.update({
+                "price": offer.get("price"),
+                "airline_code": offer.get("airlineCode"),
+                "airline_name": offer.get("airlineNames"),
+                "stops": offer.get("stops"),
+                "duration_minutes": offer.get("duration"),
+                "departure_time": offer.get("departureTime"),
+                "departure_date": offer.get("departureDate"),
+                "arrival_time": offer.get("arrivalTime"),
+                "arrival_date": offer.get("arrivalDate"),
+                "departure_airport_code": offer.get("departureAirportCode"),
+                "arrival_airport_code": offer.get("arrivalAirportCode"),
+                "segments": normalized_segments,
+            })
+            # Nếu choice == 1, tạo bản sao (hoặc thêm trực tiếp) khóa detailToken
+            result.append({
+                **flight_info,
+                "detailToken": offer.get("detailToken")
+            })
+        elif choice == 2:
+            flight_info = {
+                "price": offer.get("price"),
+                "airline_code": offer.get("airlineCode"),
+                "airline_name": offer.get("airlineNames"),
+                "stops": offer.get("stops"),
+                "duration_minutes": offer.get("duration"),
+                "departure_time": offer.get("departureTime"),
+                "departure_date": offer.get("departureDate"),
+                "arrival_time": offer.get("arrivalTime"),
+                "arrival_date": offer.get("arrivalDate"),
+                "departure_airport_code": offer.get("departureAirportCode"),
+                "arrival_airport_code": offer.get("arrivalAirportCode"),
+                "segments": normalized_segments,
+            }
+
+            result.append({
+                **flight_info,
+                "returningToken": offer.get("returningToken")
+            })
+    return result
+
+
+
+
+
+
+_AIRLINE_NAME_TO_CODE: dict[str, str] = {
+    # Vietnamese carriers
+    "vietjet": "VJ",
+    "vietjet air": "VJ",
+    "vj": "VJ",
+    "vietnam airlines": "VN",
+    "vn": "VN",
+    "bamboo airways": "QH",
+    "bamboo": "QH",
+    "qh": "QH",
+    "vietravel airlines": "VU",
+    "vietravel": "VU",
+    "vu": "VU",
+    "pacific airlines": "BL",
+    "bl": "BL",
+    # Common international carriers
+    "thai airways": "TG",
+    "tg": "TG",
+    "singapore airlines": "SQ",
+    "sq": "SQ",
+    "cathay pacific": "CX",
+    "cx": "CX",
+    "korean air": "KE",
+    "ke": "KE",
+    "asiana": "OZ",
+    "oz": "OZ",
+    "air asia": "AK",
+    "airasia": "AK",
+    "ak": "AK",
+    "qatar airways": "QR",
+    "qr": "QR",
+    "emirates": "EK",
+    "ek": "EK",
+    "lufthansa": "LH",
+    "lh": "LH",
+    "air france": "AF",
+    "af": "AF",
+    "turkish airlines": "TK",
+    "tk": "TK",
+}
+
+
+def _resolve_airline_codes(airlines: Optional[str]) -> Optional[str]:
+    """
+    Convert airline name(s) to IATA code(s).
+    Input can be a comma-separated list of names or codes, e.g. "VietJet,Vietnam Airlines".
+    Returns comma-separated IATA codes, e.g. "VJ,VN".
+    If a token is already an unknown code it is passed through as-is.
+    """
+    if not airlines:
+        return None
+    resolved = []
+    for token in airlines.split(","):
+        key = token.strip().lower()
+        resolved.append(_AIRLINE_NAME_TO_CODE.get(key, token.strip()))
+    return ",".join(resolved)
+
+
+def _map_cabin_class(cabin_class: str) -> str:
+    """economy→1, premium_economy→2, business→3, first→4"""
+    mapping = {
+        "economy": "1",
+        "premium economy": "2",
+        "premium_economy": "2",
+        "business": "3",
+        "first": "4",
+    }
+    return mapping.get(cabin_class.lower().strip(), "1")
+
+
+def _map_sort_by(sort_by: str) -> str:
+    """top/best→1, price→2, departure_time→3, arrival_time→4, duration→5, emissions→6"""
+    mapping = {
+        "top": "1",
+        "best": "1",
+        "price": "2",
+        "cheap": "2",
+        "departure_time": "3",
+        "departure": "3",
+        "arrival_time": "4",
+        "arrival": "4",
+        "duration": "5",
+        "emissions": "6",
+    }
+    return mapping.get(sort_by.lower().strip(), "1")
+
+
+
+def _parse_flight_time(value: str) -> datetime | None:
+    if not value:
+        return None
+    for fmt in ("%d-%m-%Y %I:%M %p", "%Y-%m-%d %H:%M", "%H:%M"):
+        try:
+            return datetime.strptime(value.strip(), fmt)
+        except ValueError:
+            continue
+    return None
+
+
+def _time_range_from_center(
+    center: str,
+    tolerance_minutes: int = 60,
+) -> tuple[str, str]:
+    """
+    Tính khoảng [after, before] xung quanh giờ trung tâm.
+    Clamp về [00:00, 23:59] để tránh tràn ngày.
+    Ví dụ: center="08:30", tolerance=60 → ("07:30", "09:30")
+    """
+    base = datetime.strptime(center.strip(), "%H:%M")
+    after_dt = base - timedelta(minutes=tolerance_minutes)
+    before_dt = base + timedelta(minutes=tolerance_minutes)
+
+    midnight = datetime.strptime("00:00", "%H:%M")
+    end_of_day = datetime.strptime("23:59", "%H:%M")
+
+    after_dt = max(after_dt, midnight)
+    before_dt = min(before_dt, end_of_day)
+
+    return after_dt.strftime("%H:%M"), before_dt.strftime("%H:%M")
+
+
+def _time_in_range(dt: datetime | None, after: str | None, before: str | None) -> bool:
+    if dt is None:
+        return True
+    if after:
+        after_t = datetime.strptime(after, "%H:%M").time()
+        if dt.time() < after_t:
+            return False
+    if before:
+        before_t = datetime.strptime(before, "%H:%M").time()
+        if dt.time() > before_t:
+            return False
+    return True
+
+
+def _filter_flights_by_time(
+    flights: list[dict],
+    departure_after: Optional[str] = None,
+    departure_before: Optional[str] = None,
+    arrival_after: Optional[str] = None,
+    arrival_before: Optional[str] = None,
+) -> list[dict]:
+    """
+    Lọc danh sách flight offers theo giờ bay (chỉ xét chiều đi):
+    - departure_time trong khoảng departure_after/before
+    - arrival_time trong khoảng arrival_after/before
+    """
+    if not flights:
+        return []
+
+    filtered = []
+    for offer in flights:
+        departure = _parse_flight_time(offer.get("departure_time"))
+        arrival = _parse_flight_time(offer.get("arrival_time"))
+
+        if not _time_in_range(departure, departure_after, departure_before):
+            continue
+        if not _time_in_range(arrival, arrival_after, arrival_before):
+            continue
+
+        filtered.append(offer)
+
+    return filtered
+
+def search_one_way_flights_from_api(
+    origin: str,
+    destination: str,
+    departure_date: Optional[str] = None,
+    adults: int = 1,
+    children: int = 0,
+    infant_on_lap: int = 0,
+    infant_in_seat: int = 0,
+    cabin_class: str = "economy",
+    currency_code: str = BOOKING_CURRENCY_CODE,
+    languagecode: str = BOOKING_LANGUAGE_CODE,
+    countrycode: str = COUNTRY_CODE,
+    sort_by: str = "best",
+    stops: str = "0",
+    alliances: Optional[str] = None,
+    airlines: Optional[str] = None,
+    carry_on_bag: int = 0,
+    max_price: Optional[int] = None,
+    emissions: int = 0,
+    layover_duration: Optional[str] = None,
+    airports: Optional[str] = None,
+    flight_duration: Optional[str] = None,
+    # --- Lọc theo giờ bay (post-filter) ---
+    preferred_departure_time: Optional[str] = None,
+    preferred_arrival_time: Optional[str] = None,
+    # preferred_return_departure_time: Optional[str] = None,
+    # preferred_return_arrival_time: Optional[str] = None,
+    time_tolerance_minutes: int = 60,
+    limit: int = 10,
+) -> list[dict]:
+    """
+    Tìm kiếm chuyến bay một chiều.
+    cabinClass: economy/premium_economy/business/first → 1/2/3/4
+    sort_by: best/price/departure_time/arrival_time/duration/emissions → 1-6
+    stops: "0"=any, "1"=nonstop, "2"=1 stop or fewer, "3"=2 stops or fewer
+    preferred_departure_time: "HH:MM" — lọc trong khoảng ±time_tolerance_minutes (mặc định ±60 phút)
+    preferred_arrival_time: "HH:MM" — lọc trong khoảng ±time_tolerance_minutes
+    """
+    if not origin:
+        return [{"error": "Bạn cần cung cấp điểm đi."}]
+    if not destination:
+        return [{"error": "Bạn cần cung cấp điểm đến."}]
+    if not departure_date:
+        return [{"error": "Bạn cần cung cấp ngày bay departure_date để tìm chuyến bay."}]
+    if adults < 1:
+        return [{"error": "Số người lớn adults phải >= 1."}]
+
+    departure_date = to_date(departure_date) if departure_date else None
+
+    if departure_date and departure_date < date.today():
+        return [{"error": "departure_date phải từ hôm nay trở về sau."}]
+
+    try:
+        origin_info = search_flight_location_from_api(origin)
+        destination_info = search_flight_location_from_api(destination)
+
+        if origin_info.get("error"):
+            return [origin_info]
+        if destination_info.get("error"):
+            return [destination_info]
+
+        departure_id = origin_info.get("code") or origin_info.get("id")
+        arrival_id = destination_info.get("code") or destination_info.get("id")
+
+        if not departure_id:
+            return [{"error": "Không tìm được mã sân bay đi (departureId)."}]
+        if not arrival_id:
+            return [{"error": "Không tìm được mã sân bay đến (arrivalId)."}]
+
+        params = {
+            "departureId":    departure_id,
+            "arrivalId":      arrival_id,
+            "departureDate":  departure_date,
+            "adults":         str(adults),
+            "children":       str(children),
+            "infantsOnLap":   str(infant_on_lap),
+            "infantsInSeat":  str(infant_in_seat),
+            "cabinClass":     _map_cabin_class(cabin_class),
+            "sort":           _map_sort_by(sort_by),
+            "stops":          str(stops),
+            "currency":       currency_code,
+            "language":       languagecode,
+            "location":       countrycode,
+            "carryOnBag":     str(carry_on_bag),
+            "maxPrice":       str(max_price) if max_price is not None else None,
+            "emissions":      str(emissions),
+            "alliances":      alliances,
+            "airlines":       _resolve_airline_codes(airlines),
+            "layoverDuration": layover_duration,
+            "airports":       airports,
+            "flightDuration": flight_duration,
         }
 
-    return {
-        "airline": _pick_first_value(
-            segment,
-            [
-                "airline",
-                "airlineName",
-                "carrierName",
-                "marketingCarrier",
-            ],
-        ),
-        "flight_number": _pick_first_value(
-            segment,
-            [
-                "flightNumber",
-                "flight_number",
-                "number",
-            ],
-        ),
-        "departure_airport": _pick_first_value(
-            segment,
-            [
-                "departureAirport",
-                "departure_airport",
-                "from",
-                "origin",
-            ],
-        ),
-        "arrival_airport": _pick_first_value(
-            segment,
-            [
-                "arrivalAirport",
-                "arrival_airport",
-                "to",
-                "destination",
-            ],
-        ),
-        "departure_time": _pick_first_value(
-            segment,
-            [
-                "departureTime",
-                "departure_time",
-                "departTime",
-                "depart_at",
-            ],
-        ),
-        "arrival_time": _pick_first_value(
-            segment,
-            [
-                "arrivalTime",
-                "arrival_time",
-                "arriveTime",
-                "arrive_at",
-            ],
-        ),
-        "duration": _pick_first_value(
-            segment,
-            [
-                "duration",
-                "durationMinutes",
-                "durationInMinutes",
-            ],
-        ),
-        "raw": segment,
-    }
 
+        data = _booking_get("google_flight", "/flights/search-one-way", params)
 
-def _normalize_flight_offer(offer: Any) -> dict:
-    """
-    Chuẩn hóa một flight offer.
-    Giữ raw để debug vì mỗi API có thể trả field khác nhau.
-    """
+        top = _normalize_flight_offer(1, data.get("topFlights") or [], retun_assign=False)
+        other = _normalize_flight_offer(1, data.get("otherFlights") or [], retun_assign=False)
 
-    if not isinstance(offer, dict):
-        return {
-            "raw": offer
-        }
+        # --- Lọc theo giờ bay nếu user chỉ định ---
+        dep_after = dep_before = arr_after = arr_before = None
 
-    detail_token = _pick_first_value(
-        offer,
-        [
-            "token",
-            "flightToken",
-            "bookingToken",
-            "itineraryToken",
-            "detailToken",
-        ],
-    )
+        if preferred_departure_time:
+            dep_after, dep_before = _time_range_from_center(
+                preferred_departure_time, time_tolerance_minutes
+            )
+        if preferred_arrival_time:
+            arr_after, arr_before = _time_range_from_center(
+                preferred_arrival_time, time_tolerance_minutes
+            )
 
-    offer_id = _pick_first_value(
-        offer,
-        [
-            "id",
-            "offerId",
-            "flightId",
-            "itineraryId",
-            "token",
-            "flightToken",
-            "bookingToken",
-        ],
-    )
+        if any([dep_after, arr_after]):
+            top = _filter_flights_by_time(
+                top,
+                outbound_departure_after=dep_after,
+                outbound_departure_before=dep_before,
+                outbound_arrival_after=arr_after,
+                outbound_arrival_before=arr_before,
+                origin_city_code=departure_id,
+                destination_city_code=arrival_id,
+            )
+            other = _filter_flights_by_time(
+                other,
+                outbound_departure_after=dep_after,
+                outbound_departure_before=dep_before,
+                outbound_arrival_after=arr_after,
+                outbound_arrival_before=arr_before,
+                origin_city_code=departure_id,
+                destination_city_code=arrival_id,
+            )
 
-    segments_raw = _find_first_list_recursive(
-        offer,
-        keys=[
-            "segments",
-            "legs",
-            "routes",
-            "flights",
-        ],
-    )
+        return [{
+            "source": "google-flights4.p.rapidapi",
+            "topFlights": top,
+            "otherFlights": other[:limit],
+        }]
 
-    segments = [
-        _normalize_flight_segment(segment)
-        for segment in segments_raw
-    ]
+    except Exception as e:
+        return [{"error": f"Lỗi khi gọi searchFlights: {str(e)}"}]
 
-    return {
-        "source": "booking_com15_rapidapi",
-        "offer_id": offer_id,
-        "detail_token": detail_token,
-        "airline": _pick_first_value(
-            offer,
-            [
-                "airline",
-                "airlineName",
-                "carrierName",
-                "mainAirline",
-            ],
-        ),
-        "departure_time": _pick_first_value(
-            offer,
-            [
-                "departureTime",
-                "departure_time",
-                "departTime",
-            ],
-        ),
-        "arrival_time": _pick_first_value(
-            offer,
-            [
-                "arrivalTime",
-                "arrival_time",
-                "arriveTime",
-            ],
-        ),
-        "duration": _pick_first_value(
-            offer,
-            [
-                "duration",
-                "durationMinutes",
-                "durationInMinutes",
-            ],
-        ),
-        "stops": _pick_first_value(
-            offer,
-            [
-                "stops",
-                "numberOfStops",
-                "stopCount",
-            ],
-        ),
-        "price": _pick_first_value(
-            offer,
-            [
-                "price",
-                "totalPrice",
-                "total_price",
-                "priceBreakdown",
-                "amount",
-            ],
-        ),
-        "currency": _pick_first_value(
-            offer,
-            [
-                "currency",
-                "currencyCode",
-                "currency_code",
-            ],
-        ),
-        "booking_url": _find_url_recursive(offer),
-        "segments": segments,
-        "raw": offer,
-    }
-
-
-# =========================
-# SEARCH FLIGHTS
-# =========================
-
-def search_flights_from_api(
+def search_roundtrip_flights_from_api(
     origin: str,
     destination: str,
     departure_date: Optional[str] = None,
     return_date: Optional[str] = None,
-    trip_type: str = "one_way",
     adults: int = 1,
     children: int = 0,
-    infants: int = 0,
+    infant_on_lap: int = 0,
+    infant_in_seat: int = 0,
     cabin_class: str = "economy",
-    sort_by: str = "best",
-    page: int = 1,
     currency_code: str = BOOKING_CURRENCY_CODE,
     languagecode: str = BOOKING_LANGUAGE_CODE,
-    limit: int = 10,
-) -> list[dict]:
-    """
-    Search flights theo điểm đi, điểm đến, ngày bay.
-
-    Flight khác attraction:
-    - Không search nếu thiếu departure_date.
-    - Không tự gán ngày mặc định.
-    - Nếu user chưa nhập ngày, trả error để agent hỏi lại ngày bay.
-
-    Flow:
-    1. origin -> /flights/searchDestination -> lấy origin id/code
-    2. destination -> /flights/searchDestination -> lấy destination id/code
-    3. gọi /flights/searchFlights
-    4. normalize kết quả flight offers
-    """
+    countrycode: str = COUNTRY_CODE,
+    sort_by: str = "best",
+    stops: str = "0",
+    alliances: Optional[str] = None,
+    airlines: Optional[str] = None,
+    carry_on_bag: int = 0,
+    max_price: Optional[int] = None,
+    emissions: int = 0,
+    layover_duration: Optional[str] = None,
+    airports: Optional[str] = None,
+    flight_duration: Optional[str] = None,
+    # --- Lọc theo giờ bay (post-filter) ---
+    preferred_departure_time: Optional[str] = None,       # Giờ khởi hành chiều đi
+    preferred_arrival_time: Optional[str] = None,         # Giờ hạ cánh chiều đi
+    preferred_return_departure_time: Optional[str] = None, # Giờ khởi hành chiều về
+    preferred_return_arrival_time: Optional[str] = None,   # Giờ hạ cánh chiều về
+    time_tolerance_minutes: int = 90,
+    limit: int = 2,
+):
 
     if not origin:
-        return [
-            {
-                "error": "Bạn cần cung cấp điểm đi."
-            }
-        ]
-
+        return [{"error": "Bạn cần cung cấp điểm đi."}]
     if not destination:
-        return [
-            {
-                "error": "Bạn cần cung cấp điểm đến."
-            }
-        ]
-
+        return [{"error": "Bạn cần cung cấp điểm đến."}]
     if not departure_date:
-        return [
-            {
-                "error": "Bạn cần cung cấp ngày bay departure_date để tìm chuyến bay."
-            }
-        ]
-
+        return [{"error": "Bạn cần cung cấp ngày bay departure_date để tìm chuyến bay."}]
+    if not return_date:
+        return [{"error": "Bạn cần cung cấp ngày bay return_date để tìm chuyến bay."}]
     if adults < 1:
-        return [
-            {
-                "error": "Số người lớn adults phải >= 1."
-            }
-        ]
+        return [{"error": "Số người lớn adults phải >= 1."}]
 
-    if page < 1:
-        return [
-            {
-                "error": "page phải >= 1."
-            }
-        ]
+    departure_date = to_date(departure_date) if departure_date else None
+    return_date = to_date(return_date) if return_date else None
 
-    if limit < 1:
-        return [
-            {
-                "error": "limit phải >= 1."
-            }
-        ]
+    if departure_date and departure_date < date.today():
+        return [{"error": "departure_date phải từ hôm nay trở về sau."}]
+
+    if return_date and return_date < departure_date:
+        return [{"error": "Ngày về (return_date) phải sau hoặc bằng ngày đi."}]
 
     try:
-        parsed_departure_date = _parse_date(departure_date)
-        parsed_return_date = _parse_date(return_date)
-
-        if trip_type not in ["one_way", "round_trip"]:
-            return [
-                {
-                    "error": "trip_type chỉ nhận 'one_way' hoặc 'round_trip'."
-                }
-            ]
-
-        if trip_type == "round_trip":
-            if not parsed_return_date:
-                return [
-                    {
-                        "error": "Vé khứ hồi cần có return_date."
-                    }
-                ]
-
-            if parsed_return_date < parsed_departure_date:
-                return [
-                    {
-                        "error": "return_date phải sau hoặc bằng departure_date."
-                    }
-                ]
-
-        origin_info = search_flight_location_from_api(
-            origin,
-            languagecode=languagecode,
-        )
+        origin_info = search_flight_location_from_api(origin)
+        destination_info = search_flight_location_from_api(destination)
 
         if origin_info.get("error"):
             return [origin_info]
-
-        destination_info = search_flight_location_from_api(
-            destination,
-            languagecode=languagecode,
-        )
-
         if destination_info.get("error"):
             return [destination_info]
 
-        origin_id = origin_info.get("id") or origin_info.get("code")
-        destination_id = destination_info.get("id") or destination_info.get("code")
+        departure_id = origin_info.get("code") or origin_info.get("id")
+        arrival_id = destination_info.get("code") or destination_info.get("id")
 
-        if not origin_id:
-            return [
-                {
-                    "error": f"Không lấy được origin id/code cho '{origin}'.",
-                    "raw": origin_info,
-                }
-            ]
+        if not departure_id:
+            return [{"error": "Không tìm được mã sân bay đi (departureId)."}]
+        if not arrival_id:
+            return [{"error": "Không tìm được mã sân bay đến (arrivalId)."}]
 
-        if not destination_id:
-            return [
-                {
-                    "error": f"Không lấy được destination id/code cho '{destination}'.",
-                    "raw": destination_info,
-                }
-            ]
+        params = {
+            "departureId":    departure_id,
+            "arrivalId":      arrival_id,
+            "departureDate":  departure_date,
+            "arrivalDate":    return_date,
+            "adults":         str(adults),
+            "children":       str(children),
+            "infantsOnLap":   str(infant_on_lap),
+            "infantsInSeat":  str(infant_in_seat),
+            "cabinClass":     _map_cabin_class(cabin_class),
+            "sort":           _map_sort_by(sort_by),
+            "stops":          str(stops),
+            "currency":       currency_code,
+            "language":       languagecode,
+            "location":       countrycode,
+            "carryOnBag":     str(carry_on_bag),
+            "maxPrice":       str(max_price) if max_price is not None else None,
+            "emissions":      str(emissions),
+            "alliances":      alliances,
+            "airlines":       _resolve_airline_codes(airlines),
+            "layoverDuration": layover_duration,
+            "airports":       airports,
+            "flightDuration": flight_duration,
+        }
+        # params["returnDate"] = return_date
 
-        params = _compact_params(
-            {
-                "fromId": origin_id,
-                "toId": destination_id,
-                "departDate": parsed_departure_date,
-                "returnDate": parsed_return_date if trip_type == "round_trip" else None,
-                "tripType": trip_type,
-                "adults": adults,
-                "children": children,
-                "infants": infants,
-                "cabinClass": cabin_class,
-                "sortBy": sort_by,
-                "page": page,
-                "currency_code": currency_code,
-                "languagecode": languagecode,
-            }
-        )
+        data = _booking_get("google_flight", "/flights/search-roundtrip", params)
 
-        data = _booking_get(
-            FLIGHT_SEARCH_ENDPOINT,
-            params,
-        )
+        outbound_top = _normalize_flight_offer(2, data.get("topFlights") or [], retun_assign=True)
+        outbound_other = _normalize_flight_offer(2, data.get("otherFlights") or [], retun_assign=True)
 
-        offers_raw = _find_first_list_recursive(
-            data,
-            keys=[
-                "flights",
-                "flightOffers",
-                "offers",
-                "itineraries",
-                "results",
-                "items",
-                "data",
-            ],
-        )
 
-        flights = [
-            _normalize_flight_offer(offer)
-            for offer in offers_raw
-        ]
+        # --- Lọc giờ chiều đi ---
+        dep_after = dep_before = arr_after = arr_before = None
+        if preferred_departure_time:
+            dep_after, dep_before = _time_range_from_center(
+                preferred_departure_time, time_tolerance_minutes
+            )
+        if preferred_arrival_time:
+            arr_after, arr_before = _time_range_from_center(
+                preferred_arrival_time, time_tolerance_minutes
+            )
 
-        return flights[:limit]
+        if dep_after or dep_before or arr_after or arr_before:
+            outbound_top = _filter_flights_by_time(
+                outbound_top,
+                departure_after=dep_after,
+                departure_before=dep_before,
+                arrival_after=arr_after,
+                arrival_before=arr_before,
+            )
+            outbound_other = _filter_flights_by_time(
+                outbound_other,
+                departure_after=dep_after,
+                departure_before=dep_before,
+                arrival_after=arr_after,
+                arrival_before=arr_before,) 
+        inbound_params_base = {
+            "arrivalDate":    return_date,
+            "language":       languagecode,
+            "location":       countrycode,
+            "currency":       currency_code,
+            "adults":         str(adults),
+            "children":       str(children),
+            "infantsOnLap":   str(infant_on_lap),
+            "infantsInSeat":  str(infant_in_seat),
+            "cabinClass":     _map_cabin_class(cabin_class),
+            "sort":           _map_sort_by(sort_by),
+            "stops":          str(stops),
+            "alliances":      alliances,
+            "carryOnBag":     str(carry_on_bag),
+            "maxPrice":       str(max_price) if max_price is not None else None,
+            "emissions":      str(emissions),
+            "airlines":       _resolve_airline_codes(airlines),
+            "layoverDuration": layover_duration,
+            "airports":       airports,
+            "flightDuration": flight_duration,
+        }
+
+        #Lọc giờ chiều về
+        ret_dep_after = ret_dep_before = ret_arr_after = ret_arr_before = None
+        if preferred_return_departure_time:
+            ret_dep_after, ret_dep_before = _time_range_from_center(
+                preferred_return_departure_time, time_tolerance_minutes
+            )
+        if preferred_return_arrival_time:
+            ret_arr_after, ret_arr_before = _time_range_from_center(
+                preferred_return_arrival_time, time_tolerance_minutes
+            )
+
+
+        def _fetch_inbound(outbound_offer: dict) -> dict:
+            """Gọi roundtrip-returning và ghép chuyến về vào chuyến đi tương ứng."""
+            token = outbound_offer.get("returningToken")
+            if not token:
+                return {**outbound_offer, "inbound_options": []}
+            try:
+                ret_data = _booking_get("google_flight", "/flights/roundtrip-returning", {
+                    "returningToken": token,
+                    **inbound_params_base,
+                })
+                # inbound = (
+                #     _normalize_flight_offer(2, ret_data.get("topFlights") or []) +
+                #     _normalize_flight_offer(2, ret_data.get("otherFlights") or [])
+                # )
+                pairs = []
+                inbound = (
+                    _normalize_flight_offer(1, ret_data.get("topFlights") or [], retun_assign=True) +
+                    _normalize_flight_offer(1, ret_data.get("otherFlights") or [], retun_assign=True)
+                )
+                if ret_dep_after or ret_dep_before or ret_arr_after or ret_arr_before:
+                    inbound = _filter_flights_by_time(
+                        inbound,
+                        departure_after=ret_dep_after,
+                        departure_before=ret_dep_before,
+                        arrival_after=ret_arr_after,
+                        arrival_before=ret_arr_before,
+                    )
+                for inb in inbound:
+                    offer_id = f"FL-{uuid.uuid4().hex[:6].upper()}"
+                    pairs.append({
+                        "Offer_ID": offer_id,
+                        "price": inb.get("price"),
+                        "detailToken": inb.get("detailToken"),
+                        "inbound": {
+                            k: v for k, v in inb.items()
+                            if k not in ("detailToken")
+                        },
+                        "outbound": {
+                            k: v for k, v in outbound_offer.items()
+                            if k not in ("returningToken")
+                        },
+                    })
+                
+
+
+            except Exception as exc:
+                inbound = [{"error": f"Không lấy được chuyến bay chiều về: {str(exc)}"}]
+            return pairs 
+
+        # paired_top   = [_fetch_inbound(o) for o in outbound_top]
+        paired_top = []
+        for o in outbound_top:
+            paired_top.extend(_fetch_inbound(o))
+        paired_other = []
+        for o in outbound_other:
+            paired_other.extend(_fetch_inbound(o))
+
+       
+
+        # # --- Lọc giờ chiều về (bên trong inbound_options của mỗi cặp) ---
+        # ret_dep_after = ret_dep_before = ret_arr_after = ret_arr_before = None
+        # if preferred_return_departure_time:
+        #     ret_dep_after, ret_dep_before = _time_range_from_center(
+        #         preferred_return_departure_time, time_tolerance_minutes
+        #     )
+        # if preferred_return_arrival_time:
+        #     ret_arr_after, ret_arr_before = _time_range_from_center(
+        #         preferred_return_arrival_time, time_tolerance_minutes
+        #     )
+
+        # if ret_dep_after or ret_dep_before or ret_arr_after or ret_arr_before:
+        #     for pair in paired_top + paired_other:
+        #         pair["inbound_options"] = _filter_flights_by_time(
+        #             pair.get("inbound_options") or [],
+        #             outbound_departure_after=ret_dep_after,
+        #             outbound_departure_before=ret_dep_before,
+        #             outbound_arrival_after=ret_arr_after,
+        #             outbound_arrival_before=ret_arr_before,
+        #         )
+        return [{
+            "source": "google-flights4.p.rapidapi",
+            "topFlights": paired_top,
+            "otherFlights": paired_other,
+        }]
 
     except Exception as e:
-        return [
-            {
-                "error": f"Lỗi khi gọi searchFlights: {str(e)}"
-            }
-        ]
+        return [{"error": f"Lỗi khi gọi searchFlights: {str(e)}"}]
 
+def _normalize_get_booking_result(data: dict) -> dict:
+    if "error" in data:
+        return data
+    options = data.get("bookingOptions") or []
+    result = []
+    for op in options:
+        booking_link = op.get("bookingLink") or []
+        for link in booking_link:
+            booking_price = op.get("listedPrice") or {}
+            result.append({
+                "bookingLink": link.get("link"),
+                "bookingPrice": booking_price.get("price") or op.get("totalPrice"),
+                "bookingCurrency": booking_price.get("currency") or "VND",
+                "airlineName": op.get("airlineName"),
+                "flightNumber": op.get("flightNumber"),
+                "domain": op.get("domain"),
+            })
+    return {
+        "source": "google-flights4.p.rapidapi",
+        "booking_options": result,
+        "status": data.get("status"),
+        "message": data.get("message"),
+    }
 
-# =========================
-# FLIGHT DETAILS
-# =========================
-
-def fetch_flight_details_from_api(
-    token: str,
-    currency_code: str = BOOKING_CURRENCY_CODE,
-    languagecode: str = BOOKING_LANGUAGE_CODE,
+def get_booking_link_from_api(
+    detailToken: str,
+    language: str = BOOKING_LANGUAGE_CODE,
+    location: str = COUNTRY_CODE,
+    currency: str = BOOKING_CURRENCY_CODE,
+    adults: int = 1,
+    children: int = 0,
+    infantsOnLap: int = 0,
+    infantsInSeat: int = 0,
+    cabinClass: str = "economy",
+    alliances: Optional[str] = None,
+    airlines: Optional[str] = None,
+    carryOnBag: int = 0,
+    maxPrice: Optional[int] = None,
 ) -> dict:
     """
-    Lấy chi tiết một flight offer.
-
-    token lấy từ detail_token của kết quả search_flights_from_api.
-    Không bắt user nhập token.
+    Lấy kết quả booking từ API.
     """
-
-    if not token:
-        return {
-            "error": "Bạn cần cung cấp token/detail_token của flight offer."
-        }
-
+    if not detailToken:
+        return [{"error": "Bạn cần cung cấp detailToken."}]
     try:
-        data = _booking_get(
-            FLIGHT_DETAILS_ENDPOINT,
-            _compact_params(
-                {
-                    "token": token,
-                    "currency_code": currency_code,
-                    "languagecode": languagecode,
-                }
-            ),
-        )
-
-        return {
-            "source": "booking_com15_rapidapi",
-            "token": token,
-            "booking_url": _find_url_recursive(data),
-            "details": data,
+        params = {
+            "detailToken": detailToken,
+            "language": language,
+            "location": location,
+            "currency": currency,
+            "adults": str(adults),
+            "children": str(children),
+            "infantsOnLap": str(infantsOnLap),
+            "infantsInSeat": str(infantsInSeat),
+            "cabinClass": _map_cabin_class(cabinClass),
+            "alliances": alliances,
+            "airlines": _resolve_airline_codes(airlines),
+            "carryOnBag": str(carryOnBag),
+            "maxPrice": str(maxPrice) if maxPrice is not None else None,
         }
-
+        data = _booking_get("google_flight", "/flights/get-booking-results", params)
+        return _normalize_get_booking_result(data)
     except Exception as e:
-        return {
-            "error": f"Lỗi khi lấy flight details: {str(e)}"
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # Namespace for generating deterministic UUIDs from business keys
-# NAMESPACE_UUID = uuid.uuid5(uuid.NAMESPACE_DNS, 'customer-support-agent.flight')
-
-
-# def _normalize_vietnamese(text):
-#     """Normalize Vietnamese text by removing diacritics for comparison"""
-#     if not text:
-#         return ""
-#     # Replace Đ/đ with D/d first (these are separate characters, not composed)
-#     text = text.replace('Đ', 'D').replace('đ', 'd')
-#     # Normalize to NFD (decompose characters)
-#     nfd = unicodedata.normalize('NFD', text)
-#     # Remove combining characters (diacritics)
-#     return ''.join(c for c in nfd if unicodedata.category(c) != 'Mn').lower().strip()
-
-
-# # Get credentials from environment variables
-# BIN_ID_FLIGHT = os.getenv("BIN_ID_FLIGHT")
-# API_KEY = os.getenv("API_KEY")
-# USE_QDRANT = os.getenv("USE_QDRANT", "true").lower() == "true"  
-# API_URL = f'https://api.jsonbin.io/v3/b/{BIN_ID_FLIGHT}'
-# HEADERS = {
-#   'Content-Type': 'application/json',
-#   'X-Master-Key': API_KEY
-# }
-
-
-# # --- Caching Mechanism ---
-# # This cache will hold the data in memory to avoid repeated API calls.
-# _cache = None
-# _qdrant_client = None
-# _embedder = None
-# _qdrant_initialized = False
-
-
-# def _get_qdrant_client():
-#     """Khởi tạo Qdrant client (kết nối tới instance persistent)"""
-#     global _qdrant_client
-#     if _qdrant_client is None:
-#         # Kết nối tới Qdrant chạy trên Docker
-#         _qdrant_client = QdrantClient(host="localhost", port=6333)
-#     return _qdrant_client
-
-
-# def _get_embedder():
-#     """Khởi tạo sentence transformer model (multilingual)"""
-#     global _embedder
-#     if _embedder is None:
-#         # Model hỗ trợ tiếng Việt, nhẹ, nhanh
-#         _embedder = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
-#     return _embedder
-
-
-# def _init_qdrant_collections():
-#     """Tạo các collection trong Qdrant nếu chưa tồn tại."""
-#     global _qdrant_initialized
-#     if _qdrant_initialized:
-#         return
-   
-#     client = _get_qdrant_client()
-#     embedder = _get_embedder()
-   
-#     vector_size = embedder.get_sentence_embedding_dimension()
-#     collection_names = ["flights_v2","flight_prices","passengers","bookings","tickets"]
-   
-#     for collection_name in collection_names:
-#         try:
-#             client.get_collection(collection_name=collection_name)
-#             print(f"Collection '{collection_name}' already exists. Skipping creation.")
-#         except Exception:
-#             print(f"Collection '{collection_name}' not found. Creating...")
-#             try:
-#                 client.create_collection(
-#                     collection_name=collection_name,
-#                     vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
-#                 )
-#                 print(f" Collection '{collection_name}' created successfully.")
-#             except Exception as e:
-#                 print(f"Error: Could not create collection '{collection_name}': {e}")
-   
-#     _qdrant_initialized = True
-
-
-# def _index_data_to_qdrant(data):
-#     """
-#     Index chỉ những dữ liệu mới vào Qdrant.
-#     Hàm này sẽ kiểm tra các ID đã có và chỉ nạp những airports/airlines/flights/flight_prices/passengers/bookings/tickets chưa tồn tại.
-#     """
-#     if not USE_QDRANT:
-#         return
-   
-#     client = _get_qdrant_client()
-#     embedder = _get_embedder()
-#     _init_qdrant_collections()
-
-
-#     # --- Index Flights ---
-#     collection_name_flights = "flights_v2"
-#     try:
-#         existing_flights_points = client.scroll(
-#             collection_name=collection_name_flights,
-#             limit=10000,
-#             with_payload=False,
-#             with_vectors=False
-#         )[0]
-#         existing_flights_ids = {point.id for point in existing_flights_points}
-#         print(f"Found {len(existing_flights_ids)} existing flights points in Qdrant.")
-#     except Exception as e:
-#         print(f"Could not fetch existing flights points (collection might be new): {e}")
-#         existing_flights_ids = set()
-
-
-#     flights = data.get("flights", [])
-#     # Convert flight_id to UUID for Qdrant compatibility
-#     new_flights = []
-#     for flight in flights:
-#         point_id = str(uuid.uuid5(NAMESPACE_UUID, str(flight.get('flight_id'))))
-#         if point_id not in existing_flights_ids:
-#             new_flights.append(flight)
-   
-#     if not new_flights:
-#         print(" Qdrant (Flights) is up-to-date. No new flights to index.")
-#     else:
-#         print(f"Indexing {len(new_flights)} new flights...")
-#         flight_points = []
-#         for flight in new_flights:
-#             # Create a rich text for semantic vector
-#             text_parts = [
-#                 "chuyen bay",
-#                 flight.get('flight_id', ''),
-#                 flight.get('airline_id', ''),
-#                 "tu", flight.get('city_depart', ''), flight.get('airport_name_depart', ''), flight.get('departure_airport_id', ''),
-#                 "den", flight.get('city_arrive', ''), flight.get('airport_name_arrive', ''), flight.get('arrival_airport_id', '')
-#             ]
-#             text = " ".join(filter(None, text_parts))
-#             vector = embedder.encode(text).tolist()
-#             point_id = str(uuid.uuid5(NAMESPACE_UUID, str(flight.get('flight_id'))))
-            
-#             payload = flight.copy()
-#             for key in ['departure_time', 'arrival_time']:
-#                 if payload.get(key):
-#                     try:
-#                         # Convert "YYYY-MM-DD HH:MM" to ISO 8601 format "YYYY-MM-DDTHH:MM:SS"
-#                         dt_obj = datetime.strptime(payload[key], "%Y-%m-%d %H:%M")
-#                         payload[key] = dt_obj.isoformat()
-#                     except ValueError:
-#                         # Keep original if format is wrong, which will prevent datetime filtering
-#                         pass
-
-#             flight_points.append(PointStruct(id=point_id, vector=vector, payload=payload))
-
-
-#         if flight_points:
-#             try:
-#                 client.upsert(collection_name=collection_name_flights, points=flight_points)
-#                 print(f" Successfully indexed {len(flight_points)} flights to Qdrant.")
-#             except Exception as e:
-#                 print(f"Warning: Could not index new flights: {e}")
-
-
-#     collection_name_flight_prices = "flight_prices"
-#     try:
-#         existing_flight_prices_points = client.scroll(
-#             collection_name=collection_name_flight_prices,
-#             limit=10000,
-#             with_payload=False,
-#             with_vectors=False
-#         )[0]
-#         existing_flight_prices_ids = {point.id for point in existing_flight_prices_points}
-#         print(f"Found {len(existing_flight_prices_ids)} existing flight prices points in Qdrant.")
-#     except Exception as e:
-#         print(f"Could not fetch existing flight prices points (collection might be new): {e}")
-#         existing_flight_prices_ids = set()
-
-
-#     flight_prices = data.get("flightPrices", [])
-   
-#     new_flight_prices = []
-#     for fp in flight_prices:
-#         composite_id = f"{fp.get('flight_id')}-{fp.get('seat_type')}"
-#         point_id = str(uuid.uuid5(NAMESPACE_UUID, composite_id))
-#         if point_id not in existing_flight_prices_ids:
-#             new_flight_prices.append(fp)
-
-
-#     if not new_flight_prices:
-#         print(" Qdrant (Flight Prices) is up-to-date. No flight prices to index.")
-#     else:
-#         print(f" Indexing {len(new_flight_prices)} flight prices...")
-#         flight_price_points = []
-#         for flight_price in new_flight_prices:
-#             # Tạo ID tổng hợp từ flight_id và seat_type
-#             composite_id = f"{flight_price.get('flight_id')}-{flight_price.get('seat_type')}"
-#             point_id = str(uuid.uuid5(NAMESPACE_UUID, composite_id))
-#             # Lấy thông tin chi tiết để tạo vector giàu ngữ nghĩa
-#             text = f"{flight_price.get('flight_id')}{flight_price.get('seat_type')} {flight_price.get('price')} {flight_price.get('seat_quota')}"
-#             vector = embedder.encode(text).tolist()
-#             flight_price_points.append(PointStruct(id=point_id, vector=vector, payload=flight_price))
-
-
-#         if flight_price_points:
-#             try:
-#                 client.upsert(collection_name=collection_name_flight_prices, points=flight_price_points)
-#                 print(f" Successfully indexed {len(flight_price_points)} flight prices to Qdrant.")
-#             except Exception as e:
-#                 print(f"Warning: Could not index new flight prices: {e}")
-
-
-#     # # --- Index Passengers ---
-#     # collection_name_passengers = "passengers"
-#     # try:
-#     #     existing_passengers_points = client.scroll(
-#     #         collection_name=collection_name_passengers,
-#     #         limit=10000,  
-#     #         with_payload=False,
-#     #         with_vectors=False
-#     #     )[0]
-#     #     existing_passengers_ids = {point.id for point in existing_passengers_points}
-#     #     print(f"Found {len(existing_passengers_ids)} existing passengers points in Qdrant.")
-#     # except Exception as e:
-#     #     print(f"Could not fetch existing passengers points (collection might be new): {e}")
-#     #     existing_passengers_ids = set()
-
-
-#     # passengers = data.get("passengers", [])
-#     # new_passengers = [
-#     #     p for p in passengers
-#     #     if str(uuid.uuid5(NAMESPACE_UUID, p.get('passenger_id'))) not in existing_passengers_ids
-#     # ]
-   
-#     # if not new_passengers:
-#     #     print(" Qdrant (Passengers) is up-to-date. No new passengers to index.")
-#     # else:
-#     #     print(f"⏳ Found {len(new_passengers)} new passengers to index...")
-#     #     passenger_points = []
-#     #     for p in new_passengers:
-#     #         text = f"{p.get('passenger_id')} {p.get('passenger_name')} {p.get('contact_data')}"
-#     #         vector = embedder.encode(text).tolist()
-#     #         point_id = str(uuid.uuid5(NAMESPACE_UUID, p.get('passenger_id')))
-#     #         passenger_points.append(PointStruct(id=point_id, vector=vector, payload=p))
-       
-#     #     if passenger_points:
-#     #         try:
-#     #             client.upsert(collection_name=collection_name_passengers, points=passenger_points)
-#     #             print(f" Successfully indexed {len(passenger_points)} new passengers to Qdrant.")
-#     #         except Exception as e:
-#     #             print(f"Warning: Could not index new passengers: {e}")
-
-
-#     #--- Index Bookings ---
-#     collection_name_bookings = "bookings"
-#     try:
-#         existing_bookings_points = client.scroll(
-#             collection_name=collection_name_bookings,
-#             limit=10000,
-#             with_payload=False,
-#             with_vectors=False
-#         )[0]
-#         existing_bookings_ids = {point.id for point in existing_bookings_points}
-#         print(f"Found {len(existing_bookings_ids)} existing bookings points in Qdrant.")
-#     except Exception as e:
-#         print(f"Could not fetch existing bookings points (collection might be new): {e}")
-#         existing_bookings_ids = set()
-
-
-#     bookings = data.get("flightBookings", [])
-#     new_bookings = [
-#         b for b in bookings
-#         if b.get('booking_id') and str(uuid.uuid5(NAMESPACE_UUID, str(b.get('booking_id')))) not in existing_bookings_ids
-#     ]
-
-
-#     if not new_bookings:
-#         print(" Qdrant (Bookings) is up-to-date. No new bookings to index.")
-#     else:
-#         print(f"Indexing {len(new_bookings)} bookings...")
-#         booking_points = []
-#         for booking in new_bookings:
-#             booking_id = booking.get('booking_id')
-#             if not booking_id:
-#                 print(f"Warning: Skipping booking without booking_id: {booking}")
-#                 continue
-            
-#             text = f"{booking.get('booking_id')} {booking.get('booking_status')}"
-#             vector = embedder.encode(text).tolist()
-#             point_id = str(uuid.uuid5(NAMESPACE_UUID, str(booking_id)))
-#             booking_points.append(PointStruct(id=point_id, vector=vector, payload=booking))
-
-
-#         if booking_points:
-#             try:
-#                 client.upsert(collection_name=collection_name_bookings, points=booking_points)
-#                 print(f" Successfully indexed {len(booking_points)} bookings to Qdrant.")
-#             except Exception as e:
-#                 print(f"Warning: Could not index new bookings: {e}")
-
-
-#     #--- Index Tickets ---
-#     collection_name_tickets = "tickets"
-#     try:
-#         existing_tickets_points = client.scroll(
-#             collection_name=collection_name_tickets,
-#             limit=10000,
-#             with_payload=False,
-#             with_vectors=False
-#         )[0]
-#         existing_tickets_ids = {point.id for point in existing_tickets_points}
-#         print(f"Found {len(existing_tickets_ids)} existing tickets points in Qdrant.")
-#     except Exception as e:
-#         print(f"Could not fetch existing tickets points (collection might be new): {e}")
-#         existing_tickets_ids = set()
-
-
-#     tickets = data.get("tickets", [])
-#     new_tickets = [
-#         t for t in tickets
-#         if t.get('ticket_id') and str(uuid.uuid5(NAMESPACE_UUID, t.get('ticket_id'))) not in existing_tickets_ids
-#     ]
-
-
-#     if not new_tickets:
-#         print(" Qdrant (Tickets) is up-to-date. No new tickets to index.")
-#     else:
-#         print(f"Indexing {len(new_tickets)} tickets...")
-#         ticket_points = []
-#         for ticket in new_tickets:
-#             ticket_id = ticket.get('ticket_id')
-#             if not ticket_id:
-#                 print(f"Warning: Skipping ticket without ticket_id: {ticket}")
-#                 continue
-            
-#             text = f"{ticket.get('ticket_id')} {ticket.get('flight_id')} {ticket.get('seat_type')} {ticket.get('booking_id')}"
-#             vector = embedder.encode(text).tolist()
-#             point_id = str(uuid.uuid5(NAMESPACE_UUID, ticket_id))
-#             ticket_points.append(PointStruct(id=point_id, vector=vector, payload=ticket))
-
-
-#         if ticket_points:
-#             try:
-#                 client.upsert(collection_name=collection_name_tickets, points=ticket_points)
-#                 print(f" Successfully indexed {len(ticket_points)} tickets to Qdrant.")
-#             except Exception as e:
-#                 print(f"Warning: Could not index new tickets: {e}")
-
-
-
-
-# def _load_data():
-#     global _cache
-#     if _cache:
-#         return _cache
-
-
-#     if not BIN_ID_FLIGHT or not API_KEY:
-#         raise ValueError("BIN_ID và API_KEY chưa được thiết lập trong file .env")
-   
-#     response = requests.get(f"{API_URL}/latest", headers=HEADERS)
-#     response.raise_for_status()
-   
-#     data = response.json()['record']
-#     _cache = data  
-   
-#     if USE_QDRANT:
-#         _index_data_to_qdrant(data)
-   
-#     return data
-
-
-# def _save_data(data):
-#     global _cache, _qdrant_initialized
-#     if not BIN_ID_FLIGHT or not API_KEY:
-#         raise ValueError("BIN_ID và API_KEY chưa được thiết lập trong file .env")
-
-
-#     response = requests.put(API_URL, json=data, headers=HEADERS)
-#     response.raise_for_status()
-   
-#     _cache = data
-    
-#     if USE_QDRANT:
-#         _index_data_to_qdrant(data)
-
-# def search_flight_from_api(
-#     departure_airport_code: str | None = None,
-#     arrival_airport_code: str | None = None,
-#     departure_time: str | None = None,
-#     arrival_time: str | None = None,
-#     city_depart: str| None = None,
-#     city_arrive: str| None = None,
-#     flight_no: str | None = None,
-#     **kwargs
-# ) -> list[dict]:
-#     """
-#     Search for flights based on departure airport name or code
-#     or arrival airport name or code,
-#     flight_no, city_depart, city_arrive, departure time or arrival time or date.
-#     """
-#     data = _load_data()
-   
-#     is_semantic_query = any([ city_depart, city_arrive, departure_time, arrival_time])
-#     has_filters = any([departure_airport_code, arrival_airport_code, flight_no])
-
-
-#     # Fallback if Qdrant is disabled
-#     if not USE_QDRANT:
-#         return _search_flight_exact(data,  departure_airport_code, arrival_airport_code, departure_time, arrival_time, flight_no, city_depart, city_arrive)
-       
-#     try:
-#         client = _get_qdrant_client()
-#         embedder = _get_embedder()
-
-
-#         # --- Build Qdrant filters for exact match ---
-#         must_conditions = []
-#         if departure_airport_code:
-#             must_conditions.append(
-#                 FieldCondition(key="departure_airport_id", match=MatchValue(value=departure_airport_code))
-#             )
-#         if arrival_airport_code:
-#             must_conditions.append(
-#                 FieldCondition(key="arrival_airport_id", match=MatchValue(value=arrival_airport_code))
-#             )
-
-#         # if departure_time:
-#         #     must_conditions.append(
-#         #         FieldCondition(key="departure_time", match=MatchValue(value=departure_time))
-#         #     )
-#         # if arrival_time:
-#         #     must_conditions.append(
-#         #         FieldCondition(key="arrival_time", match=MatchValue(value=arrival_time))
-#         #     )
-        
-#         if flight_no:
-#             # Normalize flight_no before search
-#             flight_no_clean = flight_no.strip().upper()
-#             must_conditions.append(
-#                 FieldCondition(key="flight_id", match=MatchValue(value=flight_no_clean))
-#             )
-
-
-#         # --- Decide Search Strategy ---
-#         if is_semantic_query:
-#             # 1. Semantic Search + Filtering
-#             print("Executing semantic search with filters...")
-#             query_parts = []
-#             if city_depart: query_parts.append(city_depart)
-#             if city_arrive: query_parts.append(city_arrive)
-#             if departure_time: query_parts.append(to_date(departure_time))
-#             if arrival_time: query_parts.append(to_date(arrival_time))
-#             query_text = " ".join(query_parts)
-#             query_vector = embedder.encode(query_text).tolist()
-
-
-#             search_result = client.search(
-#                 collection_name="flights_v2",
-#                 query_vector=query_vector,
-#                 query_filter=Filter(must=must_conditions) if must_conditions else None,
-#                 limit=50
-#             )
-           
-#             # Post-filter by city and date for more accurate results
-#             results = []
-            
-#             results = [hit.payload for hit in search_result]
-           
-#             print(f"Qdrant semantic search: Found {len(results)} results")
-
-
-#         elif has_filters:
-#             # 2. Filter-Only Search
-#             print("Executing filter-only search with Qdrant...")
-#             scroll_result, _ = client.scroll(
-#                 collection_name="flights_v2",
-#                 scroll_filter=Filter(must=must_conditions),
-#                 limit=200 # Get up to 200 results for filter-only
-#             )
-#             results = [record.payload for record in scroll_result]
-#             print(f"Qdrant filter-only search: Found {len(results)} results")
-       
-#         else:
-#             # 3. No criteria, fallback to exact search (which will return all)
-#             return _search_flight_exact(data,  departure_airport_code, arrival_airport_code, departure_time, arrival_time, flight_no, city_depart, city_arrive)
-
-
-#         return results
-           
-#     except Exception as e:
-#         print(f"Qdrant search failed: {e}, falling back to exact search")
-#         return _search_flight_exact(data,  departure_airport_code, arrival_airport_code, departure_time, arrival_time, flight_no, city_depart, city_arrive)
-
-
-# def _search_flight_exact(data,  departure_airport_code, arrival_airport_code, departure_time, arrival_time, flight_no, city_depart, city_arrive):
-#     """Fallback: Exact search with list comprehension (optimized single-pass)"""
-#     results = data.get("flights", [])
-   
-#     # Normalize inputs
-#     dep_code = departure_airport_code.upper().strip() if departure_airport_code else None
-#     arr_code = arrival_airport_code.upper().strip() if arrival_airport_code else None
-#     f_no = flight_no.lower().strip() if flight_no else None
-#     dep_date = departure_time.strip() if departure_time else None
-#     dep_city = city_depart.lower().strip() if city_depart else None
-#     arr_city = city_arrive.lower().strip() if city_arrive else None
-
-
-#     filtered = [
-#         flight for flight in results
-#         if (not dep_code or flight.get('departure_airport_id') == dep_code)
-#         and (not arr_code or flight.get('arrival_airport_id') == arr_code)
-#         and (not dep_city or dep_city in (flight.get('city_depart') or '').lower())
-#         and (not arr_city or arr_city in (flight.get('city_arrive') or '').lower())
-#         and (not dep_date or str(flight.get('departure_time', '')).startswith(dep_date))
-#         and (not f_no or (
-#             f_no in str(flight.get('flight_id', '')).lower()
-#         ))
-#     ]
-   
-#     print(f"Exact search (flights): Found {len(filtered)} results")
-#     return filtered
-
-
-# def fetch_flight_price_from_api(flight_id: str | None = None, seat_type: str | None = None) -> dict:
-#     """
-#     Fetch a flight price based on flight_id and seat_type.
-#     Returns a single price dict, not a list.
-#     """
-#     data = _load_data()
-#     if not USE_QDRANT:
-#         result = _fetch_flight_price_exact(data, flight_id, seat_type)
-#         return result[0] if result else {}
-#     if not flight_id:
-#         return "Please provide a valid flight_id."
-#     try:
-#         client = _get_qdrant_client()
-#         embedder = _get_embedder()
-#         if not seat_type:
-#             return "Please provide a valid seat_type."
-#         query_parts = []
-#         query_parts.append(seat_type)
-#         query_text = " ".join(query_parts)
-#         query_vector = embedder.encode(query_text).tolist()
-#         search_result = client.search(
-#             collection_name="flight_prices",
-#             query_vector=query_vector,
-#             query_filter=Filter(must=[FieldCondition(key="flight_id", match=MatchValue(value=flight_id.upper().strip()))]),
-#             limit = 1 
-#         ) 
-#         if search_result:
-#            return search_result[0].payload
-#     except Exception as e:
-#         print(f" Qdrant search failed: {e}, falling back to exact search")
-#         result = _fetch_flight_price_exact(data, flight_id, seat_type)
-#         return result[0] if result else {}
-
-# def _fetch_flight_price_exact(data, flight_id, seat_type):
-#     """Fallback: Exact search with list comprehension (optimized single-pass)"""
-#     results = data.get("flightPrices", [])
-#     filtered = [
-#         fp for fp in results
-#         if (not flight_id or fp.get('flight_id') == flight_id)
-#         and (not seat_type or seat_type in (fp.get('seat_type') or '').lower())
-#     ]
-#     print(f"Exact search (flight prices): Found {len(filtered)} results")
-#     return filtered
-
-
-# def search_flight_price_from_api(
-#     flight_id: str | None = None,
-#     seat_type: str | None = None,
-# ) -> list[dict]:
-#     """
-#     Search for flight prices based on flight_id anf seat_types (eco, business, first). if seat_type is not provided, return all seat types.
-#     """
-#     data = _load_data()
-#     if not USE_QDRANT:
-#         return _search_flight_price_exact(data, flight_id, seat_type)
-    
-#     if not flight_id:
-#         return "Please provide a flight_id."
-    
-#     try:
-#         client = _get_qdrant_client()
-#         embedder = _get_embedder()
-#         query_parts = []
-#         if seat_type:
-#             query_parts.append(seat_type)
-#         query_text = " ".join(query_parts)
-        
-#         query_vector = embedder.encode(query_text).tolist()
-        
-#         must_conditions = []
-#         if flight_id:
-#             must_conditions.append(
-#                 FieldCondition(key="flight_id", match=MatchValue(value=flight_id.upper().strip()))
-#             )
-
-#         search_result = client.search(
-#             collection_name="flight_prices",
-#             query_vector=query_vector,
-#             query_filter=Filter(must=must_conditions) if must_conditions else None,
-#             limit= 1 if seat_type else 50  
-#         )
-        
-#         results = [hit.payload for hit in search_result]
-        
-#         print(f" Qdrant semantic search: Found {len(results)} results")
-#         return results
-#     except Exception as e:
-#         print(f" Qdrant search failed: {e}, falling back to exact search")
-#         return _search_flight_price_exact(data, flight_id, seat_type)
-
-
-# def _search_flight_price_exact(data, flight_id, seat_type):
-#     """Fallback: Exact search with list comprehension (optimized single-pass)"""
-#     results = data.get("flightPrices", [])
-#     filtered = [
-#         fp for fp in results
-#         if (not flight_id or fp.get('flight_id') == flight_id)
-#         and (not seat_type or seat_type in (fp.get('seat_type') or '').lower())
-#     ]
-#     print(f"Exact search (flight prices): Found {len(filtered)} results")
-#     return filtered
-
-
-# def generate_next_booking_id(bookings: list[dict], prefix="BKG") -> str:
-#     """
-#     Tạo booking_id tiếp theo theo định dạng 'BKG001', 'BKG002',...
-#     """
-#     if not bookings:
-#         return f"{prefix}001"
-    
-#     max_num = 0
-#     # Lặp qua các booking để tìm số lớn nhất
-#     for b in bookings:
-#         booking_id =  b.get('booking_id')
-#         if isinstance(booking_id, str) and booking_id.startswith(prefix):
-#             try:
-#                 num_part = int(booking_id[len(prefix):])
-#                 if num_part > max_num:
-#                     max_num = num_part
-#             except (ValueError, TypeError):
-#                 # Bỏ qua nếu phần số không hợp lệ
-#                 continue
-#         elif isinstance(booking_id, int):
-#             # Xử lý trường hợp booking_id cũ là số nguyên
-#             if booking_id > max_num:
-#                 max_num = booking_id
-
-#     next_num = max_num + 1
-#     # Định dạng số với 3 chữ số, ví dụ: 1 -> "001", 12 -> "012"
-#     return f"{prefix}{next_num:03d}"
-
-
-
-
-
-# def generate_next_ticket_no(tickets: list[dict], prefix="T") -> str:
-#     """
-#     Generate the next ticket number.
-#     """
-#     if not tickets:
-#         return f"{prefix}001"
-    
-#     max_num = 0
-#     for t in tickets:
-#         ticket_no = t.get('ticket_no')
-#         if isinstance(ticket_no, str) and ticket_no.startswith(prefix):
-#             try:
-#                 num_part = int(ticket_no[len(prefix):])
-#                 if num_part > max_num:
-#                     max_num = num_part
-#             except (ValueError, TypeError):
-#                 continue
-    
-#     next_num = max_num + 1
-#     return f"{prefix}{next_num:03d}"
-
-# def  book_flight_from_api(
-#     flight_id: str | None = None,
-#     seat_type: str | None = None,
-#     passengers: int | None = None,
-# ) -> str:
-#     """
-#     Book a flight based on flight_id and seat_type, passengers and price_per_person.
-#     If passengers is not provided, book 1 passenger.
-#     """
-#     if not flight_id :
-#         return "Please provide a valid flight_id."
-#     if not seat_type:
-#         return "Please provide a valid seat_type."
-#     if not passengers or passengers <= 0:
-#         passengers = 1
-
-#     # Fetch price information
-#     try:
-#         price_info = fetch_flight_price_from_api(flight_id, seat_type)
-#         print(f"DEBUG: price_info = {price_info}, type = {type(price_info)}")
-#     except Exception as e:
-#         return f"Error fetching price: {str(e)}"
-    
-#     if not price_info or isinstance(price_info, str):
-#         return f"Could not find price information for flight {flight_id} with seat type {seat_type}."
-    
-#     total_price = price_info.get("price") * passengers
-    
-#     data = _load_data()
-#     bookings = data.get("flightBookings", [])
-#     tickets = data.get("tickets", [])
-#     flight_prices = data.get("flightPrices", [])
-    
-#     new_booking_id = generate_next_booking_id(bookings)
-    
-#     new_booking = {
-#         "booking_id": new_booking_id,
-#         "total_price": total_price, 
-#         "booking_status": "confirmed",
-#         "num_ticket": passengers,
-#         "created_at": datetime.now().strftime("%Y-%m-%d"),
-        
-#     }
-#     bookings.append(new_booking)
-#     data["flightBookings"] = bookings
-    
-#     seat_quota = int(price_info.get('seat_quota', 0))
-#     if not seat_quota:
-#         return f"Seat quota is not available in price_info: {price_info}"
-#     if seat_quota < passengers:
-#         return f"Seat quota is not enough for {passengers} passengers. Available: {seat_quota}"
-#     else:
-#         target_flight_id = str(flight_id).strip().upper()
-#         target_seat_type = price_info.get('seat_type').strip().lower()
-        
-#         print(f"DEBUG: Looking for flight_id='{target_flight_id}', seat_type='{target_seat_type}'")
-#         print(f"DEBUG: flight_prices has {len(flight_prices)} records")
-        
-#         updated = False
-#         for i, fp in enumerate(flight_prices):
-#             fp_flight_id = str(fp.get('flight_id', '')).strip().upper()
-#             fp_seat_type = str(fp.get('seat_type', '')).strip().lower()
-            
-#             # print(f"DEBUG: Checking [{i}] flight_id='{fp_flight_id}', seat_type='{fp_seat_type}'")
-            
-#             if fp_flight_id == target_flight_id and fp_seat_type == target_seat_type:
-#                 # Tìm thấy! Cập nhật trực tiếp vào object này (tham chiếu)
-#                 old_quota = fp['seat_quota']
-#                 fp['seat_quota'] = int(fp['seat_quota']) - passengers 
-#                 updated = True
-#                 print(f"DEBUG: FOUND! Updated seat_quota from {old_quota} to {fp['seat_quota']}")
-                
-#                 # Cập nhật cache ngay sau khi update quota
-#                 global _cache
-#                 if _cache and "flightPrices" in _cache:
-#                     for cache_fp in _cache["flightPrices"]:
-#                         if (str(cache_fp.get('flight_id', '')).strip().upper() == target_flight_id and 
-#                             str(cache_fp.get('seat_type', '')).strip().lower() == target_seat_type):
-#                             cache_fp['seat_quota'] = fp['seat_quota']
-#                             print(f"DEBUG: Cache updated for {target_flight_id}/{target_seat_type}")
-#                             break
-                
-#                 # Cập nhật Qdrant collection flight_prices
-#                 if USE_QDRANT:
-#                     try:
-#                         client = _get_qdrant_client()
-#                         embedder = _get_embedder()
-                        
-#                         # Tạo point ID giống như khi index
-#                         composite_id = f"{target_flight_id}-{target_seat_type}"
-#                         point_id = str(uuid.uuid5(NAMESPACE_UUID, composite_id))
-                        
-#                         # Tạo vector mới với quota đã cập nhật
-#                         text = f"{fp.get('flight_id')}{fp.get('seat_type')} {fp.get('price')} {fp.get('seat_quota')}"
-#                         vector = embedder.encode(text).tolist()
-                        
-#                         # Upsert point với payload mới
-#                         client.upsert(
-#                             collection_name="flight_prices",
-#                             points=[PointStruct(id=point_id, vector=vector, payload=fp)]
-#                         )
-#                         print(f"DEBUG: Qdrant collection updated for {target_flight_id}/{target_seat_type}")
-#                     except Exception as e:
-#                         print(f"Warning: Could not update Qdrant collection: {e}")
-                
-#                 break
-        
-#         if not updated:
-#             return f"Error: Could not find flight price record for {flight_id}/{seat_type} in database."
-        
-#         _save_data(data)
-    
-#     # Generate tickets
-#     created_tickets = []
-    
-#     # Pre-fetch the latest ticket ID number to increment properly
-#     # Get the max current ticket ID number
-#     max_ticket_num = 0
-#     if tickets:
-#         for t in tickets:
-#             t_id = t.get('ticket_id') or t.get('ticket_no') # Handle both keys for robustness
-#             if isinstance(t_id, str) and t_id.startswith("T"):
-#                 try:
-#                     num_part = int(t_id[1:]) # Assuming T001 format
-#                     if num_part > max_ticket_num:
-#                         max_ticket_num = num_part
-#                 except (ValueError, TypeError):
-#                     continue
-    
-#     for i in range(passengers):
-#         max_ticket_num += 1
-#         new_ticket_no = f"T{max_ticket_num:03d}"
-#         print(f"DEBUG: Generated ticket {i+1}: {new_ticket_no}")
-        
-#         new_ticket = {
-#             "ticket_id": new_ticket_no,
-#             "flight_id": flight_id,
-#             "seat_type": seat_type,
-#             "passenger_id": None,  # To be updated later
-#             "booking_id": new_booking_id,
-#             "ticket_status": "confirmed"
-#         }
-#         tickets.append(new_ticket)
-#         created_tickets.append(new_ticket_no)
-    
-#     data["tickets"] = tickets
-    
-#     try:
-#         _save_data(data)
-#     except Exception as e:
-#         return f"Error saving data: {str(e)}"
-    
-#     tickets_str = ", ".join(str(t) for t in created_tickets if t is not None)
-#     return f"Booking confirmed with ID {new_booking_id}. Tickets created: {tickets_str}. Total price: {total_price} . Please provide passenger details for each ticket. The information of the passengers is in the format of a list of dictionaries with the following keys: passenger_name, date_of_birth, id_type, id_number, nationality."
-
-
-# def generate_next_passenger_id(passengers: list[dict], prefix="P") -> str:
-#     """
-#     Generate the next passenger ID.
-#     """
-#     if not passengers:
-#         return f"{prefix}001"
-    
-#     max_num = 0
-#     for p in passengers:
-#         p_id = p.get('passenger_id')
-#         if isinstance(p_id, str) and p_id.startswith(prefix):
-#             try:
-#                 num_part = int(p_id[len(prefix):])
-#                 if num_part > max_num:
-#                     max_num = num_part
-#             except (ValueError, TypeError):
-#                 continue
-    
-#     next_num = max_num + 1
-#     return f"{prefix}{next_num:03d}"
-
-
-# def fetch_passenger_from_api(id_type: str = None, id_number: str = None, passenger_id: str = None) -> dict:
-#     """
-#     Fetch passenger information by ID type and number or passenger_id.
-#     """
-#     data = _load_data()
-#     passengers = data.get("passengers", [])
-    
-#     if passenger_id:
-#         passenger = next((p for p in passengers if p.get("passenger_id") == passenger_id), None)
-#         return passenger
-    
-#     if id_type and id_number:
-#         passenger = next((p for p in passengers if p.get("id_type") == id_type and p.get("id_number") == id_number), None)
-#         return passenger
-    
-#     return None
-
-
-# def update_ticket_passenger_from_api( 
-#     ticket_no: str,
-#     passenger_name: str = None, 
-#     date_of_birth: str = None, 
-#     id_type: str = None, 
-#     id_number: str = None, 
-#     nationality: str = None
-# ) -> str:
-#     """
-#     Update passenger details for a specific ticket.
-#     Allows incremental updates - only provided fields will be updated.
-#     """
-#     data = _load_data()
-#     tickets = data.get("tickets", [])
-#     passengers = data.get("passengers", [])
-#     client = _get_qdrant_client()
-#     # # Find ticket
-#     # scroll_result, _ = client.scroll(
-#     #             collection_name="tickets",
-#     #             scroll_filter=Filter(must=[FieldCondition(key="ticket_id", match=MatchValue(value=ticket_no))]),
-#     #             limit=1
-#     #         )
-#     # if scroll_result:
-#     #     ticket = scroll_result[0]
-#     # else:
-#     #     return f"Ticket {ticket_no} not found."
-
-#     ticket = next((t for t in tickets if t.get("ticket_id") == ticket_no), None)
-#     if not ticket:
-#         return f"Ticket {ticket_no} not found."
-
-#     # Determine passenger to update
-#     existing_passenger = None
-    
-#     # Case 1: Ticket already has a passenger_id
-#     if ticket.get("passenger_id"):
-#         existing_passenger = fetch_passenger_from_api(passenger_id=ticket.get("passenger_id"))
-    
-#     # Case 2: Search by id_number and id_type
-#     elif id_number and id_type:
-#         existing_passenger = fetch_passenger_from_api(id_type=id_type, id_number=id_number)
-    
-#     # Case 3: Use provided passenger_id
-#     elif passenger_id:
-#         existing_passenger = fetch_passenger_from_api(passenger_id=passenger_id)
-    
-#     # Update or create passenger
-#     if existing_passenger:
-#         # Update existing passenger with new information (only non-None fields)
-#         if passenger_name:
-#             existing_passenger["full_name"] = passenger_name
-#         if date_of_birth:
-#             existing_passenger["dob"] = to_date(date_of_birth).isoformat() if to_date(date_of_birth) else None
-#         if id_type:
-#             existing_passenger["id_type"] = id_type
-#         if id_number:
-#             existing_passenger["id_number"] = id_number
-#         if nationality:
-#             existing_passenger["nationality"] = nationality
-        
-#         passenger_id = existing_passenger["passenger_id"]
-#     else:
-#         # Create new passenger with provided information
-#         new_passenger_id = generate_next_passenger_id(passengers)
-#         new_passenger = {
-#             "passenger_id": new_passenger_id,
-#             "full_name": passenger_name or "Unnamed Passenger",
-#             "dob": to_date(date_of_birth).isoformat() if date_of_birth and to_date(date_of_birth) else None,
-#             "id_type": id_type,
-#             "id_number": id_number,
-#             "nationality": nationality,
-#         }
-#         passengers.append(new_passenger)
-#         passenger_id = new_passenger_id
-    
-#     # Update ticket
-#     # if passenger_name:
-#     #     ticket["full_name"] = passenger_name
-#     ticket["passenger_id"] = passenger_id
-    
-#     # Save all changes
-#     data["passengers"] = passengers
-#     data["tickets"] = tickets
-#     _save_data(data)
-    
-#     return f"Ticket {ticket_no} updated with passenger {passenger_name or 'information'} (ID: {passenger_id})."
-
-
-# def update_multiple_tickets_with_passengers(booking_id: str, passengers_info: list[dict]) -> str:
-#     """
-#     Update multiple tickets with passenger information at once.
-    
-#     Args:
-#         booking_id: The booking reference ID
-#             passengers_info: List of dictionaries containing passenger information.
-#                             Each dict should have keys: passenger_name, date_of_birth, id_type, 
-#                             id_number, nationality
-#         """
-#     data = _load_data()
-#     tickets = data.get("tickets", [])
-#     passengers = data.get("passengers", [])
-    
-#     # Get all tickets for this booking
-#     booking_tickets = [t for t in tickets if t.get("booking_id") == booking_id]
-    
-#     if not booking_tickets:
-#         return f"No tickets found for booking {booking_id}."
-    
-#     if len(passengers_info) != len(booking_tickets):
-#         return f"Mismatch: Found {len(booking_tickets)} tickets but {len(passengers_info)} passenger info provided."
-    
-#     results = []
-    
-#     # Loop through each passenger info and corresponding ticket
-#     for idx, passenger_info in enumerate(passengers_info):
-#         ticket = booking_tickets[idx]
-#         ticket_id = ticket.get("ticket_id")
-        
-#         # Extract passenger info
-#         passenger_name = passenger_info.get("full_name")
-#         date_of_birth = passenger_info.get("dob")
-#         id_type = passenger_info.get("id_type")
-#         id_number = passenger_info.get("id_number")
-#         nationality = passenger_info.get("nationality")
-        
-#         # Check if passenger already exists (by id_number + id_type)
-#         existing_passenger = None
-#         if id_number and id_type:
-#             existing_passenger = next(
-#                 (p for p in passengers if p.get("id_type") == id_type and p.get("id_number") == id_number),
-#                 None
-#             )
-        
-#         if existing_passenger:
-#             # Passenger exists, just link to ticket
-#             passenger_id = existing_passenger["passenger_id"]
-#             ticket["passenger_id"] = passenger_id
-#             ticket["passenger_name"] = existing_passenger.get("full_name")
-#             results.append(f"Ticket {ticket_id}: Linked to existing passenger {passenger_id}")
-#         else:
-#             # Create new passenger
-#             new_passenger_id = generate_next_passenger_id(passengers)
-            
-#             new_passenger = {
-#                 "passenger_id": new_passenger_id,
-#                 "full_name": passenger_name or "Unnamed Passenger",
-#                 "dob": to_date(date_of_birth).isoformat() if date_of_birth and to_date(date_of_birth) else None,
-#                 "id_type": id_type,
-#                 "id_number": id_number,
-#                 "nationality": nationality,
-#             }
-#             passengers.append(new_passenger)
-            
-#             # Link to ticket
-#             ticket["passenger_id"] = new_passenger_id
-#             ticket["full_name"] = passenger_name
-            
-#             results.append(f"✓ Ticket {ticket_id}: Created new passenger {new_passenger_id} ({passenger_name})")
-    
-#     # Save all changes
-#     data["passengers"] = passengers
-#     data["tickets"] = tickets
-#     _save_data(data)
-    
-#     summary = f"Updated {len(booking_tickets)} tickets for booking {booking_id}:\n" + "\n".join(results)
-#     return summary
-
-# def cancel_booking_from_api(booking_id: str) -> str:
-#     """
-#     Cancel a booking.
-#     """
-#     data = _load_data()
-#     bookings = data.get("flightBookings", [])
-#     booking = next((b for b in bookings if b.get("booking_id") == booking_id), None)
-    
-#     # Check booking tồn tại trước
-#     if not booking:
-#         return f"Booking {booking_id} not found."
-
-#     if booking['booking_status'] == "confirmed":
-#         booking['booking_status'] = "cancelled"
-#     _save_data(data)
-#     # Lấy flight_price để cập nhật quota
-#     # Cập nhật trạng thái tickets
-#     tickets = data.get("tickets", [])
-#     for ticket in tickets:
-#         if ticket.get("booking_id") == booking_id:
-#             ticket['ticket_status'] = 'cancelled'
-#             flight_id = ticket.get("flight_id")
-
-#     _save_data(data)
-
-#     flight_prices = data.get("flightPrices", [])
-#     flight_price = next((fp for fp in flight_prices if fp.get("flight_id") == flight_id), None)
-    
-#     if not flight_price:
-#         return f"Flight price not found for booking {booking_id}."
-    
-#     # Hoàn trả quota
-#     old_quota = flight_price["seat_quota"]
-#     flight_price["seat_quota"] = int(flight_price.get('seat_quota')) + int(booking.get("num_ticket"))
-#     _save_data(data) 
-#     # Cập nhật cache
-#     global _cache
-#     if _cache and "flightPrices" in _cache:
-#         target_flight_id = str(flight_price.get('flight_id', '')).strip().upper()
-#         target_seat_type = str(flight_price.get('seat_type', '')).strip().lower()
-#         for cache_fp in _cache["flightPrices"]:
-#             if (str(cache_fp.get('flight_id', '')).strip().upper() == target_flight_id and 
-#                 str(cache_fp.get('seat_type', '')).strip().lower() == target_seat_type):
-#                 cache_fp['seat_quota'] = flight_price['seat_quota']
-#                 print(f"DEBUG: Cache updated for {target_flight_id}/{target_seat_type} - returned {booking.get('num_ticket')} seats")
-#                 break
-    
-#     # Cập nhật Qdrant collection flight_prices
-#     if USE_QDRANT:
-#         try:
-#             client = _get_qdrant_client()
-#             embedder = _get_embedder()
-            
-#             target_flight_id = str(flight_price.get('flight_id', '')).strip().upper()
-#             target_seat_type = str(flight_price.get('seat_type', '')).strip().lower()
-            
-#             composite_id = f"{target_flight_id}-{target_seat_type}"
-#             point_id = str(uuid.uuid5(NAMESPACE_UUID, composite_id))
-            
-#             text = f"{flight_price.get('flight_id')}{flight_price.get('seat_type')} {flight_price.get('price')} {flight_price.get('seat_quota')}"
-#             vector = embedder.encode(text).tolist()
-            
-#             client.upsert(
-#                 collection_name="flight_prices",
-#                 points=[PointStruct(id=point_id, vector=vector, payload=flight_price)]
-#             )
-#             print(f"DEBUG: Qdrant collection updated - quota restored from {old_quota} to {flight_price['seat_quota']}")
-#         except Exception as e:
-#             print(f"Warning: Could not update Qdrant collection: {e}")
-    
-#     return f"Booking {booking_id} has been cancelled successfully. {booking.get('num_ticket')} seat(s) have been released."
-#     # return f"Booking {booking_id} cancelled."
+        return [{"error": f"Lỗi khi gọi get-booking-results: {str(e)}"}] 

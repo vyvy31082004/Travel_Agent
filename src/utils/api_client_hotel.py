@@ -916,6 +916,229 @@ def get_hotel_room_list_from_api(
     except Exception as e:
         return [{"error": f"Lỗi khi gọi getRoomList: {str(e)}"}]
 
+def _normalize_booking_review(raw_review: dict) -> dict:
+    """Chuẩn hóa 1 review từ getHotelReviews."""
+    stayed = raw_review.get("stayed_room_info") or {}
+    photo = stayed.get("photo") or {}
+
+    return {
+        "source": "booking_com15_rapidapi",
+
+        "date": raw_review.get("date"),
+        "travel_purpose": raw_review.get("travel_purpose"),
+        "country_code": raw_review.get("countrycode"),
+
+        "pros": raw_review.get("pros"),
+        "cons": raw_review.get("cons"),
+        "pros_translated": raw_review.get("pros_translated"),
+        "cons_translated": raw_review.get("cons_translated"),
+
+        "title": raw_review.get("title"),
+        "reviewer_name": raw_review.get("author", {}).get("name") if isinstance(raw_review.get("author"), dict) else raw_review.get("author"),
+        "anonymous": bool(raw_review.get("anonymous")),
+        "tags": raw_review.get("tags") or [],
+        "helpful_vote_count": raw_review.get("helpful_vote_count", 0),
+        "hotelier_response": raw_review.get("hotelier_response"),
+
+        "room_name": stayed.get("room_name"),
+        "room_id": stayed.get("room_id"),
+        "checkin": stayed.get("checkin"),
+        "checkout": stayed.get("checkout"),
+        "num_nights": stayed.get("num_nights"),
+        "room_photo": photo.get("url_max300") or photo.get("url_original"),
+
+        "is_incentivised": bool(raw_review.get("is_incentivised")),
+        "is_moderated": bool(raw_review.get("is_moderated")),
+
+        "raw": raw_review,
+    }
+
+
+def get_hotel_reviews_from_api(
+    hotel_id: str | int,
+    page_number: int = 1,
+    sort_option_id: str = "sort_most_relevant",
+    limit: int = 10,
+) -> dict:
+    """
+    Lấy đánh giá khách sạn qua Booking.com15 getHotelReviews.
+
+    hotel_id = external_hotel_id từ search_hotel_from_api.
+    """
+    if not hotel_id:
+        return {"error": "Bạn cần cung cấp hotel_id (external_hotel_id)."}
+
+    try:
+        data = _booking_get(
+            "/hotels/getHotelReviews",
+            {
+                "hotel_id": str(hotel_id),
+                "page_number": page_number,
+                "sort_option_id": sort_option_id,
+            },
+        )
+
+        # API trả result là list reviews
+        raw_reviews = []
+        if isinstance(data, dict):
+            raw_reviews = data.get("result") or data.get("reviews") or []
+        elif isinstance(data, list):
+            raw_reviews = data
+
+        reviews = [
+            _normalize_booking_review(item)
+            for item in raw_reviews
+            if isinstance(item, dict)
+        ]
+
+        if limit and len(reviews) > limit:
+            reviews = reviews[:limit]
+
+        return {
+            "source": "booking_com15_rapidapi",
+            "external_hotel_id": str(hotel_id),
+            "page": page_number,
+            "sort_option_id": sort_option_id,
+            "review_count": len(reviews),
+            "reviews": reviews,
+        }
+
+    except Exception as e:
+        return {
+            "error": f"Lỗi khi gọi getHotelReviews: {str(e)}"
+        }
+
+def _normalize_booking_facility(raw_facility: dict) -> dict:
+    rs =[]
+    instances = raw_facility.get("instances") or []
+    for inst in instances:
+        if not isinstance(inst,dict):
+            continue
+        payment = inst.get("paymentInfo") or {}
+        rs.append(
+            {
+                "title": inst.get("title"),
+                "charge_mode": payment.get("chargeMode"),  
+                "sub_facilities": [
+                    sf.get("title")
+                    for sf in (inst.get("subFacilities") or [])
+                    if isinstance(sf, dict) and sf.get("title")
+                ],
+            }
+        )
+    return {
+        "id": raw_facility.get("id"),
+        "group_id": raw_facility.get("groupId"),
+        "instances": rs
+    }
+def get_hotel_facility_from_api(
+    hotel_id: str | int,
+) -> dict:
+    """
+    Lấy tiện ích/facilities khách sạn qua Booking.com15 getHotelFacilities.
+    hotel_id = external_hotel_id từ search_hotel_from_api.
+    """
+    if not hotel_id:
+        return {"error": "Bạn cần cung cấp hotel_id (external_hotel_id)."}
+    try:
+        params = {
+            "hotel_id": str(hotel_id),
+            "languagecode": BOOKING_LANGUAGE_CODE,
+        }
+        data = _booking_get("/hotels/getHotelFacilities", params)
+        raw_highlights = []
+        raw_facilities = []
+        if isinstance(data, dict):
+            raw_highlights = (
+                data.get("accommodationHighlights")
+                or data.get("accommodation_highlights")
+                or []
+            )
+            raw_facilities = data.get("facilities") or []
+        highlights = [
+            item.get("title")
+            for item in raw_highlights
+            if isinstance(item, dict) and item.get("title")
+        ]
+        facilities = [
+            _normalize_booking_facility(item)
+            for item in raw_facilities
+            if isinstance(item, dict)
+        ]
+        # Flat list tiện ích (dễ cho agent đọc)
+        facility_titles = []
+        for fac in facilities:
+            for inst in fac.get("instances", []):
+                title = inst.get("title")
+                if title:
+                    facility_titles.append(title)
+                facility_titles.extend(inst.get("sub_facilities") or [])
+        # Loại trùng, giữ thứ tự
+        seen = set()
+        unique_titles = []
+        for t in facility_titles:
+            if t not in seen:
+                seen.add(t)
+                unique_titles.append(t)
+        return {
+            "external_hotel_id": str(hotel_id),
+            "highlights": highlights,
+            "facility_count": len(unique_titles),
+            "facility_titles": unique_titles,
+            "facilities": facilities,
+        }
+    except Exception as e:
+        return {
+            "error": f"Lỗi khi gọi getHotelFacilities: {str(e)}"
+        }
+
+def _normalize_booking_policy(raw_policy: dict) -> dict:
+    
+    if not isinstance(raw_policy, dict):
+        return None 
+    
+    description = raw_policy.get("content") or {}
+    first = description[0] if description else {}
+    return{
+            "type": raw_policy.get("type"),
+            "description": first.get("text")if isinstance(first, dict) else None,
+    }
+
+
+
+
+
+
+def get_hotel_policy_from_api(hotel_id: str | int) -> dict:
+    """
+    Lấy chính sách khách sạn qua Booking.com15 getHotelPolicies.
+    hotel_id = external_hotel_id từ search_hotel_from_api.
+    """
+    if not hotel_id:
+        return {"error": "Bạn cần cung cấp hotel_id (external_hotel_id)."}
+    try:
+        params = {
+            "hotel_id": str(hotel_id),
+            "languagecode": BOOKING_LANGUAGE_CODE,
+        }
+        data = _booking_get("/hotels/getHotelPolicies", params)
+
+        policies = [
+            _normalize_booking_policy(item)
+            for item in data.get("policy") or []
+            if isinstance(item, dict)
+        ]
+        return{
+            "external_hotel_id": str(hotel_id),
+            "policies": policies,
+            "policy_count": len(policies),
+            "policy_titles": [policy.get("type") for policy in policies],
+            "policy_descriptions": [policy.get("description") if policy.get("description") else None for policy in policies],
+        }
+    except Exception as e:
+        return {
+            "error": f"Lỗi khi gọi getHotelPolicies: {str(e)}"
+        }
 
 
 # def _search_hotel_exact(data, location, name, price_tier, rating):
