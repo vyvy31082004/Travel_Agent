@@ -16,7 +16,7 @@ from mcp_servers.hotel.tools import register_hotel_tools
 mcp = FastMCP(
     "hotel-server",
     host="127.0.0.1",
-    port=8000,
+    port=8004,
 )
 
 register_hotel_tools(mcp)

@@ -4,7 +4,7 @@ from mcp_servers.flight.tools import register_flight_tools
 mcp = FastMCP(
     "flight-server",
     host="127.0.0.1",
-    port=8000,
+    port=8003,
 )
 
 register_flight_tools(mcp)

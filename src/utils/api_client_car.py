@@ -514,11 +514,21 @@ def filter_cars_by_price(
     price_min: int | None = None,
     price_max: int | None = None,
 ) -> list[dict]:
+    # Tool defaults min_price=0 / max_price=0 mean "no price filter".
+    if not price_min:
+        price_min = None
+    if not price_max:
+        price_max = None
+
+    if price_min is None and price_max is None:
+        return cars
+
     filtered = []
 
     for car in cars:
-        # Chỉ lấy Giá gốc
-        price = parse_mioto_price(car.get("Giá gốc"))
+        price = parse_mioto_price(car.get("Giá gốc")) or parse_mioto_price(
+            car.get("Giá sau giảm")
+        )
         if price is None:
             continue
 

@@ -79,7 +79,16 @@ def _booking_get(header: str, path: str, params: dict, retries: int = 2) -> dict
             print("FINAL URL:", response.url)
 
             if response.status_code == 429:
-                raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
+                last_exc = RuntimeError(
+                    "RapidAPI bị giới hạn request. Hãy thử lại sau."
+                )
+                if attempt <= retries:
+                    import time
+
+                    print(f"429 on attempt {attempt}/{retries + 1}, backing off...")
+                    time.sleep(2 * attempt)
+                    continue
+                raise last_exc
 
             response.raise_for_status()
             payload = response.json()

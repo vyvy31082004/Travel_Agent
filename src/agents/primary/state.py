@@ -1,4 +1,4 @@
-﻿from typing import Annotated, Any, Dict, Literal, Optional
+from typing import Annotated, Any, Dict, Literal, Optional
 
 from langgraph.graph.message import AnyMessage, add_messages
 from typing_extensions import TypedDict
@@ -34,6 +34,8 @@ class State(TypedDict, total=False):
                 "flight_assistant",
                 "hotel_assistant",
                 "excursion_assistant",
+                "car_assistant",
+                "travel_planner_assistant",
             ]
         ],
         update_dialog_stack,

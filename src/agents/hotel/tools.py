@@ -59,12 +59,14 @@ load_dotenv()
 #     )
 
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from langsmith import traceable
 
+@traceable(run_type="chain", name="load_hotel_mcp_tools")
 async def get_hotel_tools():
     client = MultiServerMCPClient(
         {
             "hotel": {
-                "url": "http://127.0.0.1:8000/sse",
+                "url": "http://127.0.0.1:8004/sse",
                 "transport": "sse",
             }
         }

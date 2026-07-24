@@ -14,6 +14,7 @@ from agents.flight.state import State
 from agents.flight.tools import get_flight_tools
 from prompts.prompt import flight_prompts
 from utils.api_client_flight import get_booking_link_from_api
+from utils.tracing import with_trace_config
 
 load_dotenv()
 
@@ -190,8 +191,20 @@ async def build_flight_graph():
 
     all_tools = mcp_tools + [book_flight_by_id]
 
-    flight_runnable = flight_prompts | llm.bind_tools(all_tools)
-    tool_node = ToolNode(all_tools)
+    flight_runnable = (flight_prompts | llm.bind_tools(all_tools)).with_config(
+        with_trace_config(
+            run_name="flight_llm",
+            tags=["customer-support", "flight", "llm"],
+            metadata={"agent": "flight"},
+        )
+    )
+    tool_node = ToolNode(all_tools).with_config(
+        with_trace_config(
+            run_name="flight_tools",
+            tags=["customer-support", "flight", "tools", "mcp"],
+            metadata={"agent": "flight", "tool_transport": "mcp_sse"},
+        )
+    )
 
     async def flight_chat(state: dict, config: RunnableConfig):
         messages = state.get("messages", [])
@@ -203,7 +216,15 @@ async def build_flight_graph():
         cleaned_messages = _strip_tokens_from_messages(messages)
         cleaned_state = {**state, "messages": cleaned_messages}
 
-        response = await flight_runnable.ainvoke(cleaned_state, config=config)
+        response = await flight_runnable.ainvoke(
+            cleaned_state,
+            config=with_trace_config(
+                config,
+                run_name="flight_chat",
+                tags=["customer-support", "flight"],
+                metadata={"agent": "flight"},
+            ),
+        )
         result: dict = {"messages": [response] if not isinstance(response, list) else response}
         if new_token_map:
             result["flight_token_map"] = new_token_map

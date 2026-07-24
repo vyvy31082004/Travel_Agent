@@ -38,11 +38,40 @@ JSONBIN_API_KEY=your_api_key
 # Google Gemini API
 GOOGLE_API_KEY=your_google_api_key
 
+# PostgreSQL (application data and LangGraph checkpoints)
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/customer_support
+COOKIE_SECRET=replace-with-a-long-random-secret
+COOKIE_SECURE=false
+CHECKPOINT_RETENTION_DAYS=30
+CONVERSATION_RETENTION_DAYS=90
+DB_POOL_MIN_SIZE=1
+DB_POOL_MAX_SIZE=10
+DB_POOL_TIMEOUT_SECONDS=30
+
 # Hybrid Search (Optional)
 USE_QDRANT=true  # true = semantic search, false = exact search
+
+# LangSmith tracing (Optional)
+LANGSMITH_TRACING=true
+LANGSMITH_API_KEY=your_langsmith_api_key
+LANGSMITH_PROJECT=customer-support-agent
+# Optional compatibility for older LangChain tracing stacks
+LANGCHAIN_TRACING_V2=true
 ```
 
-### 3. Test Hybrid Search
+### 3. Initialize PostgreSQL and run the API
+
+```bash
+alembic upgrade head
+uvicorn app:app --app-dir src --host 0.0.0.0 --port 5000
+```
+
+The FastAPI lifespan opens one shared PostgreSQL pool, applies the LangGraph
+checkpoint schema via `AsyncPostgresSaver.setup()`, builds the primary graph,
+and closes the pool on shutdown. Start the MCP servers before the API so their
+tools are available during graph construction.
+
+### 4. Test Hybrid Search
 
 ```bash
 # Quick test
@@ -135,6 +164,19 @@ python test_hybrid_search.py
 ```
 
 ## 🔧 Configuration
+
+### LangSmith tracing
+
+LangGraph and MCP-backed tools are invoked through LangChain `ToolNode`, so LangSmith can render agent and tool runs when tracing is enabled before starting the app or notebooks.
+
+```env
+LANGSMITH_TRACING=true
+LANGSMITH_API_KEY=your_langsmith_api_key
+LANGSMITH_PROJECT=customer-support-agent
+LANGCHAIN_TRACING_V2=true
+```
+
+Run the MCP servers first, then start the FastAPI app or notebooks so tool discovery and tool runs are captured in the same trace context.
 
 ### Enable/Disable Qdrant
 

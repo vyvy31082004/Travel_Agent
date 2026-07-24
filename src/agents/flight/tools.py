@@ -1,11 +1,13 @@
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from langsmith import traceable
 
 
+@traceable(run_type="chain", name="load_flight_mcp_tools")
 async def get_flight_tools():
     client = MultiServerMCPClient(
         {
             "flight": {
-                "url": "http://127.0.0.1:8000/sse",
+                "url": "http://127.0.0.1:8003/sse",
                 "transport": "sse",
             }
         }

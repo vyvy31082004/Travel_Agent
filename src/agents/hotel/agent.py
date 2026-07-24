@@ -7,6 +7,7 @@ from langgraph.prebuilt import ToolNode
 from agents.hotel.tools import get_hotel_tools
 from prompts.prompt import hotel_prompts
 from agents.hotel.state import State
+from utils.tracing import with_trace_config
 
 load_dotenv()
 
@@ -38,11 +39,31 @@ temperature = 0.2,
 
 async def build_hotel_graph():
     hotel_tools = await get_hotel_tools()   # ← OK, nằm trong async def
-    hotel_runnable = hotel_prompts | llm.bind_tools(hotel_tools)
-    tool_node = ToolNode(hotel_tools)
+    hotel_runnable = (hotel_prompts | llm.bind_tools(hotel_tools)).with_config(
+        with_trace_config(
+            run_name="hotel_llm",
+            tags=["customer-support", "hotel", "llm"],
+            metadata={"agent": "hotel"},
+        )
+    )
+    tool_node = ToolNode(hotel_tools).with_config(
+        with_trace_config(
+            run_name="hotel_tools",
+            tags=["customer-support", "hotel", "tools", "mcp"],
+            metadata={"agent": "hotel", "tool_transport": "mcp_sse"},
+        )
+    )
 
     async def hotel_chat(state: dict, config: RunnableConfig):
-        response = await hotel_runnable.ainvoke(state, config=config)
+        response = await hotel_runnable.ainvoke(
+            state,
+            config=with_trace_config(
+                config,
+                run_name="hotel_chat",
+                tags=["customer-support", "hotel"],
+                metadata={"agent": "hotel"},
+            ),
+        )
         if isinstance(response, list):
             return {"messages": response}
         return {"messages": [response]}

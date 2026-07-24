@@ -51,7 +51,9 @@ def _booking_headers() -> dict:
     }
 
 
-def _booking_get(path: str, params: dict) -> dict | list:
+def _booking_get(path: str, params: dict, retries: int = 1) -> dict | list:
+    import time
+
     url = f"{BOOKING_BASE_URL}{path}"
 
     clean_params = {
@@ -63,28 +65,47 @@ def _booking_get(path: str, params: dict) -> dict | list:
     print("CALL API:", url)
     print("PARAMS:", clean_params)
 
-    response = requests.get(
-        url,
-        headers=_booking_headers(),
-        params=clean_params,
-        timeout=20,
-    )
+    last_error: Exception | None = None
+    for attempt in range(1, retries + 2):
+        response = requests.get(
+            url,
+            headers=_booking_headers(),
+            params=clean_params,
+            timeout=20,
+        )
 
-    print("FINAL URL:", response.url)
+        print("FINAL URL:", response.url)
 
-    if response.status_code == 429:
-        raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
+        if response.status_code == 429:
+            last_error = RuntimeError(
+                "RapidAPI bị giới hạn request. Hãy thử lại sau."
+            )
+            if attempt <= retries:
+                retry_after = response.headers.get("Retry-After")
+                try:
+                    delay_seconds = min(max(float(retry_after), 0), 10)
+                except (TypeError, ValueError):
+                    delay_seconds = 2 * attempt
+                print(
+                    f"429 on attempt {attempt}/{retries + 1}, "
+                    f"retrying after {delay_seconds:g}s..."
+                )
+                time.sleep(delay_seconds)
+                continue
+            raise last_error
 
-    response.raise_for_status()
-    payload = response.json()
+        response.raise_for_status()
+        payload = response.json()
 
-    if isinstance(payload, dict) and payload.get("status") is False:
-        raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
+        if isinstance(payload, dict) and payload.get("status") is False:
+            raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
 
-    if isinstance(payload, dict):
-        return payload.get("data", payload)
+        if isinstance(payload, dict):
+            return payload.get("data", payload)
 
-    return payload
+        return payload
+
+    raise last_error or RuntimeError("Booking API thất bại.")
 
 
 def _parse_date(value: Optional[str]) -> Optional[str]:

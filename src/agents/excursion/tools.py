@@ -44,12 +44,14 @@ load_dotenv()
 #     return search_trip_from_api(location, name, keywords, details, price, price_min, price_max)
 
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from langsmith import traceable
 
+@traceable(run_type="chain", name="load_excursion_mcp_tools")
 async def get_excursion_tools():
     client = MultiServerMCPClient(
         {
             "excursion": {
-                "url": "http://127.0.0.1:8000/sse",
+                "url": "http://127.0.0.1:8002/sse",
                 "transport": "sse",
             }
         }

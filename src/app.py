@@ -1,69 +1,70 @@
-# from flask import Flask, request, jsonify, render_template
-# import uuid
-# from agents.primary.agent import primary_graph
-
-# app = Flask(__name__)
-
-# @app.route("/")
-# def index():
-#     return render_template("chat.html")
-
-# @app.route("/chat", methods=["POST"])
-# def chat():
-#     data = request.get_json()
-#     user_message = data.get("msg")
-#     thread_id = data.get("thread_id") or str(uuid.uuid4())
-#     config = {"configurable": {"thread_id": thread_id}}
-#     snapshot = primary_graph.get_state(config)
-#     old_count = len(snapshot.values.get("messages", [])) if snapshot.values else 0
-#     result = primary_graph.invoke({"messages": ("user", user_message)}, config)
-#     new_messages = result["messages"][old_count:]
-#     ai_responses = []
-#     for msg in new_messages:
-#         if msg.type in ("ai", "assistant") and msg.content:
-
-#             if "Proceeding with the next requested task" not in msg.content:
-#                 ai_responses.append(msg.content)
-    
-#     response = "\n\n".join(ai_responses) if ai_responses else "Sorry, I couldn't get a response."
-#     return jsonify({"response": response, "thread_id": thread_id})
-
-# if __name__ == "__main__":
-#     app.run(host='0.0.0.0', debug=True, port=5000)
-
-import asyncio
 import uuid
+from contextlib import asynccontextmanager
+from pathlib import Path
+from typing import AsyncIterator
 
-from flask import Flask, jsonify, render_template, request
+import uvicorn
+from fastapi import Depends, FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel, Field
 
 from agents.primary.agent import build_primary_graph
+from dependencies import get_primary_graph
+from infrastructure.postgres import open_postgres
+from settings import get_settings
+from utils.tracing import with_trace_config
 
-app = Flask(__name__)
-
-# Khởi tạo graph một lần khi server start (MCP servers phải đang chạy trước)
-primary_graph = asyncio.run(build_primary_graph())
-
-
-@app.route("/")
-def index():
-    return render_template("chat.html")
+TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
+templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 
-@app.route("/chat", methods=["POST"])
-async def chat():
-    data = request.get_json()
-    user_message = data.get("msg")
-    thread_id = data.get("thread_id") or str(uuid.uuid4())
-    config = {
-        "configurable": {"thread_id": thread_id},
-        "run_name": "customer_support_agent",
-    }
+class ChatRequest(BaseModel):
+    msg: str = Field(min_length=1)
+    thread_id: str | None = None
 
-    snapshot = primary_graph.get_state(config)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    settings = get_settings()
+    async with open_postgres(settings) as postgres:
+        app.state.settings = settings
+        app.state.database_pool = postgres.pool
+        app.state.checkpointer = postgres.checkpointer
+        app.state.primary_graph = await build_primary_graph(
+            checkpointer=postgres.checkpointer
+        )
+        yield
+
+
+app = FastAPI(title="Travel Customer Support Agent", lifespan=lifespan)
+
+
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(request=request, name="chat.html")
+
+
+@app.post("/chat")
+async def chat(
+    payload: ChatRequest,
+    primary_graph=Depends(get_primary_graph),
+) -> dict[str, str]:
+    thread_id = payload.thread_id or str(uuid.uuid4())
+    config = with_trace_config(
+        {"configurable": {"thread_id": thread_id}},
+        run_name="customer_support_agent",
+        tags=["customer-support", "primary"],
+        metadata={"thread_id": thread_id},
+    )
+
+    snapshot = await primary_graph.aget_state(config)
     old_count = len(snapshot.values.get("messages", [])) if snapshot.values else 0
 
-    # ainvoke vì subgraph flight/hotel/excursion là async
-    result = await primary_graph.ainvoke({"messages": ("user", user_message)}, config)
+    result = await primary_graph.ainvoke(
+        {"messages": ("user", payload.msg)},
+        config,
+    )
 
     new_messages = result["messages"][old_count:]
     ai_responses = []
@@ -72,9 +73,13 @@ async def chat():
             if "Proceeding with the next requested task" not in msg.content:
                 ai_responses.append(msg.content)
 
-    response = "\n\n".join(ai_responses) if ai_responses else "Sorry, I couldn't get a response."
-    return jsonify({"response": response, "thread_id": thread_id})
+    response = (
+        "\n\n".join(ai_responses)
+        if ai_responses
+        else "Sorry, I couldn't get a response."
+    )
+    return {"response": response, "thread_id": thread_id}
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, port=5000)
+    uvicorn.run("app:app", host="0.0.0.0", port=5000, reload=True)

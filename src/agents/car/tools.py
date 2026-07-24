@@ -8,7 +8,9 @@ from utils.utils import to_date
 load_dotenv()
 
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from langsmith import traceable
 
+@traceable(run_type="chain", name="load_car_mcp_tools")
 async def get_car_tools():
     client = MultiServerMCPClient(
         {

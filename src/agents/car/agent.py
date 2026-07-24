@@ -44,6 +44,7 @@ from langgraph.prebuilt import ToolNode
 from agents.car.tools import get_car_tools
 from prompts.prompt import car_prompts
 from agents.car.state import State
+from utils.tracing import with_trace_config
 load_dotenv()
 llm = ChatGoogleGenerativeAI(
 model="gemini-2.5-flash",
@@ -51,11 +52,31 @@ temperature = 0.2,
 )
 async def build_car_graph():
     car_tools = await get_car_tools()   
-    car_runnable = car_prompts | llm.bind_tools(car_tools)
-    tool_node = ToolNode(car_tools)
+    car_runnable = (car_prompts | llm.bind_tools(car_tools)).with_config(
+        with_trace_config(
+            run_name="car_llm",
+            tags=["customer-support", "car", "llm"],
+            metadata={"agent": "car"},
+        )
+    )
+    tool_node = ToolNode(car_tools).with_config(
+        with_trace_config(
+            run_name="car_tools",
+            tags=["customer-support", "car", "tools", "mcp"],
+            metadata={"agent": "car", "tool_transport": "mcp_sse"},
+        )
+    )
 
     async def car_chat(state: dict, config: RunnableConfig):
-        response = await car_runnable.ainvoke(state, config=config)
+        response = await car_runnable.ainvoke(
+            state,
+            config=with_trace_config(
+                config,
+                run_name="car_chat",
+                tags=["customer-support", "car"],
+                metadata={"agent": "car"},
+            ),
+        )
         if isinstance(response, list):
             return {"messages": response}
         return {"messages": [response]}

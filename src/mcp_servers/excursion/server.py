@@ -4,7 +4,7 @@ from mcp_servers.excursion.tools import register_excursion_tools
 mcp = FastMCP(
     "excursion-server",
     host="127.0.0.1",
-    port=8000,
+    port=8002,
 )
 
 register_excursion_tools(mcp)
