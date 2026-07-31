@@ -49,6 +49,14 @@ app = FastAPI(title="Travel Customer Support Agent", lifespan=lifespan)
 async def index(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request=request, name="chat.html")
 
+@app.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(request=request, name="login.html")
+
+@app.get("/register", response_class=HTMLResponse)
+async def register_page(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(request=request, name="register.html")
+
 
 @app.post("/chat")
 async def chat(
