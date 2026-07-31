@@ -205,11 +205,14 @@
       </div>
 
       <p class="subtitle">Đăng nhập để tiếp tục cuộc trò chuyện, lưu sở thích du lịch và quản lý kế hoạch của bạn.</p>
+      {% if error %}
+      <p class="subtitle" role="alert" style="color: var(--red); font-weight: 700;">{{ error }}</p>
+      {% endif %}
 
-      <form action="/" method="get">
+      <form action="/login" method="post">
         <div class="field">
           <label for="email">Email</label>
-          <input id="email" name="email" type="email" autocomplete="email" placeholder="ban@example.com" required />
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="ban@example.com" value="{{ email or '' }}" required />
         </div>
         <div class="field">
           <label for="password">Mật khẩu</label>

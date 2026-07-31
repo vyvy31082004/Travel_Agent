@@ -720,10 +720,23 @@
 
         <div class="sidebar-spacer"></div>
 
-        <a class="account-card" href="/login" aria-label="Tài khoản người dùng">
+        {% if current_user %}
+        <div class="account-card" aria-label="Tài khoản người dùng">
+          <span class="avatar" aria-hidden="true">{{ current_user.full_name[:2].upper() }}</span>
+          <span class="nav-text"><strong>{{ current_user.full_name }}</strong><span>{{ current_user.email }}</span></span>
+        </div>
+        <form action="/logout" method="post">
+          <button class="nav-item" type="submit">
+            <span class="nav-icon" aria-hidden="true">↩</span>
+            <span class="nav-text"><strong>Đăng xuất</strong><span>Kết thúc phiên hiện tại</span></span>
+          </button>
+        </form>
+        {% else %}
+        <a class="account-card" href="/login" aria-label="Đăng nhập tài khoản">
           <span class="avatar" aria-hidden="true">VT</span>
-          <span class="nav-text"><strong>Khách du lịch</strong><span>Tài khoản · Sở thích · Đăng xuất</span></span>
+          <span class="nav-text"><strong>Khách du lịch</strong><span>Đăng nhập hoặc đăng ký để lưu tài khoản</span></span>
         </a>
+        {% endif %}
       </aside>
 
       <main class="main-panel">
@@ -818,7 +831,8 @@
       const mobileBackdropEl = document.getElementById('mobile-backdrop');
 
       let threadId = null;
-      let userId = localStorage.getItem('viettrip_user_id') || null;
+      const authenticatedUserId = {{ (current_user.user_id if current_user else '') | tojson }};
+      let anonymousUserId = authenticatedUserId ? null : (localStorage.getItem('viettrip_user_id') || null);
 
       function renderMarkdown(text) {
         if (window.marked && typeof window.marked.parse === 'function') {
@@ -926,7 +940,7 @@
           const res = await fetch('/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ msg: text, thread_id: threadId, user_id: userId }),
+            body: JSON.stringify({ msg: text, thread_id: threadId, user_id: anonymousUserId }),
           });
 
           if (!res.ok) {
@@ -935,8 +949,10 @@
 
           const data = await res.json();
           threadId = data.thread_id;
-          userId = data.user_id;
-          if (userId) localStorage.setItem('viettrip_user_id', userId);
+          if (!authenticatedUserId) {
+            anonymousUserId = data.user_id;
+            if (anonymousUserId) localStorage.setItem('viettrip_user_id', anonymousUserId);
+          }
           loadingRow.remove();
           appendMessage(data.response, 'ai');
         } catch (err) {
