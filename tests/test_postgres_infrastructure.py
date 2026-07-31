@@ -60,13 +60,19 @@ def test_lifespan_injects_shared_postgres_resources(monkeypatch) -> None:
         assert received_settings is settings
         yield SimpleNamespace(pool=pool, checkpointer=checkpointer)
 
-    async def fake_build_primary_graph(*, checkpointer):
+    async def fake_build_primary_graph(*, checkpointer, repo=None):
         assert checkpointer is expected_checkpointer
+        assert repo is not None
         return graph
+
+    class FakeRepo:
+        def __init__(self, pool):
+            self.pool = pool
 
     monkeypatch.setattr(app_module, "get_settings", lambda: settings)
     monkeypatch.setattr(app_module, "open_postgres", fake_open_postgres)
     monkeypatch.setattr(app_module, "build_primary_graph", fake_build_primary_graph)
+    monkeypatch.setattr(app_module, "ResultStoreRepository", FakeRepo)
 
     async def verify_lifespan() -> None:
         async with app_module.lifespan(app_module.app):
@@ -74,5 +80,6 @@ def test_lifespan_injects_shared_postgres_resources(monkeypatch) -> None:
             assert app_module.app.state.database_pool is pool
             assert app_module.app.state.checkpointer is checkpointer
             assert app_module.app.state.primary_graph is graph
+            assert app_module.app.state.result_store.pool is pool
 
     asyncio.run(verify_lifespan())

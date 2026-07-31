@@ -3,7 +3,7 @@ import warnings
 from copy import copy
 
 from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage, ToolMessage
+from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage
 from langchain_core.runnables import RunnableConfig
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.checkpoint.base import BaseCheckpointSaver
@@ -17,7 +17,10 @@ from agents.hotel.agent import build_hotel_graph
 from agents.car.agent import build_car_graph
 from agents.travel_planner.agent import build_travel_planner_graph
 from agents.primary.state import State
+from memory.agent_helpers import merge_structured_state
 from prompts.prompt import primary_prompts
+from repositories.result_store import ResultStoreRepository
+from services.summarize import should_summarize, summarize_conversation
 from utils.tracing import with_trace_config
 
 warnings.filterwarnings("ignore")
@@ -93,8 +96,19 @@ primary_runnable = (
 
 
 async def primary_chat(state: State, config: RunnableConfig) -> dict:
+    invoke_state = dict(state)
+    messages = list(state.get("messages") or [])
+    if state.get("summary"):
+        messages = [
+            SystemMessage(
+                content=f"Bản tóm tắt hội thoại đến hiện tại:\n{state['summary']}"
+            ),
+            *messages,
+        ]
+        invoke_state["messages"] = messages
+
     result = await primary_runnable.ainvoke(
-        state,
+        invoke_state,
         config=with_trace_config(
             config,
             run_name="primary_assistant",
@@ -119,46 +133,6 @@ def _branch_state(state: State, tool_call: dict, node_name: str) -> dict:
         "tool_call_id": tool_call["id"],
         "active_assistant": node_name,
     }
-
-
-def generic_assistant_entry(state: State, assistant_name: str, dialog_state: str) -> dict:
-    tcid = state.get("tool_call_id")
-
-    last_message = state["messages"][-1]
-    # tcid = (
-    #     last_message.tool_calls[0]["id"]
-    #     if getattr(last_message, "tool_calls", None)
-    #     else None
-    # )
-    tool_calls = getattr(last_message, "tool_calls", None) or []
-    tool_call = tool_calls[0] if tool_calls else {}
-    if not tcid and tool_call:
-        tcid = tool_call["id"]
-    delegated_request = tool_call.get("args", {}).get("request", "")
-    next_state = dict(state)
-    next_messages = list(state.get("messages", []))
-
-    if tcid:
-        next_messages.append(
-            ToolMessage(
-                content=(
-                    f"The assistant is now the {assistant_name}.\n"
-                    f"Delegated user request:\n{delegated_request}\n\n"
-                    f"ANSWERING RULES:\n"
-                    f"- Answer ONLY within the scope of {assistant_name}.\n"
-                    f"- Do NOT mention limitations or other domains.\n"
-                    f"- If you use a tool, you MUST use the exact output of the tool in your final response (especially numbers and prices).\n"
-                    f"- Return concise, structured results. Prefer a single bullet list or a short JSON payload.\n"
-                    f"- Answer ONLY this delegated request, not the original user message.\n"
-                    f"- Ignore all unrelated parts of the original conversation.\n"
-                ),
-                tool_call_id=tcid,
-            )
-        )
-
-    next_state["messages"] = next_messages
-    next_state["dialog_state"] = dialog_state
-    return next_state
 
 
 def _delegated_request_from_state(state: State) -> tuple[str | None, str]:
@@ -196,6 +170,7 @@ async def run_delegated_assistant(
             f"- Follow weather-first planning when the user asks for a weather-based plan.\n"
             f"- If you use a tool, you MUST use the exact output of the tool in your final response "
             f"(especially numbers and prices).\n"
+            f"- Search tools return compact refs; temporary Result Store payloads are injected for answering.\n"
             f"- Synthesize one clear itinerary covering the requested parts "
             f"(weather summary, matching activities, hotels, flights).\n"
             f"- Answer ONLY this delegated request, not unrelated conversation history.\n"
@@ -205,12 +180,18 @@ async def run_delegated_assistant(
             f"ANSWERING RULES:\n"
             f"- Answer ONLY within the scope of {assistant_name}.\n"
             f"- Do NOT mention limitations or other domains.\n"
-            f"- If you use a tool, you MUST use the exact output of the tool in your final response "
-            f"(especially numbers and prices).\n"
-            f"- Return concise, structured results. Prefer a single bullet list or a short JSON payload.\n"
+            f"- Search tools return compact refs (search_id, displayed_item_ids, labels). "
+            f"Full payloads are injected temporarily from Result Store — use them for the answer.\n"
+            f"- For ordinal requests ('thứ 2', 'cái thứ 3'), use the injected RESOLVED ITEM / "
+            f"visible list. Map position by code-provided item_id. Do NOT invent IDs and "
+            f"do NOT output CompleteOrEscalate when resolved context is present.\n"
+            f"- If you use a tool, you MUST use the exact output of the tool / temporary payload "
+            f"in your final response (especially numbers and prices).\n"
+            f"- Return concise, structured results. Prefer a single bullet list.\n"
             f"- Answer ONLY this delegated request, not the original user message.\n"
             f"- Ignore all unrelated parts of the original conversation.\n"
         )
+    configurable = dict((config or {}).get("configurable") or {})
     assistant_input = {
         **state,
         "messages": [
@@ -223,6 +204,8 @@ async def run_delegated_assistant(
         ],
         "dialog_state": dialog_state,
         "active_assistant": dialog_state,
+        "user_id": state.get("user_id") or configurable.get("user_id"),
+        "thread_id": state.get("thread_id") or configurable.get("thread_id"),
     }
     delegated_config = with_trace_config(
         config,
@@ -252,8 +235,7 @@ async def run_delegated_assistant(
                 )
             ]
         }
-    if "flight_token_map" in result:
-        output["flight_token_map"] = result["flight_token_map"]
+    output.update(merge_structured_state(result))
     return output
 
 
@@ -269,7 +251,9 @@ def route_primary_assistant(state: State):
         node_name, _ = assistant_info
         sends.append(Send(node_name, _branch_state(state, tool_call, node_name)))
 
-    return sends or END
+    if sends:
+        return sends
+    return should_summarize(state)
 
 
 def join_results(state: State) -> dict:
@@ -280,14 +264,22 @@ def join_results(state: State) -> dict:
     }
 
 
-async def build_primary_graph(*, checkpointer: BaseCheckpointSaver):
+async def summarize_node(state: State, config: RunnableConfig) -> dict:
+    return await summarize_conversation(state, llm)
+
+
+async def build_primary_graph(
+    *,
+    checkpointer: BaseCheckpointSaver,
+    repo: ResultStoreRepository | None = None,
+):
     flight_graph, hotel_graph, excursion_graph, car_graph, travel_planner_graph = (
         await asyncio.gather(
-            build_flight_graph(),
-            build_hotel_graph(),
-            build_excursion_graph(),
-            build_car_graph(),
-            build_travel_planner_graph(),
+            build_flight_graph(repo=repo),
+            build_hotel_graph(repo=repo),
+            build_excursion_graph(repo=repo),
+            build_car_graph(repo=repo),
+            build_travel_planner_graph(repo=repo),
         )
     )
 
@@ -298,7 +290,11 @@ async def build_primary_graph(*, checkpointer: BaseCheckpointSaver):
     builder.add_conditional_edges(
         "primary_assistant",
         route_primary_assistant,
-        ASSISTANT_NODES + [END],
+        {
+            **{node: node for node in ASSISTANT_NODES},
+            "summarize_conversation": "summarize_conversation",
+            "__end__": END,
+        },
     )
 
     async def hotel_assistant_node(state: State, config: RunnableConfig) -> dict:
@@ -355,10 +351,12 @@ async def build_primary_graph(*, checkpointer: BaseCheckpointSaver):
     builder.add_node("travel_planner_assistant", travel_planner_assistant_node)
 
     builder.add_node("join_results", join_results)
+    builder.add_node("summarize_conversation", summarize_node)
 
     for node_name in ASSISTANT_NODES:
         builder.add_edge(node_name, "join_results")
 
     builder.add_edge("join_results", "primary_assistant")
+    builder.add_edge("summarize_conversation", END)
 
     return builder.compile(checkpointer=checkpointer, name="primary_agent")

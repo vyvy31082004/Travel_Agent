@@ -294,11 +294,16 @@ load_dotenv()
 
 
 
-BOOKING_HOST = os.getenv("BOOKING_RAPIDAPI_HOST", "booking-com15.p.rapidapi.com")
+def _env(name: str, default: str | None = None) -> str | None:
+    value = os.getenv(name, default)
+    return value.strip() if isinstance(value, str) else value
+
+
+BOOKING_HOST = _env("BOOKING_RAPIDAPI_HOST", "booking-com15.p.rapidapi.com")
 BOOKING_BASE_URL = f"https://{BOOKING_HOST}/api/v1"
-BOOKING_LANGUAGE_CODE = os.getenv("BOOKING_LANGUAGE_CODE", "vi")
-BOOKING_CURRENCY_CODE = os.getenv("BOOKING_CURRENCY_CODE", "VND")
-RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
+BOOKING_LANGUAGE_CODE = _env("BOOKING_LANGUAGE_CODE", "vi")
+BOOKING_CURRENCY_CODE = _env("BOOKING_CURRENCY_CODE", "VND")
+RAPIDAPI_KEY = _env("RAPIDAPI_KEY")
 
 
 def _booking_headers() -> dict:

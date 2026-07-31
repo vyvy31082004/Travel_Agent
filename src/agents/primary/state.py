@@ -1,4 +1,4 @@
-from typing import Annotated, Any, Dict, Literal, Optional
+﻿from typing import Annotated, Any, Dict, Literal, Optional
 
 from langgraph.graph.message import AnyMessage, add_messages
 from typing_extensions import TypedDict
@@ -13,10 +13,10 @@ def update_dialog_stack(left: list[str], right: Optional[str]) -> list[str]:
     return left + [right]
 
 
-def merge_dicts(left: dict, right: Optional[dict]) -> dict:
+def merge_dicts(left: Optional[dict], right: Optional[dict]) -> dict:
     if right is None:
-        return left
-    return {**left, **right}
+        return left or {}
+    return {**(left or {}), **right}
 
 
 def keep_latest(left: Any, right: Any) -> Any:
@@ -25,7 +25,12 @@ def keep_latest(left: Any, right: Any) -> Any:
 
 class State(TypedDict, total=False):
     messages: Annotated[list[AnyMessage], add_messages]
+    summary: Annotated[Optional[str], keep_latest]
+
     user_info: str
+    user_id: Annotated[Optional[str], keep_latest]
+    thread_id: Annotated[Optional[str], keep_latest]
+
     dialog_state: Annotated[
         list[
             Literal[
@@ -43,3 +48,14 @@ class State(TypedDict, total=False):
     tool_call_id: Annotated[Optional[str], keep_latest]
     active_assistant: Annotated[Optional[str], keep_latest]
     flight_token_map: Annotated[Dict[str, Any], merge_dicts]
+
+    # Structured short-term memory (refs only; payloads live in Result Store)
+    trips: Annotated[dict[str, dict], merge_dicts]
+    requests: Annotated[dict[str, dict], merge_dicts]
+    request_results: Annotated[dict[str, dict], merge_dicts]
+    visible_results: Annotated[dict[str, dict], merge_dicts]
+    selected_items: Annotated[dict[str, dict], merge_dicts]
+    active_request_id: Annotated[Optional[str], keep_latest]
+    latest_request_by_domain: Annotated[dict[str, str], merge_dicts]
+    pending_action: Annotated[Optional[dict], keep_latest]
+    pending_clarification: Annotated[Optional[dict], keep_latest]

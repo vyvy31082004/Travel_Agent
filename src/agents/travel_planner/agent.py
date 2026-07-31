@@ -7,7 +7,10 @@ from langgraph.prebuilt import ToolNode, tools_condition
 
 from agents.travel_planner.state import State
 from agents.travel_planner.tools import get_travel_planner_tools
+from memory.agent_helpers import domain_chat_with_memory
+from memory.tool_wrapper import wrap_tools_with_result_store
 from prompts.prompt import travel_planner_prompts
+from repositories.result_store import ResultStoreRepository
 from utils.tracing import with_trace_config
 
 load_dotenv()
@@ -76,8 +79,13 @@ def _planner_recovery_message(messages):
     )
 
 
-async def build_travel_planner_graph():
+async def build_travel_planner_graph(*, repo: ResultStoreRepository | None = None):
     travel_planner_tools = await get_travel_planner_tools()
+    if repo is not None:
+        travel_planner_tools = wrap_tools_with_result_store(
+            travel_planner_tools, repo
+        )
+
     travel_planner_runnable = (
         travel_planner_prompts | llm.bind_tools(travel_planner_tools)
     ).with_config(
@@ -103,18 +111,13 @@ async def build_travel_planner_graph():
                 **state,
                 "messages": [*state["messages"], recovery_message],
             }
-        response = await travel_planner_runnable.ainvoke(
-            invocation_state,
-            config=with_trace_config(
-                config,
-                run_name="travel_planner_chat",
-                tags=["customer-support", "travel-planner"],
-                metadata={"agent": "travel_planner"},
-            ),
+        return await domain_chat_with_memory(
+            runnable=travel_planner_runnable,
+            state=invocation_state,
+            config=config,
+            domain_hint="tour",
+            repo=repo,
         )
-        if isinstance(response, list):
-            return {"messages": response}
-        return {"messages": [response]}
 
     graph_builder = StateGraph(State)
     graph_builder.add_node("travel_planner_chat", travel_planner_chat)

@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import pool
 
 from infrastructure.postgres import Base
+from infrastructure import models as _models  # noqa: F401 — register Result Store tables
 from settings import get_settings
 
 

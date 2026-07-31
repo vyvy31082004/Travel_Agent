@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field
 from agents.primary.agent import build_primary_graph
 from dependencies import get_primary_graph
 from infrastructure.postgres import open_postgres
+from repositories.result_store import ResultStoreRepository
 from settings import get_settings
 from utils.tracing import with_trace_config
 
@@ -22,17 +23,21 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 class ChatRequest(BaseModel):
     msg: str = Field(min_length=1)
     thread_id: str | None = None
+    user_id: str | None = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
     async with open_postgres(settings) as postgres:
+        repo = ResultStoreRepository(postgres.pool)
         app.state.settings = settings
         app.state.database_pool = postgres.pool
         app.state.checkpointer = postgres.checkpointer
+        app.state.result_store = repo
         app.state.primary_graph = await build_primary_graph(
-            checkpointer=postgres.checkpointer
+            checkpointer=postgres.checkpointer,
+            repo=repo,
         )
         yield
 
@@ -51,18 +56,28 @@ async def chat(
     primary_graph=Depends(get_primary_graph),
 ) -> dict[str, str]:
     thread_id = payload.thread_id or str(uuid.uuid4())
+    user_id = payload.user_id or "dev-user"
     config = with_trace_config(
-        {"configurable": {"thread_id": thread_id}},
+        {
+            "configurable": {
+                "thread_id": thread_id,
+                "user_id": user_id,
+            }
+        },
         run_name="customer_support_agent",
         tags=["customer-support", "primary"],
-        metadata={"thread_id": thread_id},
+        metadata={"thread_id": thread_id, "user_id": user_id},
     )
 
     snapshot = await primary_graph.aget_state(config)
     old_count = len(snapshot.values.get("messages", [])) if snapshot.values else 0
 
     result = await primary_graph.ainvoke(
-        {"messages": ("user", payload.msg)},
+        {
+            "messages": ("user", payload.msg),
+            "user_id": user_id,
+            "thread_id": thread_id,
+        },
         config,
     )
 
@@ -78,7 +93,7 @@ async def chat(
         if ai_responses
         else "Sorry, I couldn't get a response."
     )
-    return {"response": response, "thread_id": thread_id}
+    return {"response": response, "thread_id": thread_id, "user_id": user_id}
 
 
 if __name__ == "__main__":
