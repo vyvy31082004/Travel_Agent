@@ -191,15 +191,18 @@
       </div>
 
       <p class="subtitle">Tạo tài khoản để cá nhân hóa gợi ý khách sạn, chuyến bay, tour và lịch trình trong những lần trò chuyện sau.</p>
+      {% if error %}
+      <p class="subtitle" role="alert" style="color: var(--red); font-weight: 700;">{{ error }}</p>
+      {% endif %}
 
-      <form action="/" method="get">
+      <form action="/register" method="post">
         <div class="field">
           <label for="full-name">Họ tên</label>
-          <input id="full-name" name="full_name" type="text" autocomplete="name" placeholder="Nguyễn An" required />
+          <input id="full-name" name="full_name" type="text" autocomplete="name" placeholder="Nguyễn An" value="{{ full_name or '' }}" required />
         </div>
         <div class="field">
           <label for="email">Email</label>
-          <input id="email" name="email" type="email" autocomplete="email" placeholder="ban@example.com" required />
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="ban@example.com" value="{{ email or '' }}" required />
         </div>
         <div class="field">
           <label for="password">Mật khẩu</label>
