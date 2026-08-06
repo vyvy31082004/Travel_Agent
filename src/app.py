@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import AsyncIterator
 
 import uvicorn
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
@@ -12,7 +12,9 @@ from pydantic import BaseModel, Field
 from agents.primary.agent import build_primary_graph
 from dependencies import get_primary_graph
 from infrastructure.postgres import open_postgres
+from repositories.long_term_memory import PostgresLongTermMemoryRepository
 from repositories.result_store import ResultStoreRepository
+from services.long_term_memory import MemoryService
 from settings import get_settings
 from utils.tracing import with_trace_config
 
@@ -31,13 +33,17 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
     async with open_postgres(settings) as postgres:
         repo = ResultStoreRepository(postgres.pool)
+        memory_repo = PostgresLongTermMemoryRepository(postgres.pool)
+        memory_service = MemoryService(settings=settings, repository=memory_repo)
         app.state.settings = settings
         app.state.database_pool = postgres.pool
         app.state.checkpointer = postgres.checkpointer
         app.state.result_store = repo
+        app.state.long_term_memory = memory_service
         app.state.primary_graph = await build_primary_graph(
             checkpointer=postgres.checkpointer,
             repo=repo,
+            memory_service=memory_service,
         )
         yield
 
@@ -48,6 +54,46 @@ app = FastAPI(title="Travel Customer Support Agent", lifespan=lifespan)
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(request=request, name="chat.html")
+
+
+@app.get("/debug/memory/jobs")
+async def debug_memory_jobs(request: Request) -> list[dict]:
+    settings = request.app.state.settings
+    if not settings.long_term_memory_debug_enabled:
+        raise HTTPException(status_code=404, detail="Not found")
+    async with request.app.state.database_pool.connection() as conn:
+        rows = await (
+            await conn.execute(
+                """
+                SELECT job_id, user_id, thread_id, status, attempts,
+                       error_summary, created_at, updated_at
+                FROM memory_jobs
+                ORDER BY created_at DESC
+                LIMIT 50
+                """
+            )
+        ).fetchall()
+    return [dict(row) for row in rows]
+
+
+@app.get("/debug/memory/audit")
+async def debug_memory_audit(request: Request) -> list[dict]:
+    settings = request.app.state.settings
+    if not settings.long_term_memory_debug_enabled:
+        raise HTTPException(status_code=404, detail="Not found")
+    async with request.app.state.database_pool.connection() as conn:
+        rows = await (
+            await conn.execute(
+                """
+                SELECT audit_id, job_id, user_id, thread_id, decision,
+                       affected_memory_ids, created_at
+                FROM memory_audit_records
+                ORDER BY created_at DESC
+                LIMIT 50
+                """
+            )
+        ).fetchall()
+    return [dict(row) for row in rows]
 
 
 @app.post("/chat")

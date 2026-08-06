@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import warnings
 from copy import copy
 
@@ -20,11 +21,14 @@ from agents.primary.state import State
 from memory.agent_helpers import merge_structured_state
 from prompts.prompt import primary_prompts
 from repositories.result_store import ResultStoreRepository
+from services.long_term_memory import MemoryService, config_user_thread
 from services.summarize import should_summarize, summarize_conversation
 from utils.tracing import with_trace_config
 
 warnings.filterwarnings("ignore")
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 
 llm = ChatGoogleGenerativeAI(
@@ -98,14 +102,26 @@ primary_runnable = (
 async def primary_chat(state: State, config: RunnableConfig) -> dict:
     invoke_state = dict(state)
     messages = list(state.get("messages") or [])
+    context_messages: list[SystemMessage] = []
     if state.get("summary"):
-        messages = [
+        context_messages.append(
             SystemMessage(
                 content=f"Bản tóm tắt hội thoại đến hiện tại:\n{state['summary']}"
-            ),
-            *messages,
-        ]
-        invoke_state["messages"] = messages
+            )
+        )
+    if state.get("memory_context"):
+        context_messages.append(
+            SystemMessage(
+                content=(
+                    "Long-term user memory recalled across conversations. "
+                    "Treat it as durable preference/profile context, not as "
+                    "temporary tool results.\n"
+                    f"{state['memory_context']}"
+                )
+            )
+        )
+    if context_messages:
+        invoke_state["messages"] = [*context_messages, *messages]
 
     result = await primary_runnable.ainvoke(
         invoke_state,
@@ -268,10 +284,31 @@ async def summarize_node(state: State, config: RunnableConfig) -> dict:
     return await summarize_conversation(state, llm)
 
 
+
+
+def _last_user_text(state: State) -> str:
+    for message in reversed(state.get("messages") or []):
+        message_type = getattr(message, "type", None)
+        if message_type in {"human", "user"}:
+            content = getattr(message, "content", "")
+            return content if isinstance(content, str) else str(content)
+        if isinstance(message, tuple) and len(message) >= 2 and message[0] in {"user", "human"}:
+            return str(message[1])
+    return ""
+
+
+def _last_ai_message_id(state: State) -> str | None:
+    for message in reversed(state.get("messages") or []):
+        if getattr(message, "type", None) in {"ai", "assistant"}:
+            return getattr(message, "id", None)
+    return None
+
+
 async def build_primary_graph(
     *,
     checkpointer: BaseCheckpointSaver,
     repo: ResultStoreRepository | None = None,
+    memory_service: MemoryService | None = None,
 ):
     flight_graph, hotel_graph, excursion_graph, car_graph, travel_planner_graph = (
         await asyncio.gather(
@@ -285,15 +322,48 @@ async def build_primary_graph(
 
     builder = StateGraph(State)
 
+    async def memory_recall_node(state: State, config: RunnableConfig) -> dict:
+        if memory_service is None:
+            return {"memory_context": "", "recalled_memory_ids": []}
+        user_id, _ = config_user_thread(config)
+        recall = await memory_service.recall(
+            user_id=state.get("user_id") or user_id,
+            query=_last_user_text(state),
+        )
+        return {
+            "memory_context": recall.memory_context,
+            "recalled_memory_ids": recall.recalled_memory_ids,
+        }
+
+    async def memory_finalize_node(state: State, config: RunnableConfig) -> dict:
+        if memory_service is None:
+            return {}
+        user_id, thread_id = config_user_thread(config)
+        try:
+            job = await memory_service.enqueue_final_turn(
+                user_id=state.get("user_id") or user_id,
+                thread_id=state.get("thread_id") or thread_id,
+                final_message_id=_last_ai_message_id(state),
+                checkpoint_id=None,
+                messages=state.get("messages") or [],
+                metadata={"recalled_memory_ids": state.get("recalled_memory_ids") or []},
+            )
+        except Exception as exc:
+            logger.warning("memory finalize enqueue failed: %s", exc)
+            return {"memory_job_id": None}
+        return {"memory_job_id": job.job_id if job else None}
+
+    builder.add_node("memory_recall", memory_recall_node)
     builder.add_node("primary_assistant", primary_chat)
-    builder.add_edge(START, "primary_assistant")
+    builder.add_edge(START, "memory_recall")
+    builder.add_edge("memory_recall", "primary_assistant")
     builder.add_conditional_edges(
         "primary_assistant",
         route_primary_assistant,
         {
             **{node: node for node in ASSISTANT_NODES},
             "summarize_conversation": "summarize_conversation",
-            "__end__": END,
+            "__end__": "memory_finalize",
         },
     )
 
@@ -352,11 +422,13 @@ async def build_primary_graph(
 
     builder.add_node("join_results", join_results)
     builder.add_node("summarize_conversation", summarize_node)
+    builder.add_node("memory_finalize", memory_finalize_node)
 
     for node_name in ASSISTANT_NODES:
         builder.add_edge(node_name, "join_results")
 
     builder.add_edge("join_results", "primary_assistant")
-    builder.add_edge("summarize_conversation", END)
+    builder.add_edge("summarize_conversation", "memory_finalize")
+    builder.add_edge("memory_finalize", END)
 
     return builder.compile(checkpointer=checkpointer, name="primary_agent")

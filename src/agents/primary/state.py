@@ -30,6 +30,9 @@ class State(TypedDict, total=False):
     user_info: str
     user_id: Annotated[Optional[str], keep_latest]
     thread_id: Annotated[Optional[str], keep_latest]
+    memory_context: Annotated[Optional[str], keep_latest]
+    recalled_memory_ids: Annotated[list[str], keep_latest]
+    memory_job_id: Annotated[Optional[str], keep_latest]
 
     dialog_state: Annotated[
         list[
