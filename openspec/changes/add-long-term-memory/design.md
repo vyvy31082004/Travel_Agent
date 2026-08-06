@@ -88,9 +88,18 @@ This is more work than direct writes, but necessary to avoid polluting long-term
 
 ### Store audit and lifecycle metadata in PostgreSQL
 
-PostgreSQL remains the operational source of truth. If LangGraph `AsyncPostgresStore` with pgvector is available, it can hold JSON documents and semantic index; application tables should still track jobs/audit. If store support is not mature enough in the project dependency set, an application-managed `long_term_memories` table plus pgvector/search adapter is acceptable as a first implementation.
+PostgreSQL remains the operational source of truth. The first implementation will use application-managed PostgreSQL tables behind a repository/service interface rather than adopting framework-native `AsyncPostgresStore` immediately.
 
-The important boundary is the API contract: `MemoryService.recall(...)` and `MemoryService.enqueue_final_turn(...)` should hide the storage implementation from primary graph code.
+Rationale:
+
+- The project already uses Alembic, SQLAlchemy model metadata, psycopg pools, and a custom `ResultStoreRepository` pattern.
+- `langgraph-checkpoint-postgres` is already installed, but LangGraph Store/LangMem package versions are not pinned in the current requirements.
+- Application-managed tables make the first implementation deterministic, testable, and easier to migrate in this repo without adding a second storage abstraction prematurely.
+- The service boundary keeps a future move to `AsyncPostgresStore` or pgvector-backed semantic search possible.
+
+The first implementation will therefore provide deterministic filtered retrieval and optional lightweight text matching. Embedding/vector search can be added later behind the same repository interface once package versions and database extension availability are confirmed.
+
+The important boundary is the API contract: `MemoryService.recall(...)` and `MemoryService.enqueue_final_turn(...)` hide the storage implementation from primary graph code.
 
 ### Feature flags
 
@@ -123,10 +132,23 @@ This allows rollout order: schema/tests → recall read path → write pipeline 
 8. Enable recall first in development; enable write consolidation only after tests pass.
 9. Rollback by disabling feature flags; data tables can remain inert.
 
+## Verified Dependency Baseline
+
+Current installed versions checked during implementation planning:
+
+- `langgraph==1.2.8`
+- `langgraph-checkpoint-postgres==3.1.1`
+- `langchain-google-genai==4.2.7`
+- `psycopg==3.3.4`
+- `sqlalchemy==2.0.51`
+- `alembic==1.18.5`
+- `pydantic==2.13.4`
+- `langmem` is not currently installed.
+
+Because `langmem` is not present, the first implementation will not hard-require it. Candidate extraction will be isolated behind an adapter so a deterministic or LLM-based extractor can ship first, and LangMem can be added later after package/version validation.
+
 ## Open Questions
 
-- Which exact LangMem and LangGraph Store package versions should be pinned for this branch?
-- Should the first implementation use framework-native `AsyncPostgresStore` immediately, or an application-managed table with an adapter that can migrate later?
-- Which embedding model and vector dimension will be used in the deployed environment?
+- Which embedding model and vector dimension will be used in the deployed environment if semantic vector search is enabled later?
 - Should users get an explicit “forget this” UI in this change or a follow-up change?
 - What retention policy applies to rejected memory audit records?

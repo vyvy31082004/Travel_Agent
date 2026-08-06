@@ -1,0 +1,302 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Any, Protocol, Sequence
+from uuid import UUID, uuid4
+
+from psycopg.errors import UniqueViolation
+from psycopg.types.json import Jsonb
+from psycopg_pool import AsyncConnectionPool
+
+from memory.long_term import MemoryFamily, TravelMemory
+
+
+@dataclass(frozen=True)
+class MemorySearchFilters:
+    user_id: str
+    families: tuple[MemoryFamily, ...]
+    limit: int
+    query: str | None = None
+
+
+@dataclass(frozen=True)
+class MemoryJobRef:
+    job_id: str
+    idempotency_key: str
+    status: str
+    created: bool
+
+
+class LongTermMemoryRepository(Protocol):
+    async def search_active_memories(
+        self, filters: MemorySearchFilters
+    ) -> list[TravelMemory]:
+        """Return active memories matching user/family/query filters."""
+
+    async def insert_memory(self, memory: TravelMemory) -> str:
+        """Insert an approved memory and return its id."""
+
+    async def mark_memory_superseded(self, memory_id: str) -> None:
+        """Mark an active memory as superseded."""
+
+    async def write_audit_record(
+        self,
+        *,
+        job_id: str | None,
+        user_id: str,
+        thread_id: str | None,
+        decision: str,
+        proposed_transition: dict[str, Any],
+        rule_result: dict[str, Any] | None = None,
+        verifier_result: dict[str, Any] | None = None,
+        affected_memory_ids: Sequence[str] | None = None,
+    ) -> None:
+        """Persist a memory transition audit record."""
+
+    async def enqueue_memory_job(
+        self,
+        *,
+        user_id: str,
+        thread_id: str,
+        idempotency_key: str,
+        final_message_id: str | None,
+        checkpoint_id: str | None,
+        messages: Sequence[dict[str, Any]],
+        metadata: dict[str, Any] | None = None,
+    ) -> MemoryJobRef:
+        """Create or return an idempotent memory consolidation job."""
+
+
+class PostgresLongTermMemoryRepository:
+    def __init__(self, pool: AsyncConnectionPool) -> None:
+        self._pool = pool
+
+    async def search_active_memories(
+        self, filters: MemorySearchFilters
+    ) -> list[TravelMemory]:
+        families = [str(family) for family in filters.families]
+        params: dict[str, Any] = {
+            "user_id": filters.user_id,
+            "families": families,
+            "limit": filters.limit,
+        }
+        query_clause = ""
+        if filters.query:
+            terms = [term for term in filters.query.split() if len(term) >= 2][:8]
+            if terms:
+                like_patterns = [f"%{term}%" for term in terms]
+                params["patterns"] = like_patterns
+                query_clause = """
+                  AND (
+                    memory_text ILIKE ANY(%(patterns)s)
+                    OR COALESCE(condition, '') ILIKE ANY(%(patterns)s)
+                    OR evidence_text ILIKE ANY(%(patterns)s)
+                  )
+                """
+
+        async with self._pool.connection() as conn:
+            rows = await (
+                await conn.execute(
+                    f"""
+                    SELECT memory_id, user_id, memory_text, category, domain,
+                           condition, evidence_text, source_thread_id, status,
+                           valid_from, valid_to, supersedes_memory_id,
+                           created_at, updated_at, metadata
+                    FROM long_term_memories
+                    WHERE user_id = %(user_id)s
+                      AND family = ANY(%(families)s)
+                      AND status = 'active'
+                      AND (valid_from IS NULL OR valid_from <= now())
+                      AND (valid_to IS NULL OR valid_to > now())
+                      {query_clause}
+                    ORDER BY updated_at DESC, created_at DESC
+                    LIMIT %(limit)s
+                    """,
+                    params,
+                )
+            ).fetchall()
+        return [TravelMemory.from_record(dict(row)) for row in rows]
+
+    async def insert_memory(self, memory: TravelMemory) -> str:
+        memory_id = uuid4()
+        record = memory.to_record()
+        async with self._pool.connection() as conn:
+            await conn.execute(
+                """
+                INSERT INTO long_term_memories (
+                    memory_id, user_id, family, category, domain, memory_text,
+                    condition, evidence_text, source_thread_id, status,
+                    valid_from, valid_to, supersedes_memory_id, metadata
+                ) VALUES (
+                    %(memory_id)s, %(user_id)s, %(family)s, %(category)s,
+                    %(domain)s, %(memory_text)s, %(condition)s,
+                    %(evidence_text)s, %(source_thread_id)s, %(status)s,
+                    %(valid_from)s, %(valid_to)s, %(supersedes_memory_id)s,
+                    %(metadata)s
+                )
+                """,
+                {
+                    **record,
+                    "memory_id": memory_id,
+                    "metadata": Jsonb(record.get("metadata") or {}),
+                },
+            )
+        return str(memory_id)
+
+    async def mark_memory_superseded(self, memory_id: str) -> None:
+        async with self._pool.connection() as conn:
+            await conn.execute(
+                """
+                UPDATE long_term_memories
+                SET status = 'superseded', updated_at = now()
+                WHERE memory_id = %(memory_id)s
+                """,
+                {"memory_id": UUID(str(memory_id))},
+            )
+
+    async def write_audit_record(
+        self,
+        *,
+        job_id: str | None,
+        user_id: str,
+        thread_id: str | None,
+        decision: str,
+        proposed_transition: dict[str, Any],
+        rule_result: dict[str, Any] | None = None,
+        verifier_result: dict[str, Any] | None = None,
+        affected_memory_ids: Sequence[str] | None = None,
+    ) -> None:
+        async with self._pool.connection() as conn:
+            await conn.execute(
+                """
+                INSERT INTO memory_audit_records (
+                    audit_id, job_id, user_id, thread_id, decision,
+                    proposed_transition, rule_result, verifier_result,
+                    affected_memory_ids
+                ) VALUES (
+                    %(audit_id)s, %(job_id)s, %(user_id)s, %(thread_id)s,
+                    %(decision)s, %(proposed_transition)s, %(rule_result)s,
+                    %(verifier_result)s, %(affected_memory_ids)s
+                )
+                """,
+                {
+                    "audit_id": uuid4(),
+                    "job_id": UUID(str(job_id)) if job_id else None,
+                    "user_id": user_id,
+                    "thread_id": thread_id,
+                    "decision": decision,
+                    "proposed_transition": Jsonb(proposed_transition or {}),
+                    "rule_result": Jsonb(rule_result or {}),
+                    "verifier_result": Jsonb(verifier_result or {}),
+                    "affected_memory_ids": Jsonb(list(affected_memory_ids or [])),
+                },
+            )
+
+    async def enqueue_memory_job(
+        self,
+        *,
+        user_id: str,
+        thread_id: str,
+        idempotency_key: str,
+        final_message_id: str | None,
+        checkpoint_id: str | None,
+        messages: Sequence[dict[str, Any]],
+        metadata: dict[str, Any] | None = None,
+    ) -> MemoryJobRef:
+        job_id = uuid4()
+        payload = {
+            "job_id": job_id,
+            "user_id": str(user_id),
+            "thread_id": str(thread_id),
+            "idempotency_key": str(idempotency_key),
+            "final_message_id": final_message_id,
+            "checkpoint_id": checkpoint_id,
+            "messages": Jsonb(list(messages)),
+            "metadata": Jsonb(metadata or {}),
+        }
+        async with self._pool.connection() as conn:
+            try:
+                row = await (
+                    await conn.execute(
+                        """
+                        INSERT INTO memory_jobs (
+                            job_id, user_id, thread_id, idempotency_key,
+                            final_message_id, checkpoint_id, messages, metadata
+                        ) VALUES (
+                            %(job_id)s, %(user_id)s, %(thread_id)s,
+                            %(idempotency_key)s, %(final_message_id)s,
+                            %(checkpoint_id)s, %(messages)s, %(metadata)s
+                        )
+                        RETURNING job_id, idempotency_key, status
+                        """,
+                        payload,
+                    )
+                ).fetchone()
+                return MemoryJobRef(
+                    job_id=str(row["job_id"]),
+                    idempotency_key=str(row["idempotency_key"]),
+                    status=str(row["status"]),
+                    created=True,
+                )
+            except UniqueViolation:
+                row = await (
+                    await conn.execute(
+                        """
+                        SELECT job_id, idempotency_key, status
+                        FROM memory_jobs
+                        WHERE idempotency_key = %(idempotency_key)s
+                        """,
+                        {"idempotency_key": str(idempotency_key)},
+                    )
+                ).fetchone()
+                return MemoryJobRef(
+                    job_id=str(row["job_id"]),
+                    idempotency_key=str(row["idempotency_key"]),
+                    status=str(row["status"]),
+                    created=False,
+                )
+
+
+class NoopLongTermMemoryRepository:
+    async def search_active_memories(
+        self, filters: MemorySearchFilters
+    ) -> list[TravelMemory]:
+        return []
+
+    async def insert_memory(self, memory: TravelMemory) -> str:
+        return memory.memory_id or "noop-memory"
+
+    async def mark_memory_superseded(self, memory_id: str) -> None:
+        return None
+
+    async def write_audit_record(
+        self,
+        *,
+        job_id: str | None,
+        user_id: str,
+        thread_id: str | None,
+        decision: str,
+        proposed_transition: dict[str, Any],
+        rule_result: dict[str, Any] | None = None,
+        verifier_result: dict[str, Any] | None = None,
+        affected_memory_ids: Sequence[str] | None = None,
+    ) -> None:
+        return None
+
+    async def enqueue_memory_job(
+        self,
+        *,
+        user_id: str,
+        thread_id: str,
+        idempotency_key: str,
+        final_message_id: str | None,
+        checkpoint_id: str | None,
+        messages: Sequence[dict[str, Any]],
+        metadata: dict[str, Any] | None = None,
+    ) -> MemoryJobRef:
+        return MemoryJobRef(
+            job_id="noop",
+            idempotency_key=idempotency_key,
+            status="disabled",
+            created=False,
+        )
