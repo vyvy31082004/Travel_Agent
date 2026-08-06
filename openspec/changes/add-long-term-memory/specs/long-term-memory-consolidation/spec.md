@@ -24,6 +24,29 @@ The system SHALL extract candidate memories only from durable user evidence and 
 - **WHEN** a hotel, flight, car, weather, or tour tool returns temporary search results
 - **THEN** the consolidation pipeline does not store those results as user preferences unless the user explicitly asks to remember them or confirms they represent a preference
 
+### Requirement: LangMem candidate extraction adapter
+The system SHALL support `langmem==0.0.30` as a worker-side candidate extraction adapter behind the existing extraction interface.
+
+#### Scenario: LangMem adapter is enabled
+- **WHEN** the memory worker processes a completed final-turn job and LangMem extraction is configured
+- **THEN** the worker uses LangMem to propose structured candidate memories from bounded conversation context
+- **AND** the candidates are normalized into the system `TravelMemory` schema before validation
+
+#### Scenario: LangMem is unavailable or disabled
+- **WHEN** LangMem is not available, fails initialization, or the LangMem extractor flag is disabled
+- **THEN** the worker falls back to the deterministic extractor or records a safe skipped/failed job according to worker retry rules
+- **AND** the chat hot path continues unaffected
+
+#### Scenario: LangMem proposes memory changes
+- **WHEN** LangMem proposes inserts, updates, deletions, or no-op memory changes
+- **THEN** the system treats them only as proposed candidates
+- **AND** deterministic validation, dry-run transition calculation, verifier/audit, and repository commit adapter remain mandatory before active memory changes
+
+#### Scenario: LangMem must not write directly
+- **WHEN** LangMem extraction runs
+- **THEN** it must not write directly to `long_term_memories` or any framework store
+- **AND** it must not bypass audit records or feature flags
+
 ### Requirement: Dry-run transition before commit
 The system SHALL compute proposed memory inserts, updates, supersessions, or no-ops before committing changes.
 

@@ -84,6 +84,8 @@ The PDF compares `create_memory_store_manager`, `create_memory_manager + adapter
 4. Optional frozen-LLM verifier reviews ambiguous transitions.
 5. Only approved transitions are committed.
 
+LangMem `0.0.30` should be used as a worker-side candidate extraction adapter, not as a direct storage writer. The LangMem adapter may call `create_memory_manager` to produce structured `TravelMemory` candidates from bounded final-turn context, but it must return candidates to the existing consolidation pipeline. It must not bypass deterministic validation, dry-run transition calculation, verifier/audit, or repository commit boundaries.
+
 This is more work than direct writes, but necessary to avoid polluting long-term memory with temporary tool results or hallucinated facts.
 
 ### Store audit and lifecycle metadata in PostgreSQL
@@ -93,7 +95,7 @@ PostgreSQL remains the operational source of truth. The first implementation wil
 Rationale:
 
 - The project already uses Alembic, SQLAlchemy model metadata, psycopg pools, and a custom `ResultStoreRepository` pattern.
-- `langgraph-checkpoint-postgres` is already installed, but LangGraph Store/LangMem package versions are not pinned in the current requirements.
+- `langgraph-checkpoint-postgres` is already installed, and `langmem==0.0.30` is now available for candidate extraction.
 - Application-managed tables make the first implementation deterministic, testable, and easier to migrate in this repo without adding a second storage abstraction prematurely.
 - The service boundary keeps a future move to `AsyncPostgresStore` or pgvector-backed semantic search possible.
 
@@ -119,6 +121,7 @@ This allows rollout order: schema/tests → recall read path → write pipeline 
 - **Risk: Over-engineering** → Mitigation: defer org namespaces, UI management console, hot-path writes, and complex ranking until there is usage data.
 - **Risk: Privacy/user trust** → Mitigation: store evidence/source metadata, make memory writes auditable, and support future delete/forget operations.
 - **Risk: Dependency mismatch** → Mitigation: isolate LangMem/LangGraph Store behind adapters and write tests against service interfaces.
+- **Risk: LangMem overreach** → Mitigation: use LangMem only to propose candidates in the worker; never let it commit memory or run on the `/chat` hot path.
 
 ## Migration Plan
 
@@ -129,8 +132,10 @@ This allows rollout order: schema/tests → recall read path → write pipeline 
 5. Add `memory_recall` node before `primary_assistant` and extend state with `memory_context` / `recalled_memory_ids`.
 6. Add outbox enqueue after final answer with idempotency key.
 7. Implement worker/processor for candidate extraction, dry-run transition, deterministic validation, optional verifier, commit, and audit.
-8. Enable recall first in development; enable write consolidation only after tests pass.
-9. Rollback by disabling feature flags; data tables can remain inert.
+8. Add LangMem `0.0.30` as an optional candidate extraction adapter behind the same extractor interface; keep deterministic extraction as fallback.
+9. Run LangMem extraction in dry-run/audit mode before enabling approved commits.
+10. Enable recall first in development; enable write consolidation only after tests pass.
+11. Rollback by disabling feature flags; data tables can remain inert.
 
 ## Verified Dependency Baseline
 
@@ -143,12 +148,32 @@ Current installed versions checked during implementation planning:
 - `sqlalchemy==2.0.51`
 - `alembic==1.18.5`
 - `pydantic==2.13.4`
-- `langmem` is not currently installed.
+- `langmem==0.0.30`
 
-Because `langmem` is not present, the first implementation will not hard-require it. Candidate extraction will be isolated behind an adapter so a deterministic or LLM-based extractor can ship first, and LangMem can be added later after package/version validation.
+Because `langmem==0.0.30` is now installed, the next planning step is to add a `LangMemCandidateExtractor` implementation behind the existing candidate-extraction boundary. The deterministic extractor remains the fallback and safety baseline. LangMem output must be normalized into `TravelMemory` candidates and must still pass deterministic rules, dry-run transition calculation, verifier/audit, and repository commit adapter before becoming active memory.
+
+Inspected `langmem==0.0.30` API shape:
+
+```python
+from langmem import create_memory_manager
+
+manager = create_memory_manager(
+    model,
+    schemas=[TravelMemoryLikePydanticSchema],
+    instructions="...",
+    enable_inserts=True,
+    enable_updates=True,
+    enable_deletes=False,
+)
+
+outputs = await manager.ainvoke({"messages": messages, "existing": []})
+```
+
+`create_memory_manager` returns a LangChain `Runnable`. Its structured outputs are `ExtractedMemory(id: str, content: BaseModel)` objects or equivalent tuples depending on invocation path, so the adapter must normalize both object and tuple/dict forms.
 
 ## Open Questions
 
+- Which exact LangMem `0.0.30` APIs and output field names should be used after inspecting the installed package locally?
 - Which embedding model and vector dimension will be used in the deployed environment if semantic vector search is enabled later?
 - Should users get an explicit “forget this” UI in this change or a follow-up change?
 - What retention policy applies to rejected memory audit records?

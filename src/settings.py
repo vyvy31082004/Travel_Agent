@@ -57,6 +57,8 @@ class Settings:
     long_term_memory_embedding_model: str = ""
     long_term_memory_vector_dims: int = 0
     long_term_memory_debug_enabled: bool = False
+    long_term_memory_extractor: str = "deterministic"
+    long_term_memory_langmem_model: str = "gemini-2.5-flash"
 
     def __post_init__(self) -> None:
         if not self.database_url:
@@ -65,6 +67,14 @@ class Settings:
             raise ValueError("COOKIE_SECRET is required")
         if self.db_pool_min_size > self.db_pool_max_size:
             raise ValueError("DB_POOL_MIN_SIZE cannot exceed DB_POOL_MAX_SIZE")
+        if self.long_term_memory_extractor not in {
+            "deterministic",
+            "langmem",
+            "compare",
+        }:
+            raise ValueError(
+                "LONG_TERM_MEMORY_EXTRACTOR must be deterministic, langmem, or compare"
+            )
 
 
 @lru_cache
@@ -107,4 +117,10 @@ def get_settings() -> Settings:
         long_term_memory_debug_enabled=_bool_env(
             "LONG_TERM_MEMORY_DEBUG_ENABLED", False
         ),
+        long_term_memory_extractor=os.getenv(
+            "LONG_TERM_MEMORY_EXTRACTOR", "deterministic"
+        ).strip().lower(),
+        long_term_memory_langmem_model=os.getenv(
+            "LONG_TERM_MEMORY_LANGMEM_MODEL", "gemini-2.5-flash"
+        ).strip(),
     )

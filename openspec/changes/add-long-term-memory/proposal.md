@@ -11,7 +11,8 @@ The current Travel Agent has short-term thread memory, summaries, and Result Sto
 - Add storage/audit structures for memory jobs, proposed transitions, verifier decisions, and active/superseded memory lifecycle.
 - Add guardrails so tool/API search results are not stored as preferences unless supported by user evidence.
 - Add tests and observability hooks to validate recall, consolidation, idempotency, verification, and auditability.
-- Keep the design sufficiently complete for production evolution, but avoid over-engineering: no multi-tenant org layer, no real-time memory writes for every tool call, and no UI-heavy memory management console in the first implementation.
+- Add a planned LangMem `0.0.30` candidate-extraction adapter that runs only inside the memory worker, behind the existing extraction interface.
+- Keep the design sufficiently complete for production evolution, but avoid over-engineering: no multi-tenant org layer, no real-time memory writes for every tool call, no direct LangMem commits to storage, and no UI-heavy memory management console in the first implementation.
 
 ## Capabilities
 
@@ -27,6 +28,6 @@ The current Travel Agent has short-term thread memory, summaries, and Result Sto
 - Affected primary graph construction in `src/agents/primary/agent.py` to add recall/finalize memory nodes without disrupting current delegation flow.
 - New memory schema/service/repository modules under `src/memory/` or `src/services/` for recall, consolidation, verification, and store access.
 - New PostgreSQL migrations for memory jobs/audit metadata and potentially pgvector/LangGraph Store setup depending on final implementation approach.
-- Dependency impact may include `langmem`, `langgraph-store-postgres`/store support, and embedding configuration if not already available.
+- Dependency impact now includes `langmem==0.0.30` for worker-side candidate extraction. LangGraph Store/pgvector support remains optional and should stay behind repository adapters.
 - Runtime impact includes an optional background worker for memory consolidation and feature flags to enable recall/write independently.
 - No changes are expected to MCP domain servers; domain agents should receive memory only through primary-agent context and existing user/thread config.

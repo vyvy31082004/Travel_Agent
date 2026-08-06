@@ -2,10 +2,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import Any, Sequence
+from typing import Any, Protocol, Sequence
+
+from langchain_google_genai import ChatGoogleGenerativeAI
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from memory.long_term import MemoryCategory, MemoryDomain, TravelMemory
 from services.long_term_memory import serialize_message
+from settings import Settings
 
 
 class TransitionAction(StrEnum):
@@ -30,6 +34,142 @@ class MemoryTransition:
     reasons: list[str] = field(default_factory=list)
 
 
+class MemoryCandidateExtractor(Protocol):
+    async def extract(
+        self,
+        messages: Sequence[dict[str, Any] | Any],
+        *,
+        user_id: str,
+        thread_id: str,
+        limit: int = 5,
+    ) -> list[TravelMemory]:
+        """Extract atomic durable memory candidates."""
+
+
+class LangMemTravelMemory(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    memory_text: str = Field(min_length=3, max_length=500)
+    category: MemoryCategory | str
+    domain: MemoryDomain | str
+    evidence_text: str
+    condition: str | None = None
+
+
+class DeterministicCandidateExtractor:
+    async def extract(
+        self,
+        messages: Sequence[dict[str, Any] | Any],
+        *,
+        user_id: str,
+        thread_id: str,
+        limit: int = 5,
+    ) -> list[TravelMemory]:
+        return extract_candidate_memories(
+            messages,
+            user_id=user_id,
+            thread_id=thread_id,
+            limit=limit,
+        )
+
+
+class LangMemCandidateExtractor:
+    def __init__(
+        self,
+        *,
+        model: str = "gemini-2.5-flash",
+        manager: Any | None = None,
+    ) -> None:
+        self._model = model
+        self._manager = manager
+
+    def _manager_instance(self):
+        if self._manager is None:
+            from langmem import create_memory_manager
+
+            llm = ChatGoogleGenerativeAI(model=self._model, temperature=0)
+            self._manager = create_memory_manager(
+                llm,
+                schemas=[LangMemTravelMemory],
+                instructions=(
+                    "Extract only durable, reusable travel preferences, profile facts, "
+                    "or interaction rules from the user's own evidence. "
+                    "Do not extract temporary tool/API search results as preferences. "
+                    "Preserve explicit conditions such as business travel or family trips. "
+                    "Return no memory if evidence is ambiguous or sensitive."
+                ),
+                enable_inserts=True,
+                enable_updates=True,
+                enable_deletes=False,
+            )
+        return self._manager
+
+    async def extract(
+        self,
+        messages: Sequence[dict[str, Any] | Any],
+        *,
+        user_id: str,
+        thread_id: str,
+        limit: int = 5,
+    ) -> list[TravelMemory]:
+        serialized = [serialize_message(message) for message in messages]
+        langmem_messages = [
+            {"role": _message_role(message), "content": str(message.get("content") or "")}
+            for message in serialized
+            if _message_role(message) in {"user", "assistant"}
+        ]
+        if not langmem_messages:
+            return []
+        manager = self._manager_instance()
+        raw = await manager.ainvoke({"messages": langmem_messages, "existing": []})
+        return normalize_langmem_outputs(
+            raw,
+            user_id=user_id,
+            thread_id=thread_id,
+            fallback_evidence=_latest_user_evidence(serialized),
+            limit=limit,
+        )
+
+
+class CompareCandidateExtractor:
+    def __init__(self, deterministic: MemoryCandidateExtractor, langmem: MemoryCandidateExtractor) -> None:
+        self._deterministic = deterministic
+        self._langmem = langmem
+
+    async def extract(
+        self,
+        messages: Sequence[dict[str, Any] | Any],
+        *,
+        user_id: str,
+        thread_id: str,
+        limit: int = 5,
+    ) -> list[TravelMemory]:
+        # Dry-run comparison mode: run LangMem to surface adapter errors, but keep
+        # deterministic output as the persisted candidate source until explicitly switched.
+        await self._langmem.extract(
+            messages,
+            user_id=user_id,
+            thread_id=thread_id,
+            limit=limit,
+        )
+        return await self._deterministic.extract(
+            messages,
+            user_id=user_id,
+            thread_id=thread_id,
+            limit=limit,
+        )
+
+
+def build_candidate_extractor(settings: Settings) -> MemoryCandidateExtractor:
+    deterministic = DeterministicCandidateExtractor()
+    if settings.long_term_memory_extractor == "deterministic":
+        return deterministic
+    langmem = LangMemCandidateExtractor(model=settings.long_term_memory_langmem_model)
+    if settings.long_term_memory_extractor == "langmem":
+        return langmem
+    return CompareCandidateExtractor(deterministic, langmem)
+
+
 def extract_candidate_memories(
     messages: Sequence[dict[str, Any] | Any],
     *,
@@ -40,7 +180,7 @@ def extract_candidate_memories(
     """Extract durable memory candidates from bounded turn messages.
 
     This deterministic adapter is intentionally conservative. It provides a
-    testable baseline while LangMem/package choices remain unpinned.
+    testable fallback while LangMem quality is evaluated in the worker.
     """
 
     candidates: list[TravelMemory] = []
@@ -69,6 +209,37 @@ def extract_candidate_memories(
             )
         except ValueError:
             continue
+        if len(candidates) >= limit:
+            break
+    return candidates
+
+
+def normalize_langmem_outputs(
+    raw_outputs: Any,
+    *,
+    user_id: str,
+    thread_id: str,
+    fallback_evidence: str,
+    limit: int = 5,
+) -> list[TravelMemory]:
+    candidates: list[TravelMemory] = []
+    for item in raw_outputs or []:
+        content = _extract_langmem_content(item)
+        try:
+            model = _coerce_langmem_memory(content, fallback_evidence=fallback_evidence)
+            candidate = TravelMemory(
+                user_id=user_id,
+                memory_text=model.memory_text,
+                category=model.category,
+                domain=model.domain,
+                condition=model.condition,
+                evidence_text=model.evidence_text,
+                source_thread_id=thread_id,
+            )
+        except (TypeError, ValueError, ValidationError):
+            continue
+        if validate_memory_candidate(candidate).ok:
+            candidates.append(candidate)
         if len(candidates) >= limit:
             break
     return candidates
@@ -125,6 +296,47 @@ def calculate_transition(
             )
 
     return MemoryTransition(action=TransitionAction.INSERT, candidate=candidate)
+
+
+def _extract_langmem_content(item: Any) -> Any:
+    if isinstance(item, tuple) and len(item) >= 2:
+        return item[1]
+    return getattr(item, "content", item)
+
+
+def _coerce_langmem_memory(content: Any, *, fallback_evidence: str) -> LangMemTravelMemory:
+    if isinstance(content, LangMemTravelMemory):
+        return content
+    if isinstance(content, BaseModel):
+        content = content.model_dump()
+    if isinstance(content, str):
+        content = {
+            "memory_text": content,
+            "category": MemoryCategory.GENERAL_PREFERENCE,
+            "domain": MemoryDomain.GENERAL,
+            "evidence_text": fallback_evidence,
+        }
+    if not isinstance(content, dict):
+        raise TypeError("unsupported LangMem output content")
+    data = dict(content)
+    data.setdefault("evidence_text", fallback_evidence)
+    return LangMemTravelMemory(**data)
+
+
+def _message_role(message: dict[str, Any]) -> str:
+    message_type = str(message.get("type") or "").lower()
+    if message_type in {"human", "user"}:
+        return "user"
+    if message_type in {"ai", "assistant"}:
+        return "assistant"
+    return message_type
+
+
+def _latest_user_evidence(messages: Sequence[dict[str, Any]]) -> str:
+    for message in reversed(messages):
+        if _message_role(message) == "user":
+            return str(message.get("content") or "")
+    return ""
 
 
 def _looks_like_durable_user_evidence(text: str) -> bool:
