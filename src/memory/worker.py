@@ -8,7 +8,11 @@ from uuid import UUID
 from psycopg_pool import AsyncConnectionPool
 
 from memory.commit import MemoryCommitAdapter
-from memory.consolidation import calculate_transition, extract_candidate_memories
+from memory.consolidation import (
+    MemoryCandidateExtractor,
+    build_candidate_extractor,
+    calculate_transition,
+)
 from memory.long_term import MemoryFamily
 from repositories.long_term_memory import MemorySearchFilters, PostgresLongTermMemoryRepository
 from settings import Settings
@@ -33,11 +37,13 @@ class MemoryWorker:
         settings: Settings,
         repository: PostgresLongTermMemoryRepository,
         commit_adapter: MemoryCommitAdapter,
+        extractor: MemoryCandidateExtractor | None = None,
     ) -> None:
         self._pool = pool
         self._settings = settings
         self._repository = repository
         self._commit_adapter = commit_adapter
+        self._extractor = extractor or build_candidate_extractor(settings)
 
     async def process_next(self) -> WorkerResult:
         job = await self._claim_next_job()
@@ -45,7 +51,7 @@ class MemoryWorker:
             return WorkerResult(processed=False)
         job_id = str(job["job_id"])
         try:
-            candidates = extract_candidate_memories(
+            candidates = await self._extractor.extract(
                 job.get("messages") or [],
                 user_id=str(job["user_id"]),
                 thread_id=str(job["thread_id"]),

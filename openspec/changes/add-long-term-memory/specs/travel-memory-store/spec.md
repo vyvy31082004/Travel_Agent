@@ -61,3 +61,8 @@ The system SHALL hide the underlying memory storage implementation behind servic
 - **WHEN** the project switches between framework-native LangGraph Store and application-managed PostgreSQL tables
 - **THEN** primary graph code continues calling the same memory service interface
 - **AND** graph-level behavior remains unchanged
+
+#### Scenario: LangMem adapter proposes candidates
+- **WHEN** LangMem proposes memory candidates or state transitions
+- **THEN** storage writes still go through the system repository/commit adapter
+- **AND** LangMem is not treated as the source of truth for persisted memory lifecycle

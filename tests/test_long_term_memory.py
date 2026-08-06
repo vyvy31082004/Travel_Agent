@@ -10,10 +10,14 @@ import pytest
 
 from memory.commit import MemoryCommitAdapter
 from memory.consolidation import (
+    LangMemCandidateExtractor,
+    LangMemTravelMemory,
     MemoryTransition,
     TransitionAction,
+    build_candidate_extractor,
     calculate_transition,
     extract_candidate_memories,
+    normalize_langmem_outputs,
     validate_memory_candidate,
 )
 from memory.long_term import (
@@ -226,6 +230,79 @@ def test_commit_adapter_approve_reject_and_audit():
     )
     assert reject.decision == "reject"
     assert repo.audits[-1]["decision"] == "reject"
+
+
+class FakeLangMemManager:
+    def __init__(self, outputs):
+        self.outputs = outputs
+        self.inputs = []
+
+    async def ainvoke(self, payload):
+        self.inputs.append(payload)
+        return self.outputs
+
+
+def test_langmem_extractor_normalizes_successful_output():
+    manager = FakeLangMemManager(
+        [
+            type(
+                "Extracted",
+                (),
+                {
+                    "content": LangMemTravelMemory(
+                        memory_text="ưu tiên bay thẳng",
+                        category=MemoryCategory.FLIGHT_PREFERENCE,
+                        domain=MemoryDomain.FLIGHT,
+                        evidence_text="Tôi ưu tiên bay thẳng",
+                    )
+                },
+            )()
+        ]
+    )
+    extractor = LangMemCandidateExtractor(manager=manager)
+    candidates = asyncio.run(
+        extractor.extract(
+            [{"type": "human", "content": "Tôi ưu tiên bay thẳng"}],
+            user_id="user-1",
+            thread_id="thread-1",
+        )
+    )
+    assert len(candidates) == 1
+    assert candidates[0].category == MemoryCategory.FLIGHT_PREFERENCE
+    assert manager.inputs[0]["existing"] == []
+
+
+def test_langmem_normalizer_rejects_malformed_unsupported_output():
+    outputs = [
+        {"memory_text": "ưu tiên khách sạn boutique", "unexpected": "field"},
+        {
+            "memory_text": "khách sạn từ tool",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "evidence_text": "search_id=abc total_results=10",
+        },
+    ]
+    candidates = normalize_langmem_outputs(
+        outputs,
+        user_id="user-1",
+        thread_id="thread-1",
+        fallback_evidence="Tôi thích khách sạn boutique",
+    )
+    assert candidates == []
+
+
+def test_candidate_extractor_config_selects_deterministic():
+    extractor = build_candidate_extractor(
+        make_settings(long_term_memory_extractor="deterministic")
+    )
+    candidates = asyncio.run(
+        extractor.extract(
+            [{"type": "human", "content": "Tôi thích khách sạn boutique"}],
+            user_id="user-1",
+            thread_id="thread-1",
+        )
+    )
+    assert len(candidates) == 1
 
 
 def test_tool_only_messages_are_not_extracted():

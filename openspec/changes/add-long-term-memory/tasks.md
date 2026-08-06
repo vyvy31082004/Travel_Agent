@@ -61,3 +61,13 @@
 - [x] 8.3 Run `python -m py_compile` or project equivalent on changed Python modules.
 - [x] 8.4 Run targeted memory tests and existing primary graph/chat tests.
 - [x] 8.5 Run OpenSpec validation for `add-long-term-memory` and resolve all issues.
+
+## 9. LangMem Candidate Extraction Adapter
+
+- [x] 9.1 Inspect installed `langmem==0.0.30` APIs and document the exact manager/extractor call shape to use.
+- [x] 9.2 Add a `LangMemCandidateExtractor` behind the existing candidate extraction interface without changing the `/chat` hot path.
+- [x] 9.3 Add configuration to select deterministic extraction, LangMem extraction, or dry-run comparison mode.
+- [x] 9.4 Normalize LangMem outputs into `TravelMemory` candidates and reject unsupported output fields explicitly.
+- [x] 9.5 Ensure LangMem candidates still pass deterministic validation, dry-run transition calculation, verifier/audit, and repository commit adapter before persistence.
+- [x] 9.6 Add tests for LangMem extraction success, disabled fallback, malformed output, tool-only evidence rejection, and dry-run audit behavior.
+- [x] 9.7 Run targeted memory tests and OpenSpec validation after LangMem adapter implementation.
