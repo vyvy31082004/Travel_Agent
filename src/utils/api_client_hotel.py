@@ -459,6 +459,35 @@ def _infer_price_tier(price_per_night: float | int | None) -> str | None:
     return "luxury"
 
 
+def _split_accessibility_label(label: str | None) -> list[str]:
+    """Tách accessibilityLabel thành từng dòng dễ đọc."""
+    if not label:
+        return []
+
+    text = (
+        str(label)
+        .replace("\u200e", "")
+        .replace("\u202c", "")
+        .replace("\u202a", "")
+        .replace("\u202b", "")
+        .replace("\r\n", "\n")
+        .replace("\r", "\n")
+    )
+
+    lines: list[str] = []
+    for chunk in text.split("\n"):
+        chunk = chunk.strip(" \t•")
+        if not chunk:
+            continue
+        # Một số label gộp nhiều câu bằng ". " trên cùng 1 dòng
+        parts = chunk.split(". ") if ". " in chunk else [chunk]
+        for part in parts:
+            part = part.strip(" \t.•")
+            if part:
+                lines.append(part)
+    return lines
+
+
 def _normalize_booking_hotel(raw_hotel: dict, nights: int) -> dict:
     prop = raw_hotel.get("property", {}) or {}
     # priceBreakdown nằm TRONG property, không phải nằm ngoài raw_hotel
@@ -474,6 +503,9 @@ def _normalize_booking_hotel(raw_hotel: dict, nights: int) -> dict:
         price_per_night = round(float(total_price) / nights)
 
     photo_urls = prop.get("photoUrls") or []
+    access_lines = _split_accessibility_label(
+        raw_hotel.get("accessibilityLabel") or prop.get("accessibilityLabel")
+    )
 
     return {
         "source": "booking_com15_rapidapi",
@@ -482,6 +514,8 @@ def _normalize_booking_hotel(raw_hotel: dict, nights: int) -> dict:
         "external_hotel_id": raw_hotel.get("hotel_id"),
 
         "name": prop.get("name"),
+        # List từng dòng — agent in mỗi phần tử một dòng cho dễ nhìn
+        "accessibilityLabel": access_lines,
         "location": (
             prop.get("wishlistName")
             or prop.get("city")
