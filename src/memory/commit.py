@@ -1,10 +1,17 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+import logging
+from dataclasses import dataclass, field
 
 from memory.consolidation import MemoryTransition, TransitionAction
+from memory.embeddings import MemoryEmbeddingService, memory_content_hash
 from memory.verifier import MemoryVerifier, VerifierResult
-from repositories.long_term_memory import LongTermMemoryRepository
+from repositories.long_term_memory import (
+    LongTermMemoryRepository,
+    MemoryEmbeddingRecord,
+)
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -20,9 +27,11 @@ class MemoryCommitAdapter:
         *,
         repository: LongTermMemoryRepository,
         verifier: MemoryVerifier,
+        embedding_service: MemoryEmbeddingService | None = None,
     ) -> None:
         self._repository = repository
         self._verifier = verifier
+        self._embedding_service = embedding_service
 
     async def verify_and_commit(
         self,
@@ -38,14 +47,18 @@ class MemoryCommitAdapter:
 
         if judgment.decision == "approve" and transition.candidate is not None:
             if transition.action == TransitionAction.INSERT:
-                affected.append(await self._repository.insert_memory(transition.candidate))
+                memory_id = await self._repository.insert_memory(transition.candidate)
+                affected.append(memory_id)
+                await self._embed_committed_memory(memory_id, transition.candidate)
             elif transition.action == TransitionAction.SUPERSEDE:
                 if transition.existing_memory_id:
                     await self._repository.mark_memory_superseded(
                         transition.existing_memory_id
                     )
                     affected.append(transition.existing_memory_id)
-                affected.append(await self._repository.insert_memory(transition.candidate))
+                memory_id = await self._repository.insert_memory(transition.candidate)
+                affected.append(memory_id)
+                await self._embed_committed_memory(memory_id, transition.candidate)
             elif transition.action == TransitionAction.NOOP:
                 decision = "noop"
                 if transition.existing_memory_id:
@@ -71,6 +84,26 @@ class MemoryCommitAdapter:
             affected_memory_ids=affected,
             reasons=[*transition.reasons, *judgment.reasons],
         )
+
+    async def _embed_committed_memory(self, memory_id: str, memory) -> None:
+        if self._embedding_service is None:
+            return
+        try:
+            embedding = await self._embedding_service.embed_memory(memory)
+            await self._repository.upsert_memory_embedding(
+                MemoryEmbeddingRecord(
+                    memory_id=memory_id,
+                    embedding=embedding,
+                    embedding_model=self._embedding_service.model,
+                    embedding_dims=self._embedding_service.dims,
+                    content_hash=memory_content_hash(
+                        memory,
+                        model=self._embedding_service.model,
+                    ),
+                )
+            )
+        except Exception as exc:  # Embedding must not roll back approved memory commit.
+            logger.warning("failed to embed committed memory %s: %s", memory_id, exc)
 
 
 def _transition_to_dict(transition: MemoryTransition) -> dict:

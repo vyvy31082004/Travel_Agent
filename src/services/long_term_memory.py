@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import hashlib
+import logging
 from dataclasses import dataclass, field
 from typing import Any, Protocol, Sequence
 
 from langchain_core.messages import BaseMessage
 from langchain_core.runnables import RunnableConfig
 
+from memory.embeddings import MemoryEmbeddingService
 from memory.long_term import (
     MemoryFamily,
     TravelMemory,
@@ -19,6 +21,8 @@ from repositories.long_term_memory import (
     NoopLongTermMemoryRepository,
 )
 from settings import Settings
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -40,10 +44,12 @@ class MemoryService:
         settings: Settings,
         repository: LongTermMemoryRepository | None = None,
         processor: MemoryJobProcessor | None = None,
+        embedding_service: MemoryEmbeddingService | None = None,
     ) -> None:
         self._settings = settings
         self._repository = repository or NoopLongTermMemoryRepository()
         self._processor = processor
+        self._embedding_service = embedding_service
 
     async def recall(
         self,
@@ -66,11 +72,7 @@ class MemoryService:
             query=text,
             limit=self._settings.long_term_memory_recall_limit,
         )
-        memories = [
-            memory
-            for memory in await self._repository.search_active_memories(filters)
-            if memory.is_active
-        ][: self._settings.long_term_memory_recall_limit]
+        memories = await self._recall_memories(filters, text)
         lines = [format_memory_for_prompt(memory) for memory in memories]
         ids = [memory.memory_id for memory in memories if memory.memory_id]
         return RecallResult(
@@ -78,6 +80,40 @@ class MemoryService:
             recalled_memory_ids=ids,
             memories=memories,
         )
+
+    async def _recall_memories(
+        self,
+        filters: MemorySearchFilters,
+        query: str,
+    ) -> list[TravelMemory]:
+        if (
+            self._settings.long_term_memory_vector_search_enabled
+            and self._embedding_service is not None
+        ):
+            try:
+                query_embedding = await self._embedding_service.embed_query(query)
+                memories = await self._repository.semantic_search_active_memories(
+                    filters,
+                    query_embedding=query_embedding,
+                    embedding_model=self._embedding_service.model,
+                    embedding_dims=self._embedding_service.dims,
+                    distance_threshold=(
+                        self._settings.long_term_memory_vector_distance_threshold
+                    ),
+                )
+                return [memory for memory in memories if memory.is_active][
+                    : self._settings.long_term_memory_recall_limit
+                ]
+            except Exception as exc:
+                logger.warning("vector memory recall failed; falling back: %s", exc)
+                if not self._settings.long_term_memory_vector_fallback_enabled:
+                    raise
+        memories = [
+            memory
+            for memory in await self._repository.search_active_memories(filters)
+            if memory.is_active
+        ]
+        return memories[: self._settings.long_term_memory_recall_limit]
 
     async def enqueue_final_turn(
         self,

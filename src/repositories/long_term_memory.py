@@ -8,6 +8,7 @@ from psycopg.errors import UniqueViolation
 from psycopg.types.json import Jsonb
 from psycopg_pool import AsyncConnectionPool
 
+from memory.embeddings import vector_literal
 from memory.long_term import MemoryFamily, TravelMemory
 
 
@@ -26,6 +27,14 @@ class MemoryJobRef:
     status: str
     created: bool
 
+@dataclass(frozen=True)
+class MemoryEmbeddingRecord:
+    memory_id: str
+    embedding: Sequence[float]
+    embedding_model: str
+    embedding_dims: int
+    content_hash: str
+
 
 class LongTermMemoryRepository(Protocol):
     async def search_active_memories(
@@ -35,6 +44,29 @@ class LongTermMemoryRepository(Protocol):
 
     async def insert_memory(self, memory: TravelMemory) -> str:
         """Insert an approved memory and return its id."""
+
+    async def upsert_memory_embedding(self, record: MemoryEmbeddingRecord) -> None:
+        """Persist the current embedding for an approved memory."""
+
+    async def find_memories_missing_current_embedding(
+        self,
+        *,
+        embedding_model: str,
+        embedding_dims: int,
+        limit: int,
+    ) -> list[TravelMemory]:
+        """Return active memories needing a current embedding."""
+
+    async def semantic_search_active_memories(
+        self,
+        filters: MemorySearchFilters,
+        *,
+        query_embedding: Sequence[float],
+        embedding_model: str,
+        embedding_dims: int,
+        distance_threshold: float,
+    ) -> list[TravelMemory]:
+        """Return active memories ranked by pgvector distance."""
 
     async def mark_memory_superseded(self, memory_id: str) -> None:
         """Mark an active memory as superseded."""
@@ -142,6 +174,138 @@ class PostgresLongTermMemoryRepository:
                 },
             )
         return str(memory_id)
+
+    async def upsert_memory_embedding(self, record: MemoryEmbeddingRecord) -> None:
+        async with self._pool.connection() as conn:
+            await conn.execute(
+                """
+                UPDATE long_term_memory_embeddings
+                SET is_current = false, updated_at = now()
+                WHERE memory_id = %(memory_id)s
+                  AND is_current = true
+                  AND (
+                    embedding_model <> %(embedding_model)s
+                    OR embedding_dims <> %(embedding_dims)s
+                    OR content_hash <> %(content_hash)s
+                  )
+                """,
+                {
+                    "memory_id": UUID(str(record.memory_id)),
+                    "embedding_model": record.embedding_model,
+                    "embedding_dims": record.embedding_dims,
+                    "content_hash": record.content_hash,
+                },
+            )
+            await conn.execute(
+                """
+                INSERT INTO long_term_memory_embeddings (
+                    embedding_id, memory_id, embedding, embedding_model,
+                    embedding_dims, content_hash, is_current
+                ) VALUES (
+                    %(embedding_id)s, %(memory_id)s, %(embedding)s::vector,
+                    %(embedding_model)s, %(embedding_dims)s, %(content_hash)s, true
+                )
+                ON CONFLICT (memory_id, embedding_model, content_hash)
+                DO UPDATE SET
+                    embedding = EXCLUDED.embedding,
+                    embedding_dims = EXCLUDED.embedding_dims,
+                    is_current = true,
+                    updated_at = now()
+                """,
+                {
+                    "embedding_id": uuid4(),
+                    "memory_id": UUID(str(record.memory_id)),
+                    "embedding": vector_literal(record.embedding),
+                    "embedding_model": record.embedding_model,
+                    "embedding_dims": record.embedding_dims,
+                    "content_hash": record.content_hash,
+                },
+            )
+
+    async def find_memories_missing_current_embedding(
+        self,
+        *,
+        embedding_model: str,
+        embedding_dims: int,
+        limit: int,
+    ) -> list[TravelMemory]:
+        async with self._pool.connection() as conn:
+            rows = await (
+                await conn.execute(
+                    """
+                    SELECT m.memory_id, m.user_id, m.memory_text, m.category, m.domain,
+                           m.condition, m.evidence_text, m.source_thread_id, m.status,
+                           m.valid_from, m.valid_to, m.supersedes_memory_id,
+                           m.created_at, m.updated_at, m.metadata
+                    FROM long_term_memories m
+                    WHERE m.status = 'active'
+                      AND (m.valid_from IS NULL OR m.valid_from <= now())
+                      AND (m.valid_to IS NULL OR m.valid_to > now())
+                      AND NOT EXISTS (
+                        SELECT 1
+                        FROM long_term_memory_embeddings e
+                        WHERE e.memory_id = m.memory_id
+                          AND e.embedding_model = %(embedding_model)s
+                          AND e.embedding_dims = %(embedding_dims)s
+                          AND e.is_current = true
+                      )
+                    ORDER BY m.updated_at ASC, m.created_at ASC
+                    LIMIT %(limit)s
+                    """,
+                    {
+                        "embedding_model": embedding_model,
+                        "embedding_dims": embedding_dims,
+                        "limit": limit,
+                    },
+                )
+            ).fetchall()
+        return [TravelMemory.from_record(dict(row)) for row in rows]
+
+    async def semantic_search_active_memories(
+        self,
+        filters: MemorySearchFilters,
+        *,
+        query_embedding: Sequence[float],
+        embedding_model: str,
+        embedding_dims: int,
+        distance_threshold: float,
+    ) -> list[TravelMemory]:
+        families = [str(family) for family in filters.families]
+        async with self._pool.connection() as conn:
+            rows = await (
+                await conn.execute(
+                    """
+                    SELECT m.memory_id, m.user_id, m.memory_text, m.category, m.domain,
+                           m.condition, m.evidence_text, m.source_thread_id, m.status,
+                           m.valid_from, m.valid_to, m.supersedes_memory_id,
+                           m.created_at, m.updated_at, m.metadata,
+                           e.embedding <=> %(query_embedding)s::vector AS distance
+                    FROM long_term_memories m
+                    JOIN long_term_memory_embeddings e ON e.memory_id = m.memory_id
+                    WHERE m.user_id = %(user_id)s
+                      AND m.family = ANY(%(families)s)
+                      AND m.status = 'active'
+                      AND (m.valid_from IS NULL OR m.valid_from <= now())
+                      AND (m.valid_to IS NULL OR m.valid_to > now())
+                      AND e.is_current = true
+                      AND e.embedding_model = %(embedding_model)s
+                      AND e.embedding_dims = %(embedding_dims)s
+                      AND (e.embedding <=> %(query_embedding)s::vector) <= %(distance_threshold)s
+                    ORDER BY distance ASC, m.updated_at DESC
+                    LIMIT %(limit)s
+                    """,
+                    {
+                        "user_id": filters.user_id,
+                        "families": families,
+                        "limit": filters.limit,
+                        "query_embedding": vector_literal(query_embedding),
+                        "embedding_model": embedding_model,
+                        "embedding_dims": embedding_dims,
+                        "distance_threshold": distance_threshold,
+                    },
+                )
+            ).fetchall()
+        return [TravelMemory.from_record(dict(row)) for row in rows]
 
     async def mark_memory_superseded(self, memory_id: str) -> None:
         async with self._pool.connection() as conn:
@@ -265,6 +429,29 @@ class NoopLongTermMemoryRepository:
 
     async def insert_memory(self, memory: TravelMemory) -> str:
         return memory.memory_id or "noop-memory"
+
+    async def upsert_memory_embedding(self, record: MemoryEmbeddingRecord) -> None:
+        return None
+
+    async def find_memories_missing_current_embedding(
+        self,
+        *,
+        embedding_model: str,
+        embedding_dims: int,
+        limit: int,
+    ) -> list[TravelMemory]:
+        return []
+
+    async def semantic_search_active_memories(
+        self,
+        filters: MemorySearchFilters,
+        *,
+        query_embedding: Sequence[float],
+        embedding_model: str,
+        embedding_dims: int,
+        distance_threshold: float,
+    ) -> list[TravelMemory]:
+        return []
 
     async def mark_memory_superseded(self, memory_id: str) -> None:
         return None
