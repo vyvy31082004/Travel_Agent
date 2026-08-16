@@ -226,6 +226,44 @@ def test_vector_recall_failure_falls_back_to_deterministic():
     assert repo.filters.user_id == "user-1"
 
 
+class KeywordMissRepo(NoopLongTermMemoryRepository):
+    """Simulates lexical miss then unfiltered preference hit."""
+
+    def __init__(self, memories):
+        self.memories = memories
+        self.calls: list[MemorySearchFilters] = []
+
+    async def search_active_memories(self, filters: MemorySearchFilters):
+        self.calls.append(filters)
+        if filters.query:
+            return []
+        return self.memories
+
+
+def test_deterministic_recall_falls_back_when_query_terms_miss():
+    active = TravelMemory(
+        memory_id="pref-1",
+        user_id="user-1",
+        memory_text="Tôi ghét biển và chỉ thích ở trung tâm thành phố.",
+        category=MemoryCategory.HOTEL_PREFERENCE,
+        domain=MemoryDomain.HOTEL,
+        evidence_text="Tôi ghét biển, cho tôi ở trung tâm",
+        source_thread_id="thread-1",
+    )
+    repo = KeywordMissRepo([active])
+    service = MemoryService(
+        settings=make_settings(long_term_memory_recall_enabled=True),
+        repository=repo,
+    )
+    result = asyncio.run(
+        service.recall(user_id="user-1", query="khách sạn Nha Trang")
+    )
+    assert result.recalled_memory_ids == ["pref-1"]
+    assert len(repo.calls) == 2
+    assert repo.calls[0].query == "khách sạn Nha Trang"
+    assert repo.calls[1].query is None
+
+
 def test_write_disabled_does_not_enqueue_job():
     service = MemoryService(settings=make_settings(long_term_memory_write_enabled=False))
     result = asyncio.run(
@@ -319,6 +357,18 @@ def test_candidate_extraction_validation_and_transitions():
 
     duplicate = replace(candidate, memory_id="mem-1")
     assert calculate_transition(candidate, [duplicate]).action == TransitionAction.NOOP
+
+    # Cleaned "Tôi thích X" keeps polarity; opposing preference supersedes.
+    opposing = extract_candidate_memories(
+        [{"type": "human", "content": "Tôi không thích khách sạn boutique gần biển"}],
+        user_id="user-1",
+        thread_id="thread-2",
+    )
+    assert opposing
+    assert (
+        calculate_transition(opposing[0], [replace(candidate, memory_id="mem-old")]).action
+        == TransitionAction.SUPERSEDE
+    )
 
     sensitive = TravelMemory(
         memory_text="mật khẩu của tôi là abc",

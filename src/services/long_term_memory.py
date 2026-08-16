@@ -101,18 +101,36 @@ class MemoryService:
                         self._settings.long_term_memory_vector_distance_threshold
                     ),
                 )
-                return [memory for memory in memories if memory.is_active][
+                active = [memory for memory in memories if memory.is_active][
                     : self._settings.long_term_memory_recall_limit
                 ]
+                if active:
+                    return active
             except Exception as exc:
                 logger.warning("vector memory recall failed; falling back: %s", exc)
                 if not self._settings.long_term_memory_vector_fallback_enabled:
                     raise
+
         memories = [
             memory
             for memory in await self._repository.search_active_memories(filters)
             if memory.is_active
         ]
+        # Lexical ILIKE misses when preference wording differs from the user
+        # question ("ghét biển" vs "khách sạn Nha Trang"). Fall back to recent
+        # active memories filtered only by user / family / status.
+        if not memories and filters.query:
+            fallback = MemorySearchFilters(
+                user_id=filters.user_id,
+                families=filters.families,
+                query=None,
+                limit=filters.limit,
+            )
+            memories = [
+                memory
+                for memory in await self._repository.search_active_memories(fallback)
+                if memory.is_active
+            ]
         return memories[: self._settings.long_term_memory_recall_limit]
 
     async def enqueue_final_turn(

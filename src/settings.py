@@ -72,7 +72,7 @@ class Settings:
     long_term_memory_embedding_backfill_batch_size: int = 100
     long_term_memory_debug_enabled: bool = False
     long_term_memory_extractor: str = "deterministic"
-    long_term_memory_langmem_model: str = "gemini-2.5-flash"
+    long_term_memory_langmem_model: str = "gemini-3.6-flash"
 
     def __post_init__(self) -> None:
         if not self.database_url:
@@ -155,6 +155,6 @@ def get_settings() -> Settings:
             "LONG_TERM_MEMORY_EXTRACTOR", "deterministic"
         ).strip().lower(),
         long_term_memory_langmem_model=os.getenv(
-            "LONG_TERM_MEMORY_LANGMEM_MODEL", "gemini-2.5-flash"
+            "LONG_TERM_MEMORY_LANGMEM_MODEL", "gemini-3.6-flash"
         ).strip(),
     )

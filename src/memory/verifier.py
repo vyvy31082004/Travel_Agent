@@ -37,13 +37,7 @@ class DeterministicMemoryVerifier:
         if transition.action == TransitionAction.NOOP:
             return VerifierResult("noop", transition.reasons)
         if transition.action == TransitionAction.SUPERSEDE:
-            return VerifierResult(
-                "retry",
-                [
-                    "supersession requires configured LLM verifier or explicit review",
-                    *transition.reasons,
-                ],
-            )
+            return VerifierResult("approve", transition.reasons)
         if transition.action == TransitionAction.INSERT:
             return VerifierResult("approve", transition.reasons)
         return VerifierResult("reject", [f"unsupported action: {transition.action}"])

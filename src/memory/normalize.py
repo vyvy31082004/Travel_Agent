@@ -137,10 +137,13 @@ def normalize_hotel_offers(raw: Any) -> list[dict[str, Any]]:
             "location": hotel.get("location") or hotel.get("address"),
             "price_tier": hotel.get("price_tier"),
             "rating": hotel.get("rating"),
+            "star": hotel.get("star"),
             "price": hotel.get("price"),
             "currency": hotel.get("currency") or "VND",
             "photo": hotel.get("photo") or hotel.get("image"),
             "address": hotel.get("address"),
+            # List of short lines from Booking accessibilityLabel — agent prints each as a bullet
+            "accessibilityLabel": hotel.get("accessibilityLabel") or [],
         }
         items.append({"item_id": item_id, "payload": payload})
     return items

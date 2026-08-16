@@ -73,7 +73,7 @@ class ResultStoreRepository:
         query: dict[str, Any],
         items: Sequence[dict[str, Any]],
         status: str = "completed",
-        display_limit: int = 5,
+        display_limit: int = 10,
         ttl: timedelta | None = None,
     ) -> StoredSearchRef:
         if not user_id or not thread_id or not request_id:

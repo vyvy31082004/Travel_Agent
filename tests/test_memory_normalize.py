@@ -14,11 +14,30 @@ def test_normalize_hotel_offers_keeps_external_id():
                 "price": 500000,
                 "currency": "VND",
                 "photo": "http://x",
+                "star": 4,
+                "accessibilityLabel": [
+                    "Hotel A",
+                    "0,6km từ trung tâm",
+                    "Hủy miễn phí",
+                ],
             }
         ]
     )
     assert items[0]["item_id"] == "123"
     assert items[0]["payload"]["name"] == "Hotel A"
+    assert items[0]["payload"]["star"] == 4
+    assert items[0]["payload"]["accessibilityLabel"] == [
+        "Hotel A",
+        "0,6km từ trung tâm",
+        "Hủy miễn phí",
+    ]
+
+
+def test_normalize_hotel_offers_defaults_accessibility_label():
+    items = normalize_hotel_offers(
+        [{"external_hotel_id": "99", "name": "Bare Hotel"}]
+    )
+    assert items[0]["payload"]["accessibilityLabel"] == []
 
 
 def test_normalize_flight_offers_from_top_flights():

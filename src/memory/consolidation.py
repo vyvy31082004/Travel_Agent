@@ -41,6 +41,7 @@ class MemoryCandidateExtractor(Protocol):
         *,
         user_id: str,
         thread_id: str,
+        existing_active: Sequence[TravelMemory] = (),
         limit: int = 5,
     ) -> list[TravelMemory]:
         """Extract atomic durable memory candidates."""
@@ -63,6 +64,7 @@ class DeterministicCandidateExtractor:
         *,
         user_id: str,
         thread_id: str,
+        existing_active: Sequence[TravelMemory] = (),
         limit: int = 5,
     ) -> list[TravelMemory]:
         return extract_candidate_memories(
@@ -77,7 +79,7 @@ class LangMemCandidateExtractor:
     def __init__(
         self,
         *,
-        model: str = "gemini-2.5-flash",
+        model: str = "gemini-3.6-flash",
         manager: Any | None = None,
     ) -> None:
         self._model = model
@@ -87,7 +89,7 @@ class LangMemCandidateExtractor:
         if self._manager is None:
             from langmem import create_memory_manager
 
-            llm = ChatGoogleGenerativeAI(model=self._model, temperature=0)
+            llm = ChatGoogleGenerativeAI(model=self._model)
             self._manager = create_memory_manager(
                 llm,
                 schemas=[LangMemTravelMemory],
@@ -110,6 +112,7 @@ class LangMemCandidateExtractor:
         *,
         user_id: str,
         thread_id: str,
+        existing_active: Sequence[TravelMemory] = (),
         limit: int = 5,
     ) -> list[TravelMemory]:
         serialized = [serialize_message(message) for message in messages]
@@ -120,8 +123,19 @@ class LangMemCandidateExtractor:
         ]
         if not langmem_messages:
             return []
+        
+        existing_dicts = [
+            {
+                "memory_id": m.memory_id,
+                "memory_text": m.memory_text,
+                "category": str(m.category),
+                "domain": str(m.domain),
+            }
+            for m in existing_active
+        ]
+        
         manager = self._manager_instance()
-        raw = await manager.ainvoke({"messages": langmem_messages, "existing": []})
+        raw = await manager.ainvoke({"messages": langmem_messages, "existing": existing_dicts})
         return normalize_langmem_outputs(
             raw,
             user_id=user_id,
@@ -142,6 +156,7 @@ class CompareCandidateExtractor:
         *,
         user_id: str,
         thread_id: str,
+        existing_active: Sequence[TravelMemory] = (),
         limit: int = 5,
     ) -> list[TravelMemory]:
         # Dry-run comparison mode: run LangMem to surface adapter errors, but keep
@@ -150,12 +165,14 @@ class CompareCandidateExtractor:
             messages,
             user_id=user_id,
             thread_id=thread_id,
+            existing_active=existing_active,
             limit=limit,
         )
         return await self._deterministic.extract(
             messages,
             user_id=user_id,
             thread_id=thread_id,
+            existing_active=existing_active,
             limit=limit,
         )
 
@@ -286,7 +303,7 @@ def calculate_transition(
         if (
             candidate.category == existing.category
             and candidate.domain == existing.domain
-            and _looks_conflicting(normalized_candidate, normalized_existing)
+            and _memories_conflict(candidate, existing)
         ):
             return MemoryTransition(
                 action=TransitionAction.SUPERSEDE,
@@ -346,20 +363,31 @@ def _looks_like_durable_user_evidence(text: str) -> bool:
 
 def _clean_memory_text(text: str) -> str:
     cleaned = " ".join(text.strip().split())
-    prefixes = [
+    # Keep polarity markers so conflict detection still works after cleaning.
+    polarity_prefixes = [
+        ("tôi không thích", "không thích"),
+        ("i don't like", "don't like"),
+        ("i do not like", "do not like"),
+        ("tôi thích", "thích"),
+        ("tôi thường", "thường"),
+        ("tôi ưu tiên", "ưu tiên"),
+        ("ưu tiên của tôi là", "ưu tiên"),
+        ("i prefer", "prefer"),
+    ]
+    lowered = cleaned.lower()
+    for prefix, keep in polarity_prefixes:
+        if lowered.startswith(prefix):
+            rest = cleaned[len(prefix) :].strip(" :,-.")
+            return f"{keep} {rest}".strip() if rest else keep
+
+    neutral_prefixes = [
         "hãy nhớ rằng",
         "hãy nhớ",
         "nhớ là",
-        "tôi thích",
-        "tôi thường",
-        "tôi ưu tiên",
-        "ưu tiên của tôi là",
-        "i prefer",
         "remember that",
         "please remember",
     ]
-    lowered = cleaned.lower()
-    for prefix in prefixes:
+    for prefix in neutral_prefixes:
         if lowered.startswith(prefix):
             return cleaned[len(prefix) :].strip(" :,-.") or cleaned
     return cleaned
@@ -391,7 +419,11 @@ def _extract_condition(text: str) -> str | None:
 
 
 def _normalize_statement(text: str) -> str:
-    return " ".join(text.lower().strip().strip(".!?").split())
+    import re
+    text = text.lower()
+    text = re.sub(r'[,.;!?]', ' ', text)
+    text = re.sub(r'\b(và|and)\b', ' ', text)
+    return " ".join(text.split())
 
 
 def _is_ambiguous(lowered: str) -> bool:
@@ -401,11 +433,80 @@ def _is_ambiguous(lowered: str) -> bool:
 def _looks_conflicting(left: str, right: str) -> bool:
     positive = ["thích", "prefer", "ưu tiên", "muốn"]
     negative = ["không thích", "don't like", "do not like", "tránh", "avoid"]
-    return (
-        any(token in left for token in positive) and any(token in right for token in negative)
-    ) or (
-        any(token in left for token in negative) and any(token in right for token in positive)
-    )
+
+    def _has_negative(text: str) -> bool:
+        return any(token in text for token in negative)
+
+    def _has_positive(text: str) -> bool:
+        # Avoid counting "thích" inside "không thích".
+        stripped = text
+        for token in negative:
+            stripped = stripped.replace(token, " ")
+        return any(token in stripped for token in positive)
+
+    def _is_conflict_simple(l: str, r: str) -> bool:
+        l_pos = _has_positive(l)
+        l_neg = _has_negative(l)
+        r_pos = _has_positive(r)
+        r_neg = _has_negative(r)
+        
+        # Nếu cả hai đều có cả pos và neg (câu phức), không thể kết luận đơn giản
+        if (l_pos and l_neg) or (r_pos and r_neg):
+            return False
+            
+        return (l_pos and r_neg) or (l_neg and r_pos)
+
+    import re
+    delimiters = r'[,.;]|\bnhưng\b|\btuy nhiên\b'
+    left_clauses = [c.strip() for c in re.split(delimiters, left) if c.strip()]
+    right_clauses = [c.strip() for c in re.split(delimiters, right) if c.strip()]
+    if not left_clauses: left_clauses = [left]
+    if not right_clauses: right_clauses = [right]
+
+    for lc in left_clauses:
+        for rc in right_clauses:
+            if _is_conflict_simple(lc, rc):
+                overlap = _topic_tokens(lc) & _topic_tokens(rc)
+                meaningful_overlap = {tok for tok in overlap if tok not in {"khách", "sạn", "chuyến", "bay", "xe"}}
+                if bool(meaningful_overlap) or len(overlap) >= 3:
+                    return True
+
+    return False
+
+
+def _polarity_corpus(memory: TravelMemory) -> str:
+    """Combine memory_text + evidence so cleaning cannot erase conflict signals."""
+    return _normalize_statement(f"{memory.memory_text} {memory.evidence_text}")
+
+
+def _topic_tokens(text: str) -> set[str]:
+    stop = {
+        "tôi",
+        "thích",
+        "không",
+        "ưu",
+        "tiên",
+        "prefer",
+        "like",
+        "don't",
+        "do",
+        "not",
+        "ở",
+        "và",
+        "có",
+        "của",
+        "là",
+        "the",
+        "a",
+        "an",
+    }
+    return {tok for tok in text.split() if len(tok) >= 3 and tok not in stop}
+
+
+def _memories_conflict(left: TravelMemory, right: TravelMemory) -> bool:
+    left_text = _polarity_corpus(left)
+    right_text = _polarity_corpus(right)
+    return _looks_conflicting(left_text, right_text)
 
 
 _DURABLE_MARKERS = [

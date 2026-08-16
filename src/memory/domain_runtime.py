@@ -243,5 +243,21 @@ async def invoke_domain_llm_with_temp_payloads(
             *messages,
         ]
 
+    memory_context = (state.get("memory_context") or "").strip()
+    if memory_context:
+        messages = [
+            SystemMessage(
+                content=(
+                    "Long-term user memory (durable preferences). "
+                    "After tool results return, when you PRINT hotels to the user, "
+                    "ONLY include hotels that match these preferences. "
+                    "Omit mismatched hotels entirely. Do not invent hotels. "
+                    "For hotels you keep, copy fields/prices exactly from tool output.\n"
+                    f"{memory_context}"
+                )
+            ),
+            *messages,
+        ]
+
     invoke_state = {**state, "messages": messages}
     return await runnable.ainvoke(invoke_state, config=config)

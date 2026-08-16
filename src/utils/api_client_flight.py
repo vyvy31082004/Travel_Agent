@@ -137,14 +137,66 @@ def remove_vietnamese_accents(text: str) -> str:
     )
     return text
 
-def _pick_first_airport(data: dict) -> dict |  None:
+def _as_location_list(data: Any) -> list[dict]:
+    """Normalize searchDestination payload to a list of location dicts."""
+    if isinstance(data, list):
+        return [item for item in data if isinstance(item, dict)]
+    if isinstance(data, dict):
+        for key in ("destinations", "products", "data", "airports"):
+            nested = data.get(key)
+            if isinstance(nested, list):
+                return [item for item in nested if isinstance(item, dict)]
+    return []
+
+
+def _pick_best_airport(data: Any, query: str) -> dict | None:
     """
-    searchLocation có thể trả destinations hoặc products.
-    Theo docs, id có thể nằm trong products hoặc destinations.
+    Prefer exact IATA/city code match over Booking's default ranking.
+
+    Booking searchDestination for 'HAN' can rank unrelated metros (e.g. TYO) first.
     """
-    if isinstance(data,list) and len(data) > 0:
-        return data[0]
-    return None 
+    items = _as_location_list(data)
+    if not items:
+        return None
+
+    q = (query or "").strip().upper()
+    country = (COUNTRY_CODE or "").strip().upper()
+
+    def _code(item: dict) -> str:
+        return str(item.get("code") or item.get("id") or "").strip().upper()
+
+    # Exact IATA / city code match (SGN, HAN, ...)
+    if len(q) == 3 and q.isalpha():
+        exact = [item for item in items if _code(item) == q]
+        if exact:
+            if country:
+                in_country = [
+                    item
+                    for item in exact
+                    if str(item.get("country") or item.get("countryCode") or "")
+                    .strip()
+                    .upper()
+                    == country
+                ]
+                if in_country:
+                    return in_country[0]
+            return exact[0]
+
+    # Prefer same-country results when searching by city name
+    if country:
+        in_country = [
+            item
+            for item in items
+            if str(item.get("country") or item.get("countryCode") or "")
+            .strip()
+            .upper()
+            == country
+        ]
+        if in_country:
+            return in_country[0]
+
+    return items[0]
+
 
 def search_flight_location_from_api(
     query: str,
@@ -159,7 +211,27 @@ def search_flight_location_from_api(
             "error": "Bạn cần cung cấp điểm đi hoặc điểm đến."
         }
 
-    query = remove_vietnamese_accents(query)
+    query = remove_vietnamese_accents(query).strip()
+    query_upper = query.upper()
+    
+    if query_upper == "SAI GON":
+        query = "Ho Chi Minh"
+        query_upper = "HO CHI MINH"
+
+    # Google Flights accepts IATA/city codes directly — avoid bad ranking from
+    # searchDestination when the agent already passed SGN/HAN/etc.
+    if len(query_upper) == 3 and query_upper.isalpha():
+        return {
+            "source": "iata_passthrough",
+            "query": query,
+            "id": query_upper,
+            "code": query_upper,
+            "name": query_upper,
+            "city": None,
+            "country": COUNTRY_CODE,
+            "raw": None,
+        }
+
     try:
         data = _booking_get(
             "booking",
@@ -171,7 +243,7 @@ def search_flight_location_from_api(
             },
         )
 
-        airport  = _pick_first_airport(data)
+        airport = _pick_best_airport(data, query)
 
         if not airport:
             return {
@@ -408,7 +480,23 @@ def _time_range_from_center(
     Clamp về [00:00, 23:59] để tránh tràn ngày.
     Ví dụ: center="08:30", tolerance=60 → ("07:30", "09:30")
     """
-    base = datetime.strptime(center.strip(), "%H:%M")
+    center_lower = center.strip().lower()
+    if center_lower in ["morning", "sáng", "buổi sáng"]:
+        center = "08:00"
+        tolerance_minutes = max(tolerance_minutes, 240) # 04:00 to 12:00
+    elif center_lower in ["afternoon", "chiều", "buổi chiều"]:
+        center = "14:00"
+        tolerance_minutes = max(tolerance_minutes, 240)
+    elif center_lower in ["evening", "tối", "buổi tối", "đêm"]:
+        center = "20:00"
+        tolerance_minutes = max(tolerance_minutes, 240)
+        
+    try:
+        base = datetime.strptime(center.strip(), "%H:%M")
+    except ValueError:
+        # Fallback to a wide range if parsing fails
+        return "00:00", "23:59"
+
     after_dt = base - timedelta(minutes=tolerance_minutes)
     before_dt = base + timedelta(minutes=tolerance_minutes)
 
@@ -578,21 +666,17 @@ def search_one_way_flights_from_api(
         if any([dep_after, arr_after]):
             top = _filter_flights_by_time(
                 top,
-                outbound_departure_after=dep_after,
-                outbound_departure_before=dep_before,
-                outbound_arrival_after=arr_after,
-                outbound_arrival_before=arr_before,
-                origin_city_code=departure_id,
-                destination_city_code=arrival_id,
+                departure_after=dep_after,
+                departure_before=dep_before,
+                arrival_after=arr_after,
+                arrival_before=arr_before,
             )
             other = _filter_flights_by_time(
                 other,
-                outbound_departure_after=dep_after,
-                outbound_departure_before=dep_before,
-                outbound_arrival_after=arr_after,
-                outbound_arrival_before=arr_before,
-                origin_city_code=departure_id,
-                destination_city_code=arrival_id,
+                departure_after=dep_after,
+                departure_before=dep_before,
+                arrival_after=arr_after,
+                arrival_before=arr_before,
             )
 
         return [{

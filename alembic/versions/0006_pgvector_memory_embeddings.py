@@ -51,25 +51,26 @@ def upgrade() -> None:
         ON long_term_memory_embeddings (memory_id, embedding_model, embedding_dims, is_current)
         """
     )
-    op.execute(
-        """
-        DO $$
-        BEGIN
-            CREATE INDEX IF NOT EXISTS ix_long_term_memory_embeddings_vector_hnsw
-            ON long_term_memory_embeddings
-            USING hnsw (embedding vector_cosine_ops)
-            WHERE is_current = true;
-        EXCEPTION
-            WHEN undefined_object OR feature_not_supported THEN
-                CREATE INDEX IF NOT EXISTS ix_long_term_memory_embeddings_vector_ivfflat
+    if EMBED_DIMS <= 2000:
+        op.execute(
+            """
+            DO $$
+            BEGIN
+                CREATE INDEX IF NOT EXISTS ix_long_term_memory_embeddings_vector_hnsw
                 ON long_term_memory_embeddings
-                USING ivfflat (embedding vector_cosine_ops)
-                WITH (lists = 100)
+                USING hnsw (embedding vector_cosine_ops)
                 WHERE is_current = true;
-        END
-        $$;
-        """
-    )
+            EXCEPTION
+                WHEN undefined_object OR feature_not_supported OR program_limit_exceeded THEN
+                    CREATE INDEX IF NOT EXISTS ix_long_term_memory_embeddings_vector_ivfflat
+                    ON long_term_memory_embeddings
+                    USING ivfflat (embedding vector_cosine_ops)
+                    WITH (lists = 100)
+                    WHERE is_current = true;
+            END
+            $$;
+            """
+        )
 
 
 def downgrade() -> None:

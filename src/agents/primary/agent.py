@@ -32,8 +32,7 @@ logger = logging.getLogger(__name__)
 
 
 llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash",
-    temperature=0.2,
+    model="gemini-3.6-flash",
 )
 
 
@@ -116,6 +115,9 @@ async def primary_chat(state: State, config: RunnableConfig) -> dict:
                     "Long-term user memory recalled across conversations. "
                     "Treat it as durable preference/profile context, not as "
                     "temporary tool results.\n"
+                    "When a specialized assistant returns a hotel list already "
+                    "filtered by preference, keep that filtered list — do not "
+                    "re-add hotels that conflict with this memory.\n"
                     f"{state['memory_context']}"
                 )
             )
@@ -203,9 +205,19 @@ async def run_delegated_assistant(
             f"do NOT output CompleteOrEscalate when resolved context is present.\n"
             f"- If you use a tool, you MUST use the exact output of the tool / temporary payload "
             f"in your final response (especially numbers and prices).\n"
+            f"- If long-term memory preferences are provided: AFTER the tool returns results, "
+            f"FILTER what you print — only list items that match those preferences "
+            f"(e.g. prefer center / avoid beach). Omit non-matching items; do not invent new ones.\n"
             f"- Return concise, structured results. Prefer a single bullet list.\n"
             f"- Answer ONLY this delegated request, not the original user message.\n"
             f"- Ignore all unrelated parts of the original conversation.\n"
+        )
+    memory_context = (state.get("memory_context") or "").strip()
+    memory_block = ""
+    if memory_context:
+        memory_block = (
+            "\n\nLong-term user memory (apply when printing tool results):\n"
+            f"{memory_context}\n"
         )
     configurable = dict((config or {}).get("configurable") or {})
     assistant_input = {
@@ -213,7 +225,8 @@ async def run_delegated_assistant(
         "messages": [
             HumanMessage(
                 content=(
-                    f"Delegated user request:\n{delegated_request}\n\n"
+                    f"Delegated user request:\n{delegated_request}\n"
+                    f"{memory_block}\n"
                     f"{answering_rules}"
                 )
             )
@@ -222,6 +235,7 @@ async def run_delegated_assistant(
         "active_assistant": dialog_state,
         "user_id": state.get("user_id") or configurable.get("user_id"),
         "thread_id": state.get("thread_id") or configurable.get("thread_id"),
+        "memory_context": state.get("memory_context") or "",
     }
     delegated_config = with_trace_config(
         config,

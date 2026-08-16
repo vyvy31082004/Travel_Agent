@@ -15,8 +15,7 @@ from utils.tracing import with_trace_config
 load_dotenv()
 
 llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash",
-    temperature=0.2,
+    model="gemini-3.6-flash",
 )
 
 

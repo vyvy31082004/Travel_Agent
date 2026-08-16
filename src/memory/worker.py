@@ -49,20 +49,22 @@ class MemoryWorker:
         job = await self._claim_next_job()
         if not job:
             return WorkerResult(processed=False)
+        return await self._process_claimed_job(job)
+
+    async def process_job(self, job_id: str) -> None:
+        """Process a specific memory job (used for sync_finalize)."""
+        job = await self._claim_job(job_id)
+        if not job:
+            print(f"[Worker] process_job: could not claim job {job_id}")
+            return
+        res = await self._process_claimed_job(job)
+        print(f"[Worker] process_job result: {res}")
+        if res.error:
+            print(f"[Worker] error details: {res.error}")
+
+    async def _process_claimed_job(self, job: dict[str, Any]) -> WorkerResult:
         job_id = str(job["job_id"])
         try:
-            candidates = await self._extractor.extract(
-                job.get("messages") or [],
-                user_id=str(job["user_id"]),
-                thread_id=str(job["thread_id"]),
-            )
-            if not candidates:
-                await self._mark_job(job_id, "skipped")
-                logger.info("memory job skipped", extra={"job_id": job_id})
-                return WorkerResult(
-                    processed=True, job_id=job_id, status="skipped", candidates=0
-                )
-
             existing = await self._repository.search_active_memories(
                 MemorySearchFilters(
                     user_id=str(job["user_id"]),
@@ -71,6 +73,20 @@ class MemoryWorker:
                     limit=self._settings.long_term_memory_text_search_limit,
                 )
             )
+            
+            candidates = await self._extractor.extract(
+                job.get("messages") or [],
+                user_id=str(job["user_id"]),
+                thread_id=str(job["thread_id"]),
+                existing_active=existing,
+            )
+            if not candidates:
+                await self._mark_job(job_id, "skipped")
+                logger.info("memory job skipped", extra={"job_id": job_id})
+                return WorkerResult(
+                    processed=True, job_id=job_id, status="skipped", candidates=0
+                )
+
             for candidate in candidates:
                 transition = calculate_transition(candidate, existing)
                 result = await self._commit_adapter.verify_and_commit(
@@ -123,6 +139,27 @@ class MemoryWorker:
                     RETURNING job_id, user_id, thread_id, messages, attempts
                     """,
                     {"retry_limit": self._settings.long_term_memory_worker_retry_limit},
+                )
+            ).fetchone()
+        return dict(row) if row else None
+
+    async def _claim_job(self, job_id: str) -> dict[str, Any] | None:
+        async with self._pool.connection() as conn:
+            row = await (
+                await conn.execute(
+                    """
+                    UPDATE memory_jobs
+                    SET status = 'processing', locked_at = now(),
+                        attempts = attempts + 1, updated_at = now()
+                    WHERE job_id = %(job_id)s
+                      AND status = 'pending'
+                      AND attempts < %(retry_limit)s
+                    RETURNING job_id, user_id, thread_id, messages, attempts
+                    """,
+                    {
+                        "job_id": UUID(str(job_id)),
+                        "retry_limit": self._settings.long_term_memory_worker_retry_limit,
+                    },
                 )
             ).fetchone()
         return dict(row) if row else None

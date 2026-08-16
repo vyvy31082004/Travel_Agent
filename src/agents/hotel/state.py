@@ -19,6 +19,7 @@ class State(TypedDict, total=False):
     summary: Annotated[Optional[str], keep_latest]
     user_id: Annotated[Optional[str], keep_latest]
     thread_id: Annotated[Optional[str], keep_latest]
+    memory_context: Annotated[Optional[str], keep_latest]
     requests: Annotated[dict[str, dict], merge_dicts]
     request_results: Annotated[dict[str, dict], merge_dicts]
     visible_results: Annotated[dict[str, dict], merge_dicts]

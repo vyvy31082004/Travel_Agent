@@ -504,7 +504,7 @@ def _normalize_booking_hotel(raw_hotel: dict, nights: int) -> dict:
 
     photo_urls = prop.get("photoUrls") or []
     access_lines = _split_accessibility_label(
-        raw_hotel.get("accessibilityLabel") or prop.get("accessibilityLabel")
+        raw_hotel.get("accessibilityLabel") or "Không có thông tin về khả năng truy cập."
     )
 
     return {
@@ -516,6 +516,7 @@ def _normalize_booking_hotel(raw_hotel: dict, nights: int) -> dict:
         "name": prop.get("name"),
         # List từng dòng — agent in mỗi phần tử một dòng cho dễ nhìn
         "accessibilityLabel": access_lines,
+        # "accessibilityLabel": raw_hotel.get("accessibilityLabel"),
         "location": (
             prop.get("wishlistName")
             or prop.get("city")
