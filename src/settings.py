@@ -73,6 +73,13 @@ class Settings:
     long_term_memory_debug_enabled: bool = False
     long_term_memory_extractor: str = "deterministic"
     long_term_memory_langmem_model: str = "gemini-3.6-flash"
+    long_term_memory_verifier: str = "deterministic"
+    long_term_memory_trustmem_model: str = "heuristic-trustmem-v1"
+    long_term_memory_trustmem_prompt_version: str = "trustmem-verifier-v1"
+    long_term_memory_trustmem_timeout_seconds: int = 30
+    long_term_memory_trustmem_coverage_threshold: float = 0.80
+    long_term_memory_trustmem_preservation_threshold: float = 0.90
+    long_term_memory_trustmem_faithfulness_threshold: float = 0.95
 
     def __post_init__(self) -> None:
         if not self.database_url:
@@ -97,6 +104,21 @@ class Settings:
             raise ValueError(
                 "LONG_TERM_MEMORY_EXTRACTOR must be deterministic, langmem, or compare"
             )
+        if self.long_term_memory_verifier not in {
+            "deterministic",
+            "trustmem",
+            "trustmem-dry-run",
+        }:
+            raise ValueError(
+                "LONG_TERM_MEMORY_VERIFIER must be deterministic, trustmem, or trustmem-dry-run"
+            )
+        for name, value in {
+            "LONG_TERM_MEMORY_TRUSTMEM_COVERAGE_THRESHOLD": self.long_term_memory_trustmem_coverage_threshold,
+            "LONG_TERM_MEMORY_TRUSTMEM_PRESERVATION_THRESHOLD": self.long_term_memory_trustmem_preservation_threshold,
+            "LONG_TERM_MEMORY_TRUSTMEM_FAITHFULNESS_THRESHOLD": self.long_term_memory_trustmem_faithfulness_threshold,
+        }.items():
+            if not 0 <= value <= 1:
+                raise ValueError(f"{name} must be between 0 and 1")
 
 
 @lru_cache
@@ -157,4 +179,25 @@ def get_settings() -> Settings:
         long_term_memory_langmem_model=os.getenv(
             "LONG_TERM_MEMORY_LANGMEM_MODEL", "gemini-3.6-flash"
         ).strip(),
+        long_term_memory_verifier=os.getenv(
+            "LONG_TERM_MEMORY_VERIFIER", "deterministic"
+        ).strip().lower(),
+        long_term_memory_trustmem_model=os.getenv(
+            "LONG_TERM_MEMORY_TRUSTMEM_MODEL", "heuristic-trustmem-v1"
+        ).strip(),
+        long_term_memory_trustmem_prompt_version=os.getenv(
+            "LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION", "trustmem-verifier-v1"
+        ).strip(),
+        long_term_memory_trustmem_timeout_seconds=_positive_int(
+            "LONG_TERM_MEMORY_TRUSTMEM_TIMEOUT_SECONDS", 30
+        ),
+        long_term_memory_trustmem_coverage_threshold=_float_env(
+            "LONG_TERM_MEMORY_TRUSTMEM_COVERAGE_THRESHOLD", 0.80
+        ),
+        long_term_memory_trustmem_preservation_threshold=_float_env(
+            "LONG_TERM_MEMORY_TRUSTMEM_PRESERVATION_THRESHOLD", 0.90
+        ),
+        long_term_memory_trustmem_faithfulness_threshold=_float_env(
+            "LONG_TERM_MEMORY_TRUSTMEM_FAITHFULNESS_THRESHOLD", 0.95
+        ),
     )

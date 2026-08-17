@@ -1,9 +1,55 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Protocol
+import asyncio
+import logging
+from dataclasses import dataclass, field, replace
+from typing import Any, Protocol, Sequence
 
 from memory.consolidation import MemoryTransition, TransitionAction
+from memory.long_term import MemoryStatus, TravelMemory
+from settings import Settings
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass(frozen=True)
+class VerifierDimensionScore:
+    score: float
+    reason: str
+    threshold: float
+
+    def __post_init__(self) -> None:
+        value = float(self.score)
+        if not 0 <= value <= 1:
+            raise ValueError("verifier score must be between 0 and 1")
+        object.__setattr__(self, "score", value)
+        object.__setattr__(self, "reason", self.reason.strip() or "no reason provided")
+
+    @property
+    def passed(self) -> bool:
+        return self.score >= self.threshold
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "score": self.score,
+            "reason": self.reason,
+            "threshold": self.threshold,
+            "passed": self.passed,
+        }
+
+
+@dataclass(frozen=True)
+class MemoryVerifierContext:
+    chunk: Sequence[dict[str, Any]] = ()
+    old_memories: Sequence[TravelMemory] = ()
+    new_memories: Sequence[TravelMemory] = ()
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "chunk": [dict(message) for message in self.chunk],
+            "M_old": [memory.to_record() for memory in self.old_memories],
+            "M_new": [memory.to_record() for memory in self.new_memories],
+        }
 
 
 @dataclass(frozen=True)
@@ -12,26 +58,45 @@ class VerifierResult:
     reasons: list[str] = field(default_factory=list)
     model: str = "deterministic"
     prompt_version: str = "memory-verifier-v1"
+    mode: str = "deterministic"
+    dimensions: dict[str, VerifierDimensionScore] = field(default_factory=dict)
+    fallback_reason: str | None = None
 
     @property
     def approved(self) -> bool:
         return self.decision in {"approve", "noop"}
 
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "decision": self.decision,
+            "reasons": self.reasons,
+            "model": self.model,
+            "prompt_version": self.prompt_version,
+            "mode": self.mode,
+            "dimensions": {
+                name: score.to_dict() for name, score in self.dimensions.items()
+            },
+            "fallback_reason": self.fallback_reason,
+        }
+
 
 class MemoryVerifier(Protocol):
-    async def evaluate(self, transition: MemoryTransition) -> VerifierResult:
+    async def evaluate(
+        self,
+        transition: MemoryTransition,
+        context: MemoryVerifierContext | None = None,
+    ) -> VerifierResult:
         """Evaluate a non-trivial memory transition."""
 
 
 class DeterministicMemoryVerifier:
-    """Conservative verifier baseline.
+    """Conservative verifier baseline."""
 
-    This keeps the implementation stable until an LLM verifier prompt/model is
-    explicitly configured and tested. It approves inserts/no-ops that passed
-    deterministic rules, and requires human/future LLM review for supersessions.
-    """
-
-    async def evaluate(self, transition: MemoryTransition) -> VerifierResult:
+    async def evaluate(
+        self,
+        transition: MemoryTransition,
+        context: MemoryVerifierContext | None = None,
+    ) -> VerifierResult:
         if transition.action == TransitionAction.REJECT:
             return VerifierResult("reject", transition.reasons)
         if transition.action == TransitionAction.NOOP:
@@ -41,3 +106,311 @@ class DeterministicMemoryVerifier:
         if transition.action == TransitionAction.INSERT:
             return VerifierResult("approve", transition.reasons)
         return VerifierResult("reject", [f"unsupported action: {transition.action}"])
+
+
+class TrustMemInspiredMemoryVerifier:
+    def __init__(
+        self,
+        *,
+        model: str,
+        prompt_version: str,
+        coverage_threshold: float,
+        preservation_threshold: float,
+        faithfulness_threshold: float,
+        timeout_seconds: int = 30,
+        scorer: Any | None = None,
+    ) -> None:
+        self._model = model
+        self._prompt_version = prompt_version
+        self._coverage_threshold = coverage_threshold
+        self._preservation_threshold = preservation_threshold
+        self._faithfulness_threshold = faithfulness_threshold
+        self._timeout_seconds = timeout_seconds
+        self._scorer = scorer or self._heuristic_scores
+
+    async def evaluate(
+        self,
+        transition: MemoryTransition,
+        context: MemoryVerifierContext | None = None,
+    ) -> VerifierResult:
+        if transition.action == TransitionAction.REJECT:
+            return VerifierResult(
+                "reject",
+                transition.reasons,
+                model=self._model,
+                prompt_version=self._prompt_version,
+                mode="trustmem",
+            )
+        if transition.action == TransitionAction.NOOP:
+            return VerifierResult(
+                "noop",
+                transition.reasons,
+                model=self._model,
+                prompt_version=self._prompt_version,
+                mode="trustmem",
+                dimensions=self._passing_dimensions("no-op preserves existing memory"),
+            )
+        try:
+            dimensions = await asyncio.wait_for(
+                _maybe_await(self._scorer(transition, context)),
+                timeout=self._timeout_seconds,
+            )
+            dimensions = self._normalize_dimensions(dimensions)
+        except Exception as exc:
+            logger.warning("trustmem verifier failed or timed out: %s", exc)
+            return VerifierResult(
+                "retry",
+                ["trustmem verifier failed or returned malformed output"],
+                model=self._model,
+                prompt_version=self._prompt_version,
+                mode="trustmem",
+                fallback_reason=str(exc),
+            )
+
+        failed = [name for name, score in dimensions.items() if not score.passed]
+        decision = "approve" if not failed else "reject"
+        reasons = [
+            *(transition.reasons or []),
+            *[
+                f"{name} below threshold: {dimensions[name].reason}"
+                for name in failed
+            ],
+        ]
+        if not reasons and decision == "approve":
+            reasons = ["coverage, preservation, and faithfulness passed"]
+        log_extra = {
+            "decision": decision,
+            "failed_dimensions": failed,
+            "coverage": dimensions["coverage"].score,
+            "preservation": dimensions["preservation"].score,
+            "faithfulness": dimensions["faithfulness"].score,
+        }
+        if failed:
+            logger.warning("trustmem verifier rejected transition", extra=log_extra)
+        else:
+            logger.info("trustmem verifier approved transition", extra=log_extra)
+        return VerifierResult(
+            decision,
+            reasons,
+            model=self._model,
+            prompt_version=self._prompt_version,
+            mode="trustmem",
+            dimensions=dimensions,
+        )
+
+    def _passing_dimensions(self, reason: str) -> dict[str, VerifierDimensionScore]:
+        return {
+            "coverage": VerifierDimensionScore(1.0, reason, self._coverage_threshold),
+            "preservation": VerifierDimensionScore(
+                1.0, reason, self._preservation_threshold
+            ),
+            "faithfulness": VerifierDimensionScore(
+                1.0, reason, self._faithfulness_threshold
+            ),
+        }
+
+    def _normalize_dimensions(
+        self,
+        raw: dict[str, Any],
+    ) -> dict[str, VerifierDimensionScore]:
+        thresholds = {
+            "coverage": self._coverage_threshold,
+            "preservation": self._preservation_threshold,
+            "faithfulness": self._faithfulness_threshold,
+        }
+        result: dict[str, VerifierDimensionScore] = {}
+        for name, threshold in thresholds.items():
+            payload = raw.get(name)
+            if payload is None:
+                raise ValueError(f"missing verifier dimension: {name}")
+            if isinstance(payload, VerifierDimensionScore):
+                result[name] = payload
+            elif isinstance(payload, dict):
+                result[name] = VerifierDimensionScore(
+                    score=float(payload["score"]),
+                    reason=str(payload.get("reason") or ""),
+                    threshold=threshold,
+                )
+            else:
+                raise ValueError(f"unsupported verifier dimension payload: {name}")
+        return result
+
+    def _heuristic_scores(
+        self,
+        transition: MemoryTransition,
+        context: MemoryVerifierContext | None,
+    ) -> dict[str, dict[str, Any]]:
+        context = context or MemoryVerifierContext()
+        chunk_text = _chunk_text(context.chunk)
+        candidate_text = _candidate_text(transition)
+        old_text = "\n".join(m.memory_text for m in context.old_memories)
+
+        coverage_score, coverage_reason = _score_coverage(chunk_text, candidate_text)
+        preservation_score, preservation_reason = _score_preservation(
+            transition, old_text, candidate_text
+        )
+        faithfulness_score, faithfulness_reason = _score_faithfulness(
+            chunk_text, candidate_text, transition
+        )
+        return {
+            "coverage": {"score": coverage_score, "reason": coverage_reason},
+            "preservation": {
+                "score": preservation_score,
+                "reason": preservation_reason,
+            },
+            "faithfulness": {
+                "score": faithfulness_score,
+                "reason": faithfulness_reason,
+            },
+        }
+
+
+class TrustMemDryRunMemoryVerifier:
+    def __init__(
+        self,
+        *,
+        deterministic: DeterministicMemoryVerifier,
+        trustmem: TrustMemInspiredMemoryVerifier,
+    ) -> None:
+        self._deterministic = deterministic
+        self._trustmem = trustmem
+
+    async def evaluate(
+        self,
+        transition: MemoryTransition,
+        context: MemoryVerifierContext | None = None,
+    ) -> VerifierResult:
+        baseline = await self._deterministic.evaluate(transition, context)
+        scored = await self._trustmem.evaluate(transition, context)
+        return VerifierResult(
+            baseline.decision,
+            [*baseline.reasons, "trustmem dry-run score did not gate commit"],
+            model=scored.model,
+            prompt_version=scored.prompt_version,
+            mode="trustmem-dry-run",
+            dimensions=scored.dimensions,
+            fallback_reason=scored.fallback_reason,
+        )
+
+
+def build_memory_verifier(settings: Settings) -> MemoryVerifier:
+    deterministic = DeterministicMemoryVerifier()
+    if settings.long_term_memory_verifier == "deterministic":
+        return deterministic
+    trustmem = TrustMemInspiredMemoryVerifier(
+        model=settings.long_term_memory_trustmem_model,
+        prompt_version=settings.long_term_memory_trustmem_prompt_version,
+        coverage_threshold=settings.long_term_memory_trustmem_coverage_threshold,
+        preservation_threshold=settings.long_term_memory_trustmem_preservation_threshold,
+        faithfulness_threshold=settings.long_term_memory_trustmem_faithfulness_threshold,
+        timeout_seconds=settings.long_term_memory_trustmem_timeout_seconds,
+    )
+    if settings.long_term_memory_verifier == "trustmem":
+        return trustmem
+    return TrustMemDryRunMemoryVerifier(deterministic=deterministic, trustmem=trustmem)
+
+
+def project_memory_state(
+    transition: MemoryTransition,
+    existing: Sequence[TravelMemory],
+) -> list[TravelMemory]:
+    if transition.action == TransitionAction.REJECT:
+        return list(existing)
+    if transition.action == TransitionAction.NOOP:
+        return list(existing)
+    if transition.action == TransitionAction.INSERT and transition.candidate:
+        return [*existing, transition.candidate]
+    if transition.action == TransitionAction.SUPERSEDE and transition.candidate:
+        projected: list[TravelMemory] = []
+        for memory in existing:
+            if memory.memory_id == transition.existing_memory_id:
+                projected.append(replace(memory, status=MemoryStatus.SUPERSEDED))
+            else:
+                projected.append(memory)
+        projected.append(transition.candidate)
+        return projected
+    return list(existing)
+
+
+async def _maybe_await(value: Any) -> Any:
+    if hasattr(value, "__await__"):
+        return await value
+    return value
+
+
+def _chunk_text(chunk: Sequence[dict[str, Any]]) -> str:
+    return "\n".join(str(message.get("content") or "") for message in chunk).lower()
+
+
+def _candidate_text(transition: MemoryTransition) -> str:
+    if not transition.candidate:
+        return ""
+    parts = [transition.candidate.memory_text]
+    if transition.candidate.condition:
+        parts.append(transition.candidate.condition)
+    return "\n".join(parts).lower()
+
+
+def _score_coverage(chunk_text: str, candidate_text: str) -> tuple[float, str]:
+    required_groups = [
+        {"business", "công tác", "work"},
+        {"economy", "phổ thông", "du lịch", "leisure"},
+        {"family", "gia đình", "trẻ nhỏ"},
+    ]
+    missing: list[str] = []
+    for group in required_groups:
+        if any(token in chunk_text for token in group) and not any(
+            token in candidate_text for token in group
+        ):
+            missing.append("/".join(sorted(group)))
+    if missing:
+        return 0.55, "candidate omits durable condition(s): " + "; ".join(missing)
+    if not candidate_text.strip():
+        return 0.0, "no candidate memory to cover chunk"
+    return 0.95, "candidate covers durable travel memory evidence"
+
+
+def _score_preservation(
+    transition: MemoryTransition,
+    old_text: str,
+    candidate_text: str,
+) -> tuple[float, str]:
+    if transition.action != TransitionAction.SUPERSEDE:
+        return 0.95, "transition does not alter existing active memories"
+    condition_tokens = ["economy", "phổ thông", "leisure", "du lịch", "công tác"]
+    old_has_condition = any(token in old_text.lower() for token in condition_tokens)
+    candidate_drops_condition = not any(token in candidate_text for token in condition_tokens)
+    over_generalizes = any(token in candidate_text for token in ["always", "luôn"])
+    if old_has_condition and (candidate_drops_condition or over_generalizes):
+        return 0.45, "candidate over-generalizes or drops condition from M_old"
+    return 0.95, "valid existing memory is preserved or safely superseded"
+
+
+def _score_faithfulness(
+    chunk_text: str,
+    candidate_text: str,
+    transition: MemoryTransition,
+) -> tuple[float, str]:
+    tool_markers = ["search_id", "total_results", "displayed_item_ids", "item_id"]
+    station_tokens = ["ga", "station", "train"]
+    user_confirmation = [
+        "tôi thích",
+        "tôi muốn",
+        "tôi ưu tiên",
+        "ưu tiên của tôi",
+        "i prefer",
+        "i want",
+        "chọn",
+    ]
+    evidence = transition.candidate.evidence_text.lower() if transition.candidate else ""
+    if any(marker in evidence for marker in tool_markers):
+        return 0.1, "candidate evidence is tool/API output, not user evidence"
+    if (
+        any(marker in chunk_text for marker in tool_markers)
+        and any(token in candidate_text for token in station_tokens)
+        and not any(token in chunk_text for token in user_confirmation)
+    ):
+        return 0.2, "tool result was converted into user preference without confirmation"
+    if not evidence.strip() and transition.candidate is not None:
+        return 0.0, "candidate lacks evidence text"
+    return 0.98, "candidate is supported by user evidence or valid prior memory"

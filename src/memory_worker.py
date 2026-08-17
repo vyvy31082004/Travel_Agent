@@ -7,7 +7,7 @@ import logging
 from infrastructure.postgres import open_postgres
 from memory.commit import MemoryCommitAdapter
 from memory.embeddings import MemoryEmbeddingService, memory_content_hash
-from memory.verifier import DeterministicMemoryVerifier
+from memory.verifier import build_memory_verifier
 from memory.worker import MemoryWorker
 from repositories.long_term_memory import (
     MemoryEmbeddingRecord,
@@ -27,7 +27,7 @@ async def _run_once() -> None:
             repository=repository,
             commit_adapter=MemoryCommitAdapter(
                 repository=repository,
-                verifier=DeterministicMemoryVerifier(),
+                verifier=build_memory_verifier(settings),
                 embedding_service=embedding_service,
             ),
         )

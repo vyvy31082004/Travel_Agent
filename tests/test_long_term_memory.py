@@ -41,7 +41,14 @@ from repositories.long_term_memory import (
     MemorySearchFilters,
     NoopLongTermMemoryRepository,
 )
-from memory.verifier import DeterministicMemoryVerifier
+from memory.verifier import (
+    DeterministicMemoryVerifier,
+    MemoryVerifierContext,
+    TrustMemInspiredMemoryVerifier,
+    VerifierDimensionScore,
+    build_memory_verifier,
+    project_memory_state,
+)
 from services.long_term_memory import MemoryService, memory_job_idempotency_key
 from settings import Settings
 
@@ -61,6 +68,23 @@ def test_vector_settings_validate_distance_threshold():
     assert make_settings(long_term_memory_vector_distance_threshold=0.5)
     with pytest.raises(ValueError):
         make_settings(long_term_memory_vector_distance_threshold=2.5)
+
+
+def test_trustmem_settings_and_builder_modes():
+    deterministic = build_memory_verifier(
+        make_settings(long_term_memory_verifier="deterministic")
+    )
+    assert isinstance(deterministic, DeterministicMemoryVerifier)
+    trustmem = build_memory_verifier(make_settings(long_term_memory_verifier="trustmem"))
+    assert isinstance(trustmem, TrustMemInspiredMemoryVerifier)
+    dry_run = build_memory_verifier(
+        make_settings(long_term_memory_verifier="trustmem-dry-run")
+    )
+    assert dry_run.__class__.__name__ == "TrustMemDryRunMemoryVerifier"
+    with pytest.raises(ValueError):
+        make_settings(long_term_memory_verifier="unknown")
+    with pytest.raises(ValueError):
+        make_settings(long_term_memory_trustmem_faithfulness_threshold=1.5)
 
 
 def test_travel_memory_validation_namespace_and_lifecycle():
@@ -382,6 +406,166 @@ def test_candidate_extraction_validation_and_transitions():
     assert any("sensitive" in reason for reason in rule.reasons)
 
 
+def _flight_memory(text, *, memory_id=None, condition=None, evidence=None):
+    return TravelMemory(
+        memory_id=memory_id,
+        user_id="user-1",
+        memory_text=text,
+        category=MemoryCategory.FLIGHT_PREFERENCE,
+        domain=MemoryDomain.FLIGHT,
+        condition=condition,
+        evidence_text=evidence or text,
+        source_thread_id="thread-1",
+    )
+
+
+def test_trustmem_verifier_detects_coverage_preservation_and_faithfulness_failures():
+    verifier = TrustMemInspiredMemoryVerifier(
+        model="heuristic-trustmem-v1",
+        prompt_version="test",
+        coverage_threshold=0.8,
+        preservation_threshold=0.9,
+        faithfulness_threshold=0.95,
+    )
+    incomplete = _flight_memory(
+        "ưu tiên business khi công tác",
+        evidence="Tôi muốn business khi công tác và economy khi du lịch",
+    )
+    coverage = asyncio.run(
+        verifier.evaluate(
+            MemoryTransition(TransitionAction.INSERT, candidate=incomplete),
+            MemoryVerifierContext(
+                chunk=[
+                    {
+                        "type": "human",
+                        "content": "Tôi muốn business khi công tác và economy khi du lịch",
+                    }
+                ],
+                old_memories=[],
+                new_memories=[incomplete],
+            ),
+        )
+    )
+    assert coverage.decision == "reject"
+    assert coverage.dimensions["coverage"].score < 0.8
+
+    old = _flight_memory(
+        "ưu tiên economy khi du lịch",
+        memory_id="old-1",
+        condition="du lịch",
+    )
+    generalized = _flight_memory("luôn ưu tiên business")
+    preservation = asyncio.run(
+        verifier.evaluate(
+            MemoryTransition(
+                TransitionAction.SUPERSEDE,
+                candidate=generalized,
+                existing_memory_id="old-1",
+            ),
+            MemoryVerifierContext(
+                chunk=[{"type": "human", "content": "Tôi muốn business khi công tác"}],
+                old_memories=[old],
+                new_memories=project_memory_state(
+                    MemoryTransition(
+                        TransitionAction.SUPERSEDE,
+                        candidate=generalized,
+                        existing_memory_id="old-1",
+                    ),
+                    [old],
+                ),
+            ),
+        )
+    )
+    assert preservation.decision == "reject"
+    assert preservation.dimensions["preservation"].score < 0.9
+
+    tool_candidate = TravelMemory(
+        memory_text="thích khách sạn gần ga",
+        category=MemoryCategory.HOTEL_PREFERENCE,
+        domain=MemoryDomain.HOTEL,
+        evidence_text="search_id=abc total_results=3 hotel near station",
+        source_thread_id="thread-1",
+    )
+    faithfulness = asyncio.run(
+        verifier.evaluate(
+            MemoryTransition(TransitionAction.INSERT, candidate=tool_candidate),
+            MemoryVerifierContext(
+                chunk=[
+                    {
+                        "type": "tool",
+                        "content": "search_id=abc total_results=3 hotel near station",
+                    }
+                ],
+                old_memories=[],
+                new_memories=[tool_candidate],
+            ),
+        )
+    )
+    assert faithfulness.decision == "reject"
+    assert faithfulness.dimensions["faithfulness"].score < 0.95
+
+
+def test_trustmem_verifier_approval_dry_run_and_malformed_output():
+    candidate = _flight_memory(
+        "ưu tiên business khi công tác và economy khi du lịch",
+        evidence="Tôi muốn business khi công tác và economy khi du lịch",
+    )
+    trustmem = TrustMemInspiredMemoryVerifier(
+        model="heuristic-trustmem-v1",
+        prompt_version="test",
+        coverage_threshold=0.8,
+        preservation_threshold=0.9,
+        faithfulness_threshold=0.95,
+    )
+    approved = asyncio.run(
+        trustmem.evaluate(
+            MemoryTransition(TransitionAction.INSERT, candidate=candidate),
+            MemoryVerifierContext(
+                chunk=[
+                    {
+                        "type": "human",
+                        "content": "Tôi muốn business khi công tác và economy khi du lịch",
+                    }
+                ],
+                old_memories=[],
+                new_memories=[candidate],
+            ),
+        )
+    )
+    assert approved.decision == "approve"
+    assert approved.dimensions["faithfulness"].passed
+
+    dry_run = build_memory_verifier(
+        make_settings(long_term_memory_verifier="trustmem-dry-run")
+    )
+    dry_result = asyncio.run(
+        dry_run.evaluate(
+            MemoryTransition(TransitionAction.INSERT, candidate=candidate),
+            MemoryVerifierContext(chunk=[], old_memories=[], new_memories=[candidate]),
+        )
+    )
+    assert dry_result.decision == "approve"
+    assert dry_result.mode == "trustmem-dry-run"
+
+    malformed = TrustMemInspiredMemoryVerifier(
+        model="bad",
+        prompt_version="test",
+        coverage_threshold=0.8,
+        preservation_threshold=0.9,
+        faithfulness_threshold=0.95,
+        scorer=lambda transition, context: {
+            "coverage": {"score": 1.2, "reason": "bad"},
+            "preservation": {"score": 1.0, "reason": "ok"},
+            "faithfulness": {"score": 1.0, "reason": "ok"},
+        },
+    )
+    malformed_result = asyncio.run(
+        malformed.evaluate(MemoryTransition(TransitionAction.INSERT, candidate=candidate))
+    )
+    assert malformed_result.decision == "retry"
+    assert malformed_result.fallback_reason
+
+
 class CommitRepo(NoopLongTermMemoryRepository):
     def __init__(self):
         self.inserted = []
@@ -447,6 +631,28 @@ def test_commit_adapter_approve_reject_and_audit():
     )
     assert len(embedding_repo.embeddings) == 1
     assert embedding_repo.embeddings[0].memory_id == "inserted-1"
+
+    trustmem_repo = CommitRepo()
+    trustmem_adapter = MemoryCommitAdapter(
+        repository=trustmem_repo,
+        verifier=build_memory_verifier(make_settings(long_term_memory_verifier="trustmem")),
+    )
+    context = MemoryVerifierContext(
+        chunk=[{"type": "human", "content": "Tôi ưu tiên bay thẳng"}],
+        old_memories=[],
+        new_memories=[candidate],
+    )
+    asyncio.run(
+        trustmem_adapter.verify_and_commit(
+            transition=MemoryTransition(TransitionAction.INSERT, candidate=candidate),
+            user_id="user-1",
+            thread_id="thread-1",
+            verifier_context=context,
+        )
+    )
+    verifier_result = trustmem_repo.audits[-1]["verifier_result"]
+    assert verifier_result["mode"] == "trustmem"
+    assert "coverage" in verifier_result["dimensions"]
 
     reject = asyncio.run(
         adapter.verify_and_commit(

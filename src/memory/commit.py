@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 
 from memory.consolidation import MemoryTransition, TransitionAction
 from memory.embeddings import MemoryEmbeddingService, memory_content_hash
-from memory.verifier import MemoryVerifier, VerifierResult
+from memory.verifier import MemoryVerifier, MemoryVerifierContext, VerifierResult
 from repositories.long_term_memory import (
     LongTermMemoryRepository,
     MemoryEmbeddingRecord,
@@ -40,8 +40,9 @@ class MemoryCommitAdapter:
         user_id: str,
         thread_id: str | None,
         job_id: str | None = None,
+        verifier_context: MemoryVerifierContext | None = None,
     ) -> CommitResult:
-        judgment = await self._verifier.evaluate(transition)
+        judgment = await self._verifier.evaluate(transition, verifier_context)
         affected: list[str] = []
         decision = judgment.decision
 
@@ -116,9 +117,4 @@ def _transition_to_dict(transition: MemoryTransition) -> dict:
 
 
 def _verifier_to_dict(result: VerifierResult) -> dict:
-    return {
-        "decision": result.decision,
-        "reasons": result.reasons,
-        "model": result.model,
-        "prompt_version": result.prompt_version,
-    }
+    return result.to_dict()

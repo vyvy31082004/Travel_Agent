@@ -14,6 +14,7 @@ from memory.consolidation import (
     calculate_transition,
 )
 from memory.long_term import MemoryFamily
+from memory.verifier import MemoryVerifierContext, project_memory_state
 from repositories.long_term_memory import MemorySearchFilters, PostgresLongTermMemoryRepository
 from settings import Settings
 
@@ -94,6 +95,11 @@ class MemoryWorker:
                     user_id=str(job["user_id"]),
                     thread_id=str(job["thread_id"]),
                     job_id=job_id,
+                    verifier_context=MemoryVerifierContext(
+                        chunk=tuple(job.get("messages") or ()),
+                        old_memories=tuple(existing),
+                        new_memories=tuple(project_memory_state(transition, existing)),
+                    ),
                 )
                 logger.info(
                     "memory transition processed",
