@@ -1,0 +1,39 @@
+# VCS and editor state
+.git
+.gitignore
+.vscode
+.pi
+.pi-subagents
+
+# Python local/dev artifacts
+.venv
+venv
+__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+
+# Secrets and local env files
+.env
+.env.*
+!.env.production.example
+*.pem
+*.key
+*.crt
+
+# Logs and runtime dumps
+*.log
+logs
+*.pid
+_pyc_dump.txt
+
+# Large/local-only planning artifacts not needed at runtime
+thiet_ke_toan_bo_long_term_memory.pdf
+note.txt
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,68 @@
+name: azure-container-apps-deploy-sample
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: Image tag to build/deploy
+        required: true
+        default: manual-${{ github.sha }}
+
+jobs:
+  deploy-sample:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Build image in ACR
+        run: |
+          az acr build \
+            --registry "${{ secrets.AZURE_ACR_NAME }}" \
+            --image "viettrip-ai:${{ inputs.image_tag }}" \
+            .
+
+      - name: Update migration job image
+        run: |
+          az containerapp job update \
+            --name "viettrip-migrate" \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --image "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/viettrip-ai:${{ inputs.image_tag }}"
+
+      - name: Run migration job after pgvector preflight
+        run: |
+          echo "Ensure pgvector preflight has passed before approving this production deployment."
+          az containerapp job start \
+            --name "viettrip-migrate" \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}"
+
+      - name: Update web multi-container revision
+        run: |
+          echo "Use infra/azure/containerapps/03-deploy-web.sh or equivalent az containerapp update/create --yaml to deploy web + five MCP sidecars."
+          echo "New revision should be smoke-tested before shifting production traffic."
+
+      - name: Update worker job image
+        run: |
+          az containerapp job update \
+            --name "viettrip-memory-worker" \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --image "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/viettrip-ai:${{ inputs.image_tag }}"
+
+      - name: Update backfill job image
+        run: |
+          az containerapp job update \
+            --name "viettrip-backfill-embeddings" \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --image "${{ secrets.AZURE_ACR_NAME }}.azurecr.io/viettrip-ai:${{ inputs.image_tag }}"
+
+      - name: Smoke test and traffic shift reminder
+        run: |
+          echo "Run infra/azure/containerapps/08-smoke-test.sh against the new revision."
+          echo "After success, shift traffic using az containerapp ingress traffic set."
+          echo "Rollback: run infra/azure/containerapps/09-rollback-web.sh with ROLLBACK_REVISION set."
