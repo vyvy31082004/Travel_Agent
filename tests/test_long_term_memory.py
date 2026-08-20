@@ -566,6 +566,50 @@ def test_trustmem_verifier_approval_dry_run_and_malformed_output():
     assert malformed_result.fallback_reason
 
 
+def test_trustmem_timeout_error_has_labeled_fallback_reason():
+    async def boom(_transition, _context):
+        raise TimeoutError()
+
+    verifier = TrustMemInspiredMemoryVerifier(
+        model="gemini-2.5-flash",
+        prompt_version="test",
+        coverage_threshold=0.8,
+        preservation_threshold=0.9,
+        faithfulness_threshold=0.95,
+        scorer=boom,
+    )
+    result = asyncio.run(
+        verifier.evaluate(
+            MemoryTransition(
+                TransitionAction.INSERT,
+                candidate=_flight_memory("ưu tiên bay thẳng"),
+            )
+        )
+    )
+    assert result.decision == "retry"
+    assert result.fallback_reason
+    assert "TimeoutError" in result.fallback_reason
+
+
+def test_trustmem_selects_llm_scorer_for_non_heuristic_model():
+    heuristic = TrustMemInspiredMemoryVerifier(
+        model="heuristic-trustmem-v1",
+        prompt_version="test",
+        coverage_threshold=0.8,
+        preservation_threshold=0.9,
+        faithfulness_threshold=0.95,
+    )
+    llm = TrustMemInspiredMemoryVerifier(
+        model="gemini-2.5-flash",
+        prompt_version="test",
+        coverage_threshold=0.8,
+        preservation_threshold=0.9,
+        faithfulness_threshold=0.95,
+    )
+    assert heuristic._scorer == heuristic._heuristic_scores
+    assert llm._scorer == llm._llm_scores
+
+
 class CommitRepo(NoopLongTermMemoryRepository):
     def __init__(self):
         self.inserted = []

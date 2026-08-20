@@ -76,7 +76,7 @@ class Settings:
     long_term_memory_verifier: str = "deterministic"
     long_term_memory_trustmem_model: str = "heuristic-trustmem-v1"
     long_term_memory_trustmem_prompt_version: str = "trustmem-verifier-v1"
-    long_term_memory_trustmem_timeout_seconds: int = 30
+    long_term_memory_trustmem_timeout_seconds: int = 90
     long_term_memory_trustmem_coverage_threshold: float = 0.80
     long_term_memory_trustmem_preservation_threshold: float = 0.90
     long_term_memory_trustmem_faithfulness_threshold: float = 0.95
@@ -189,7 +189,7 @@ def get_settings() -> Settings:
             "LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION", "trustmem-verifier-v1"
         ).strip(),
         long_term_memory_trustmem_timeout_seconds=_positive_int(
-            "LONG_TERM_MEMORY_TRUSTMEM_TIMEOUT_SECONDS", 30
+            "LONG_TERM_MEMORY_TRUSTMEM_TIMEOUT_SECONDS", 90
         ),
         long_term_memory_trustmem_coverage_threshold=_float_env(
             "LONG_TERM_MEMORY_TRUSTMEM_COVERAGE_THRESHOLD", 0.80
