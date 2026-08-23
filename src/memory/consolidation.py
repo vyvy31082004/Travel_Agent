@@ -50,11 +50,65 @@ class MemoryCandidateExtractor(Protocol):
 class LangMemTravelMemory(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    memory_text: str = Field(min_length=3, max_length=500)
+    memory_text: str = Field(
+        min_length=3,
+        max_length=500,
+        description=(
+            "Tiếng Việt. Một ý durable duy nhất, trung thực với lời user; "
+            "không dịch sang tiếng Anh, không thêm chi tiết suy diễn."
+        ),
+    )
     category: MemoryCategory | str
     domain: MemoryDomain | str
-    evidence_text: str
-    condition: str | None = None
+    evidence_text: str = Field(
+        description="Nguyên văn hoặc gần nguyên văn câu user làm bằng chứng."
+    )
+    condition: str | None = Field(
+        default=None,
+        description=(
+            "Điều kiện tiếng Việt nếu user nêu (ví dụ: khi đi công tác, khi đi gia đình). "
+            "null nếu không có điều kiện."
+        ),
+    )
+
+
+_LANGMEM_EXTRACT_INSTRUCTIONS = """\
+Extract only durable, reusable travel preferences, profile facts, or interaction rules
+from the user's own evidence.
+
+Language (required):
+- Write memory_text, condition, and evidence_text in Vietnamese only.
+- Never start with English words like "User".
+- Keep the user's key phrases (e.g. "bay thẳng", "bữa sáng", "gần biển", "yên tĩnh",
+  "boutique", "đừng hỏi lại").
+
+Multi-fact coverage (required — hard rule):
+- Count every durable preference in the user message; emit that many memories (1 fact = 1 memory).
+- "boutique gần biển, yên tĩnh" => exactly 3 memories covering boutique, gần biển, yên tĩnh.
+- "số tự động, rộng rãi, có tài xế" => exactly 3 memories; never only the first fact.
+- Omitting any durable fact is a failure.
+
+Conditions (required — hard rule):
+- If the user says "khi đi công tác" / "khi đi gia đình", you MUST set condition to that phrase
+  AND keep it visible in memory_text (e.g. "Thích business khi đi công tác").
+- Forbidden: "Thích business class" / "Thích economy class" / "Thích resort yên tĩnh"
+  without the matching condition when the user stated one.
+
+Category / domain (required):
+- "Gọi tôi là …" / tên xưng hô => category=profile_fact, domain=general.
+- Sân bay nhà / điểm xuất phát (SGN, …) => category=flight_preference, domain=flight.
+- Lịch trình thong thả => category=general_preference, domain=general.
+- "đừng hỏi lại" / quy tắc trả lời => category=interaction_rule, domain=general.
+- Hotel / flight / car / excursion prefs => matching *_preference and domain.
+
+Do not extract:
+- temporary tool/API search results, prices, or one-off trip logistics
+- assistant suggestions the user has not confirmed
+- ambiguous claims ("có thể", "chưa chắc", "maybe")
+- sensitive data (passport, card, CVV, password)
+
+Return no memory if evidence is ambiguous or sensitive.\
+"""
 
 
 class DeterministicCandidateExtractor:
@@ -93,13 +147,7 @@ class LangMemCandidateExtractor:
             self._manager = create_memory_manager(
                 llm,
                 schemas=[LangMemTravelMemory],
-                instructions=(
-                    "Extract only durable, reusable travel preferences, profile facts, "
-                    "or interaction rules from the user's own evidence. "
-                    "Do not extract temporary tool/API search results as preferences. "
-                    "Preserve explicit conditions such as business travel or family trips. "
-                    "Return no memory if evidence is ambiguous or sensitive."
-                ),
+                instructions=_LANGMEM_EXTRACT_INSTRUCTIONS,
                 enable_inserts=True,
                 enable_updates=True,
                 enable_deletes=False,
@@ -395,16 +443,21 @@ def _clean_memory_text(text: str) -> str:
 
 def classify_memory(text: str) -> tuple[MemoryCategory, MemoryDomain]:
     lowered = text.lower()
-    if any(token in lowered for token in ["hotel", "khách sạn", "resort", "homestay"]):
-        return MemoryCategory.HOTEL_PREFERENCE, MemoryDomain.HOTEL
+    if any(token in lowered for token in ["gọi tôi", "tên tôi", "my name"]):
+        return MemoryCategory.PROFILE_FACT, MemoryDomain.GENERAL
+    if any(
+        token in lowered
+        for token in ["sân bay nhà", "điểm xuất phát", "home airport", "homeairport"]
+    ):
+        return MemoryCategory.FLIGHT_PREFERENCE, MemoryDomain.FLIGHT
     if any(token in lowered for token in ["flight", "bay", "chuyến bay", "sân bay"]):
         return MemoryCategory.FLIGHT_PREFERENCE, MemoryDomain.FLIGHT
+    if any(token in lowered for token in ["hotel", "khách sạn", "resort", "homestay"]):
+        return MemoryCategory.HOTEL_PREFERENCE, MemoryDomain.HOTEL
     if any(token in lowered for token in ["xe", "car", "thuê xe", "tài xế"]):
         return MemoryCategory.CAR_PREFERENCE, MemoryDomain.CAR
     if any(token in lowered for token in ["tour", "excursion", "tham quan", "hoạt động"]):
         return MemoryCategory.EXCURSION_PREFERENCE, MemoryDomain.EXCURSION
-    if any(token in lowered for token in ["gọi tôi", "tên tôi", "my name", "home airport"]):
-        return MemoryCategory.PROFILE_FACT, MemoryDomain.GENERAL
     if any(token in lowered for token in ["trả lời", "answer", "luôn", "đừng"]):
         return MemoryCategory.INTERACTION_RULE, MemoryDomain.GENERAL
     return MemoryCategory.GENERAL_PREFERENCE, MemoryDomain.GENERAL

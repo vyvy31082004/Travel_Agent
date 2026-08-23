@@ -73,8 +73,8 @@ class Settings:
     long_term_memory_debug_enabled: bool = False
     long_term_memory_extractor: str = "deterministic"
     long_term_memory_langmem_model: str = "gemini-3.6-flash"
-    long_term_memory_verifier: str = "deterministic"
-    long_term_memory_trustmem_model: str = "heuristic-trustmem-v1"
+    long_term_memory_verifier: str = "trustmem"
+    long_term_memory_trustmem_model: str = "gemini-2.5-flash"
     long_term_memory_trustmem_prompt_version: str = "trustmem-verifier-v1"
     long_term_memory_trustmem_timeout_seconds: int = 90
     long_term_memory_trustmem_coverage_threshold: float = 0.80
@@ -180,10 +180,10 @@ def get_settings() -> Settings:
             "LONG_TERM_MEMORY_LANGMEM_MODEL", "gemini-3.6-flash"
         ).strip(),
         long_term_memory_verifier=os.getenv(
-            "LONG_TERM_MEMORY_VERIFIER", "deterministic"
+            "LONG_TERM_MEMORY_VERIFIER", "trustmem"
         ).strip().lower(),
         long_term_memory_trustmem_model=os.getenv(
-            "LONG_TERM_MEMORY_TRUSTMEM_MODEL", "heuristic-trustmem-v1"
+            "LONG_TERM_MEMORY_TRUSTMEM_MODEL", "gemini-2.5-flash"
         ).strip(),
         long_term_memory_trustmem_prompt_version=os.getenv(
             "LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION", "trustmem-verifier-v1"

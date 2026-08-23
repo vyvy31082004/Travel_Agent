@@ -161,6 +161,7 @@ class TrustMemInspiredMemoryVerifier:
         faithfulness_threshold: float,
         timeout_seconds: int = 30,
         scorer: Any | None = None,
+        fallback: MemoryVerifier | None = None,
     ) -> None:
         self._model = model
         self._prompt_version = prompt_version
@@ -168,6 +169,7 @@ class TrustMemInspiredMemoryVerifier:
         self._preservation_threshold = preservation_threshold
         self._faithfulness_threshold = faithfulness_threshold
         self._timeout_seconds = timeout_seconds
+        self._fallback = fallback or DeterministicMemoryVerifier()
         if scorer is not None:
             self._scorer = scorer
         elif _uses_heuristic_model(model):
@@ -205,10 +207,17 @@ class TrustMemInspiredMemoryVerifier:
             dimensions = self._normalize_dimensions(dimensions)
         except Exception as exc:
             fallback_reason = _format_verifier_error(exc)
-            logger.warning("trustmem verifier failed or timed out: %s", fallback_reason)
+            logger.warning(
+                "trustmem verifier failed or timed out; falling back to deterministic: %s",
+                fallback_reason,
+            )
+            baseline = await self._fallback.evaluate(transition, context)
             return VerifierResult(
-                "retry",
-                ["trustmem verifier failed or returned malformed output"],
+                baseline.decision,
+                [
+                    *baseline.reasons,
+                    "trustmem verifier failed; fell back to deterministic",
+                ],
                 model=self._model,
                 prompt_version=self._prompt_version,
                 mode="trustmem",
@@ -385,6 +394,7 @@ def build_memory_verifier(settings: Settings) -> MemoryVerifier:
         preservation_threshold=settings.long_term_memory_trustmem_preservation_threshold,
         faithfulness_threshold=settings.long_term_memory_trustmem_faithfulness_threshold,
         timeout_seconds=settings.long_term_memory_trustmem_timeout_seconds,
+        fallback=deterministic,
     )
     if settings.long_term_memory_verifier == "trustmem":
         return trustmem
