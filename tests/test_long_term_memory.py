@@ -589,6 +589,7 @@ def test_trustmem_timeout_error_has_labeled_fallback_reason():
     assert result.decision == "retry"
     assert result.fallback_reason
     assert "TimeoutError" in result.fallback_reason
+    assert set(result.dimensions) == {"coverage", "preservation", "faithfulness"}
 
 
 def test_trustmem_selects_llm_scorer_for_non_heuristic_model():
@@ -696,7 +697,11 @@ def test_commit_adapter_approve_reject_and_audit():
     )
     verifier_result = trustmem_repo.audits[-1]["verifier_result"]
     assert verifier_result["mode"] == "trustmem"
-    assert "coverage" in verifier_result["dimensions"]
+    assert set(verifier_result["dimensions"]) == {
+        "coverage",
+        "preservation",
+        "faithfulness",
+    }
 
     reject = asyncio.run(
         adapter.verify_and_commit(

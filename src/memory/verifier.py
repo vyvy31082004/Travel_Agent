@@ -211,16 +211,21 @@ class TrustMemInspiredMemoryVerifier:
                 "trustmem verifier failed or timed out; falling back to deterministic: %s",
                 fallback_reason,
             )
-            baseline = await self._fallback.evaluate(transition, context)
+            # A failed/unavailable scorer cannot prove any dimension. Keep the
+            # transition out of the commit path and preserve a dimension-shaped
+            # audit record; retry is safer than silently approving a transition
+            # on an unavailable verifier.
             return VerifierResult(
-                baseline.decision,
+                "retry",
                 [
-                    *baseline.reasons,
-                    "trustmem verifier failed; fell back to deterministic",
+                    "trustmem verifier failed; transition requires retry",
                 ],
                 model=self._model,
                 prompt_version=self._prompt_version,
                 mode="trustmem",
+                dimensions=self._failed_dimensions(
+                    f"verifier unavailable: {fallback_reason}"
+                ),
                 fallback_reason=fallback_reason,
             )
 
@@ -254,6 +259,17 @@ class TrustMemInspiredMemoryVerifier:
             mode="trustmem",
             dimensions=dimensions,
         )
+
+    def _failed_dimensions(self, reason: str) -> dict[str, VerifierDimensionScore]:
+        return {
+            "coverage": VerifierDimensionScore(0.0, reason, self._coverage_threshold),
+            "preservation": VerifierDimensionScore(
+                0.0, reason, self._preservation_threshold
+            ),
+            "faithfulness": VerifierDimensionScore(
+                0.0, reason, self._faithfulness_threshold
+            ),
+        }
 
     def _passing_dimensions(self, reason: str) -> dict[str, VerifierDimensionScore]:
         return {
