@@ -36,8 +36,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--langmem-model",
-        default="gemini-3.6-flash",
+        default="gemini-2.5-flash",
         help="Model used when extractor is langmem or compare",
+    )
+    parser.add_argument(
+        "--judge-model",
+        default=None,
+        help=(
+            "Model for semantic equivalence / evidence entailment judges. "
+            "Defaults to --langmem-model. Pass empty string to disable LLM judge "
+            "(exact match only)."
+        ),
     )
     parser.add_argument("--output", help="Optional path for the JSON report")
     return parser
@@ -48,7 +57,8 @@ async def evaluate_file(
     split: str,
     *,
     extractor_name: str = "deterministic",
-    langmem_model: str = "gemini-3.6-flash",
+    langmem_model: str = "gemini-2.5-flash",
+    judge_model: str | None = None,
 ) -> dict:
     cases = load_candidate_extraction_cases(path)
     if split != "all":
@@ -65,13 +75,20 @@ async def evaluate_file(
             if extractor_name == "langmem"
             else CompareCandidateExtractor(deterministic, langmem)
         )
-    report = await CandidateExtractionEvaluator(extractor).evaluate(cases)
+    resolved_judge = langmem_model if judge_model is None else judge_model
+    if resolved_judge == "":
+        resolved_judge = None
+    report = await CandidateExtractionEvaluator(
+        extractor,
+        judge_model=resolved_judge,
+    ).evaluate(cases)
     result = {
         "suite": "candidate_extraction",
         "gold_path": str(Path(path)),
         "split": split,
         "extractor": extractor_name,
         "langmem_model": langmem_model if extractor_name != "deterministic" else None,
+        "judge_model": resolved_judge,
         "case_count": len(cases),
         "report": report.to_dict(),
     }
@@ -86,6 +103,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.split,
             extractor_name=args.extractor,
             langmem_model=args.langmem_model,
+            judge_model=args.judge_model,
         )
     )
     payload = json.dumps(result, ensure_ascii=False, indent=2)

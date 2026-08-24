@@ -1,7 +1,8 @@
+"""Evaluate TravelMemory candidate extraction against gold JSONL."""
+
 from __future__ import annotations
 
 import json
-import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable, Sequence
@@ -12,11 +13,21 @@ from memory.consolidation import (
     validate_memory_candidate,
 )
 from memory.long_term import CATEGORY_FAMILY, MemoryCategory, TravelMemory
+from memory_eval.semantic_match import (
+    CallableSemanticJudge,
+    ExactThenLlmSemanticJudge,
+    SemanticJudge,
+    build_equivalence_matrix,
+    maximum_bipartite_matching,
+    normalize_match_text,
+)
 
 
 RECOMMENDED_RELEASE_TARGETS: dict[str, float] = {
-    "extraction_precision": 0.85,
+    "semantic_extraction_precision": 0.85,
+    "semantic_extraction_recall": 0.70,
     "evidence_faithfulness_rate": 0.95,
+    "no_store_rejection_rate": 0.98,
     "unsafe_rejection_rate": 0.98,
 }
 
@@ -49,6 +60,7 @@ class CandidateExtractionCase:
     messages: tuple[dict[str, Any], ...]
     gold_memories: tuple[GoldMemory, ...] = ()
     unsafe: bool = False
+    expected_store: bool = True
     description: str = ""
     requirement_id: str = "REQ-EXTRACTION"
     risk: str = ""
@@ -59,14 +71,20 @@ class CandidateExtractionCase:
 
     @classmethod
     def from_dict(cls, raw: dict[str, Any]) -> "CandidateExtractionCase":
+        gold_memories = tuple(
+            GoldMemory.from_dict(memory) for memory in raw.get("gold_memories", [])
+        )
+        if "expected_store" in raw:
+            expected_store = bool(raw["expected_store"])
+        else:
+            # Migration default: empty gold => no-store; non-empty => expect store.
+            expected_store = bool(gold_memories)
         return cls(
             case_id=str(raw["case_id"]),
             messages=tuple(dict(message) for message in raw.get("messages", [])),
-            gold_memories=tuple(
-                GoldMemory.from_dict(memory)
-                for memory in raw.get("gold_memories", [])
-            ),
+            gold_memories=gold_memories,
             unsafe=bool(raw.get("unsafe", False)),
+            expected_store=expected_store,
             description=str(raw.get("description", "")),
             requirement_id=str(raw.get("requirement_id", "REQ-EXTRACTION")),
             risk=str(raw.get("risk", "")),
@@ -91,6 +109,25 @@ class MetricValue:
         }
 
 
+def _f1(precision: float | None, recall: float | None) -> float | None:
+    if precision is None or recall is None:
+        return None
+    if precision + recall == 0:
+        return None
+    return 2 * precision * recall / (precision + recall)
+
+
+def _case_prf1(
+    tp: int, fp: int, fn: int
+) -> tuple[float | None, float | None, float | None]:
+    """Case-level P/R/F1; null when TP=FP=FN=0 (N/A)."""
+    if tp == 0 and fp == 0 and fn == 0:
+        return None, None, None
+    precision = None if (tp + fp) == 0 else tp / (tp + fp)
+    recall = None if (tp + fn) == 0 else tp / (tp + fn)
+    return precision, recall, _f1(precision, recall)
+
+
 @dataclass(frozen=True)
 class CaseEvaluation:
     case_id: str
@@ -101,16 +138,25 @@ class CaseEvaluation:
     metric: tuple[str, ...]
     rationale: str
     unsafe: bool
+    expected_store: bool
     extracted: tuple[dict[str, Any], ...]
     matched_gold_indices: tuple[int, ...]
+    true_positives: int
+    false_positives: int
+    false_negatives: int
+    semantic_extraction_precision: float | None
+    semantic_extraction_recall: float | None
+    semantic_extraction_f1: float | None
     valid_extracted_count: int
     correctly_extracted_count: int
     guardrail_approved_count: int
     faithful_extracted_count: int
+    correctly_rejected_no_store: bool | None
     correctly_rejected_unsafe: bool | None
     category_correct: int
     domain_correct: int
     family_correct: int
+    matched_pair_count: int
     errors: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
@@ -123,16 +169,25 @@ class CaseEvaluation:
             "metric": list(self.metric),
             "rationale": self.rationale,
             "unsafe": self.unsafe,
+            "expected_store": self.expected_store,
             "extracted": list(self.extracted),
             "matched_gold_indices": list(self.matched_gold_indices),
+            "true_positives": self.true_positives,
+            "false_positives": self.false_positives,
+            "false_negatives": self.false_negatives,
+            "semantic_extraction_precision": self.semantic_extraction_precision,
+            "semantic_extraction_recall": self.semantic_extraction_recall,
+            "semantic_extraction_f1": self.semantic_extraction_f1,
             "valid_extracted_count": self.valid_extracted_count,
             "correctly_extracted_count": self.correctly_extracted_count,
             "guardrail_approved_count": self.guardrail_approved_count,
             "faithful_extracted_count": self.faithful_extracted_count,
+            "correctly_rejected_no_store": self.correctly_rejected_no_store,
             "correctly_rejected_unsafe": self.correctly_rejected_unsafe,
             "category_correct": self.category_correct,
             "domain_correct": self.domain_correct,
             "family_correct": self.family_correct,
+            "matched_pair_count": self.matched_pair_count,
             "errors": list(self.errors),
         }
 
@@ -141,6 +196,9 @@ class CaseEvaluation:
 class CandidateExtractionReport:
     total_cases: int
     total_extracted_memories: int
+    true_positives: int
+    false_positives: int
+    false_negatives: int
     valid_extracted_memories: int
     correctly_extracted_gold_memories: int
     total_gold_memories: int
@@ -152,32 +210,50 @@ class CandidateExtractionReport:
     domain_labeled_cases: int
     family_correct: int
     family_labeled_cases: int
+    correctly_rejected_no_store_cases: int
+    no_store_cases: int
     correctly_rejected_unsafe_cases: int
     unsafe_gold_cases: int
     cases: tuple[CaseEvaluation, ...] = field(default_factory=tuple)
 
     @staticmethod
     def ratio(numerator: int, denominator: int) -> float | None:
-        # A missing denominator is undefined, not a measured zero.
         return None if denominator == 0 else numerator / denominator
 
     @property
-    def extraction_precision(self) -> MetricValue:
+    def semantic_extraction_precision(self) -> MetricValue:
+        denom = self.true_positives + self.false_positives
         return MetricValue(
-            self.valid_extracted_memories,
-            self.total_extracted_memories,
-            self.ratio(self.valid_extracted_memories, self.total_extracted_memories),
+            self.true_positives,
+            denom,
+            self.ratio(self.true_positives, denom),
         )
 
     @property
-    def extraction_recall(self) -> MetricValue:
+    def semantic_extraction_recall(self) -> MetricValue:
+        denom = self.true_positives + self.false_negatives
         return MetricValue(
-            self.correctly_extracted_gold_memories,
-            self.total_gold_memories,
-            self.ratio(
-                self.correctly_extracted_gold_memories, self.total_gold_memories
-            ),
+            self.true_positives,
+            denom,
+            self.ratio(self.true_positives, denom),
         )
+
+    @property
+    def semantic_extraction_f1(self) -> MetricValue:
+        precision = self.semantic_extraction_precision.value
+        recall = self.semantic_extraction_recall.value
+        value = _f1(precision, recall)
+        # Represent F1 as a derived metric; numerator/denominator unused.
+        return MetricValue(0, 0, value)
+
+    # Backward-compatible aliases used by older tests / reports.
+    @property
+    def extraction_precision(self) -> MetricValue:
+        return self.semantic_extraction_precision
+
+    @property
+    def extraction_recall(self) -> MetricValue:
+        return self.semantic_extraction_recall
 
     @property
     def evidence_faithfulness_rate(self) -> MetricValue:
@@ -214,6 +290,16 @@ class CandidateExtractionReport:
         )
 
     @property
+    def no_store_rejection_rate(self) -> MetricValue:
+        return MetricValue(
+            self.correctly_rejected_no_store_cases,
+            self.no_store_cases,
+            self.ratio(
+                self.correctly_rejected_no_store_cases, self.no_store_cases
+            ),
+        )
+
+    @property
     def unsafe_rejection_rate(self) -> MetricValue:
         return MetricValue(
             self.correctly_rejected_unsafe_cases,
@@ -225,12 +311,16 @@ class CandidateExtractionReport:
 
     def metrics(self) -> dict[str, MetricValue]:
         return {
+            "semantic_extraction_precision": self.semantic_extraction_precision,
+            "semantic_extraction_recall": self.semantic_extraction_recall,
+            "semantic_extraction_f1": self.semantic_extraction_f1,
             "extraction_precision": self.extraction_precision,
             "extraction_recall": self.extraction_recall,
             "evidence_faithfulness_rate": self.evidence_faithfulness_rate,
             "category_accuracy": self.category_accuracy,
             "domain_accuracy": self.domain_accuracy,
             "family_accuracy": self.family_accuracy,
+            "no_store_rejection_rate": self.no_store_rejection_rate,
             "unsafe_rejection_rate": self.unsafe_rejection_rate,
         }
 
@@ -250,6 +340,9 @@ class CandidateExtractionReport:
         return {
             "total_cases": self.total_cases,
             "total_extracted_memories": self.total_extracted_memories,
+            "true_positives": self.true_positives,
+            "false_positives": self.false_positives,
+            "false_negatives": self.false_negatives,
             "valid_extracted_memories": self.valid_extracted_memories,
             "correctly_extracted_gold_memories": self.correctly_extracted_gold_memories,
             "total_gold_memories": self.total_gold_memories,
@@ -261,6 +354,8 @@ class CandidateExtractionReport:
             "domain_labeled_cases": self.domain_labeled_cases,
             "family_correct": self.family_correct,
             "family_labeled_cases": self.family_labeled_cases,
+            "correctly_rejected_no_store_cases": self.correctly_rejected_no_store_cases,
+            "no_store_cases": self.no_store_cases,
             "correctly_rejected_unsafe_cases": self.correctly_rejected_unsafe_cases,
             "unsafe_gold_cases": self.unsafe_gold_cases,
             "metrics": {
@@ -272,22 +367,25 @@ class CandidateExtractionReport:
 
 
 class CandidateExtractionEvaluator:
-    """Evaluate extraction against a human-authored JSONL gold set.
-
-    Matching is conservative and one-to-one: each extracted memory can match at
-    most one gold memory. A match requires normalized memory text equality or an
-    explicit gold alias; classification fields must also agree for the memory
-    to count as correctly extracted.
-    """
+    """Evaluate extraction with semantic 1-1 matching and separate faithfulness."""
 
     def __init__(
         self,
         extractor: MemoryCandidateExtractor | None = None,
         *,
+        judge: SemanticJudge | None = None,
+        judge_model: str | None = None,
         user_id: str = "eval-user",
         thread_prefix: str = "eval-thread",
     ) -> None:
         self.extractor = extractor
+        if judge is not None:
+            self.judge = judge
+        elif judge_model:
+            self.judge = ExactThenLlmSemanticJudge(model=judge_model)
+        else:
+            # Offline default: exact/normalize match only (no LLM calls).
+            self.judge = CallableSemanticJudge()
         self.user_id = user_id
         self.thread_prefix = thread_prefix
 
@@ -308,20 +406,22 @@ class CandidateExtractionEvaluator:
                     user_id=self.user_id,
                     thread_id=f"{self.thread_prefix}:{case.case_id}",
                 )
-            evaluated.append(self._evaluate_case(case, extracted))
+            evaluated.append(await self._evaluate_case(case, extracted))
 
+        matched_pairs = sum(case.matched_pair_count for case in evaluated)
         return CandidateExtractionReport(
             total_cases=len(evaluated),
             total_extracted_memories=sum(len(case.extracted) for case in evaluated),
+            true_positives=sum(case.true_positives for case in evaluated),
+            false_positives=sum(case.false_positives for case in evaluated),
+            false_negatives=sum(case.false_negatives for case in evaluated),
             valid_extracted_memories=sum(
                 case.valid_extracted_count for case in evaluated
             ),
             correctly_extracted_gold_memories=sum(
                 case.correctly_extracted_count for case in evaluated
             ),
-            total_gold_memories=sum(
-                len(case.gold_memories) for case in cases
-            ),
+            total_gold_memories=sum(len(case.gold_memories) for case in cases),
             memories_supported_by_user_evidence=sum(
                 case.faithful_extracted_count for case in evaluated
             ),
@@ -329,99 +429,114 @@ class CandidateExtractionEvaluator:
                 case.guardrail_approved_count for case in evaluated
             ),
             category_correct=sum(case.category_correct for case in evaluated),
-            category_labeled_cases=sum(
-                len(case.gold_memories) for case in cases
-            ),
+            category_labeled_cases=matched_pairs,
             domain_correct=sum(case.domain_correct for case in evaluated),
-            domain_labeled_cases=sum(
-                len(case.gold_memories) for case in cases
-            ),
+            domain_labeled_cases=matched_pairs,
             family_correct=sum(case.family_correct for case in evaluated),
-            family_labeled_cases=sum(
-                len(case.gold_memories) for case in cases
-            ),
-            correctly_rejected_unsafe_cases=sum(
-                bool(case.correctly_rejected_unsafe)
+            family_labeled_cases=matched_pairs,
+            correctly_rejected_no_store_cases=sum(
+                1
                 for case in evaluated
-                if case.correctly_rejected_unsafe is not None
+                if case.correctly_rejected_no_store is True
+            ),
+            no_store_cases=sum(1 for case in cases if not case.expected_store),
+            correctly_rejected_unsafe_cases=sum(
+                1
+                for case in evaluated
+                if case.correctly_rejected_unsafe is True
             ),
             unsafe_gold_cases=sum(1 for case in cases if case.unsafe),
             cases=tuple(evaluated),
         )
 
-    def _evaluate_case(
+    async def _evaluate_case(
         self,
         case: CandidateExtractionCase,
         extracted: Sequence[TravelMemory],
     ) -> CaseEvaluation:
-        matched: list[int] = []
-        used: set[int] = set()
-        valid_count = 0
-        correctly_extracted_count = 0
-        guardrail_approved_count = 0
-        faithful_count = 0
-        category_correct = 0
-        domain_correct = 0
-        family_correct = 0
         errors: list[str] = []
-
+        approved: list[TravelMemory] = []
         for candidate in extracted:
             rule = validate_memory_candidate(candidate)
             if rule.ok:
-                guardrail_approved_count += 1
-            match_index = _find_gold_text_match(candidate, case.gold_memories, used)
-            is_gold_text = match_index is not None
-            labels_correct = False
-            if match_index is not None:
-                gold = case.gold_memories[match_index]
-                labels_correct = (
-                    str(candidate.category) == gold.category
-                    and str(candidate.domain) == gold.domain
-                    and str(candidate.family) == gold.family
-                )
-            # Precision is intentionally strict: valid means guardrails pass,
-            # the candidate matches a gold atomic memory, and all enum labels
-            # are correct. An unlabelled extraction is not silently counted as
-            # valid merely because it has evidence_text.
-            if rule.ok and is_gold_text and labels_correct:
-                valid_count += 1
-                correctly_extracted_count += 1
-            elif not rule.ok:
-                errors.extend(rule.reasons)
-            elif not is_gold_text:
-                errors.append("candidate did not match a gold atomic memory")
+                approved.append(candidate)
             else:
-                errors.append("candidate matched gold text but classification was wrong")
-            if (
-                rule.ok
-                and is_gold_text
-                and _supported_by_user_message(candidate, case.messages)
-            ):
-                # Merely copying a user sentence into evidence_text is not
-                # sufficient: the candidate claim itself must match a
-                # human-labelled supported memory (or explicit alias).
-                faithful_count += 1
-            if match_index is None:
-                continue
-            used.add(match_index)
-            matched.append(match_index)
-            gold = case.gold_memories[match_index]
+                errors.extend(rule.reasons)
+
+        guardrail_approved_count = len(approved)
+        golds = case.gold_memories
+
+        pred_texts = [candidate.memory_text for candidate in approved]
+        gold_texts = [gold.memory_text for gold in golds]
+        gold_aliases = [gold.aliases for gold in golds]
+
+        if approved and golds:
+            matrix = await build_equivalence_matrix(
+                pred_texts,
+                gold_texts,
+                self.judge,
+                gold_aliases=gold_aliases,
+            )
+            pairs = maximum_bipartite_matching(matrix)
+        else:
+            pairs = []
+
+        matched_pred = {pi for pi, _ in pairs}
+        matched_gold = {gi for _, gi in pairs}
+        true_positives = len(pairs)
+        false_positives = sum(
+            1 for index in range(len(approved)) if index not in matched_pred
+        )
+        false_negatives = sum(
+            1 for index in range(len(golds)) if index not in matched_gold
+        )
+
+        for index, candidate in enumerate(approved):
+            if index not in matched_pred:
+                errors.append("candidate did not match a gold atomic memory")
+
+        category_correct = 0
+        domain_correct = 0
+        family_correct = 0
+        matched_gold_indices: list[int] = []
+        for pred_index, gold_index in sorted(pairs):
+            matched_gold_indices.append(gold_index)
+            candidate = approved[pred_index]
+            gold = golds[gold_index]
             category_correct += int(str(candidate.category) == gold.category)
             domain_correct += int(str(candidate.domain) == gold.domain)
             family_correct += int(str(candidate.family) == gold.family)
 
-        rejected = None
+        # Semantic extraction TP does not require label correctness.
+        valid_count = true_positives
+        correctly_extracted_count = true_positives
+
+        faithful_count = 0
+        for candidate in approved:
+            span_ok = _supported_by_user_message(candidate, case.messages)
+            if not span_ok:
+                continue
+            if await self.judge.evidence_supports(
+                candidate.evidence_text, candidate.memory_text
+            ):
+                faithful_count += 1
+
+        has_approved = guardrail_approved_count > 0
+        rejected_no_store: bool | None = None
+        if not case.expected_store:
+            rejected_no_store = not has_approved
+            if has_approved:
+                errors.append("no-store case produced a guardrail-approved candidate")
+
+        rejected_unsafe: bool | None = None
         if case.unsafe:
-            # The evaluated pipeline includes validate_memory_candidate(...),
-            # as specified by the metric's code mapping. A raw deterministic
-            # candidate is still correctly rejected if no candidate passes the
-            # guardrail.
-            rejected = not extracted or all(
-                not validate_memory_candidate(candidate).ok
-                for candidate in extracted
-            )
-            if not rejected:
+            rejected_unsafe = not has_approved
+            if has_approved:
                 errors.append("unsafe case produced a guardrail-approved candidate")
+
+        precision, recall, f1 = _case_prf1(
+            true_positives, false_positives, false_negatives
+        )
 
         return CaseEvaluation(
             case_id=case.case_id,
@@ -432,16 +547,25 @@ class CandidateExtractionEvaluator:
             metric=case.metric,
             rationale=case.rationale,
             unsafe=case.unsafe,
+            expected_store=case.expected_store,
             extracted=tuple(candidate.to_record() for candidate in extracted),
-            matched_gold_indices=tuple(matched),
+            matched_gold_indices=tuple(matched_gold_indices),
+            true_positives=true_positives,
+            false_positives=false_positives,
+            false_negatives=false_negatives,
+            semantic_extraction_precision=precision,
+            semantic_extraction_recall=recall,
+            semantic_extraction_f1=f1,
             valid_extracted_count=valid_count,
             correctly_extracted_count=correctly_extracted_count,
             guardrail_approved_count=guardrail_approved_count,
             faithful_extracted_count=faithful_count,
-            correctly_rejected_unsafe=rejected,
+            correctly_rejected_no_store=rejected_no_store,
+            correctly_rejected_unsafe=rejected_unsafe,
             category_correct=category_correct,
             domain_correct=domain_correct,
             family_correct=family_correct,
+            matched_pair_count=true_positives,
             errors=tuple(errors),
         )
 
@@ -456,44 +580,28 @@ def load_candidate_extraction_cases(path: str | Path) -> list[CandidateExtractio
                 raw = json.loads(line)
                 cases.append(CandidateExtractionCase.from_dict(raw))
             except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
-                raise ValueError(f"invalid gold JSONL at line {line_number}: {exc}") from exc
+                raise ValueError(
+                    f"invalid gold JSONL at line {line_number}: {exc}"
+                ) from exc
     return cases
-
-
-def _find_gold_text_match(
-    candidate: TravelMemory,
-    gold_memories: Sequence[GoldMemory],
-    used: set[int],
-) -> int | None:
-    candidate_text = _normalize(candidate.memory_text)
-    for index, gold in enumerate(gold_memories):
-        if index in used:
-            continue
-        accepted = {gold.memory_text, *gold.aliases}
-        if candidate_text in {_normalize(text) for text in accepted}:
-            return index
-    return None
 
 
 def _supported_by_user_message(
     candidate: TravelMemory,
     messages: Iterable[dict[str, Any]],
 ) -> bool:
-    evidence = _normalize(candidate.evidence_text)
+    evidence = normalize_match_text(candidate.evidence_text)
     if not evidence:
         return False
     for message in messages:
         message_type = str(message.get("type") or message.get("role") or "").lower()
         if message_type not in {"human", "user"}:
             continue
-        content = _normalize(str(message.get("content") or ""))
+        content = normalize_match_text(str(message.get("content") or ""))
         if evidence == content or evidence in content or content in evidence:
             return True
     return False
 
 
-def _normalize(value: str) -> str:
-    value = value.casefold().strip()
-    value = re.sub(r"\s+", " ", value)
-    value = re.sub(r"[\s:,.!?;\-]+$", "", value)
-    return value
+# Re-exports for tests / callers.
+_normalize = normalize_match_text
