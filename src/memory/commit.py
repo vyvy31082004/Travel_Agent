@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from memory.consolidation import MemoryTransition, TransitionAction
 from memory.embeddings import MemoryEmbeddingService, memory_content_hash
@@ -57,9 +57,15 @@ class MemoryCommitAdapter:
                         transition.existing_memory_id
                     )
                     affected.append(transition.existing_memory_id)
-                memory_id = await self._repository.insert_memory(transition.candidate)
+                candidate = transition.candidate
+                if transition.existing_memory_id and not candidate.supersedes_memory_id:
+                    candidate = replace(
+                        candidate,
+                        supersedes_memory_id=transition.existing_memory_id,
+                    )
+                memory_id = await self._repository.insert_memory(candidate)
                 affected.append(memory_id)
-                await self._embed_committed_memory(memory_id, transition.candidate)
+                await self._embed_committed_memory(memory_id, candidate)
             elif transition.action == TransitionAction.NOOP:
                 decision = "noop"
                 if transition.existing_memory_id:

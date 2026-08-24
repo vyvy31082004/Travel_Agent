@@ -15,13 +15,29 @@ from memory_eval.candidate_extraction import (
     CandidateExtractionEvaluator,
     load_candidate_extraction_cases,
 )
+from memory_eval.suites import (
+    evaluate_answer_file,
+    evaluate_retrieval_file,
+    evaluate_supersession_file,
+    evaluate_transition_file,
+    make_eval_settings,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Evaluate TravelMemory candidate extraction against gold JSONL."
+        description="Evaluate long-term memory gold JSONL suites."
     )
-    parser.add_argument("--gold", required=True, help="Path to extraction gold JSONL")
+    parser.add_argument(
+        "--suite",
+        choices=("extraction", "transition", "retrieval", "answer", "all"),
+        default="extraction",
+        help="Evaluation suite to run",
+    )
+    parser.add_argument(
+        "--gold",
+        help="Path to gold JSONL, or a directory when --suite all",
+    )
     parser.add_argument(
         "--split",
         choices=("all", "development", "test"),
@@ -95,17 +111,69 @@ async def evaluate_file(
     return result
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
-    result = asyncio.run(
-        evaluate_file(
+async def evaluate_suite(args: argparse.Namespace) -> dict:
+    if args.suite == "extraction":
+        if not args.gold:
+            raise ValueError("--gold is required for extraction")
+        return await evaluate_file(
             args.gold,
             args.split,
             extractor_name=args.extractor,
             langmem_model=args.langmem_model,
             judge_model=args.judge_model,
         )
+    gold = Path(args.gold) if args.gold else Path("tests/fixtures/long_term_memory_eval")
+    settings = make_eval_settings()
+    if args.suite == "transition":
+        path = gold if gold.is_file() else gold / "transition_cases.jsonl"
+        report = evaluate_transition_file(path)
+        super_report = await evaluate_supersession_file(path, settings)
+        payload = report.to_dict()
+        payload["metrics"].update(
+            {name: metric.to_dict() for name, metric in super_report.metrics.items()}
+        )
+        payload["supersession_cases"] = list(super_report.cases)
+        return {"suite": "transition", "gold_path": str(path), "report": payload}
+    if args.suite == "retrieval":
+        path = gold if gold.is_file() else gold / "retrieval_cases.jsonl"
+        report = await evaluate_retrieval_file(path, settings)
+        return {"suite": "retrieval", "gold_path": str(path), "report": report.to_dict()}
+    if args.suite == "answer":
+        path = gold if gold.is_file() else gold / "answer_cases.jsonl"
+        report = evaluate_answer_file(path)
+        return {"suite": "answer", "gold_path": str(path), "report": report.to_dict()}
+    directory = gold if gold.is_dir() else gold.parent
+    settings = make_eval_settings()
+    transition = evaluate_transition_file(directory / "transition_cases.jsonl")
+    supersession = await evaluate_supersession_file(
+        directory / "transition_cases.jsonl", settings
     )
+    retrieval = await evaluate_retrieval_file(
+        directory / "retrieval_cases.jsonl", settings
+    )
+    answer = evaluate_answer_file(directory / "answer_cases.jsonl")
+    combined = {
+        **transition.metrics,
+        **supersession.metrics,
+        **retrieval.metrics,
+        **answer.metrics,
+    }
+    return {
+        "suite": "all",
+        "gold_path": str(directory),
+        "report": {
+            "metrics": {name: metric.to_dict() for name, metric in combined.items()},
+            "transition": transition.to_dict(),
+            "supersession": supersession.to_dict(),
+            "retrieval": retrieval.to_dict(),
+            "answer": answer.to_dict(),
+        },
+    }
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    result = asyncio.run(evaluate_suite(args))
     payload = json.dumps(result, ensure_ascii=False, indent=2)
     if args.output:
         Path(args.output).write_text(payload + "\n", encoding="utf-8")
