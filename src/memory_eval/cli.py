@@ -22,6 +22,12 @@ from memory_eval.suites import (
     evaluate_transition_file,
     make_eval_settings,
 )
+from memory_eval.short_term import (
+    evaluate_factual_recall_file,
+    evaluate_reference_file,
+    evaluate_state_file,
+    evaluate_success_file,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -30,13 +36,24 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--suite",
-        choices=("extraction", "transition", "retrieval", "answer", "all"),
+        choices=(
+            "extraction",
+            "transition",
+            "retrieval",
+            "answer",
+            "all",
+            "state",
+            "reference",
+            "factual-recall",
+            "success",
+            "stm-all",
+        ),
         default="extraction",
         help="Evaluation suite to run",
     )
     parser.add_argument(
         "--gold",
-        help="Path to gold JSONL, or a directory when --suite all",
+        help="Path to gold JSONL, or a directory when --suite all/stm-all",
     )
     parser.add_argument(
         "--split",
@@ -122,6 +139,9 @@ async def evaluate_suite(args: argparse.Namespace) -> dict:
             langmem_model=args.langmem_model,
             judge_model=args.judge_model,
         )
+    stm_suites = {"state", "reference", "factual-recall", "success", "stm-all"}
+    if args.suite in stm_suites:
+        return evaluate_stm_suite(args)
     gold = Path(args.gold) if args.gold else Path("tests/fixtures/long_term_memory_eval")
     settings = make_eval_settings()
     if args.suite == "transition":
@@ -167,6 +187,43 @@ async def evaluate_suite(args: argparse.Namespace) -> dict:
             "supersession": supersession.to_dict(),
             "retrieval": retrieval.to_dict(),
             "answer": answer.to_dict(),
+        },
+    }
+
+
+def evaluate_stm_suite(args: argparse.Namespace) -> dict:
+    gold = Path(args.gold) if args.gold else Path("tests/fixtures/short_term_memory_eval")
+    single = {
+        "state": ("state_cases.jsonl", evaluate_state_file),
+        "reference": ("reference_cases.jsonl", evaluate_reference_file),
+        "factual-recall": ("factual_recall_cases.jsonl", evaluate_factual_recall_file),
+        "success": ("success_cases.jsonl", evaluate_success_file),
+    }
+    if args.suite in single:
+        filename, evaluator = single[args.suite]
+        path = gold if gold.is_file() else gold / filename
+        report = evaluator(path)
+        return {"suite": args.suite, "gold_path": str(path), "report": report.to_dict()}
+    directory = gold if gold.is_dir() else gold.parent
+    state = evaluate_state_file(directory / "state_cases.jsonl")
+    reference = evaluate_reference_file(directory / "reference_cases.jsonl")
+    factual = evaluate_factual_recall_file(directory / "factual_recall_cases.jsonl")
+    success = evaluate_success_file(directory / "success_cases.jsonl")
+    combined = {
+        **state.metrics,
+        **reference.metrics,
+        **factual.metrics,
+        **success.metrics,
+    }
+    return {
+        "suite": "stm-all",
+        "gold_path": str(directory),
+        "report": {
+            "metrics": {name: metric.to_dict() for name, metric in combined.items()},
+            "state": state.to_dict(),
+            "reference": reference.to_dict(),
+            "factual_recall": factual.to_dict(),
+            "success": success.to_dict(),
         },
     }
 

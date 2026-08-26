@@ -1,0 +1,6 @@
+{"case_id":"recall_head_before_001","split":"development","position":"đầu","phase":"before","probe":"Giới hạn transit là bao nhiêu giờ?","predicted_answer":"toi khong muon transit qua 3 gio","gold_answer":"transit khong qua 3 gio"}
+{"case_id":"recall_head_after_001","split":"development","position":"đầu","phase":"after","probe":"Giới hạn transit là bao nhiêu giờ?","predicted_answer":"transit toi da 3 gio","gold_answer":"transit khong qua 3 gio"}
+{"case_id":"recall_mid_after_001","split":"development","position":"giữa","phase":"after","probe":"Ngân sách khách sạn là bao nhiêu?","predicted_answer":"duoi 2 trieu","gold_answer":"duoi 2 trieu"}
+{"case_id":"recall_tail_after_001","split":"test","position":"cuối","phase":"after","probe":"Số khách là mấy người?","predicted_answer":"2 nguoi","gold_answer":"2 nguoi"}
+{"case_id":"recall_mid_lost_001","split":"test","position":"giữa","phase":"after","probe":"Ngày đi là ngày nào?","predicted_answer":"toi khong nho","gold_answer":"ngay 15 thang 9"}
+{"case_id":"recall_head_after_002","split":"test","position":"đầu","phase":"after","probe":"Có yêu cầu phòng không hút thuốc không?","predicted_answer":"co, phong khong hut thuoc","gold_answer":"co phong khong hut thuoc"}
