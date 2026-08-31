@@ -15,11 +15,21 @@ CREATE EXTENSION IF NOT EXISTS vector;
 SELECT extname FROM pg_extension WHERE extname = 'vector';
 SQL
 
-az containerapp job start \
-  --name "${MIGRATION_JOB_NAME}" \
-  --resource-group "${AZURE_RESOURCE_GROUP}"
+if [[ "${MIGRATION_START_ONLY:-false}" == "true" ]]; then
+  # CI captures the exact execution name so it never accidentally waits on an
+  # older run or starts the job twice.
+  az containerapp job start \
+    --name "${MIGRATION_JOB_NAME}" \
+    --resource-group "${AZURE_RESOURCE_GROUP}" \
+    --query name \
+    --output tsv
+else
+  az containerapp job start \
+    --name "${MIGRATION_JOB_NAME}" \
+    --resource-group "${AZURE_RESOURCE_GROUP}"
 
-az containerapp job execution list \
-  --name "${MIGRATION_JOB_NAME}" \
-  --resource-group "${AZURE_RESOURCE_GROUP}" \
-  --output table
+  az containerapp job execution list \
+    --name "${MIGRATION_JOB_NAME}" \
+    --resource-group "${AZURE_RESOURCE_GROUP}" \
+    --output table
+fi

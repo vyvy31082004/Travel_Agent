@@ -1,0 +1,249 @@
+name: VietTrip CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: Deploy to production after CI
+        required: true
+        default: true
+        type: boolean
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHON_VERSION: "3.12"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: viettrip-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    name: Test and validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements.production.txt
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
+      - name: Run unit tests
+        env:
+          DATABASE_URL: ""
+        run: python -m pytest -q -m 'not live' tests --ignore=tests/test_retrieval_postgres.py --ignore=tests/test_memory_eval_suites.py
+      - name: Compile application
+        run: python -m compileall -q src
+      - name: Check repository diff
+        run: git diff --check
+      - name: Build production image
+        run: docker build --pull --tag viettrip-ai:ci-${GITHUB_SHA} .
+
+  deploy:
+    name: Deploy production
+    needs: ci
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy == true)
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+      AZURE_ACR_NAME: ${{ vars.AZURE_ACR_NAME }}
+      AZURE_CONTAINERAPPS_ENV: ${{ vars.AZURE_CONTAINERAPPS_ENV }}
+      AZURE_LOG_ANALYTICS: ${{ vars.AZURE_LOG_ANALYTICS }}
+      WEB_APP_NAME: ${{ vars.WEB_APP_NAME }}
+      MIGRATION_JOB_NAME: ${{ vars.MIGRATION_JOB_NAME }}
+      MEMORY_WORKER_JOB_NAME: ${{ vars.MEMORY_WORKER_JOB_NAME }}
+      BACKFILL_JOB_NAME: ${{ vars.BACKFILL_JOB_NAME }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+      WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+      LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+      AZURE_LOCATION: japaneast
+      COOKIE_SECURE: "true"
+      IMAGE_NAME: viettrip-ai
+      IMAGE_TAG: ci-${{ github.sha }}
+      BOOKING_RAPIDAPI_HOST: booking-com15.p.rapidapi.com
+      GEOCODING_RAPIDAPI_HOST: booking-com15.p.rapidapi.com
+      GOOGLE_FLIGHT_RAPIDAPI_HOST: google-flights2.p.rapidapi.com
+      BOOKING_LANGUAGE_CODE: vi
+      BOOKING_CURRENCY_CODE: VND
+      COUNTRY_CODE: vn
+      LONG_TERM_MEMORY_RECALL_ENABLED: "true"
+      LONG_TERM_MEMORY_WRITE_ENABLED: "true"
+      LONG_TERM_MEMORY_SYNC_FINALIZE: "true"
+      LONG_TERM_MEMORY_VECTOR_SEARCH_ENABLED: "true"
+      LONG_TERM_MEMORY_VECTOR_FALLBACK_ENABLED: "true"
+      LONG_TERM_MEMORY_EMBEDDING_MODEL: models/gemini-embedding-001
+      LONG_TERM_MEMORY_VECTOR_DIMS: "3072"
+      LONG_TERM_MEMORY_EMBEDDING_BACKFILL_BATCH_SIZE: "3"
+      LONG_TERM_MEMORY_EXTRACTOR: langmem
+      LONG_TERM_MEMORY_LANGMEM_MODEL: gemini-3.6-flash
+      LONG_TERM_MEMORY_VERIFIER: trustmem
+      LONG_TERM_MEMORY_TRUSTMEM_MODEL: gemini-2.5-flash
+      LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION: trustmem-verifier-v1
+      LONG_TERM_MEMORY_TRUSTMEM_TIMEOUT_SECONDS: "30"
+      LONG_TERM_MEMORY_TRUSTMEM_COVERAGE_THRESHOLD: "0.80"
+      LONG_TERM_MEMORY_TRUSTMEM_PRESERVATION_THRESHOLD: "0.90"
+      LONG_TERM_MEMORY_TRUSTMEM_FAITHFULNESS_THRESHOLD: "0.95"
+      LONG_TERM_MEMORY_TRANSITION_PATH: llm
+      LONG_TERM_MEMORY_TRANSITION_MODEL: gemini-2.5-flash
+      LONG_TERM_MEMORY_TRANSITION_CONFIDENCE_THRESHOLD: "0.85"
+      LONG_TERM_MEMORY_TRANSITION_BATCH_SIZE: "10"
+      LONG_TERM_MEMORY_DOMAIN_CANDIDATE_LIMIT: "50"
+      LONG_TERM_MEMORY_ACTION_INFERENCE_ENABLED: "true"
+      LONG_TERM_MEMORY_APPLICABILITY_JUDGE_ENABLED: "true"
+      LONG_TERM_MEMORY_APPLICABILITY_BATCH_SIZE: "10"
+      RAPIDAPI_LOCK_FILE: /tmp/viettrip-rapidapi.lock
+      WEB_MIN_REPLICAS: "1"
+      WEB_MAX_REPLICAS: "1"
+      WEB_CPU: "1.0"
+      WEB_MEMORY: 2.0Gi
+      WORKER_CRON_EXPRESSION: "*/1 * * * *"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Azure login with OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Set image coordinates
+        run: echo "IMAGE=${AZURE_ACR_NAME}.azurecr.io/${IMAGE_NAME}:${IMAGE_TAG}" >> "$GITHUB_ENV"
+      - name: Build and push immutable image
+        run: |
+          set -euo pipefail
+          az acr login --name "$AZURE_ACR_NAME"
+          docker build --pull --tag "$IMAGE" .
+          docker push "$IMAGE"
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends postgresql-client
+      - name: Generate CI deployment environment
+        run: |
+          set -euo pipefail
+          umask 077
+          cat > infra/azure/containerapps/00-vars.local.sh <<'VARS'
+          # CI-generated runtime configuration; never committed.
+          set -euo pipefail
+          export AZURE_RESOURCE_GROUP="${AZURE_RESOURCE_GROUP}"
+          export AZURE_LOCATION="${AZURE_LOCATION}"
+          export AZURE_ACR_NAME="${AZURE_ACR_NAME}"
+          export AZURE_CONTAINERAPPS_ENV="${AZURE_CONTAINERAPPS_ENV}"
+          export AZURE_LOG_ANALYTICS="${AZURE_LOG_ANALYTICS}"
+          export IMAGE_NAME="${IMAGE_NAME}"
+          export IMAGE_TAG="${IMAGE_TAG}"
+          export IMAGE="${IMAGE}"
+          export WEB_APP_NAME="${WEB_APP_NAME}"
+          export MIGRATION_JOB_NAME="${MIGRATION_JOB_NAME}"
+          export MEMORY_WORKER_JOB_NAME="${MEMORY_WORKER_JOB_NAME}"
+          export BACKFILL_JOB_NAME="${BACKFILL_JOB_NAME}"
+          export DATABASE_URL="${DATABASE_URL}"
+          export COOKIE_SECRET="${COOKIE_SECRET}"
+          export GOOGLE_API_KEY="${GOOGLE_API_KEY}"
+          export RAPIDAPI_KEY="${RAPIDAPI_KEY}"
+          export WEATHER_API_KEY="${WEATHER_API_KEY}"
+          export LANGSMITH_API_KEY="${LANGSMITH_API_KEY}"
+          export COOKIE_SECURE="${COOKIE_SECURE}"
+          export BOOKING_RAPIDAPI_HOST="${BOOKING_RAPIDAPI_HOST}"
+          export GEOCODING_RAPIDAPI_HOST="${GEOCODING_RAPIDAPI_HOST}"
+          export GOOGLE_FLIGHT_RAPIDAPI_HOST="${GOOGLE_FLIGHT_RAPIDAPI_HOST}"
+          export BOOKING_LANGUAGE_CODE="${BOOKING_LANGUAGE_CODE}"
+          export BOOKING_CURRENCY_CODE="${BOOKING_CURRENCY_CODE}"
+          export COUNTRY_CODE="${COUNTRY_CODE}"
+          export LONG_TERM_MEMORY_RECALL_ENABLED="${LONG_TERM_MEMORY_RECALL_ENABLED}"
+          export LONG_TERM_MEMORY_WRITE_ENABLED="${LONG_TERM_MEMORY_WRITE_ENABLED}"
+          export LONG_TERM_MEMORY_SYNC_FINALIZE="${LONG_TERM_MEMORY_SYNC_FINALIZE}"
+          export LONG_TERM_MEMORY_VECTOR_SEARCH_ENABLED="${LONG_TERM_MEMORY_VECTOR_SEARCH_ENABLED}"
+          export LONG_TERM_MEMORY_VECTOR_FALLBACK_ENABLED="${LONG_TERM_MEMORY_VECTOR_FALLBACK_ENABLED}"
+          export LONG_TERM_MEMORY_EMBEDDING_MODEL="${LONG_TERM_MEMORY_EMBEDDING_MODEL}"
+          export LONG_TERM_MEMORY_VECTOR_DIMS="${LONG_TERM_MEMORY_VECTOR_DIMS}"
+          export LONG_TERM_MEMORY_EMBEDDING_BACKFILL_BATCH_SIZE="${LONG_TERM_MEMORY_EMBEDDING_BACKFILL_BATCH_SIZE}"
+          export LONG_TERM_MEMORY_EXTRACTOR="${LONG_TERM_MEMORY_EXTRACTOR}"
+          export LONG_TERM_MEMORY_LANGMEM_MODEL="${LONG_TERM_MEMORY_LANGMEM_MODEL}"
+          export LONG_TERM_MEMORY_VERIFIER="${LONG_TERM_MEMORY_VERIFIER}"
+          export LONG_TERM_MEMORY_TRUSTMEM_MODEL="${LONG_TERM_MEMORY_TRUSTMEM_MODEL}"
+          export LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION="${LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION}"
+          export LONG_TERM_MEMORY_TRUSTMEM_TIMEOUT_SECONDS="${LONG_TERM_MEMORY_TRUSTMEM_TIMEOUT_SECONDS}"
+          export LONG_TERM_MEMORY_TRUSTMEM_COVERAGE_THRESHOLD="${LONG_TERM_MEMORY_TRUSTMEM_COVERAGE_THRESHOLD}"
+          export LONG_TERM_MEMORY_TRUSTMEM_PRESERVATION_THRESHOLD="${LONG_TERM_MEMORY_TRUSTMEM_PRESERVATION_THRESHOLD}"
+          export LONG_TERM_MEMORY_TRUSTMEM_FAITHFULNESS_THRESHOLD="${LONG_TERM_MEMORY_TRUSTMEM_FAITHFULNESS_THRESHOLD}"
+          export LONG_TERM_MEMORY_TRANSITION_PATH="${LONG_TERM_MEMORY_TRANSITION_PATH}"
+          export LONG_TERM_MEMORY_TRANSITION_MODEL="${LONG_TERM_MEMORY_TRANSITION_MODEL}"
+          export LONG_TERM_MEMORY_TRANSITION_CONFIDENCE_THRESHOLD="${LONG_TERM_MEMORY_TRANSITION_CONFIDENCE_THRESHOLD}"
+          export LONG_TERM_MEMORY_TRANSITION_BATCH_SIZE="${LONG_TERM_MEMORY_TRANSITION_BATCH_SIZE}"
+          export LONG_TERM_MEMORY_DOMAIN_CANDIDATE_LIMIT="${LONG_TERM_MEMORY_DOMAIN_CANDIDATE_LIMIT}"
+          export LONG_TERM_MEMORY_ACTION_INFERENCE_ENABLED="${LONG_TERM_MEMORY_ACTION_INFERENCE_ENABLED}"
+          export LONG_TERM_MEMORY_APPLICABILITY_JUDGE_ENABLED="${LONG_TERM_MEMORY_APPLICABILITY_JUDGE_ENABLED}"
+          export LONG_TERM_MEMORY_APPLICABILITY_BATCH_SIZE="${LONG_TERM_MEMORY_APPLICABILITY_BATCH_SIZE}"
+          export RAPIDAPI_LOCK_FILE="${RAPIDAPI_LOCK_FILE}"
+          export WEB_MIN_REPLICAS="${WEB_MIN_REPLICAS}"
+          export WEB_MAX_REPLICAS="${WEB_MAX_REPLICAS}"
+          export WEB_CPU="${WEB_CPU}"
+          export WEB_MEMORY="${WEB_MEMORY}"
+          export WORKER_CRON_EXPRESSION="${WORKER_CRON_EXPRESSION}"
+          VARS
+      - name: Run database migration and wait
+        run: |
+          set -euo pipefail
+          bash infra/azure/containerapps/04-create-migration-job.sh
+          started_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          export MIGRATION_START_ONLY=true
+          execution=$(bash infra/azure/containerapps/05-run-migration-job.sh)
+          test -n "$execution"
+          echo "Migration execution: $execution (started $started_at)"
+          for attempt in $(seq 1 60); do
+            status=$(az containerapp job execution show --name "$MIGRATION_JOB_NAME" --resource-group "$AZURE_RESOURCE_GROUP" --job-execution-name "$execution" --query properties.status -o tsv)
+            echo "Migration status: $status"
+            case "$status" in
+              Succeeded) exit 0 ;;
+              Failed|Canceled|Cancelled) exit 1 ;;
+            esac
+            sleep 10
+          done
+          echo "Migration timed out: $execution" >&2
+          exit 1
+      - name: Deploy web worker and backfill definitions
+        run: |
+          set -euo pipefail
+          bash infra/azure/containerapps/03-deploy-web.sh
+          bash infra/azure/containerapps/06-create-memory-worker-job.sh
+          bash infra/azure/containerapps/07-create-backfill-job.sh
+      - name: Production smoke test
+        run: |
+          set -euo pipefail
+          bash infra/azure/containerapps/08-smoke-test.sh
+          fqdn=$(az containerapp show --name "$WEB_APP_NAME" --resource-group "$AZURE_RESOURCE_GROUP" --query properties.configuration.ingress.fqdn -o tsv)
+          for path in /login /register; do
+            code=$(curl --max-time 30 --silent --show-error --output /dev/null --write-out '%{http_code}' "https://$fqdn$path")
+            test "$code" = 200
+          done
+      - name: Verify ready revision has all traffic
+        run: |
+          set -euo pipefail
+          latest=$(az containerapp show --name "$WEB_APP_NAME" --resource-group "$AZURE_RESOURCE_GROUP" --query properties.latestReadyRevisionName -o tsv)
+          weight=$(az containerapp ingress traffic show --name "$WEB_APP_NAME" --resource-group "$AZURE_RESOURCE_GROUP" --query "[?revisionName=='$latest'].weight" -o tsv)
+          test "$weight" = 100
+          echo "Traffic is 100% on $latest"

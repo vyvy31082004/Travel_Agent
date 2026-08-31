@@ -129,6 +129,7 @@ def test_azure_scripts_are_concrete_and_secret_safe():
 def test_docs_and_workflow_cover_deployment_lifecycle():
     docs = read("docs/azure-container-apps-deployment.md")
     workflow = read(".github/workflows/azure-container-apps-deploy.sample.yml")
+    production_workflow = read(".github/workflows/ci-cd.yml")
     smoke = read("infra/azure/containerapps/08-smoke-test.sh")
     assert 'curl --max-time 20 --fail' in smoke
     assert 'Root page GET succeeded' in smoke
@@ -147,3 +148,5 @@ def test_docs_and_workflow_cover_deployment_lifecycle():
         assert term in docs
     for term in ["az acr build", "viettrip-migrate", "viettrip-memory-worker", "smoke", "rollback"]:
         assert term in workflow
+    for term in ["azure/login@v2", "id-token: write", "docker push", "04-create-migration-job.sh", "05-run-migration-job.sh", "03-deploy-web.sh", "08-smoke-test.sh", "/login", "/register"]:
+        assert term in production_workflow

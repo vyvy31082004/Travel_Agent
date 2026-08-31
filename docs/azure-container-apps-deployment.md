@@ -236,28 +236,79 @@ az containerapp job execution list --name viettrip-memory-worker --resource-grou
 
 Migration job logs/status cần kiểm tra sau mỗi deploy trước khi shift traffic.
 
-## CI/CD sample
+## CI/CD production
 
-Sample workflow nằm ở:
+Workflow thực tế nằm ở:
 
 ```text
-.github/workflows/azure-container-apps-deploy.sample.yml
+.github/workflows/ci-cd.yml
 ```
 
-Workflow sample là artifact bắt buộc của repo, nhưng operator có thể chọn manual deployment trước. Khi dùng CI/CD production, nên có manual approval trước migration/web traffic shift.
+Workflow sample cũ vẫn được giữ làm tài liệu tham khảo. Workflow production chạy CI trên pull request vào `main`, và CI + deployment khi push vào `main`. Job deploy dùng GitHub Environment `production`; nên bật **Required reviewers** để có approval trước migration và rollout.
 
-GitHub secrets tối thiểu:
+Pipeline thực hiện:
 
-- `AZURE_CREDENTIALS` hoặc cấu hình Azure federated identity tương đương
-- `AZURE_RESOURCE_GROUP`
-- `AZURE_LOCATION`
-- `AZURE_ACR_NAME`
-- `AZURE_CONTAINERAPPS_ENV`
+1. pytest không dùng external database/live APIs;
+2. compile và Docker build gate;
+3. Azure login bằng GitHub OIDC;
+4. build/push immutable image `viettrip-ai:ci-<commit-sha>`;
+5. recreate và chờ đúng migration execution thành công;
+6. deploy web + 5 MCP sidecars, memory worker và backfill job definition;
+7. smoke test `/healthz`, `/`, `/login`, `/register`, private MCP ports;
+8. xác minh revision ready mới nhận 100% traffic.
+
+### GitHub Environment secrets
+
+Tạo environment `production` và đặt các secret sau, không đặt trong repository files:
+
+- `AZURE_CLIENT_ID`
+- `AZURE_TENANT_ID`
+- `AZURE_SUBSCRIPTION_ID`
 - `DATABASE_URL`
 - `COOKIE_SECRET`
 - `GOOGLE_API_KEY`
 - `RAPIDAPI_KEY`
 - `WEATHER_API_KEY`
+- `LANGSMITH_API_KEY` (có thể để rỗng nếu tracing tắt)
+
+### GitHub Environment variables
+
+- `AZURE_RESOURCE_GROUP=viettrip-rg`
+- `AZURE_ACR_NAME=viettripacr20260831`
+- `AZURE_CONTAINERAPPS_ENV=viettrip-aca-env`
+- `AZURE_LOG_ANALYTICS=viettrip-logs-jpe`
+- `WEB_APP_NAME=viettrip-web`
+- `MIGRATION_JOB_NAME=viettrip-migrate`
+- `MEMORY_WORKER_JOB_NAME=viettrip-memory-worker`
+- `BACKFILL_JOB_NAME=viettrip-backfill-embeddings`
+
+### Azure OIDC federated identity
+
+Tạo một Microsoft Entra application/service principal dành riêng cho GitHub Actions, cấp quyền tối thiểu cần thiết trên resource group production, rồi thêm federated credential với subject:
+
+```text
+repo:vyvy31082004/Travel_Agent:environment:production
+```
+
+Audience:
+
+```text
+api://AzureADTokenExchange
+```
+
+OIDC tránh lưu client secret dài hạn trong GitHub. Workflow cần `permissions: id-token: write` và chỉ deploy từ environment `production`.
+
+### Branch protection
+
+Khuyến nghị bảo vệ `main`:
+
+- require pull request;
+- require status check `Test and validate`;
+- require branch up to date;
+- không cho force push;
+- chỉ cho deploy sau environment approval.
+
+Do Azure for Students không cho ACR Tasks trong subscription hiện tại, workflow dùng Docker trên GitHub-hosted runner rồi `docker push` vào ACR.
 - optional `LANGSMITH_API_KEY`
 
 Khuyến nghị dùng GitHub Environments với required reviewers/manual approval cho production trước khi chạy migration job và shift traffic.

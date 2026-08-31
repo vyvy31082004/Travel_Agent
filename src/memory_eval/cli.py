@@ -44,6 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
             "extraction",
             "transition",
             "retrieval",
+            "retrieval-threshold",
             "answer",
             "all",
             "state",
@@ -208,7 +209,7 @@ async def evaluate_suite(args: argparse.Namespace) -> dict:
             "case_count": len(report.cases),
             "report": payload,
         }
-    if args.suite == "retrieval":
+    if args.suite in {"retrieval", "retrieval-threshold"}:
         path = gold if gold.is_file() else gold / "retrieval_cases.jsonl"
         report = await evaluate_retrieval_file(
             path,
@@ -218,7 +219,7 @@ async def evaluate_suite(args: argparse.Namespace) -> dict:
             judge_model=args.applicability_judge_model,
         )
         return {
-            "suite": "retrieval",
+            "suite": args.suite,
             "gold_path": str(path),
             "split": args.split,
             "case_count": len(report.cases),
@@ -331,7 +332,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     result = _run_async(evaluate_suite(args))
     payload = json.dumps(result, ensure_ascii=False, indent=2)
-    if args.suite == "retrieval" and not args.no_report:
+    if args.suite == "retrieval-threshold":
+        # The threshold collector owns its JSONL output; do not overwrite it
+        # with the CLI summary payload after the suite returns.
+        pass
+    elif args.suite == "retrieval" and not args.no_report:
         if args.output:
             json_path = Path(args.output)
             md_path = json_path.with_suffix(".md")
