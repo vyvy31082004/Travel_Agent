@@ -35,7 +35,13 @@ COMMON_ARGS=(
 )
 
 if az containerapp job show --name "${MIGRATION_JOB_NAME}" --resource-group "${AZURE_RESOURCE_GROUP}" >/dev/null 2>&1; then
-  az containerapp job update "${COMMON_ARGS[@]}"
-else
-  az containerapp job create "${COMMON_ARGS[@]}"
+  # Recreate because the preview CLI's job update cannot move a job between
+  # Container Apps Environments while preserving the full definition.
+  echo "Recreating ${MIGRATION_JOB_NAME} with the current definition"
+  az containerapp job delete \
+    --name "${MIGRATION_JOB_NAME}" \
+    --resource-group "${AZURE_RESOURCE_GROUP}" \
+    --yes
 fi
+
+az containerapp job create "${COMMON_ARGS[@]}"

@@ -25,8 +25,7 @@ COMMON_ARGS=(
   --replica-retry-limit 1
   --cpu 1.0
   --memory 2.0Gi
-  --command "python"
-  --args "src/memory_worker.py" "--once"
+  --command "scripts/run-memory-worker-once.sh"
   --secrets
     database-url="${DATABASE_URL}"
     cookie-secret="${COOKIE_SECRET}"
@@ -42,10 +41,26 @@ COMMON_ARGS=(
     LONG_TERM_MEMORY_EXTRACTOR="${LONG_TERM_MEMORY_EXTRACTOR}"
     LONG_TERM_MEMORY_VERIFIER="${LONG_TERM_MEMORY_VERIFIER}"
     LONG_TERM_MEMORY_VECTOR_SEARCH_ENABLED="${LONG_TERM_MEMORY_VECTOR_SEARCH_ENABLED}"
+    LONG_TERM_MEMORY_TRANSITION_PATH="${LONG_TERM_MEMORY_TRANSITION_PATH:-llm}"
+    LONG_TERM_MEMORY_TRANSITION_MODEL="${LONG_TERM_MEMORY_TRANSITION_MODEL:-gemini-2.5-flash}"
+    LONG_TERM_MEMORY_TRANSITION_CONFIDENCE_THRESHOLD="${LONG_TERM_MEMORY_TRANSITION_CONFIDENCE_THRESHOLD:-0.85}"
+    LONG_TERM_MEMORY_TRANSITION_BATCH_SIZE="${LONG_TERM_MEMORY_TRANSITION_BATCH_SIZE:-10}"
+    LONG_TERM_MEMORY_DOMAIN_CANDIDATE_LIMIT="${LONG_TERM_MEMORY_DOMAIN_CANDIDATE_LIMIT:-50}"
+    LONG_TERM_MEMORY_ACTION_INFERENCE_ENABLED="${LONG_TERM_MEMORY_ACTION_INFERENCE_ENABLED:-false}"
+    LONG_TERM_MEMORY_APPLICABILITY_JUDGE_ENABLED="${LONG_TERM_MEMORY_APPLICABILITY_JUDGE_ENABLED:-true}"
+    LONG_TERM_MEMORY_APPLICABILITY_BATCH_SIZE="${LONG_TERM_MEMORY_APPLICABILITY_BATCH_SIZE:-10}"
+    RAPIDAPI_LOCK_FILE=/tmp/viettrip-rapidapi.lock
 )
 
 if az containerapp job show --name "${MEMORY_WORKER_JOB_NAME}" --resource-group "${AZURE_RESOURCE_GROUP}" >/dev/null 2>&1; then
-  az containerapp job update "${COMMON_ARGS[@]}"
-else
-  az containerapp job create "${COMMON_ARGS[@]}"
+  # The preview CLI does not accept the full job definition on `job update`
+  # (notably environment, registry credentials, secrets, and trigger options).
+  # Recreate this scheduled job so its command and secret references are atomic.
+  echo "Recreating ${MEMORY_WORKER_JOB_NAME} with the current definition"
+  az containerapp job delete \
+    --name "${MEMORY_WORKER_JOB_NAME}" \
+    --resource-group "${AZURE_RESOURCE_GROUP}" \
+    --yes
 fi
+
+az containerapp job create "${COMMON_ARGS[@]}"

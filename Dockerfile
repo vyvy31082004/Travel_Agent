@@ -17,17 +17,18 @@ RUN apt-get update \
         netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt ./
+COPY requirements.production.txt ./
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+    && pip install --no-cache-dir -r requirements.production.txt
 
 COPY alembic.ini ./
 COPY alembic ./alembic
 COPY src ./src
 COPY scripts ./scripts
-COPY docs ./docs
 
-RUN chmod +x /app/scripts/start-web-with-mcp-wait.sh
+RUN chmod +x /app/scripts/start-web-with-mcp-wait.sh \
+        /app/scripts/run-memory-worker-once.sh \
+        /app/scripts/run-memory-embedding-backfill.sh
 
 EXPOSE 5000
 

@@ -90,6 +90,24 @@ properties:
             value: "${LONG_TERM_MEMORY_EXTRACTOR}"
           - name: LONG_TERM_MEMORY_VERIFIER
             value: "${LONG_TERM_MEMORY_VERIFIER}"
+          - name: LONG_TERM_MEMORY_TRANSITION_PATH
+            value: "${LONG_TERM_MEMORY_TRANSITION_PATH:-llm}"
+          - name: LONG_TERM_MEMORY_TRANSITION_MODEL
+            value: "${LONG_TERM_MEMORY_TRANSITION_MODEL:-gemini-2.5-flash}"
+          - name: LONG_TERM_MEMORY_TRANSITION_CONFIDENCE_THRESHOLD
+            value: "${LONG_TERM_MEMORY_TRANSITION_CONFIDENCE_THRESHOLD:-0.85}"
+          - name: LONG_TERM_MEMORY_TRANSITION_BATCH_SIZE
+            value: "${LONG_TERM_MEMORY_TRANSITION_BATCH_SIZE:-10}"
+          - name: LONG_TERM_MEMORY_DOMAIN_CANDIDATE_LIMIT
+            value: "${LONG_TERM_MEMORY_DOMAIN_CANDIDATE_LIMIT:-50}"
+          - name: LONG_TERM_MEMORY_ACTION_INFERENCE_ENABLED
+            value: "${LONG_TERM_MEMORY_ACTION_INFERENCE_ENABLED:-false}"
+          - name: LONG_TERM_MEMORY_APPLICABILITY_JUDGE_ENABLED
+            value: "${LONG_TERM_MEMORY_APPLICABILITY_JUDGE_ENABLED:-true}"
+          - name: LONG_TERM_MEMORY_APPLICABILITY_BATCH_SIZE
+            value: "${LONG_TERM_MEMORY_APPLICABILITY_BATCH_SIZE:-10}"
+          - name: RAPIDAPI_LOCK_FILE
+            value: "/tmp/viettrip-rapidapi.lock"
       - name: mcp-car
         image: ${IMAGE}
         command: ["python", "src/mcp_servers/car/server.py"]

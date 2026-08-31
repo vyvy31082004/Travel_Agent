@@ -45,11 +45,17 @@ open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specifie
 DOCKER_BUILD_EXIT=1
 ```
 
-This is an environment blocker, not a Dockerfile validation failure. Start Docker Desktop/Linux engine and rerun:
+This was an environment blocker during the first validation attempt, not a Dockerfile validation failure. Docker Desktop/Linux engine was subsequently started and the image was rebuilt successfully.
 
-```bash
-docker build -t viettrip-ai:test-deploy .
-```
+Successful verification:
+
+- `docker build -t viettrip-ai:test-deploy .` passed.
+- Chromium and ChromeDriver binaries were present and version-matched.
+- All five MCP server commands started and listened on ports `8001-8005`.
+- `alembic upgrade head` passed against a temporary PostgreSQL 16 + pgvector container.
+- `python src/memory_worker.py --once` passed.
+- `python src/memory_worker.py --backfill-embeddings` passed on an empty migrated database.
+- A web + five-MCP process simulation passed `/healthz` after the MCP startup wait.
 
 - Azure CLI/account validation and real deployment were not completed in this local session. Before deployment, verify:
 

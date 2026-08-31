@@ -106,6 +106,24 @@ async def debug_memory_audit(request: Request) -> list[dict]:
     return [dict(row) for row in rows]
 
 
+def _message_content_text(content: object) -> str:
+    """Normalize LangChain string or structured content blocks for `/chat`."""
+    if isinstance(content, str):
+        return content
+    if not isinstance(content, list):
+        return str(content) if content is not None else ""
+
+    parts: list[str] = []
+    for block in content:
+        if isinstance(block, str):
+            parts.append(block)
+        elif isinstance(block, dict):
+            text = block.get("text")
+            if isinstance(text, str):
+                parts.append(text)
+    return "".join(parts)
+
+
 @app.post("/chat")
 async def chat(
     payload: ChatRequest,
@@ -138,11 +156,12 @@ async def chat(
     )
 
     new_messages = result["messages"][old_count:]
-    ai_responses = []
+    ai_responses: list[str] = []
     for msg in new_messages:
         if msg.type in ("ai", "assistant") and msg.content:
-            if "Proceeding with the next requested task" not in msg.content:
-                ai_responses.append(msg.content)
+            content = _message_content_text(msg.content)
+            if content and "Proceeding with the next requested task" not in content:
+                ai_responses.append(content)
 
     response = (
         "\n\n".join(ai_responses)

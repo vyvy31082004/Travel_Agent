@@ -3,9 +3,9 @@
 - [x] 1.1 Add production `Dockerfile` for FastAPI runtime on port `5000`.
 - [x] 1.2 Include Chromium/ChromeDriver and required Selenium/Chrome runtime libraries in the image to preserve current car search behavior.
 - [x] 1.3 Add `.dockerignore` excluding local environments, git data, caches, local env files, logs, and other non-runtime artifacts.
-- [ ] 1.4 Build the image locally or with `az acr build` and verify the web command starts FastAPI after MCP readiness checks.
-- [ ] 1.5 Verify the same image can run all five MCP server commands, `alembic upgrade head`, `python src/memory_worker.py --once`, and `python src/memory_worker.py --backfill-embeddings`.
-- [ ] 1.6 Verify Chromium/ChromeDriver binaries are present in the built image.
+- [x] 1.4 Build the image locally or with `az acr build` and verify the web command starts FastAPI after MCP readiness checks.
+- [x] 1.5 Verify the same image can run all five MCP server commands, `alembic upgrade head`, `python src/memory_worker.py --once`, and `python src/memory_worker.py --backfill-embeddings`.
+- [x] 1.6 Verify Chromium/ChromeDriver binaries are present in the built image.
 
 ## 2. Health, MCP Readiness, and Runtime Configuration
 
@@ -68,6 +68,6 @@
 - [x] 7.9 Run static checks that the Container Apps web artifact defines one web container and five MCP sidecar containers, preserves `127.0.0.1:8001-8005`, and exposes only port `5000` through ingress.
 - [x] 7.10 Run static checks that `docs/azure-container-apps-deployment.md` covers pgvector hard preflight before migration, migration order, custom domain/HTTPS, smoke checks, revision traffic, rollback, and staged memory rollout.
 - [x] 7.11 Run static checks that `.github/workflows/azure-container-apps-deploy.sample.yml` covers build/push, migration, multi-container web update, worker/backfill job updates, smoke test, traffic shift, and rollback.
-- [ ] 7.12 Build or ACR-build the image and verify web, MCP sidecar, migration, worker, and backfill commands can start in the expected environment.
-- [ ] 7.13 Verify Chromium/ChromeDriver presence in the built image.
+- [x] 7.12 Build or ACR-build the image and verify web, MCP sidecar, migration, worker, and backfill commands can start in the expected environment.
+- [x] 7.13 Verify Chromium/ChromeDriver presence in the built image.
 - [x] 7.14 Record any environment-specific blockers such as missing Azure credentials, Docker daemon, or pgvector support as deployment notes rather than code blockers.

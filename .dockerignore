@@ -19,7 +19,7 @@ htmlcov
 # Secrets and local env files
 .env
 .env.*
-!.env.production.example
+!env.production.example
 *.pem
 *.key
 *.crt
@@ -30,8 +30,15 @@ logs
 *.pid
 _pyc_dump.txt
 
-# Large/local-only planning artifacts not needed at runtime
+# Evaluation, notebook, report, and local planning artifacts not needed at runtime
+src/memory_eval/
+src/memory_eval_cli.py
+src/notebooks/
+src/extraction_*.txt
+reports/
+plan.pdf
 thiet_ke_toan_bo_long_term_memory.pdf
+ke-hoach-danh-gia-short-term-memory-viettrip-ai.md
 note.txt
 
 # OS files

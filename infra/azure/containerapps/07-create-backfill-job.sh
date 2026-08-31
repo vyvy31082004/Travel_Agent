@@ -24,8 +24,7 @@ COMMON_ARGS=(
   --replica-retry-limit 1
   --cpu 1.0
   --memory 2.0Gi
-  --command "python"
-  --args "src/memory_worker.py" "--backfill-embeddings"
+  --command "scripts/run-memory-embedding-backfill.sh"
   --secrets
     database-url="${DATABASE_URL}"
     cookie-secret="${COOKIE_SECRET}"
@@ -35,10 +34,17 @@ COMMON_ARGS=(
     COOKIE_SECRET=secretref:cookie-secret
     GOOGLE_API_KEY=secretref:google-api-key
     LONG_TERM_MEMORY_VECTOR_SEARCH_ENABLED=true
+    RAPIDAPI_LOCK_FILE=/tmp/viettrip-rapidapi.lock
 )
 
 if az containerapp job show --name "${BACKFILL_JOB_NAME}" --resource-group "${AZURE_RESOURCE_GROUP}" >/dev/null 2>&1; then
-  az containerapp job update "${COMMON_ARGS[@]}"
-else
-  az containerapp job create "${COMMON_ARGS[@]}"
+  # Recreate because the preview CLI's job update accepts only a subset of the
+  # full definition and can reject the trigger/secret/registry arguments.
+  echo "Recreating ${BACKFILL_JOB_NAME} with the current definition"
+  az containerapp job delete \
+    --name "${BACKFILL_JOB_NAME}" \
+    --resource-group "${AZURE_RESOURCE_GROUP}" \
+    --yes
 fi
+
+az containerapp job create "${COMMON_ARGS[@]}"

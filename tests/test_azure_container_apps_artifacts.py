@@ -13,10 +13,18 @@ def test_dockerfile_contains_runtime_contract():
     assert "chromium" in dockerfile
     assert "chromium-driver" in dockerfile
     assert "PYTHONPATH=/app/src" in dockerfile
+    assert "requirements.production.txt" in dockerfile
     assert "COPY src ./src" in dockerfile
     assert "COPY alembic ./alembic" in dockerfile
     assert "EXPOSE 5000" in dockerfile
     assert "start-web-with-mcp-wait.sh" in dockerfile
+    assert "run-memory-worker-once.sh" in dockerfile
+    assert "run-memory-embedding-backfill.sh" in dockerfile
+    production_requirements = read("requirements.production.txt")
+    assert "selenium" in production_requirements
+    assert "pgvector" in production_requirements
+    assert "qdrant-client" not in production_requirements
+    assert "sentence-transformers" not in production_requirements
 
 
 def test_dockerignore_excludes_local_and_sensitive_artifacts():
@@ -43,6 +51,11 @@ def test_production_env_example_documents_required_variables():
         "LONG_TERM_MEMORY_RECALL_ENABLED",
         "LONG_TERM_MEMORY_WRITE_ENABLED",
         "LONG_TERM_MEMORY_VERIFIER",
+        "LONG_TERM_MEMORY_TRANSITION_PATH",
+        "LONG_TERM_MEMORY_TRANSITION_MODEL",
+        "LONG_TERM_MEMORY_ACTION_INFERENCE_ENABLED",
+        "LONG_TERM_MEMORY_APPLICABILITY_JUDGE_ENABLED",
+        "RAPIDAPI_LOCK_FILE",
         "LONG_TERM_MEMORY_VECTOR_SEARCH_ENABLED",
     ]:
         assert name in env
@@ -89,16 +102,37 @@ def test_azure_scripts_are_concrete_and_secret_safe():
         }
         assert "real-secret" not in content.lower()
 
+    build_image = read("infra/azure/containerapps/02-build-image.sh")
+    assert "az acr build" in build_image
+    assert "docker build" in build_image
+    assert "docker push" in build_image
+    assert "ACR Tasks build was unavailable" in build_image
+
     deploy_web = read("infra/azure/containerapps/03-deploy-web.sh")
     for container_name in ["mcp-car", "mcp-excursion", "mcp-flight", "mcp-hotel", "mcp-travel-planner"]:
         assert container_name in deploy_web
     assert "targetPort: 5000" in deploy_web
     assert "start-web-with-mcp-wait.sh" in deploy_web
+    assert 'value: "/tmp/viettrip-rapidapi.lock"' in deploy_web
+    worker = read("infra/azure/containerapps/06-create-memory-worker-job.sh")
+    backfill = read("infra/azure/containerapps/07-create-backfill-job.sh")
+    assert '--command "scripts/run-memory-worker-once.sh"' in worker
+    assert '--command "scripts/run-memory-embedding-backfill.sh"' in backfill
+    assert 'RAPIDAPI_LOCK_FILE=/tmp/viettrip-rapidapi.lock' in worker
+    assert 'RAPIDAPI_LOCK_FILE=/tmp/viettrip-rapidapi.lock' in backfill
+    assert 'az containerapp job delete' in worker
+    assert 'az containerapp job delete' in backfill
+    migration = read("infra/azure/containerapps/04-create-migration-job.sh")
+    assert 'az containerapp job delete' in migration
 
 
 def test_docs_and_workflow_cover_deployment_lifecycle():
     docs = read("docs/azure-container-apps-deployment.md")
     workflow = read(".github/workflows/azure-container-apps-deploy.sample.yml")
+    smoke = read("infra/azure/containerapps/08-smoke-test.sh")
+    assert 'curl --max-time 20 --fail' in smoke
+    assert 'Root page GET succeeded' in smoke
+    assert '--head' not in smoke
     for term in [
         "MCP sidecar",
         "pgvector",

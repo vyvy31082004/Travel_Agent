@@ -62,3 +62,5 @@ mioto_cars_30.xlsx
 data/
 __init__.py
 update_data.py
+
+infra/azure/containerapps/00-vars.local.sh

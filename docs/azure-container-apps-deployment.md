@@ -67,7 +67,8 @@ Các giá trị có thể đưa vào Container Apps env vars:
 - `BOOKING_LANGUAGE_CODE`
 - `BOOKING_CURRENCY_CODE`
 - `COUNTRY_CODE`
-- `LONG_TERM_MEMORY_*`
+- `LONG_TERM_MEMORY_*`, bao gồm transition/applicability settings như `LONG_TERM_MEMORY_TRANSITION_PATH`, `LONG_TERM_MEMORY_TRANSITION_MODEL`, `LONG_TERM_MEMORY_ACTION_INFERENCE_ENABLED` và `LONG_TERM_MEMORY_APPLICABILITY_JUDGE_ENABLED`
+- `RAPIDAPI_LOCK_FILE` (mặc định `/tmp/viettrip-rapidapi.lock`)
 - `MCP_SIDECAR_*`
 - tracing/debug flags
 
@@ -139,6 +140,8 @@ ROLLBACK_REVISION=<old-revision> ./infra/azure/containerapps/09-rollback-web.sh
 ```
 
 ## Image/runtime commands
+
+Một image dùng nhiều command. Image production cài từ `requirements.production.txt`, là subset runtime của `requirements.txt`; các dependency đánh giá/dev như Qdrant, sentence-transformers, pandas, openpyxl và pytest không được đưa vào production image nếu không được runtime import.
 
 Một image dùng nhiều command:
 

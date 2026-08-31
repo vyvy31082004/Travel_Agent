@@ -9,11 +9,15 @@ FQDN="$(az containerapp show --name "${WEB_APP_NAME}" --resource-group "${AZURE_
 BASE_URL="https://${FQDN}"
 
 echo "Smoke testing ${BASE_URL}"
-curl --fail --show-error --silent "${BASE_URL}/healthz"
+curl --max-time 20 --fail --show-error --silent "${BASE_URL}/healthz"
 echo
-curl --fail --show-error --silent --head "${BASE_URL}/" >/dev/null
+# FastAPI GET routes may return 405 to HEAD unless HEAD is declared explicitly,
+# so verify the real browser method instead.
+curl --max-time 20 --fail --show-error --silent "${BASE_URL}/" >/dev/null
+echo "Root page GET succeeded"
 
 for port in 8001 8002 8003 8004 8005; do
+  echo "Checking that MCP port ${port} is not public"
   if curl --max-time 5 --silent --fail "https://${FQDN}:${port}/sse" >/dev/null 2>&1; then
     echo "MCP port ${port} is publicly reachable; this is not allowed." >&2
     exit 1
