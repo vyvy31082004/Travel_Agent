@@ -238,17 +238,19 @@ Migration job logs/status cần kiểm tra sau mỗi deploy trước khi shift t
 
 ## CI/CD production
 
+Production hiện tại đã được deploy thủ công và không phụ thuộc GitHub Actions để tiếp tục chạy. Workflow dưới đây chỉ tự động hóa các lần deploy sau; việc cấu hình GitHub Environment `production` và merge vào `main` vẫn là bước vận hành chưa thực hiện.
+
 Workflow thực tế nằm ở:
 
 ```text
 .github/workflows/ci-cd.yml
 ```
 
-Workflow sample cũ vẫn được giữ làm tài liệu tham khảo. Workflow production chạy CI trên pull request vào `main`, và CI + deployment khi push vào `main`. Job deploy dùng GitHub Environment `production`; nên bật **Required reviewers** để có approval trước migration và rollout.
+Workflow sample cũ vẫn được giữ làm tài liệu tham khảo. Workflow production chạy CI trên pull request vào `main`, và CI + deployment khi push vào `main`. Job deploy dùng GitHub Environment `production`; hiện workflow được thiết kế tự động deploy sau CI theo quyết định vận hành, không yêu cầu approval thủ công.
 
 Pipeline thực hiện:
 
-1. pytest không dùng external database/live APIs;
+1. pytest không dùng external database/live APIs (hai integration suites PostgreSQL cần được chạy riêng khi có database test);
 2. compile và Docker build gate;
 3. Azure login bằng GitHub OIDC;
 4. build/push immutable image `viettrip-ai:ci-<commit-sha>`;
@@ -272,6 +274,8 @@ Tạo environment `production` và đặt các secret sau, không đặt trong r
 - `LANGSMITH_API_KEY` (có thể để rỗng nếu tracing tắt)
 
 ### GitHub Environment variables
+
+Các biến resource dưới đây là cấu hình mục tiêu cho Environment `production`; chúng chưa được tạo tự động trong GitHub:
 
 - `AZURE_RESOURCE_GROUP=viettrip-rg`
 - `AZURE_ACR_NAME=viettripacr20260831`
@@ -309,6 +313,13 @@ Khuyến nghị bảo vệ `main`:
 - chỉ cho deploy sau environment approval.
 
 Do Azure for Students không cho ACR Tasks trong subscription hiện tại, workflow dùng Docker trên GitHub-hosted runner rồi `docker push` vào ACR.
+
+Hai bước còn để sau:
+
+1. tạo GitHub Environment `production` và nhập variables/secrets;
+2. merge `ft/deploy` vào `main` để bật trigger production.
+
+Trước khi hai bước này hoàn tất, tiếp tục dùng quy trình deploy thủ công trong phần `Deployment scripts`.
 - optional `LANGSMITH_API_KEY`
 
 Khuyến nghị dùng GitHub Environments với required reviewers/manual approval cho production trước khi chạy migration job và shift traffic.

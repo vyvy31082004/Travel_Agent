@@ -1,8 +1,8 @@
 ## 1. Environment and Dependency Verification
 
-- [ ] 1.1 Verify target PostgreSQL can enable `vector` extension, and document whether extension setup is app-managed or provisioned out-of-band.
+- [x] 1.1 Verify target PostgreSQL can enable `vector` extension, and document whether extension setup is app-managed or provisioned out-of-band. Production verification: Azure PostgreSQL 16 has `vector` enabled; Alembic runs `CREATE EXTENSION IF NOT EXISTS vector` after an operator/CI preflight.
 - [x] 1.2 Verify installed package/API support for `GoogleGenerativeAIEmbeddings`, vector SQL usage, and any required Python `pgvector` helper package if raw SQL is not sufficient.
-- [ ] 1.3 Generate a sample embedding with the configured model and confirm actual vector length matches the planned `LONG_TERM_MEMORY_VECTOR_DIMS`.
+- [x] 1.3 Generate a sample embedding with the configured model and confirm actual vector length matches the planned `LONG_TERM_MEMORY_VECTOR_DIMS`. Production verification: `models/gemini-embedding-001` returned 3072-dimensional vectors and two persisted memory embeddings were verified at 3072 dimensions.
 - [x] 1.4 Add settings for vector search enabled, fallback enabled, embedding model, vector dimensions, distance threshold, and backfill batch size.
 
 ## 2. Database Migration and Indexing

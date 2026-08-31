@@ -23,6 +23,10 @@ The system SHALL run domain recall only for domains the primary assistant delega
 ### Requirement: Branch-local delegation state
 The system SHALL keep `delegated_request`, `turn_constraints`, and `domain_memory_context` on each parallel Send copy, not on shared parent state with last-write reducers.
 
+#### Scenario: Parallel delegation isolation
+- **WHEN** hotel and flight branches execute in parallel
+- **THEN** each branch retains its own delegated request, constraints, and domain memory context without overwriting the other branch
+
 ### Requirement: Structured domain branch results
 Each domain wrapper SHALL return a `DomainBranchResult` object via state update with domain, options, applied_constraints, warnings, and summary.
 
@@ -34,5 +38,13 @@ Each domain wrapper SHALL return a `DomainBranchResult` object via state update 
 ### Requirement: Per-domain turn constraints
 The primary assistant SHALL assign turn constraints per domain and pass only the relevant list to each delegation tool.
 
+#### Scenario: Hotel-only constraints
+- **WHEN** a turn includes hotel and flight constraints
+- **THEN** the hotel delegation receives only hotel-relevant constraints and the flight delegation receives only flight-relevant constraints
+
 ### Requirement: Memory finalize scope
 `memory_finalize` SHALL enqueue durable preference extraction only and SHALL NOT persist MCP results, prices, IDs, search refs, or temporary itineraries.
+
+#### Scenario: Finalize after tool results
+- **WHEN** a turn contains MCP results and temporary itinerary data
+- **THEN** memory finalization enqueues only durable preference extraction and excludes tool results, prices, IDs, search references, and temporary itinerary data
