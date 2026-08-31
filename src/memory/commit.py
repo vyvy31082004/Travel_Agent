@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from memory.consolidation import MemoryTransition, TransitionAction
 from memory.embeddings import MemoryEmbeddingService, memory_content_hash
@@ -52,14 +52,30 @@ class MemoryCommitAdapter:
                 affected.append(memory_id)
                 await self._embed_committed_memory(memory_id, transition.candidate)
             elif transition.action == TransitionAction.SUPERSEDE:
-                if transition.existing_memory_id:
-                    await self._repository.mark_memory_superseded(
-                        transition.existing_memory_id
+                if not transition.existing_memory_id:
+                    decision = "reject"
+                    judgment = replace(
+                        judgment,
+                        decision="reject",
+                        reasons=[
+                            *judgment.reasons,
+                            "supersede requires existing_memory_id",
+                        ],
+                    )
+                else:
+                    candidate = transition.candidate
+                    if not candidate.supersedes_memory_id:
+                        candidate = replace(
+                            candidate,
+                            supersedes_memory_id=transition.existing_memory_id,
+                        )
+                    memory_id = await self._repository.commit_supersede(
+                        existing_memory_id=transition.existing_memory_id,
+                        new_memory=candidate,
                     )
                     affected.append(transition.existing_memory_id)
-                memory_id = await self._repository.insert_memory(transition.candidate)
-                affected.append(memory_id)
-                await self._embed_committed_memory(memory_id, transition.candidate)
+                    affected.append(memory_id)
+                    await self._embed_committed_memory(memory_id, candidate)
             elif transition.action == TransitionAction.NOOP:
                 decision = "noop"
                 if transition.existing_memory_id:

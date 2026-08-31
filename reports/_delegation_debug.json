@@ -1,0 +1,9 @@
+{
+  "destination": "Đà Nẵng",
+  "checkin": "06/09/2026",
+  "checkout": "08/09/2026",
+  "hotel_min": true,
+  "car_min": true,
+  "ToHotelAssistant": "Tìm khách sạn tại Đà Nẵng, check-in 06/09/2026, check-out 08/09/2026, 2 người lớn.",
+  "ToCarAssistant": "Thuê xe tại Đà Nẵng từ 06/09/2026 đến 08/09/2026."
+}

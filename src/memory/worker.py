@@ -13,9 +13,20 @@ from memory.consolidation import (
     build_candidate_extractor,
     calculate_transition,
 )
+from memory.embeddings import MemoryEmbeddingService
 from memory.long_term import MemoryFamily
+from memory.transition import (
+    RelationJudge,
+    ScopeJudge,
+    build_transition_judges,
+    propose_transition,
+)
 from memory.verifier import MemoryVerifierContext, project_memory_state
-from repositories.long_term_memory import MemorySearchFilters, PostgresLongTermMemoryRepository
+from repositories.long_term_memory import (
+    LongTermMemoryRepository,
+    MemorySearchFilters,
+    PostgresLongTermMemoryRepository,
+)
 from settings import Settings
 
 logger = logging.getLogger(__name__)
@@ -39,12 +50,23 @@ class MemoryWorker:
         repository: PostgresLongTermMemoryRepository,
         commit_adapter: MemoryCommitAdapter,
         extractor: MemoryCandidateExtractor | None = None,
+        embedding_service: MemoryEmbeddingService | None = None,
+        scope_judge: ScopeJudge | None = None,
+        relation_judge: RelationJudge | None = None,
     ) -> None:
         self._pool = pool
         self._settings = settings
-        self._repository = repository
+        self._repository: LongTermMemoryRepository = repository
         self._commit_adapter = commit_adapter
         self._extractor = extractor or build_candidate_extractor(settings)
+        self._embedding_service = embedding_service
+        if scope_judge is not None and relation_judge is not None:
+            self._scope_judge = scope_judge
+            self._relation_judge = relation_judge
+        else:
+            built_scope, built_relation = build_transition_judges(settings)
+            self._scope_judge = scope_judge or built_scope
+            self._relation_judge = relation_judge or built_relation
 
     async def process_next(self) -> WorkerResult:
         job = await self._claim_next_job()
@@ -63,21 +85,41 @@ class MemoryWorker:
         if res.error:
             print(f"[Worker] error details: {res.error}")
 
+    async def _load_existing(self, user_id: str):
+        return await self._repository.search_active_memories(
+            MemorySearchFilters(
+                user_id=user_id,
+                families=tuple(MemoryFamily),
+                query=None,
+                limit=self._settings.long_term_memory_text_search_limit,
+            )
+        )
+
+    async def _decide_transition(self, candidate, existing):
+        path = self._settings.long_term_memory_transition_path
+        if path == "lexical":
+            return calculate_transition(candidate, existing)
+        return await propose_transition(
+            candidate,
+            repository=self._repository,
+            scope_judge=self._scope_judge,
+            relation_judge=self._relation_judge,
+            embedder=self._embedding_service,
+            confidence_threshold=(
+                self._settings.long_term_memory_transition_confidence_threshold
+            ),
+            batch_size=self._settings.long_term_memory_transition_batch_size,
+        )
+
     async def _process_claimed_job(self, job: dict[str, Any]) -> WorkerResult:
         job_id = str(job["job_id"])
         try:
-            existing = await self._repository.search_active_memories(
-                MemorySearchFilters(
-                    user_id=str(job["user_id"]),
-                    families=tuple(MemoryFamily),
-                    query=None,
-                    limit=self._settings.long_term_memory_text_search_limit,
-                )
-            )
-            
+            user_id = str(job["user_id"])
+            existing = await self._load_existing(user_id)
+
             candidates = await self._extractor.extract(
                 job.get("messages") or [],
-                user_id=str(job["user_id"]),
+                user_id=user_id,
                 thread_id=str(job["thread_id"]),
                 existing_active=existing,
             )
@@ -89,10 +131,10 @@ class MemoryWorker:
                 )
 
             for candidate in candidates:
-                transition = calculate_transition(candidate, existing)
+                transition = await self._decide_transition(candidate, existing)
                 result = await self._commit_adapter.verify_and_commit(
                     transition=transition,
-                    user_id=str(job["user_id"]),
+                    user_id=user_id,
                     thread_id=str(job["thread_id"]),
                     job_id=job_id,
                     verifier_context=MemoryVerifierContext(
@@ -109,6 +151,8 @@ class MemoryWorker:
                         "affected_memory_ids": result.affected_memory_ids,
                     },
                 )
+                if result.decision in {"approve", "noop"} and result.affected_memory_ids:
+                    existing = await self._load_existing(user_id)
             await self._mark_job(job_id, "completed")
             return WorkerResult(
                 processed=True,

@@ -1,0 +1,541 @@
+{
+  "suite": "transition",
+  "gold_path": "E:\\Travel Agent\\customer-support-agent\\tests\\fixtures\\long_term_memory_eval\\transition_cases.jsonl",
+  "split": "development",
+  "case_count": 65,
+  "report": {
+    "suite": "transition",
+    "metrics": {
+      "transition_accuracy": {
+        "numerator": 65,
+        "denominator": 65,
+        "value": 1.0
+      },
+      "supersession_correctness": {
+        "numerator": 18,
+        "denominator": 18,
+        "value": 1.0
+      }
+    },
+    "cases": [
+      {
+        "case_id": "dup_001",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "dup_002",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "dup_003",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "dup_004",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "dup_005",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "dup_006",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "dup_007",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "dup_008",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "dup_009",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "dup_010",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "dup_011",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "dup_012",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_001",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_002",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_003",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_004",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_005",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_006",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_007",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_008",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_009",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_010",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_011",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "conflict_012",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "condition_001",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "condition_002",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "condition_003",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "condition_004",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "condition_005",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "condition_006",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true
+      },
+      {
+        "case_id": "sensitive_001",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "sensitive_002",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "sensitive_003",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "sensitive_004",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "sensitive_005",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "sensitive_006",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "sensitive_007",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "sensitive_008",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "sensitive_009",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "sensitive_010",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "ambiguous_001",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "ambiguous_002",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "ambiguous_003",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "ambiguous_004",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "ambiguous_005",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "ambiguous_006",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "ambiguous_007",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "ambiguous_008",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true
+      },
+      {
+        "case_id": "insert_001",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_002",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_003",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_004",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_005",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_006",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_007",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_008",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_009",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_010",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_011",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_012",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_013",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_014",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_015",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_016",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      },
+      {
+        "case_id": "insert_017",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true
+      }
+    ],
+    "supersession_cases": [
+      {
+        "case_id": "conflict_001",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "conflict_002",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "conflict_003",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "conflict_004",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "conflict_005",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "conflict_006",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "conflict_007",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "conflict_008",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "conflict_009",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "conflict_010",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "conflict_011",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "conflict_012",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "condition_001",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "condition_002",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "condition_003",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "condition_004",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "condition_005",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      },
+      {
+        "case_id": "condition_006",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true
+      }
+    ]
+  }
+}

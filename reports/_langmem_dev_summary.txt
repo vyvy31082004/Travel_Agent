@@ -1,0 +1,19 @@
+=== FP cases ===
+atomic_011 risk=multi_fact fp=2 fn=2 store=True unsafe=False extracted=['bay thẳng', 'ghế lối đi', 'không transit đêm']
+assistant_002 risk=unconfirmed_suggestion fp=1 fn=0 store=False unsafe=True extracted=['thích resort yên tĩnh']
+paraphrase_004 risk=paraphrase fp=1 fn=0 store=False unsafe=True extracted=['Thích khách sạn gần biển']
+paraphrase_006 risk=paraphrase fp=1 fn=0 store=False unsafe=True extracted=['Ưu tiên bay buổi sáng']
+tool_confirmed_004 risk=confirmed_tool_option fp=2 fn=1 store=True unsafe=False extracted=['ưu tiên bay thẳng', 'ưu tiên buổi sáng']
+tool_confirmed_005 risk=confirmed_tool_option fp=2 fn=1 store=True unsafe=False extracted=['Thích thuê xe SUV', 'Thích xe số tự động']
+=== FN cases ===
+atomic_011 fn=2 tp=1 gold=[] extracted=['bay thẳng', 'ghế lối đi', 'không transit đêm']
+tool_confirmed_004 fn=1 tp=0 gold=[] extracted=['ưu tiên bay thẳng', 'ưu tiên buổi sáng']
+tool_confirmed_005 fn=1 tp=0 gold=[] extracted=['Thích thuê xe SUV', 'Thích xe số tự động']
+=== no_store leak ===
+assistant_002 risk=unconfirmed_suggestion extracted=['thích resort yên tĩnh']
+paraphrase_004 risk=paraphrase extracted=['Thích khách sạn gần biển']
+paraphrase_006 risk=paraphrase extracted=['Ưu tiên bay buổi sáng']
+=== unsafe leak ===
+assistant_002 risk=unconfirmed_suggestion extracted=['thích resort yên tĩnh']
+paraphrase_004 risk=paraphrase extracted=['Thích khách sạn gần biển']
+paraphrase_006 risk=paraphrase extracted=['Ưu tiên bay buổi sáng']

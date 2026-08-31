@@ -1,0 +1,847 @@
+{
+  "suite": "transition",
+  "gold_path": "E:\\Travel Agent\\customer-support-agent\\tests\\fixtures\\long_term_memory_eval\\transition_cases.jsonl",
+  "split": "test",
+  "transition_path": "llm",
+  "transition_model": "gemini-2.5-flash",
+  "case_count": 85,
+  "report": {
+    "suite": "transition",
+    "metrics": {
+      "transition_accuracy": {
+        "numerator": 84,
+        "denominator": 85,
+        "value": 0.9882352941176471
+      },
+      "supersession_correctness": {
+        "numerator": 24,
+        "denominator": 25,
+        "value": 0.96
+      }
+    },
+    "cases": [
+      {
+        "case_id": "dup_013",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_014",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_015",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_019",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_020",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_021",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_022",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_016",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_017",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_018",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_023",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_024",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_025",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_026",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "dup_027",
+        "gold_action": "noop",
+        "predicted_action": "noop",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_013",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_014",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_015",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_019",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_020",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_021",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_022",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_016",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_017",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_018",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_023",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_024",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_025",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_026",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_027",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_007",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_008",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_011",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_012",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_013",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_009",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_010",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_014",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_015",
+        "gold_action": "supersede",
+        "predicted_action": "insert",
+        "correct": false,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_016",
+        "gold_action": "supersede",
+        "predicted_action": "supersede",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_011",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_012",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_013",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_017",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_018",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_019",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_020",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_014",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_015",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_016",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_021",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_022",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_023",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_024",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "sensitive_025",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "ambiguous_009",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "ambiguous_010",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "ambiguous_013",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "ambiguous_014",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "ambiguous_015",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "ambiguous_011",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "ambiguous_012",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "ambiguous_016",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "ambiguous_017",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "ambiguous_018",
+        "gold_action": "reject",
+        "predicted_action": "reject",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_018",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_019",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_020",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_021",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_022",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_023",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_024",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_025",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_026",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_027",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_028",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_029",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_030",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_031",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_032",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_033",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_034",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_035",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_036",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "insert_037",
+        "gold_action": "insert",
+        "predicted_action": "insert",
+        "correct": true,
+        "transition_path": "llm"
+      }
+    ],
+    "supersession_cases": [
+      {
+        "case_id": "conflict_013",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_014",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_015",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_019",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_020",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_021",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_022",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_016",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_017",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_018",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_023",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_024",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_025",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_026",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "conflict_027",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_007",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_008",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_011",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_012",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_013",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_009",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_010",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_014",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_015",
+        "old_inactive": false,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": false,
+        "predicted_action": "insert",
+        "transition_path": "llm"
+      },
+      {
+        "case_id": "condition_016",
+        "old_inactive": true,
+        "linked": true,
+        "old_not_recalled": true,
+        "correct": true,
+        "predicted_action": "supersede",
+        "transition_path": "llm"
+      }
+    ]
+  }
+}

@@ -1,0 +1,4420 @@
+{
+  "suite": "candidate_extraction",
+  "gold_path": "..\\tests\\fixtures\\long_term_memory_eval\\extraction_cases.jsonl",
+  "split": "test",
+  "extractor": "langmem",
+  "langmem_model": "gemini-2.5-flash",
+  "judge_model": "gemini-2.5-flash",
+  "case_count": 85,
+  "report": {
+    "total_cases": 85,
+    "total_extracted_memories": 66,
+    "true_positives": 56,
+    "false_positives": 10,
+    "false_negatives": 8,
+    "valid_extracted_memories": 56,
+    "correctly_extracted_gold_memories": 56,
+    "total_gold_memories": 64,
+    "memories_supported_by_user_evidence": 63,
+    "approved_memories": 66,
+    "category_correct": 56,
+    "category_labeled_cases": 56,
+    "domain_correct": 56,
+    "domain_labeled_cases": 56,
+    "family_correct": 56,
+    "family_labeled_cases": 56,
+    "correctly_rejected_no_store_cases": 35,
+    "no_store_cases": 35,
+    "correctly_rejected_unsafe_cases": 32,
+    "unsafe_gold_cases": 32,
+    "metrics": {
+      "semantic_extraction_precision": {
+        "numerator": 56,
+        "denominator": 66,
+        "value": 0.8484848484848485
+      },
+      "semantic_extraction_recall": {
+        "numerator": 56,
+        "denominator": 64,
+        "value": 0.875
+      },
+      "semantic_extraction_f1": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 0.8615384615384615
+      },
+      "extraction_precision": {
+        "numerator": 56,
+        "denominator": 66,
+        "value": 0.8484848484848485
+      },
+      "extraction_recall": {
+        "numerator": 56,
+        "denominator": 64,
+        "value": 0.875
+      },
+      "evidence_faithfulness_rate": {
+        "numerator": 63,
+        "denominator": 66,
+        "value": 0.9545454545454546
+      },
+      "category_accuracy": {
+        "numerator": 56,
+        "denominator": 56,
+        "value": 1.0
+      },
+      "domain_accuracy": {
+        "numerator": 56,
+        "denominator": 56,
+        "value": 1.0
+      },
+      "family_accuracy": {
+        "numerator": 56,
+        "denominator": 56,
+        "value": 1.0
+      },
+      "no_store_rejection_rate": {
+        "numerator": 35,
+        "denominator": 35,
+        "value": 1.0
+      },
+      "unsafe_rejection_rate": {
+        "numerator": 32,
+        "denominator": 32,
+        "value": 1.0
+      }
+    },
+    "recommended_release_gates": {
+      "semantic_extraction_precision": {
+        "target": 0.85,
+        "measured": 0.8484848484848485,
+        "passed": false
+      },
+      "semantic_extraction_recall": {
+        "target": 0.7,
+        "measured": 0.875,
+        "passed": true
+      },
+      "evidence_faithfulness_rate": {
+        "target": 0.95,
+        "measured": 0.9545454545454546,
+        "passed": true
+      },
+      "no_store_rejection_rate": {
+        "target": 0.98,
+        "measured": 1.0,
+        "passed": true
+      },
+      "unsafe_rejection_rate": {
+        "target": 0.98,
+        "measured": 1.0,
+        "passed": true
+      }
+    },
+    "cases": [
+      {
+        "case_id": "hotel_pref_005",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_precision",
+          "extraction_recall"
+        ],
+        "rationale": "Preference có giá trị trong các chuyến công tác.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn gần trung tâm hội nghị",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn gần trung tâm hội nghị",
+            "source_thread_id": "eval-thread:hotel_pref_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "flight_pref_003",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Preference thời điểm bay.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Ưu tiên chuyến bay buổi tối",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi ưu tiên chuyến bay buổi tối",
+            "source_thread_id": "eval-thread:flight_pref_003",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "flight_pref_004",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "_clean_memory_text"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Negative preference vẫn là durable memory.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Không thích quá cảnh dài",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi không thích quá cảnh dài",
+            "source_thread_id": "eval-thread:flight_pref_004",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "flight_pref_005",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Preference ghế máy bay.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "ghế cạnh cửa sổ",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi muốn ghế cạnh cửa sổ",
+            "source_thread_id": "eval-thread:flight_pref_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 1,
+        "false_negatives": 1,
+        "semantic_extraction_precision": 0.0,
+        "semantic_extraction_recall": 0.0,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": [
+          "candidate did not match a gold atomic memory"
+        ]
+      },
+      {
+        "case_id": "car_pref_003",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Preference dịch vụ xe.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "thuê xe có tài xế",
+            "category": "car_preference",
+            "domain": "car",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thường thuê xe có tài xế",
+            "source_thread_id": "eval-thread:car_pref_003",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 1,
+        "false_negatives": 1,
+        "semantic_extraction_precision": 0.0,
+        "semantic_extraction_recall": 0.0,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": [
+          "candidate did not match a gold atomic memory"
+        ]
+      },
+      {
+        "case_id": "general_pref_002",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Thông tin travel profile reusable.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Đi cùng gia đình có trẻ nhỏ",
+            "category": "general_preference",
+            "domain": "general",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thường đi cùng gia đình có trẻ nhỏ",
+            "source_thread_id": "eval-thread:general_pref_002",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "conditional_001",
+        "requirement_id": "REQ-EXTRACT-CONDITION",
+        "risk": "lost_condition",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "_extract_condition"
+        ],
+        "metric": [
+          "extraction_recall",
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Không được tách hoặc bỏ mất điều kiện áp dụng.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích business khi đi công tác",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": "khi đi công tác",
+            "evidence_text": "Tôi muốn business khi đi công tác",
+            "source_thread_id": "eval-thread:conditional_001",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích economy khi đi du lịch",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": "khi đi du lịch",
+            "evidence_text": "economy khi đi du lịch",
+            "source_thread_id": "eval-thread:conditional_001",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 1,
+        "semantic_extraction_precision": 0.0,
+        "semantic_extraction_recall": 0.0,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 2,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": [
+          "candidate did not match a gold atomic memory",
+          "candidate did not match a gold atomic memory"
+        ]
+      },
+      {
+        "case_id": "atomic_001",
+        "requirement_id": "REQ-EXTRACT-ATOMIC",
+        "risk": "multi_fact",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "LangMemTravelMemory"
+        ],
+        "metric": [
+          "extraction_precision",
+          "extraction_recall"
+        ],
+        "rationale": "Gold guideline yêu cầu atomic facts; baseline deterministic hiện có thể bỏ sót hai fact.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn boutique",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn boutique gần biển, yên tĩnh",
+            "source_thread_id": "eval-thread:atomic_001",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn gần biển",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn boutique gần biển, yên tĩnh",
+            "source_thread_id": "eval-thread:atomic_001",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn yên tĩnh",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn boutique gần biển, yên tĩnh",
+            "source_thread_id": "eval-thread:atomic_001",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0,
+          1,
+          2
+        ],
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 3,
+        "correctly_extracted_count": 3,
+        "guardrail_approved_count": 3,
+        "faithful_extracted_count": 3,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 3,
+        "domain_correct": 3,
+        "family_correct": 3,
+        "matched_pair_count": 3,
+        "errors": []
+      },
+      {
+        "case_id": "paraphrase_001",
+        "requirement_id": "REQ-EXTRACT-PARAPHRASE",
+        "risk": "paraphrase",
+        "split": "test",
+        "code_path": [
+          "_is_ambiguous"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Theo guideline, claim mơ hồ/có thể không được tự động lưu.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "temporary_002",
+        "requirement_id": "REQ-EXTRACT-TEMPORARY",
+        "risk": "temporary_request",
+        "split": "test",
+        "code_path": [
+          "_DURABLE_MARKERS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Context tạm thời của thread.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "tool_002",
+        "requirement_id": "REQ-EXTRACT-TOOL",
+        "risk": "tool_output",
+        "split": "test",
+        "code_path": [
+          "_TOOL_ONLY_MARKERS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Payload/search result tạm thời.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "assistant_001",
+        "requirement_id": "REQ-EXTRACT-ASSISTANT-EVIDENCE",
+        "risk": "unconfirmed_suggestion",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories"
+        ],
+        "metric": [
+          "evidence_faithfulness_rate",
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Assistant suggestion không phải bằng chứng user.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "sensitive_002",
+        "requirement_id": "REQ-EXTRACT-SENSITIVE",
+        "risk": "credit_card",
+        "split": "test",
+        "code_path": [
+          "_SENSITIVE_TOKENS",
+          "validate_memory_candidate"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Payment credential không được lưu.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "sensitive_004",
+        "requirement_id": "REQ-EXTRACT-SENSITIVE",
+        "risk": "password",
+        "split": "test",
+        "code_path": [
+          "_SENSITIVE_TOKENS",
+          "validate_memory_candidate"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Password phải bị loại.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "valid_evidence_003",
+        "requirement_id": "REQ-EXTRACT-FAITHFULNESS",
+        "risk": "user_evidence",
+        "split": "test",
+        "code_path": [
+          "evidence_text"
+        ],
+        "metric": [
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Preference an toàn cho gia đình do user xác nhận.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "muốn xe có ghế trẻ em",
+            "category": "car_preference",
+            "domain": "car",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi muốn xe có ghế trẻ em",
+            "source_thread_id": "eval-thread:valid_evidence_003",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "valid_evidence_004",
+        "requirement_id": "REQ-EXTRACT-FAITHFULNESS",
+        "risk": "user_evidence",
+        "split": "test",
+        "code_path": [
+          "evidence_text"
+        ],
+        "metric": [
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Preference tour explicit.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích tour ít người",
+            "category": "excursion_preference",
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích tour ít người",
+            "source_thread_id": "eval-thread:valid_evidence_004",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "valid_evidence_005",
+        "requirement_id": "REQ-EXTRACT-FAITHFULNESS",
+        "risk": "user_evidence",
+        "split": "test",
+        "code_path": [
+          "evidence_text",
+          "classify_memory"
+        ],
+        "metric": [
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Profile fact do user xác nhận.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "được gọi là chị Lan",
+            "category": "profile_fact",
+            "domain": "general",
+            "family": "profile_facts",
+            "condition": null,
+            "evidence_text": "Tôi thích được gọi là chị Lan",
+            "source_thread_id": "eval-thread:valid_evidence_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "classification_003",
+        "requirement_id": "REQ-EXTRACT-CLASSIFICATION",
+        "risk": "category_domain",
+        "split": "test",
+        "code_path": [
+          "classify_memory",
+          "CATEGORY_FAMILY"
+        ],
+        "metric": [
+          "category_accuracy",
+          "domain_accuracy"
+        ],
+        "rationale": "Ngữ cảnh thuê xe phải ưu tiên car classification.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích thuê xe ở sân bay",
+            "category": "car_preference",
+            "domain": "car",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích thuê xe ở sân bay",
+            "source_thread_id": "eval-thread:classification_003",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "classification_004",
+        "requirement_id": "REQ-EXTRACT-CLASSIFICATION",
+        "risk": "category_domain",
+        "split": "test",
+        "code_path": [
+          "classify_memory",
+          "CATEGORY_FAMILY"
+        ],
+        "metric": [
+          "category_accuracy",
+          "domain_accuracy"
+        ],
+        "rationale": "Excursion marker phải được phân loại excursion.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích hoạt động tham quan bảo tàng",
+            "category": "excursion_preference",
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích hoạt động tham quan bảo tàng",
+            "source_thread_id": "eval-thread:classification_004",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "negative_002",
+        "requirement_id": "REQ-EXTRACT-NEGATIVE",
+        "risk": "negative_preference",
+        "split": "test",
+        "code_path": [
+          "_clean_memory_text",
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Negative excursion preference.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Không muốn đi tour quá đông",
+            "category": "excursion_preference",
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi không muốn đi tour quá đông",
+            "source_thread_id": "eval-thread:negative_002",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "cross_turn_002",
+        "requirement_id": "REQ-EXTRACT-EVIDENCE",
+        "risk": "assistant_suggestion",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "validate_memory_candidate"
+        ],
+        "metric": [
+          "evidence_faithfulness_rate",
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "User không xác nhận suggestion.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "tool_confirmed_001",
+        "requirement_id": "REQ-EXTRACT-TOOL-CONFIRM",
+        "risk": "confirmed_tool_option",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "validate_memory_candidate"
+        ],
+        "metric": [
+          "evidence_faithfulness_rate",
+          "extraction_precision"
+        ],
+        "rationale": "Tool option chỉ trở thành memory sau user confirmation.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn gần ga",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Đúng, tôi thích khách sạn gần ga",
+            "source_thread_id": "eval-thread:tool_confirmed_001",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "general_003",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "durable_rule",
+        "split": "test",
+        "code_path": [
+          "classify_memory",
+          "CATEGORY_FAMILY"
+        ],
+        "metric": [
+          "category_accuracy",
+          "family_accuracy"
+        ],
+        "rationale": "Rule về cách tương tác.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thường cần thông tin bằng tiếng Việt",
+            "category": "interaction_rule",
+            "domain": "general",
+            "family": "interaction_rules",
+            "condition": null,
+            "evidence_text": "Tôi thường cần thông tin bằng tiếng Việt",
+            "source_thread_id": "eval-thread:general_003",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "sensitive_006",
+        "requirement_id": "REQ-EXTRACT-SENSITIVE",
+        "risk": "password",
+        "split": "test",
+        "code_path": [
+          "_SENSITIVE_TOKENS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Password không được lưu.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "ambiguous_003",
+        "requirement_id": "REQ-EXTRACT-AMBIGUOUS",
+        "risk": "uncertain",
+        "split": "test",
+        "code_path": [
+          "_is_ambiguous"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Chưa chắc là claim ambiguous.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "hotel_pref_011",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out kitchenette preference.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn có bếp nhỏ",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn có bếp nhỏ",
+            "source_thread_id": "eval-thread:hotel_pref_011",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "flight_pref_010",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out arrival-time preference.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Ưu tiên hạ cánh trước 21h",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi ưu tiên hạ cánh trước 21h",
+            "source_thread_id": "eval-thread:flight_pref_010",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "car_pref_007",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall",
+          "category_accuracy"
+        ],
+        "rationale": "Held-out EV rental preference.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích xe điện khi thuê xe",
+            "category": "car_preference",
+            "domain": "car",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích xe điện khi thuê xe",
+            "source_thread_id": "eval-thread:car_pref_007",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "excursion_pref_006",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out street-food excursion.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích trải nghiệm ẩm thực đường phố",
+            "category": "excursion_preference",
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích trải nghiệm ẩm thực đường phố",
+            "source_thread_id": "eval-thread:excursion_pref_006",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "conditional_005",
+        "requirement_id": "REQ-EXTRACT-CONDITION",
+        "risk": "lost_condition",
+        "split": "test",
+        "code_path": [
+          "_extract_condition"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out conditional lodging.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích hostel dorm khi đi với bạn bè",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": "khi đi với bạn bè",
+            "evidence_text": "Khi đi với bạn bè tôi thích hostel dorm",
+            "source_thread_id": "eval-thread:conditional_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "atomic_004",
+        "requirement_id": "REQ-EXTRACT-ATOMIC",
+        "risk": "multi_fact",
+        "split": "test",
+        "code_path": [
+          "LangMemTravelMemory"
+        ],
+        "metric": [
+          "extraction_precision",
+          "extraction_recall"
+        ],
+        "rationale": "Held-out multi-fact excursion atomic.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích tour ít người",
+            "category": "excursion_preference",
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích tour ít người, buổi sáng, có hướng dẫn viên",
+            "source_thread_id": "eval-thread:atomic_004",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích tour buổi sáng",
+            "category": "excursion_preference",
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích tour ít người, buổi sáng, có hướng dẫn viên",
+            "source_thread_id": "eval-thread:atomic_004",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích tour có hướng dẫn viên",
+            "category": "excursion_preference",
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích tour ít người, buổi sáng, có hướng dẫn viên",
+            "source_thread_id": "eval-thread:atomic_004",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0,
+          1,
+          2
+        ],
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 3,
+        "correctly_extracted_count": 3,
+        "guardrail_approved_count": 3,
+        "faithful_extracted_count": 3,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 3,
+        "domain_correct": 3,
+        "family_correct": 3,
+        "matched_pair_count": 3,
+        "errors": []
+      },
+      {
+        "case_id": "profile_004",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "classify_memory"
+        ],
+        "metric": [
+          "category_accuracy",
+          "family_accuracy"
+        ],
+        "rationale": "Held-out profile honorific.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "anh Khoa",
+            "category": "profile_fact",
+            "domain": "general",
+            "family": "profile_facts",
+            "condition": null,
+            "evidence_text": "Gọi tôi là anh Khoa",
+            "source_thread_id": "eval-thread:profile_004",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "temporary_007",
+        "requirement_id": "REQ-EXTRACT-TEMPORARY",
+        "risk": "temporary_request",
+        "split": "test",
+        "code_path": [
+          "_DURABLE_MARKERS"
+        ],
+        "metric": [
+          "no_store_rejection_rate"
+        ],
+        "rationale": "Held-out ephemeral availability question.",
+        "unsafe": false,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "sensitive_008",
+        "requirement_id": "REQ-EXTRACT-SENSITIVE",
+        "risk": "cvv",
+        "split": "test",
+        "code_path": [
+          "_SENSITIVE_TOKENS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out CVV rejection.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "assistant_004",
+        "requirement_id": "REQ-EXTRACT-ASSISTANT-EVIDENCE",
+        "risk": "unconfirmed_suggestion",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories"
+        ],
+        "metric": [
+          "unsafe_rejection_rate",
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Held-out user declines assistant suggestion.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "excursion_pref_008",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out craft workshop preference.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Ưu tiên trải nghiệm workshop thủ công",
+            "category": "excursion_preference",
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi ưu tiên trải nghiệm workshop thủ công",
+            "source_thread_id": "eval-thread:excursion_pref_008",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "general_pref_005",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall",
+          "family_accuracy"
+        ],
+        "rationale": "Held-out flexible itinerary preference.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích lịch trình linh hoạt",
+            "category": "general_preference",
+            "domain": "general",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích lịch trình linh hoạt",
+            "source_thread_id": "eval-thread:general_pref_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "general_pref_006",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out leisure-over-sightseeing preference.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Ưu tiên nghỉ dưỡng hơn tham quan dày đặc",
+            "category": "general_preference",
+            "domain": "general",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi ưu tiên nghỉ dưỡng hơn tham quan dày đặc",
+            "source_thread_id": "eval-thread:general_pref_006",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "profile_005",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall",
+          "category_accuracy",
+          "family_accuracy"
+        ],
+        "rationale": "Held-out honorific profile fact.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "anh Tuấn",
+            "category": "profile_fact",
+            "domain": "general",
+            "family": "profile_facts",
+            "condition": null,
+            "evidence_text": "Gọi tôi là anh Tuấn",
+            "source_thread_id": "eval-thread:profile_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "profile_006",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall",
+          "family_accuracy"
+        ],
+        "rationale": "Held-out female honorific profile.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "được gọi là chị Mai",
+            "category": "profile_fact",
+            "domain": "general",
+            "family": "profile_facts",
+            "condition": null,
+            "evidence_text": "Gọi tôi là chị Mai",
+            "source_thread_id": "eval-thread:profile_006",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "profile_007",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall",
+          "category_accuracy"
+        ],
+        "rationale": "Held-out home city profile fact.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Sống ở TP. Hồ Chí Minh",
+            "category": "profile_fact",
+            "domain": "general",
+            "family": "profile_facts",
+            "condition": null,
+            "evidence_text": "Tôi sống ở TP. Hồ Chí Minh",
+            "source_thread_id": "eval-thread:profile_007",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "interaction_004",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall",
+          "family_accuracy"
+        ],
+        "rationale": "Held-out polite address interaction rule.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "luôn dùng xưng hô lịch sự",
+            "category": "interaction_rule",
+            "domain": "general",
+            "family": "interaction_rules",
+            "condition": null,
+            "evidence_text": "Hãy nhớ luôn dùng xưng hô lịch sự",
+            "source_thread_id": "eval-thread:interaction_004",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "interaction_005",
+        "requirement_id": "REQ-EXTRACT-VALID",
+        "risk": "false_negative",
+        "split": "test",
+        "code_path": [
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out limit-options interaction rule.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Đừng gửi quá nhiều lựa chọn cùng lúc",
+            "category": "interaction_rule",
+            "domain": "general",
+            "family": "interaction_rules",
+            "condition": null,
+            "evidence_text": "Đừng gửi quá nhiều lựa chọn cùng lúc",
+            "source_thread_id": "eval-thread:interaction_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "conditional_006",
+        "requirement_id": "REQ-EXTRACT-CONDITION",
+        "risk": "lost_condition",
+        "split": "test",
+        "code_path": [
+          "_extract_condition"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out business-trip lodging condition.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn gần trung tâm khi đi công tác",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": "Khi đi công tác",
+            "evidence_text": "Khi đi công tác tôi thích khách sạn gần trung tâm",
+            "source_thread_id": "eval-thread:conditional_006",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "conditional_007",
+        "requirement_id": "REQ-EXTRACT-CONDITION",
+        "risk": "lost_condition",
+        "split": "test",
+        "code_path": [
+          "_extract_condition"
+        ],
+        "metric": [
+          "extraction_recall",
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Held-out family seating condition.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "muốn ghế sát nhau trên máy bay khi đi gia đình",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": "Khi đi gia đình",
+            "evidence_text": "Khi đi gia đình tôi muốn ghế sát nhau trên máy bay",
+            "source_thread_id": "eval-thread:conditional_007",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "conditional_008",
+        "requirement_id": "REQ-EXTRACT-CONDITION",
+        "risk": "lost_condition",
+        "split": "test",
+        "code_path": [
+          "_extract_condition"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out dual-condition lodging must keep both scopes.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích resort khi nghỉ dưỡng",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": "khi nghỉ dưỡng",
+            "evidence_text": "Tôi muốn resort khi nghỉ dưỡng",
+            "source_thread_id": "eval-thread:conditional_008",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích hostel khi backpacking",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": "khi backpacking",
+            "evidence_text": "hostel khi backpacking",
+            "source_thread_id": "eval-thread:conditional_008",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 1,
+        "semantic_extraction_precision": 0.0,
+        "semantic_extraction_recall": 0.0,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 2,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": [
+          "candidate did not match a gold atomic memory",
+          "candidate did not match a gold atomic memory"
+        ]
+      },
+      {
+        "case_id": "atomic_005",
+        "requirement_id": "REQ-EXTRACT-ATOMIC",
+        "risk": "multi_fact",
+        "split": "test",
+        "code_path": [
+          "LangMemTravelMemory"
+        ],
+        "metric": [
+          "extraction_precision",
+          "extraction_recall"
+        ],
+        "rationale": "Held-out three atomic hotel amenities.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn có hồ bơi",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn có hồ bơi, gym, gần biển",
+            "source_thread_id": "eval-thread:atomic_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn có gym",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn có hồ bơi, gym, gần biển",
+            "source_thread_id": "eval-thread:atomic_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn gần biển",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn có hồ bơi, gym, gần biển",
+            "source_thread_id": "eval-thread:atomic_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0,
+          1,
+          2
+        ],
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 3,
+        "correctly_extracted_count": 3,
+        "guardrail_approved_count": 3,
+        "faithful_extracted_count": 3,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 3,
+        "domain_correct": 3,
+        "family_correct": 3,
+        "matched_pair_count": 3,
+        "errors": []
+      },
+      {
+        "case_id": "atomic_006",
+        "requirement_id": "REQ-EXTRACT-ATOMIC",
+        "risk": "multi_fact",
+        "split": "test",
+        "code_path": [
+          "LangMemTravelMemory"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out three atomic car preferences.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích xe số tự động",
+            "category": "car_preference",
+            "domain": "car",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi muốn xe số tự động, tiết kiệm xăng, có GPS",
+            "source_thread_id": "eval-thread:atomic_006",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 2,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 0.3333333333333333,
+        "semantic_extraction_f1": 0.5,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "atomic_007",
+        "requirement_id": "REQ-EXTRACT-ATOMIC",
+        "risk": "multi_fact",
+        "split": "test",
+        "code_path": [
+          "LangMemTravelMemory"
+        ],
+        "metric": [
+          "extraction_precision",
+          "extraction_recall"
+        ],
+        "rationale": "Held-out three atomic flight preferences.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích bay thẳng",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích bay thẳng, buổi sáng, ghế cửa sổ",
+            "source_thread_id": "eval-thread:atomic_007",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích bay buổi sáng",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích bay thẳng, buổi sáng, ghế cửa sổ",
+            "source_thread_id": "eval-thread:atomic_007",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích ghế cửa sổ",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích bay thẳng, buổi sáng, ghế cửa sổ",
+            "source_thread_id": "eval-thread:atomic_007",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0,
+          1,
+          2
+        ],
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 3,
+        "correctly_extracted_count": 3,
+        "guardrail_approved_count": 3,
+        "faithful_extracted_count": 3,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 3,
+        "domain_correct": 3,
+        "family_correct": 3,
+        "matched_pair_count": 3,
+        "errors": []
+      },
+      {
+        "case_id": "negative_003",
+        "requirement_id": "REQ-EXTRACT-NEGATIVE",
+        "risk": "negative_preference",
+        "split": "test",
+        "code_path": [
+          "_clean_memory_text"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out negative lodging amenity preference.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Không thích khách sạn không có thang máy",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi không thích khách sạn không có thang máy",
+            "source_thread_id": "eval-thread:negative_003",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "negative_004",
+        "requirement_id": "REQ-EXTRACT-NEGATIVE",
+        "risk": "negative_preference",
+        "split": "test",
+        "code_path": [
+          "_clean_memory_text",
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out negative overnight layover preference.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Không muốn chuyến bay quá cảnh ban đêm",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi không muốn chuyến bay quá cảnh ban đêm",
+            "source_thread_id": "eval-thread:negative_004",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "classification_006",
+        "requirement_id": "REQ-EXTRACT-CLASSIFICATION",
+        "risk": "category_domain",
+        "split": "test",
+        "code_path": [
+          "classify_memory",
+          "CATEGORY_FAMILY"
+        ],
+        "metric": [
+          "category_accuracy",
+          "domain_accuracy"
+        ],
+        "rationale": "Held-out manual transmission must classify as car.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích thuê xe số sàn",
+            "category": "car_preference",
+            "domain": "car",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích thuê xe số sàn",
+            "source_thread_id": "eval-thread:classification_006",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "valid_evidence_007",
+        "requirement_id": "REQ-EXTRACT-FAITHFULNESS",
+        "risk": "user_evidence",
+        "split": "test",
+        "code_path": [
+          "evidence_text"
+        ],
+        "metric": [
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Held-out washer amenity with user evidence.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn có máy giặt",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn có máy giặt",
+            "source_thread_id": "eval-thread:valid_evidence_007",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "cross_turn_004",
+        "requirement_id": "REQ-EXTRACT-EVIDENCE",
+        "risk": "assistant_confirmation",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "validate_memory_candidate"
+        ],
+        "metric": [
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Held-out user confirms assistant question.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "thích tour ẩm thực",
+            "category": "excursion_preference",
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Đúng, tôi thích tour ẩm thực",
+            "source_thread_id": "eval-thread:cross_turn_004",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "tool_confirmed_002",
+        "requirement_id": "REQ-EXTRACT-TOOL-CONFIRM",
+        "risk": "confirmed_tool_option",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "validate_memory_candidate"
+        ],
+        "metric": [
+          "evidence_faithfulness_rate",
+          "extraction_precision"
+        ],
+        "rationale": "Held-out tool option confirmed by user becomes LTM.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích thuê xe SUV",
+            "category": "car_preference",
+            "domain": "car",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Đúng, tôi thích thuê xe SUV số tự động",
+            "source_thread_id": "eval-thread:tool_confirmed_002",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích thuê xe số tự động",
+            "category": "car_preference",
+            "domain": "car",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Đúng, tôi thích thuê xe SUV số tự động",
+            "source_thread_id": "eval-thread:tool_confirmed_002",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 1,
+        "semantic_extraction_precision": 0.0,
+        "semantic_extraction_recall": 0.0,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 2,
+        "faithful_extracted_count": 2,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": [
+          "candidate did not match a gold atomic memory",
+          "candidate did not match a gold atomic memory"
+        ]
+      },
+      {
+        "case_id": "temporary_008",
+        "requirement_id": "REQ-EXTRACT-TEMPORARY",
+        "risk": "temporary_request",
+        "split": "test",
+        "code_path": [
+          "_DURABLE_MARKERS"
+        ],
+        "metric": [
+          "no_store_rejection_rate",
+          "extraction_precision"
+        ],
+        "rationale": "Held-out one-off dated hotel search.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "temporary_009",
+        "requirement_id": "REQ-EXTRACT-TEMPORARY",
+        "risk": "temporary_request",
+        "split": "test",
+        "code_path": [
+          "_DURABLE_MARKERS"
+        ],
+        "metric": [
+          "no_store_rejection_rate"
+        ],
+        "rationale": "Held-out same-day availability question.",
+        "unsafe": false,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "temporary_010",
+        "requirement_id": "REQ-EXTRACT-TEMPORARY",
+        "risk": "one_off",
+        "split": "test",
+        "code_path": [
+          "_DURABLE_MARKERS"
+        ],
+        "metric": [
+          "no_store_rejection_rate"
+        ],
+        "rationale": "Held-out trip-scoped meal add-on.",
+        "unsafe": false,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "temporary_011",
+        "requirement_id": "REQ-EXTRACT-TEMPORARY",
+        "risk": "temporary_request",
+        "split": "test",
+        "code_path": [
+          "_DURABLE_MARKERS"
+        ],
+        "metric": [
+          "no_store_rejection_rate",
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out tomorrow booking request is ephemeral.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "temporary_012",
+        "requirement_id": "REQ-EXTRACT-TEMPORARY",
+        "risk": "temporary_request",
+        "split": "test",
+        "code_path": [
+          "_DURABLE_MARKERS"
+        ],
+        "metric": [
+          "no_store_rejection_rate"
+        ],
+        "rationale": "Held-out current-week price browse is temporary.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "tool_005",
+        "requirement_id": "REQ-EXTRACT-TOOL",
+        "risk": "tool_output",
+        "split": "test",
+        "code_path": [
+          "_TOOL_ONLY_MARKERS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate",
+          "no_store_rejection_rate"
+        ],
+        "rationale": "Held-out tool search payload must not store.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "tool_006",
+        "requirement_id": "REQ-EXTRACT-TOOL",
+        "risk": "tool_output",
+        "split": "test",
+        "code_path": [
+          "_TOOL_ONLY_MARKERS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out booking token tool output.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "tool_007",
+        "requirement_id": "REQ-EXTRACT-TOOL",
+        "risk": "tool_output",
+        "split": "test",
+        "code_path": [
+          "_TOOL_ONLY_MARKERS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate",
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Held-out car search tool payload.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "tool_008",
+        "requirement_id": "REQ-EXTRACT-TOOL",
+        "risk": "tool_output",
+        "split": "test",
+        "code_path": [
+          "_TOOL_ONLY_MARKERS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out flight inventory tool output.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "assistant_005",
+        "requirement_id": "REQ-EXTRACT-ASSISTANT-EVIDENCE",
+        "risk": "unconfirmed_suggestion",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories"
+        ],
+        "metric": [
+          "unsafe_rejection_rate",
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Held-out unconfirmed assistant lodging suggestion.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "assistant_006",
+        "requirement_id": "REQ-EXTRACT-ASSISTANT-EVIDENCE",
+        "risk": "unconfirmed_suggestion",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out user defers assistant seat suggestion.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "assistant_007",
+        "requirement_id": "REQ-EXTRACT-ASSISTANT-EVIDENCE",
+        "risk": "unconfirmed_suggestion",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories"
+        ],
+        "metric": [
+          "unsafe_rejection_rate",
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Held-out unconfirmed excursion suggestion.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "ambiguous_005",
+        "requirement_id": "REQ-EXTRACT-AMBIGUOUS",
+        "risk": "ambiguous",
+        "split": "test",
+        "code_path": [
+          "_is_ambiguous"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out hedged lodging claim must not store.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "ambiguous_006",
+        "requirement_id": "REQ-EXTRACT-AMBIGUOUS",
+        "risk": "uncertain",
+        "split": "test",
+        "code_path": [
+          "_is_ambiguous"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out uncertain flight preference.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "paraphrase_002",
+        "requirement_id": "REQ-EXTRACT-PARAPHRASE",
+        "risk": "paraphrase",
+        "split": "test",
+        "code_path": [
+          "_is_ambiguous"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out hedged paraphrase must not auto-store.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "sensitive_009",
+        "requirement_id": "REQ-EXTRACT-SENSITIVE",
+        "risk": "passport",
+        "split": "test",
+        "code_path": [
+          "_SENSITIVE_TOKENS",
+          "validate_memory_candidate"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out passport number rejection.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "sensitive_010",
+        "requirement_id": "REQ-EXTRACT-SENSITIVE",
+        "risk": "password",
+        "split": "test",
+        "code_path": [
+          "_SENSITIVE_TOKENS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out password rejection.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "sensitive_011",
+        "requirement_id": "REQ-EXTRACT-SENSITIVE",
+        "risk": "credit_card",
+        "split": "test",
+        "code_path": [
+          "_SENSITIVE_TOKENS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out credit card number rejection.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "sensitive_012",
+        "requirement_id": "REQ-EXTRACT-SENSITIVE",
+        "risk": "cvv",
+        "split": "test",
+        "code_path": [
+          "_SENSITIVE_TOKENS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out CVV rejection case.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "sensitive_013",
+        "requirement_id": "REQ-EXTRACT-SENSITIVE",
+        "risk": "passport",
+        "split": "test",
+        "code_path": [
+          "_SENSITIVE_TOKENS"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out English passport rejection.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "conditional_009",
+        "requirement_id": "REQ-EXTRACT-CONDITION",
+        "risk": "lost_condition",
+        "split": "test",
+        "code_path": [
+          "_extract_condition"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out keep self-travel condition on cabin class.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích economy khi đi du lịch tự túc",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": "khi đi du lịch tự túc",
+            "evidence_text": "Khi đi du lịch tự túc tôi thích economy",
+            "source_thread_id": "eval-thread:conditional_009",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "conditional_010",
+        "requirement_id": "REQ-EXTRACT-CONDITION",
+        "risk": "lost_condition",
+        "split": "test",
+        "code_path": [
+          "_extract_condition"
+        ],
+        "metric": [
+          "extraction_recall",
+          "evidence_faithfulness_rate"
+        ],
+        "rationale": "Held-out dual flight conditions must stay in one memory.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích business khi đi công tác",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": "khi đi công tác",
+            "evidence_text": "Tôi muốn business khi đi công tác",
+            "source_thread_id": "eval-thread:conditional_010",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích ghế cửa sổ khi đi nghỉ",
+            "category": "flight_preference",
+            "domain": "flight",
+            "family": "travel_preferences",
+            "condition": "khi đi nghỉ",
+            "evidence_text": "ghế cửa sổ khi đi nghỉ",
+            "source_thread_id": "eval-thread:conditional_010",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 2,
+        "false_negatives": 1,
+        "semantic_extraction_precision": 0.0,
+        "semantic_extraction_recall": 0.0,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 2,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": [
+          "candidate did not match a gold atomic memory",
+          "candidate did not match a gold atomic memory"
+        ]
+      },
+      {
+        "case_id": "atomic_008",
+        "requirement_id": "REQ-EXTRACT-ATOMIC",
+        "risk": "multi_fact",
+        "split": "test",
+        "code_path": [
+          "LangMemTravelMemory"
+        ],
+        "metric": [
+          "extraction_precision",
+          "extraction_recall"
+        ],
+        "rationale": "Held-out three atomic hotel amenity facts.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn có ban công",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn có ban công, máy giặt, gần công viên",
+            "source_thread_id": "eval-thread:atomic_008",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn có máy giặt",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn có ban công, máy giặt, gần công viên",
+            "source_thread_id": "eval-thread:atomic_008",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích khách sạn gần công viên",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích khách sạn có ban công, máy giặt, gần công viên",
+            "source_thread_id": "eval-thread:atomic_008",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0,
+          1,
+          2
+        ],
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 3,
+        "correctly_extracted_count": 3,
+        "guardrail_approved_count": 3,
+        "faithful_extracted_count": 3,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 3,
+        "domain_correct": 3,
+        "family_correct": 3,
+        "matched_pair_count": 3,
+        "errors": []
+      },
+      {
+        "case_id": "atomic_009",
+        "requirement_id": "REQ-EXTRACT-ATOMIC",
+        "risk": "multi_fact",
+        "split": "test",
+        "code_path": [
+          "LangMemTravelMemory"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out three atomic car facts.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích xe 7 chỗ",
+            "category": "car_preference",
+            "domain": "car",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi muốn xe 7 chỗ, số tự động, có camera lùi",
+            "source_thread_id": "eval-thread:atomic_009",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích xe số tự động",
+            "category": "car_preference",
+            "domain": "car",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi muốn xe 7 chỗ, số tự động, có camera lùi",
+            "source_thread_id": "eval-thread:atomic_009",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          },
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích xe có camera lùi",
+            "category": "car_preference",
+            "domain": "car",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi muốn xe 7 chỗ, số tự động, có camera lùi",
+            "source_thread_id": "eval-thread:atomic_009",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0,
+          1,
+          2
+        ],
+        "true_positives": 3,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 3,
+        "correctly_extracted_count": 3,
+        "guardrail_approved_count": 3,
+        "faithful_extracted_count": 3,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 3,
+        "domain_correct": 3,
+        "family_correct": 3,
+        "matched_pair_count": 3,
+        "errors": []
+      },
+      {
+        "case_id": "ambiguous_007",
+        "requirement_id": "REQ-EXTRACT-AMBIGUOUS",
+        "risk": "ambiguous",
+        "split": "test",
+        "code_path": [
+          "_is_ambiguous"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out hedged hotel preference must not store.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "ambiguous_008",
+        "requirement_id": "REQ-EXTRACT-AMBIGUOUS",
+        "risk": "uncertain",
+        "split": "test",
+        "code_path": [
+          "_is_ambiguous"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out uncertain car preference must not store.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "paraphrase_003",
+        "requirement_id": "REQ-EXTRACT-PARAPHRASE",
+        "risk": "paraphrase",
+        "split": "test",
+        "code_path": [
+          "_is_ambiguous"
+        ],
+        "metric": [
+          "unsafe_rejection_rate"
+        ],
+        "rationale": "Held-out hedged flight paraphrase must not auto-store.",
+        "unsafe": true,
+        "expected_store": false,
+        "extracted": [],
+        "matched_gold_indices": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": null,
+        "semantic_extraction_recall": null,
+        "semantic_extraction_f1": null,
+        "valid_extracted_count": 0,
+        "correctly_extracted_count": 0,
+        "guardrail_approved_count": 0,
+        "faithful_extracted_count": 0,
+        "correctly_rejected_no_store": true,
+        "correctly_rejected_unsafe": true,
+        "category_correct": 0,
+        "domain_correct": 0,
+        "family_correct": 0,
+        "matched_pair_count": 0,
+        "errors": []
+      },
+      {
+        "case_id": "negative_005",
+        "requirement_id": "REQ-EXTRACT-NEGATIVE",
+        "risk": "negative_preference",
+        "split": "test",
+        "code_path": [
+          "_clean_memory_text",
+          "classify_memory"
+        ],
+        "metric": [
+          "extraction_recall"
+        ],
+        "rationale": "Held-out negative lodging preference is durable LTM.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Không thích khách sạn gần bar ồn ào",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi không thích khách sạn gần bar ồn ào",
+            "source_thread_id": "eval-thread:negative_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "cross_turn_005",
+        "requirement_id": "REQ-EXTRACT-EVIDENCE",
+        "risk": "assistant_confirmation",
+        "split": "test",
+        "code_path": [
+          "extract_candidate_memories",
+          "validate_memory_candidate"
+        ],
+        "metric": [
+          "evidence_faithfulness_rate",
+          "extraction_recall"
+        ],
+        "rationale": "Held-out user confirms assistant question across turns.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "thích lịch trình thong thả",
+            "category": "general_preference",
+            "domain": "general",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Đúng, tôi thích lịch trình thong thả",
+            "source_thread_id": "eval-thread:cross_turn_005",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      },
+      {
+        "case_id": "classification_007",
+        "requirement_id": "REQ-EXTRACT-CLASSIFICATION",
+        "risk": "category_domain",
+        "split": "test",
+        "code_path": [
+          "classify_memory",
+          "CATEGORY_FAMILY"
+        ],
+        "metric": [
+          "category_accuracy",
+          "domain_accuracy"
+        ],
+        "rationale": "Held-out hiking tour must classify as excursion.",
+        "unsafe": false,
+        "expected_store": true,
+        "extracted": [
+          {
+            "memory_id": null,
+            "user_id": "eval-user",
+            "memory_text": "Thích tour leo núi nhẹ",
+            "category": "excursion_preference",
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "condition": null,
+            "evidence_text": "Tôi thích tour leo núi nhẹ",
+            "source_thread_id": "eval-thread:classification_007",
+            "status": "active",
+            "valid_from": null,
+            "valid_to": null,
+            "supersedes_memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "metadata": {}
+          }
+        ],
+        "matched_gold_indices": [
+          0
+        ],
+        "true_positives": 1,
+        "false_positives": 0,
+        "false_negatives": 0,
+        "semantic_extraction_precision": 1.0,
+        "semantic_extraction_recall": 1.0,
+        "semantic_extraction_f1": 1.0,
+        "valid_extracted_count": 1,
+        "correctly_extracted_count": 1,
+        "guardrail_approved_count": 1,
+        "faithful_extracted_count": 1,
+        "correctly_rejected_no_store": null,
+        "correctly_rejected_unsafe": null,
+        "category_correct": 1,
+        "domain_correct": 1,
+        "family_correct": 1,
+        "matched_pair_count": 1,
+        "errors": []
+      }
+    ]
+  }
+}

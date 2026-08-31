@@ -1,15 +1,57 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 from dataclasses import dataclass, field, replace
 from typing import Any, Protocol, Sequence
+
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_google_genai import ChatGoogleGenerativeAI
+from pydantic import BaseModel, Field
 
 from memory.consolidation import MemoryTransition, TransitionAction
 from memory.long_term import MemoryStatus, TravelMemory
 from settings import Settings
 
 logger = logging.getLogger(__name__)
+
+TRUSTMEM_SYSTEM_PROMPT = """You are a frozen TrustMem-style verifier for a travel assistant.
+Score a proposed local memory transition z_t = (chunk, M_old, actions, M_new).
+
+Return scores in [0, 1] with short reasons.
+
+Dimensions:
+- coverage: durable user facts/preferences in the chunk are preserved in proposed memory changes.
+- preservation: valid old memories are not incorrectly deleted, distorted, over-generalized, or merged with lost conditions (e.g. business vs leisure, family vs solo).
+- faithfulness: new/changed memory is supported by the user's own evidence in the chunk or by valid M_old. Tool/API search results alone are not user preferences.
+
+Be conservative. If evidence is missing or the candidate looks like tool output, lower faithfulness sharply."""
+
+
+class TrustMemLlmScores(BaseModel):
+    coverage_score: float = Field(ge=0, le=1)
+    coverage_reason: str
+    preservation_score: float = Field(ge=0, le=1)
+    preservation_reason: str
+    faithfulness_score: float = Field(ge=0, le=1)
+    faithfulness_reason: str
+
+    def to_dimension_dict(self) -> dict[str, dict[str, Any]]:
+        return {
+            "coverage": {
+                "score": self.coverage_score,
+                "reason": self.coverage_reason,
+            },
+            "preservation": {
+                "score": self.preservation_score,
+                "reason": self.preservation_reason,
+            },
+            "faithfulness": {
+                "score": self.faithfulness_score,
+                "reason": self.faithfulness_reason,
+            },
+        }
 
 
 @dataclass(frozen=True)
@@ -119,6 +161,7 @@ class TrustMemInspiredMemoryVerifier:
         faithfulness_threshold: float,
         timeout_seconds: int = 30,
         scorer: Any | None = None,
+        fallback: MemoryVerifier | None = None,
     ) -> None:
         self._model = model
         self._prompt_version = prompt_version
@@ -126,7 +169,13 @@ class TrustMemInspiredMemoryVerifier:
         self._preservation_threshold = preservation_threshold
         self._faithfulness_threshold = faithfulness_threshold
         self._timeout_seconds = timeout_seconds
-        self._scorer = scorer or self._heuristic_scores
+        self._fallback = fallback or DeterministicMemoryVerifier()
+        if scorer is not None:
+            self._scorer = scorer
+        elif _uses_heuristic_model(model):
+            self._scorer = self._heuristic_scores
+        else:
+            self._scorer = self._llm_scores
 
     async def evaluate(
         self,
@@ -157,14 +206,27 @@ class TrustMemInspiredMemoryVerifier:
             )
             dimensions = self._normalize_dimensions(dimensions)
         except Exception as exc:
-            logger.warning("trustmem verifier failed or timed out: %s", exc)
+            fallback_reason = _format_verifier_error(exc)
+            logger.warning(
+                "trustmem verifier failed or timed out; falling back to deterministic: %s",
+                fallback_reason,
+            )
+            # A failed/unavailable scorer cannot prove any dimension. Keep the
+            # transition out of the commit path and preserve a dimension-shaped
+            # audit record; retry is safer than silently approving a transition
+            # on an unavailable verifier.
             return VerifierResult(
                 "retry",
-                ["trustmem verifier failed or returned malformed output"],
+                [
+                    "trustmem verifier failed; transition requires retry",
+                ],
                 model=self._model,
                 prompt_version=self._prompt_version,
                 mode="trustmem",
-                fallback_reason=str(exc),
+                dimensions=self._failed_dimensions(
+                    f"verifier unavailable: {fallback_reason}"
+                ),
+                fallback_reason=fallback_reason,
             )
 
         failed = [name for name, score in dimensions.items() if not score.passed]
@@ -197,6 +259,17 @@ class TrustMemInspiredMemoryVerifier:
             mode="trustmem",
             dimensions=dimensions,
         )
+
+    def _failed_dimensions(self, reason: str) -> dict[str, VerifierDimensionScore]:
+        return {
+            "coverage": VerifierDimensionScore(0.0, reason, self._coverage_threshold),
+            "preservation": VerifierDimensionScore(
+                0.0, reason, self._preservation_threshold
+            ),
+            "faithfulness": VerifierDimensionScore(
+                0.0, reason, self._faithfulness_threshold
+            ),
+        }
 
     def _passing_dimensions(self, reason: str) -> dict[str, VerifierDimensionScore]:
         return {
@@ -234,6 +307,39 @@ class TrustMemInspiredMemoryVerifier:
             else:
                 raise ValueError(f"unsupported verifier dimension payload: {name}")
         return result
+
+    async def _llm_scores(
+        self,
+        transition: MemoryTransition,
+        context: MemoryVerifierContext | None,
+    ) -> dict[str, dict[str, Any]]:
+        context = context or MemoryVerifierContext()
+        llm = ChatGoogleGenerativeAI(
+            model=self._model,
+            temperature=0,
+        ).with_structured_output(TrustMemLlmScores)
+        payload = {
+            "action": str(transition.action),
+            "reasons": list(transition.reasons),
+            "existing_memory_id": transition.existing_memory_id,
+            "candidate": _compact_memory(transition.candidate),
+            "chunk": _compact_chunk(context.chunk),
+            "M_old": [_compact_memory(memory) for memory in context.old_memories[:20]],
+            "M_new": [_compact_memory(memory) for memory in context.new_memories[:20]],
+        }
+        scored = await llm.ainvoke(
+            [
+                SystemMessage(content=TRUSTMEM_SYSTEM_PROMPT),
+                HumanMessage(
+                    content=json.dumps(payload, ensure_ascii=False, default=str)
+                ),
+            ]
+        )
+        if isinstance(scored, dict):
+            scored = TrustMemLlmScores.model_validate(scored)
+        if not isinstance(scored, TrustMemLlmScores):
+            raise ValueError(f"trustmem llm returned unexpected type: {type(scored)}")
+        return scored.to_dimension_dict()
 
     def _heuristic_scores(
         self,
@@ -304,6 +410,7 @@ def build_memory_verifier(settings: Settings) -> MemoryVerifier:
         preservation_threshold=settings.long_term_memory_trustmem_preservation_threshold,
         faithfulness_threshold=settings.long_term_memory_trustmem_faithfulness_threshold,
         timeout_seconds=settings.long_term_memory_trustmem_timeout_seconds,
+        fallback=deterministic,
     )
     if settings.long_term_memory_verifier == "trustmem":
         return trustmem
@@ -330,6 +437,39 @@ def project_memory_state(
         projected.append(transition.candidate)
         return projected
     return list(existing)
+
+
+def _uses_heuristic_model(model: str) -> bool:
+    return str(model or "").strip().lower().startswith("heuristic")
+
+
+def _format_verifier_error(exc: BaseException) -> str:
+    message = str(exc).strip() or repr(exc)
+    return f"{type(exc).__name__}: {message}"
+
+
+def _compact_memory(memory: TravelMemory | None) -> dict[str, Any] | None:
+    if memory is None:
+        return None
+    return {
+        "memory_id": memory.memory_id,
+        "memory_text": memory.memory_text,
+        "category": str(memory.category),
+        "condition": memory.condition,
+        "evidence_text": (memory.evidence_text or "")[:500],
+    }
+
+
+def _compact_chunk(chunk: Sequence[dict[str, Any]]) -> list[dict[str, str]]:
+    compact: list[dict[str, str]] = []
+    for message in list(chunk)[-12:]:
+        compact.append(
+            {
+                "type": str(message.get("type") or message.get("role") or ""),
+                "content": str(message.get("content") or "")[:1000],
+            }
+        )
+    return compact
 
 
 async def _maybe_await(value: Any) -> Any:
