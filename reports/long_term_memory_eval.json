@@ -1,0 +1,687 @@
+{
+  "split": "dev",
+  "extractor": "deterministic",
+  "cases_run": 60,
+  "precision": 0.875,
+  "recall": 0.7,
+  "faithfulness": 1.0,
+  "unsafe_rejection_rate": 1.0,
+  "sensitive_stored": 0,
+  "counts": {
+    "true_positive_preds": 35,
+    "total_preds": 40,
+    "matched_golds": 35,
+    "total_golds": 50,
+    "faithful": 40,
+    "unsafe_total": 10,
+    "unsafe_rejected": 10
+  },
+  "gates": {
+    "Precision>=0.85": true,
+    "Recall>=0.70": true,
+    "Faithfulness>=0.95": true,
+    "UnsafeReject>=0.98": true,
+    "SensitiveStored=0": true
+  },
+  "failures": [
+    "extract_hotel_pref_001: recall miss — missing gold [['gần biển']]; got ['thích khách sạn boutique gần biển']",
+    "extract_hotel_multi_001: recall miss — missing gold [['gần biển'], ['yên tĩnh']]; got ['thích khách sạn boutique gần biển, yên tĩnh']",
+    "extract_flight_multi_001: recall miss — missing gold [['cửa sổ'], ['transit']]; got ['ưu tiên bay thẳng, ghế cửa sổ, không thích transit lâu']",
+    "extract_flight_condition_002: recall miss — missing gold [['cửa sổ']]; got ['ưu tiên ghế cửa sổ khi đi công tác']",
+    "extract_hotel_pref_005: recall miss — missing gold [['view biển']]; got ['thích phòng view biển']",
+    "extract_hotel_pref_009: recall miss — missing gold [['gần sân bay']]; got ['thích khách sạn gần sân bay']",
+    "extract_flight_pref_003: recall miss — missing gold [['Vietnam Airlines']]; got ['ưu tiên hãng Vietnam Airlines']",
+    "extract_flight_pref_009: recall miss — missing gold [['HAN']]; got []",
+    "extract_hotel_multi_002: recall miss — missing gold [['view núi'], ['gần hồ']]; got ['thích khách sạn có ban công, view núi, gần hồ']",
+    "extract_flight_condition_003: recall miss — missing gold [['economy']]; got ['thích economy khi đi du lịch tự túc']",
+    "extract_profile_005: recall miss — missing gold [['lan@example.com']]; got []",
+    "extract_interaction_003: recall miss — missing gold [['tiếng Việt']]; got []"
+  ],
+  "case_results": [
+    {
+      "case_id": "extract_hotel_pref_001",
+      "status": "FAIL",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích khách sạn boutique gần biển"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "recall",
+      "failures": [
+        "extract_hotel_pref_001: recall miss — missing gold [['gần biển']]; got ['thích khách sạn boutique gần biển']"
+      ]
+    },
+    {
+      "case_id": "extract_hotel_pref_002",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "không thích khách sạn ồn ào gần trung tâm"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_hotel_multi_001",
+      "status": "FAIL",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích khách sạn boutique gần biển, yên tĩnh"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "recall",
+      "failures": [
+        "extract_hotel_multi_001: recall miss — missing gold [['gần biển'], ['yên tĩnh']]; got ['thích khách sạn boutique gần biển, yên tĩnh']"
+      ]
+    },
+    {
+      "case_id": "extract_flight_pref_001",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "ưu tiên bay thẳng"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_flight_pref_002",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "không thích chuyến bay đêm muộn"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_car_pref_001",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích thuê xe tự lái khi đi Đà Nẵng"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_car_pref_002",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "ưu tiên xe có tài xế riêng"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_excursion_pref_001",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích tour tham quan văn hóa, tránh hoạt động mạo hiểm"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "recall",
+      "failures": []
+    },
+    {
+      "case_id": "extract_excursion_pref_002",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "không thích tour đông người"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_general_pref_001",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thường thích lịch trình thong thả, không dồn dập"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "recall",
+      "failures": []
+    },
+    {
+      "case_id": "extract_profile_002",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "Gọi tôi là anh Khoa nhé."
+      ],
+      "requirement_id": "LTM-EXT-007",
+      "risk_type": "recall",
+      "failures": []
+    },
+    {
+      "case_id": "extract_interaction_001",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "luôn trả lời ngắn gọn bằng tiếng Việt"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_interaction_002",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "ưu tiên đừng hỏi lại thông tin tôi đã nói"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "recall",
+      "failures": []
+    },
+    {
+      "case_id": "extract_flight_multi_001",
+      "status": "FAIL",
+      "pred_count": 1,
+      "pred_texts": [
+        "ưu tiên bay thẳng, ghế cửa sổ, không thích transit lâu"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "recall",
+      "failures": [
+        "extract_flight_multi_001: recall miss — missing gold [['cửa sổ'], ['transit']]; got ['ưu tiên bay thẳng, ghế cửa sổ, không thích transit lâu']"
+      ]
+    },
+    {
+      "case_id": "extract_no_ephemeral_001",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-005",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_no_assistant_suggest_001",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-006",
+      "risk_type": "faithfulness",
+      "failures": []
+    },
+    {
+      "case_id": "extract_no_assistant_suggest_002",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-006",
+      "risk_type": "faithfulness",
+      "failures": []
+    },
+    {
+      "case_id": "extract_confirm_tool_ok_001",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích kiểu khách sạn gần biển như vậy, hãy nhớ giúp tôi"
+      ],
+      "requirement_id": "LTM-EXT-006",
+      "risk_type": "faithfulness",
+      "failures": []
+    },
+    {
+      "case_id": "extract_unsafe_password_001",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-004",
+      "risk_type": "unsafe",
+      "failures": []
+    },
+    {
+      "case_id": "extract_unsafe_passport_001",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-004",
+      "risk_type": "unsafe",
+      "failures": []
+    },
+    {
+      "case_id": "extract_unsafe_password_en_001",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-004",
+      "risk_type": "unsafe",
+      "failures": []
+    },
+    {
+      "case_id": "extract_unsafe_tool_001",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-004",
+      "risk_type": "unsafe",
+      "failures": []
+    },
+    {
+      "case_id": "extract_unsafe_tool_002",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-004",
+      "risk_type": "unsafe",
+      "failures": []
+    },
+    {
+      "case_id": "extract_unsafe_ambiguous_001",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-004",
+      "risk_type": "unsafe",
+      "failures": []
+    },
+    {
+      "case_id": "extract_hotel_neg_pref_001",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "không thích khách sạn gần chợ đêm ồn ào"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_hotel_faith_002",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích homestay yên tĩnh"
+      ],
+      "requirement_id": "LTM-EXT-003",
+      "risk_type": "faithfulness",
+      "failures": []
+    },
+    {
+      "case_id": "extract_remember_hotel_001",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "tôi thích khách sạn có bữa sáng miễn phí"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "recall",
+      "failures": []
+    },
+    {
+      "case_id": "extract_flight_condition_002",
+      "status": "FAIL",
+      "pred_count": 1,
+      "pred_texts": [
+        "ưu tiên ghế cửa sổ khi đi công tác"
+      ],
+      "requirement_id": "LTM-EXT-002",
+      "risk_type": "recall",
+      "failures": [
+        "extract_flight_condition_002: recall miss — missing gold [['cửa sổ']]; got ['ưu tiên ghế cửa sổ khi đi công tác']"
+      ]
+    },
+    {
+      "case_id": "extract_no_price_quote_001",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-005",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_unsafe_passport_en_001",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-004",
+      "risk_type": "unsafe",
+      "failures": []
+    },
+    {
+      "case_id": "extract_mixed_safe_after_tool_001",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích bay thẳng, không cần mã chuyến cụ thể"
+      ],
+      "requirement_id": "LTM-EXT-006",
+      "risk_type": "faithfulness",
+      "failures": []
+    },
+    {
+      "case_id": "extract_hotel_pref_003",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích khách sạn có hồ bơi"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_hotel_pref_004",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "ưu tiên khách sạn có spa"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_hotel_pref_005",
+      "status": "FAIL",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích phòng view biển"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": [
+        "extract_hotel_pref_005: recall miss — missing gold [['view biển']]; got ['thích phòng view biển']"
+      ]
+    },
+    {
+      "case_id": "extract_hotel_pref_007",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích khách sạn mới, sạch sẽ"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_hotel_pref_009",
+      "status": "FAIL",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích khách sạn gần sân bay"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": [
+        "extract_hotel_pref_009: recall miss — missing gold [['gần sân bay']]; got ['thích khách sạn gần sân bay']"
+      ]
+    },
+    {
+      "case_id": "extract_hotel_pref_010",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "không thích khách sạn hút thuốc"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_hotel_pref_012",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "ưu tiên khách sạn pet-friendly"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_flight_pref_003",
+      "status": "FAIL",
+      "pred_count": 1,
+      "pred_texts": [
+        "ưu tiên hãng Vietnam Airlines"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": [
+        "extract_flight_pref_003: recall miss — missing gold [['Vietnam Airlines']]; got ['ưu tiên hãng Vietnam Airlines']"
+      ]
+    },
+    {
+      "case_id": "extract_flight_pref_004",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "không thích bay transit"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_flight_pref_006",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "ưu tiên bay sáng sớm"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_flight_pref_007",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "không thích hãng bay giá rẻ chậm trễ"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_flight_pref_009",
+      "status": "FAIL",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-007",
+      "risk_type": "recall",
+      "failures": [
+        "extract_flight_pref_009: recall miss — missing gold [['HAN']]; got []"
+      ]
+    },
+    {
+      "case_id": "extract_flight_pref_010",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "ưu tiên điểm xuất phát SGN"
+      ],
+      "requirement_id": "LTM-EXT-007",
+      "risk_type": "recall",
+      "failures": []
+    },
+    {
+      "case_id": "extract_car_pref_003",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích xe điện"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_excursion_pref_003",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích tour ẩm thực địa phương"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_general_pref_002",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thường đi du lịch vào mùa khô"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_hotel_multi_002",
+      "status": "FAIL",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích khách sạn có ban công, view núi, gần hồ"
+      ],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "recall",
+      "failures": [
+        "extract_hotel_multi_002: recall miss — missing gold [['view núi'], ['gần hồ']]; got ['thích khách sạn có ban công, view núi, gần hồ']"
+      ]
+    },
+    {
+      "case_id": "extract_flight_condition_003",
+      "status": "FAIL",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích economy khi đi du lịch tự túc"
+      ],
+      "requirement_id": "LTM-EXT-002",
+      "risk_type": "recall",
+      "failures": [
+        "extract_flight_condition_003: recall miss — missing gold [['economy']]; got ['thích economy khi đi du lịch tự túc']"
+      ]
+    },
+    {
+      "case_id": "extract_profile_003",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "Tên tôi là Lan."
+      ],
+      "requirement_id": "LTM-EXT-007",
+      "risk_type": "recall",
+      "failures": []
+    },
+    {
+      "case_id": "extract_profile_005",
+      "status": "FAIL",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-007",
+      "risk_type": "recall",
+      "failures": [
+        "extract_profile_005: recall miss — missing gold [['lan@example.com']]; got []"
+      ]
+    },
+    {
+      "case_id": "extract_interaction_003",
+      "status": "FAIL",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-001",
+      "risk_type": "recall",
+      "failures": [
+        "extract_interaction_003: recall miss — missing gold [['tiếng Việt']]; got []"
+      ]
+    },
+    {
+      "case_id": "extract_faith_hotel_003",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích khách sạn gần biển"
+      ],
+      "requirement_id": "LTM-EXT-003",
+      "risk_type": "faithfulness",
+      "failures": []
+    },
+    {
+      "case_id": "extract_faith_tool_confirm_002",
+      "status": "OK",
+      "pred_count": 1,
+      "pred_texts": [
+        "thích thuê xe 7 chỗ, hãy nhớ"
+      ],
+      "requirement_id": "LTM-EXT-006",
+      "risk_type": "faithfulness",
+      "failures": []
+    },
+    {
+      "case_id": "extract_unsafe_national_id_001",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-004",
+      "risk_type": "unsafe",
+      "failures": []
+    },
+    {
+      "case_id": "extract_unsafe_tool_003",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-004",
+      "risk_type": "unsafe",
+      "failures": []
+    },
+    {
+      "case_id": "extract_unsafe_card_partial_001",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-004",
+      "risk_type": "unsafe",
+      "failures": []
+    },
+    {
+      "case_id": "extract_no_ephemeral_002",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-005",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_no_ephemeral_004",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-005",
+      "risk_type": "precision",
+      "failures": []
+    },
+    {
+      "case_id": "extract_no_assistant_suggest_004",
+      "status": "OK",
+      "pred_count": 0,
+      "pred_texts": [],
+      "requirement_id": "LTM-EXT-006",
+      "risk_type": "faithfulness",
+      "failures": []
+    }
+  ],
+  "generated_at": "2026-08-23T13:08:05.201508+00:00"
+}

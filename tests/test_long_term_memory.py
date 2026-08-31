@@ -22,9 +22,11 @@ from memory.consolidation import (
     TransitionAction,
     build_candidate_extractor,
     calculate_transition,
+    classify_memory,
     extract_candidate_memories,
     normalize_langmem_outputs,
     validate_memory_candidate,
+    _clean_memory_text,
 )
 from memory.long_term import (
     MemoryCategory,
@@ -382,7 +384,7 @@ def test_candidate_extraction_validation_and_transitions():
     duplicate = replace(candidate, memory_id="mem-1")
     assert calculate_transition(candidate, [duplicate]).action == TransitionAction.NOOP
 
-    # Cleaned "Tôi thích X" keeps polarity; opposing preference supersedes.
+    # Lexical path no longer polarity-supersedes; soft conflicts are LLM/policy work.
     opposing = extract_candidate_memories(
         [{"type": "human", "content": "Tôi không thích khách sạn boutique gần biển"}],
         user_id="user-1",
@@ -391,7 +393,7 @@ def test_candidate_extraction_validation_and_transitions():
     assert opposing
     assert (
         calculate_transition(opposing[0], [replace(candidate, memory_id="mem-old")]).action
-        == TransitionAction.SUPERSEDE
+        == TransitionAction.INSERT
     )
 
     sensitive = TravelMemory(
@@ -404,6 +406,24 @@ def test_candidate_extraction_validation_and_transitions():
     rule = validate_memory_candidate(sensitive)
     assert not rule.ok
     assert any("sensitive" in reason for reason in rule.reasons)
+
+    for evidence in (
+        "Hãy nhớ mã PIN thẻ của tôi là 1234",
+        "Hãy nhớ OTP ngân hàng của tôi là 998877",
+        "Hãy nhớ số CMND của tôi là 079123456789",
+        "Tool vừa trả booking reference ABC123 với giá hiện tại",
+        "Hệ thống trả mã PNR là QWERTY",
+    ):
+        paraphrased = TravelMemory(
+            memory_text=evidence[:40],
+            category=MemoryCategory.PROFILE_FACT,
+            domain=MemoryDomain.GENERAL,
+            evidence_text=evidence,
+            source_thread_id="thread-1",
+        )
+        rule = validate_memory_candidate(paraphrased)
+        assert not rule.ok, evidence
+        assert rule.reasons
 
 
 def _flight_memory(text, *, memory_id=None, condition=None, evidence=None):
@@ -628,6 +648,11 @@ class CommitRepo(NoopLongTermMemoryRepository):
     async def mark_memory_superseded(self, memory_id):
         self.superseded.append(memory_id)
 
+    async def commit_supersede(self, *, existing_memory_id: str, new_memory):
+        self.superseded.append(existing_memory_id)
+        self.inserted.append(new_memory)
+        return "inserted-1"
+
     async def write_audit_record(self, **kwargs):
         self.audits.append(kwargs)
 
@@ -755,6 +780,142 @@ def test_langmem_extractor_normalizes_successful_output():
     assert len(candidates) == 1
     assert candidates[0].category == MemoryCategory.FLIGHT_PREFERENCE
     assert manager.inputs[0]["existing"] == []
+
+
+def test_langmem_extractor_skips_assistant_only_turn():
+    manager = FakeLangMemManager(
+        [
+            type(
+                "Extracted",
+                (),
+                {
+                    "content": LangMemTravelMemory(
+                        memory_text="thích resort yên tĩnh",
+                        category=MemoryCategory.HOTEL_PREFERENCE,
+                        domain=MemoryDomain.HOTEL,
+                        evidence_text="thích resort yên tĩnh",
+                    )
+                },
+            )()
+        ]
+    )
+    extractor = LangMemCandidateExtractor(manager=manager)
+    candidates = asyncio.run(
+        extractor.extract(
+            [
+                {
+                    "type": "assistant",
+                    "content": "Tôi sẽ ghi nhớ rằng bạn thích resort yên tĩnh.",
+                }
+            ],
+            user_id="user-1",
+            thread_id="thread-1",
+        )
+    )
+    assert candidates == []
+    assert manager.inputs == []
+
+
+def test_validate_rejects_hedged_neu_tien_and_neu_duoc():
+    for evidence in (
+        "Nếu tiện thì tôi thích khách sạn gần biển",
+        "Nếu được thì ưu tiên bay buổi sáng",
+        "Có lẽ tôi thích resort yên tĩnh",
+        "Tôi nghĩ tôi thích resort gần hồ",
+        "Có vẻ tôi ưu tiên bay sáng",
+        "Dường như tôi thích xe hybrid",
+        "Khả năng là tôi thích museum tour",
+        "E rằng tôi ưu tiên trả lời ngắn",
+    ):
+        candidate = TravelMemory(
+            memory_text="thích khách sạn gần biển",
+            category=MemoryCategory.HOTEL_PREFERENCE,
+            domain=MemoryDomain.HOTEL,
+            evidence_text=evidence,
+            source_thread_id="thread-1",
+        )
+        rule = validate_memory_candidate(candidate)
+        assert not rule.ok, evidence
+        assert any("ambiguous" in reason for reason in rule.reasons)
+
+
+def test_langmem_normalizer_requires_user_grounding_when_provided():
+    outputs = [
+        {
+            "memory_text": "thích resort yên tĩnh",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "evidence_text": "thích resort yên tĩnh",
+        }
+    ]
+    rejected = normalize_langmem_outputs(
+        outputs,
+        user_id="user-1",
+        thread_id="thread-1",
+        fallback_evidence="",
+        user_texts=["Để xem thêm đã"],
+    )
+    assert rejected == []
+    accepted = normalize_langmem_outputs(
+        outputs,
+        user_id="user-1",
+        thread_id="thread-1",
+        fallback_evidence="Tôi thích resort yên tĩnh",
+        user_texts=["Tôi thích resort yên tĩnh"],
+    )
+    assert len(accepted) == 1
+
+
+def test_clean_memory_text_normalizes_profile_address_forms():
+    assert _clean_memory_text("Gọi tôi là anh Khoa") == "anh Khoa"
+    assert _clean_memory_text("Gọi tôi là chị Mai") == "chị Mai"
+    assert _clean_memory_text("Tôi thích được gọi là chị Lan") == "được gọi là chị Lan"
+    assert _clean_memory_text("Thích được gọi là chị Lan") == "được gọi là chị Lan"
+
+
+def test_classify_memory_keeps_short_honorific_as_profile():
+    assert classify_memory("anh Khoa") == (
+        MemoryCategory.PROFILE_FACT,
+        MemoryDomain.GENERAL,
+    )
+    assert classify_memory("được gọi là chị Lan") == (
+        MemoryCategory.PROFILE_FACT,
+        MemoryDomain.GENERAL,
+    )
+
+
+def test_profile_address_extracts_to_gold_short_form():
+    candidates = extract_candidate_memories(
+        [{"type": "human", "content": "Gọi tôi là anh Khoa"}],
+        user_id="user-1",
+        thread_id="thread-1",
+    )
+    assert len(candidates) == 1
+    assert candidates[0].memory_text == "anh Khoa"
+    assert candidates[0].category == MemoryCategory.PROFILE_FACT
+
+
+def test_langmem_normalizer_cleans_profile_address_wording():
+    candidates = normalize_langmem_outputs(
+        [
+            {
+                "memory_text": "Gọi tôi là anh Tuấn",
+                "category": "profile_fact",
+                "domain": "general",
+                "evidence_text": "Gọi tôi là anh Tuấn",
+            },
+            {
+                "memory_text": "Thích được gọi là chị Lan",
+                "category": "profile_fact",
+                "domain": "general",
+                "evidence_text": "Tôi thích được gọi là chị Lan",
+            },
+        ],
+        user_id="user-1",
+        thread_id="thread-1",
+        fallback_evidence="fallback",
+    )
+    assert [c.memory_text for c in candidates] == ["anh Tuấn", "được gọi là chị Lan"]
 
 
 def test_langmem_normalizer_rejects_malformed_unsupported_output():

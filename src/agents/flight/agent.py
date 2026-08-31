@@ -12,9 +12,12 @@ from dotenv import load_dotenv
 from agents.flight.state import State
 from agents.flight.tools import get_flight_tools
 from memory.agent_helpers import domain_chat_with_memory
+from memory.long_term import MemoryDomain
+from memory.recall_nodes import make_domain_memory_recall_node
 from memory.tool_wrapper import wrap_tools_with_result_store
 from prompts.prompt import flight_prompts
 from repositories.result_store import ResultStoreRepository
+from services.long_term_memory import MemoryService
 from services.reference_resolver import ClarificationNeeded, resolve_item_reference
 from utils.api_client_flight import get_booking_link_from_api
 from utils.tracing import with_trace_config
@@ -75,7 +78,11 @@ async def book_flight_by_id(
     )
 
 
-async def build_flight_graph(*, repo: ResultStoreRepository | None = None):
+async def build_flight_graph(
+    *,
+    repo: ResultStoreRepository | None = None,
+    memory_service: MemoryService | None = None,
+):
     mcp_tools = await get_flight_tools()
     mcp_tools = [t for t in mcp_tools if t.name != "book_flight"]
     if repo is not None:
@@ -150,9 +157,19 @@ async def build_flight_graph(*, repo: ResultStoreRepository | None = None):
         return updates
 
     graph_builder = StateGraph(State)
+    graph_builder.add_node(
+        "memory_recall_flight",
+        make_domain_memory_recall_node(
+            memory_service,
+            domain=MemoryDomain.FLIGHT,
+            llm=llm,
+            node_name="memory_recall_flight",
+        ),
+    )
     graph_builder.add_node("flight_chat", flight_chat)
     graph_builder.add_node("tools", tool_node)
-    graph_builder.add_edge(START, "flight_chat")
+    graph_builder.add_edge(START, "memory_recall_flight")
+    graph_builder.add_edge("memory_recall_flight", "flight_chat")
     graph_builder.add_conditional_edges("flight_chat", tools_condition)
     graph_builder.add_edge("tools", "flight_chat")
 

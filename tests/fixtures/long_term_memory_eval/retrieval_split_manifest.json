@@ -1,0 +1,393 @@
+{
+  "development_count": 65,
+  "test_count": 85,
+  "total": 150,
+  "mapping": {
+    "scope_same_user_same_domain_dev_00": "development",
+    "scope_same_user_same_domain_dev_01": "development",
+    "scope_same_user_same_domain_tes_00": "test",
+    "scope_same_user_same_domain_tes_01": "test",
+    "scope_same_user_same_domain_tes_02": "test",
+    "scope_cross_user_dev_00": "development",
+    "scope_cross_user_dev_01": "development",
+    "scope_cross_user_tes_00": "test",
+    "scope_cross_user_tes_01": "test",
+    "scope_cross_user_tes_02": "test",
+    "scope_cross_domain_dev_00": "development",
+    "scope_cross_domain_dev_01": "development",
+    "scope_cross_domain_tes_00": "test",
+    "scope_cross_domain_tes_01": "test",
+    "scope_cross_domain_tes_02": "test",
+    "scope_inactive_dev_00": "development",
+    "scope_inactive_dev_01": "development",
+    "scope_inactive_tes_00": "test",
+    "scope_inactive_tes_01": "test",
+    "scope_inactive_tes_02": "test",
+    "scope_global_not_in_pool_dev_00": "development",
+    "scope_global_not_in_pool_dev_01": "development",
+    "scope_global_not_in_pool_tes_00": "test",
+    "scope_global_not_in_pool_tes_01": "test",
+    "scope_global_not_in_pool_tes_02": "test",
+    "scope_empty_pool_dev_00": "development",
+    "scope_empty_pool_dev_01": "development",
+    "scope_empty_pool_tes_00": "test",
+    "scope_empty_pool_tes_01": "test",
+    "scope_empty_pool_tes_02": "test",
+    "action_contrast_hotel_search_dev_00": "development",
+    "action_contrast_hotel_search_tes_00": "test",
+    "action_contrast_hotel_search_tes_01": "test",
+    "action_contrast_hotel_search_tes_02": "test",
+    "action_contrast_hotel_details_dev_00": "development",
+    "action_contrast_hotel_details_tes_00": "test",
+    "action_contrast_hotel_details_tes_01": "test",
+    "action_contrast_hotel_select_room_dev_00": "development",
+    "action_contrast_hotel_select_room_dev_01": "development",
+    "action_contrast_hotel_select_room_tes_00": "test",
+    "action_contrast_hotel_select_room_tes_01": "test",
+    "action_contrast_hotel_reviews_dev_00": "development",
+    "action_contrast_hotel_reviews_tes_00": "test",
+    "action_contrast_hotel_reviews_tes_01": "test",
+    "action_contrast_flight_search_dev_00": "development",
+    "action_contrast_flight_search_dev_01": "development",
+    "action_contrast_flight_search_tes_00": "test",
+    "action_contrast_flight_search_tes_01": "test",
+    "action_contrast_flight_compare_dev_00": "development",
+    "action_contrast_flight_compare_tes_00": "test",
+    "action_contrast_flight_compare_tes_01": "test",
+    "action_contrast_car_search_dev_00": "development",
+    "action_contrast_car_search_dev_01": "development",
+    "action_contrast_car_search_tes_00": "test",
+    "action_contrast_car_search_tes_01": "test",
+    "action_contrast_car_select_dev_00": "development",
+    "action_contrast_car_select_tes_00": "test",
+    "action_contrast_car_select_tes_01": "test",
+    "action_contrast_excursion_search_dev_00": "development",
+    "action_contrast_excursion_search_dev_01": "development",
+    "action_contrast_excursion_search_tes_00": "test",
+    "action_contrast_excursion_search_tes_01": "test",
+    "action_contrast_excursion_details_dev_00": "development",
+    "action_contrast_excursion_details_tes_00": "test",
+    "action_contrast_excursion_details_tes_01": "test",
+    "override_flight_time_dev_00": "development",
+    "override_flight_time_dev_01": "development",
+    "override_flight_time_tes_00": "test",
+    "override_flight_time_tes_01": "test",
+    "override_flight_time_tes_02": "test",
+    "override_hotel_budget_dev_00": "development",
+    "override_hotel_budget_dev_01": "development",
+    "override_hotel_budget_tes_00": "test",
+    "override_hotel_budget_tes_01": "test",
+    "override_hotel_budget_tes_02": "test",
+    "override_hotel_location_irrelevant_dev_00": "development",
+    "override_hotel_location_irrelevant_dev_01": "development",
+    "override_hotel_location_irrelevant_tes_00": "test",
+    "override_hotel_location_irrelevant_tes_01": "test",
+    "override_hotel_location_irrelevant_tes_02": "test",
+    "override_car_transmission_dev_00": "development",
+    "override_car_transmission_dev_01": "development",
+    "override_car_transmission_tes_00": "test",
+    "override_car_transmission_tes_01": "test",
+    "override_car_transmission_tes_02": "test",
+    "override_flight_departure_dev_00": "development",
+    "override_flight_departure_dev_01": "development",
+    "override_flight_departure_tes_00": "test",
+    "override_flight_departure_tes_01": "test",
+    "override_flight_departure_tes_02": "test",
+    "soft_hotel_quiet_apply_dev_00": "development",
+    "soft_hotel_quiet_apply_dev_01": "development",
+    "soft_hotel_quiet_apply_dev_02": "development",
+    "soft_hotel_quiet_apply_tes_00": "test",
+    "soft_hotel_quiet_apply_tes_01": "test",
+    "soft_hotel_quiet_apply_tes_02": "test",
+    "soft_hotel_avoid_groups_uncertain_dev_00": "development",
+    "soft_hotel_avoid_groups_uncertain_dev_01": "development",
+    "soft_hotel_avoid_groups_uncertain_dev_02": "development",
+    "soft_hotel_avoid_groups_uncertain_tes_00": "test",
+    "soft_hotel_avoid_groups_uncertain_tes_01": "test",
+    "soft_hotel_avoid_groups_uncertain_tes_02": "test",
+    "soft_hotel_bathtub_uncertain_dev_00": "development",
+    "soft_hotel_bathtub_uncertain_dev_01": "development",
+    "soft_hotel_bathtub_uncertain_dev_02": "development",
+    "soft_hotel_bathtub_uncertain_tes_00": "test",
+    "soft_hotel_bathtub_uncertain_tes_01": "test",
+    "soft_hotel_bathtub_uncertain_tes_02": "test",
+    "soft_flight_direct_apply_dev_00": "development",
+    "soft_flight_direct_apply_dev_01": "development",
+    "soft_flight_direct_apply_dev_02": "development",
+    "soft_flight_direct_apply_tes_00": "test",
+    "soft_flight_direct_apply_tes_01": "test",
+    "soft_flight_direct_apply_tes_02": "test",
+    "soft_flight_direct_apply_tes_03": "test",
+    "soft_flight_lowest_price_uncertain_dev_00": "development",
+    "soft_flight_lowest_price_uncertain_dev_01": "development",
+    "soft_flight_lowest_price_uncertain_tes_00": "test",
+    "soft_flight_lowest_price_uncertain_tes_01": "test",
+    "soft_flight_lowest_price_uncertain_tes_02": "test",
+    "state_hotel_bathtub_apply_with_selection_dev_00": "development",
+    "state_hotel_bathtub_apply_with_selection_dev_01": "development",
+    "state_hotel_bathtub_apply_with_selection_dev_02": "development",
+    "state_hotel_bathtub_apply_with_selection_dev_03": "development",
+    "state_hotel_bathtub_apply_with_selection_tes_00": "test",
+    "state_hotel_bathtub_apply_with_selection_tes_01": "test",
+    "state_hotel_bathtub_apply_with_selection_tes_02": "test",
+    "state_hotel_bathtub_apply_with_selection_tes_03": "test",
+    "state_hotel_bathtub_irrelevant_without_selection_dev_00": "development",
+    "state_hotel_bathtub_irrelevant_without_selection_dev_01": "development",
+    "state_hotel_bathtub_irrelevant_without_selection_dev_02": "development",
+    "state_hotel_bathtub_irrelevant_without_selection_dev_03": "development",
+    "state_hotel_bathtub_irrelevant_without_selection_tes_00": "test",
+    "state_hotel_bathtub_irrelevant_without_selection_tes_01": "test",
+    "state_hotel_bathtub_irrelevant_without_selection_tes_02": "test",
+    "state_hotel_bathtub_irrelevant_without_selection_tes_03": "test",
+    "state_flight_seat_with_shortlist_dev_00": "development",
+    "state_flight_seat_with_shortlist_dev_01": "development",
+    "state_flight_seat_with_shortlist_dev_02": "development",
+    "state_flight_seat_with_shortlist_dev_03": "development",
+    "state_flight_seat_with_shortlist_tes_00": "test",
+    "state_flight_seat_with_shortlist_tes_01": "test",
+    "state_flight_seat_with_shortlist_tes_02": "test",
+    "state_flight_seat_with_shortlist_tes_03": "test",
+    "state_car_capacity_with_trip_context_dev_00": "development",
+    "state_car_capacity_with_trip_context_dev_01": "development",
+    "state_car_capacity_with_trip_context_dev_02": "development",
+    "state_car_capacity_with_trip_context_tes_00": "test",
+    "state_car_capacity_with_trip_context_tes_01": "test",
+    "state_car_capacity_with_trip_context_tes_02": "test"
+  },
+  "coverage_matrix": {
+    "scope_same_user_same_domain": {
+      "development": 2,
+      "test": 3
+    },
+    "scope_cross_user": {
+      "development": 2,
+      "test": 3
+    },
+    "scope_cross_domain": {
+      "development": 2,
+      "test": 3
+    },
+    "scope_inactive": {
+      "development": 2,
+      "test": 3
+    },
+    "scope_global_not_in_pool": {
+      "development": 2,
+      "test": 3
+    },
+    "scope_empty_pool": {
+      "development": 2,
+      "test": 3
+    },
+    "action_contrast_hotel_search": {
+      "development": 1,
+      "test": 3
+    },
+    "action_contrast_hotel_details": {
+      "development": 1,
+      "test": 2
+    },
+    "action_contrast_hotel_select_room": {
+      "development": 2,
+      "test": 2
+    },
+    "action_contrast_hotel_reviews": {
+      "development": 1,
+      "test": 2
+    },
+    "action_contrast_flight_search": {
+      "development": 2,
+      "test": 2
+    },
+    "action_contrast_flight_compare": {
+      "development": 1,
+      "test": 2
+    },
+    "action_contrast_car_search": {
+      "development": 2,
+      "test": 2
+    },
+    "action_contrast_car_select": {
+      "development": 1,
+      "test": 2
+    },
+    "action_contrast_excursion_search": {
+      "development": 2,
+      "test": 2
+    },
+    "action_contrast_excursion_details": {
+      "development": 1,
+      "test": 2
+    },
+    "override_flight_time": {
+      "development": 2,
+      "test": 3
+    },
+    "override_hotel_budget": {
+      "development": 2,
+      "test": 3
+    },
+    "override_hotel_location_irrelevant": {
+      "development": 2,
+      "test": 3
+    },
+    "override_car_transmission": {
+      "development": 2,
+      "test": 3
+    },
+    "override_flight_departure": {
+      "development": 2,
+      "test": 3
+    },
+    "soft_hotel_quiet_apply": {
+      "development": 3,
+      "test": 3
+    },
+    "soft_hotel_avoid_groups_uncertain": {
+      "development": 3,
+      "test": 3
+    },
+    "soft_hotel_bathtub_uncertain": {
+      "development": 3,
+      "test": 3
+    },
+    "soft_flight_direct_apply": {
+      "development": 3,
+      "test": 4
+    },
+    "soft_flight_lowest_price_uncertain": {
+      "development": 2,
+      "test": 3
+    },
+    "state_hotel_bathtub_apply_with_selection": {
+      "development": 4,
+      "test": 4
+    },
+    "state_hotel_bathtub_irrelevant_without_selection": {
+      "development": 4,
+      "test": 4
+    },
+    "state_flight_seat_with_shortlist": {
+      "development": 4,
+      "test": 4
+    },
+    "state_car_capacity_with_trip_context": {
+      "development": 3,
+      "test": 3
+    }
+  },
+  "coverage_gaps": [],
+  "by_group": {
+    "A_scope_isolation": {
+      "development": 12,
+      "test": 18
+    },
+    "B_action_sensitive": {
+      "development": 14,
+      "test": 21
+    },
+    "C_explicit_override": {
+      "development": 10,
+      "test": 15
+    },
+    "D_soft_preference": {
+      "development": 14,
+      "test": 16
+    },
+    "E_domain_state": {
+      "development": 15,
+      "test": 15
+    }
+  },
+  "by_requirement": {
+    "REQ-RETR-SCOPE-SAME": {
+      "development": 2,
+      "test": 3
+    },
+    "REQ-RETR-SCOPE-CROSS-USER": {
+      "development": 2,
+      "test": 3
+    },
+    "REQ-RETR-SCOPE-CROSS-DOMAIN": {
+      "development": 2,
+      "test": 3
+    },
+    "REQ-RETR-SCOPE-INACTIVE": {
+      "development": 2,
+      "test": 3
+    },
+    "REQ-RETR-SCOPE-GLOBAL": {
+      "development": 2,
+      "test": 3
+    },
+    "REQ-RETR-SCOPE-EMPTY": {
+      "development": 2,
+      "test": 3
+    },
+    "REQ-RETR-ACTION-HOTEL": {
+      "development": 5,
+      "test": 9
+    },
+    "REQ-RETR-ACTION-FLIGHT": {
+      "development": 3,
+      "test": 4
+    },
+    "REQ-RETR-ACTION-CAR": {
+      "development": 3,
+      "test": 4
+    },
+    "REQ-RETR-ACTION-EXCURSION": {
+      "development": 3,
+      "test": 4
+    },
+    "REQ-RETR-OVERRIDE": {
+      "development": 10,
+      "test": 15
+    },
+    "REQ-RETR-SOFT-PREF": {
+      "development": 14,
+      "test": 16
+    },
+    "REQ-RETR-STATE": {
+      "development": 15,
+      "test": 15
+    }
+  },
+  "by_domain": {
+    "hotel": {
+      "development": 37,
+      "test": 48
+    },
+    "flight": {
+      "development": 17,
+      "test": 22
+    },
+    "car": {
+      "development": 8,
+      "test": 11
+    },
+    "excursion": {
+      "development": 3,
+      "test": 4
+    }
+  },
+  "by_label": {
+    "apply": {
+      "development": 57,
+      "test": 76
+    },
+    "irrelevant": {
+      "development": 15,
+      "test": 21
+    },
+    "uncertain": {
+      "development": 13,
+      "test": 18
+    },
+    "overridden": {
+      "development": 8,
+      "test": 12
+    }
+  },
+  "note": "Domain recall eval: SQL candidate pool + applicability judge. Mirrored full coverage — every scenario_type appears in development and test."
+}

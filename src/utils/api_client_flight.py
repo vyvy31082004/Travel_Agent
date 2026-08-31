@@ -12,6 +12,8 @@ from functools import lru_cache
 from datetime import date, datetime
 from typing import Any, Optional
 
+from utils.rapidapi_limiter import call_with_rate_limit_retry
+
 
 BOOKING_HOST = os.getenv(
     "BOOKING_RAPIDAPI_HOST",
@@ -51,65 +53,73 @@ def _get_headers(header: str) -> dict:
     }
 
 
+def _serialize_param_value(value: Any) -> Any:
+    if isinstance(value, date):
+        return value.isoformat()
+    return value
+
+
+def _clean_request_params(params: dict) -> dict:
+    return {
+        key: _serialize_param_value(value)
+        for key, value in params.items()
+        if value is not None and value != ""
+    }
+
+
 def _booking_get(header: str, path: str, params: dict, retries: int = 2) -> dict | list:
     if header == "booking":
         url = f"{BOOKING_BASE_URL}{path}"
     else:
         url = f"{GOOGLE_FLIGHT_BASE_URL}{path}"
 
-    clean_params = {
-        key: value
-        for key, value in params.items()
-        if value is not None and value != ""
-    }
+    clean_params = _clean_request_params(params)
 
     print("CALL API:", url)
     print("PARAMS:", clean_params)
 
-    last_exc: Exception = RuntimeError("Unknown error")
-    for attempt in range(1, retries + 2):
-        try:
-            response = requests.get(
-                url,
-                headers=_get_headers(header),
-                params=clean_params,
-                timeout=40,
-            )
+    def _do_request() -> dict | list:
+        response = requests.get(
+            url,
+            headers=_get_headers(header),
+            params=clean_params,
+            timeout=40,
+        )
 
-            print("FINAL URL:", response.url)
+        print("FINAL URL:", response.url)
 
-            if response.status_code == 429:
-                raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
+        if response.status_code == 429:
+            raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
 
-            response.raise_for_status()
-            payload = response.json()
+        if response.status_code == 400:
+            try:
+                error_data = response.json()
+                return {"error": error_data.get("message", "Lỗi từ API")}
+            except Exception:
+                pass
 
-            if isinstance(payload, dict) and payload.get("status") is False:
-                raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
+        response.raise_for_status()
+        payload = response.json()
 
-            if isinstance(payload, dict):
-                return payload.get("data", payload)
+        if isinstance(payload, dict) and payload.get("status") is False:
+            raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
 
-            return payload
+        if isinstance(payload, dict):
+            return payload.get("data", payload)
 
-        except requests.exceptions.Timeout as exc:
-            last_exc = exc
-            print(f"Timeout on attempt {attempt}/{retries + 1}, retrying...")
-            continue
-        except requests.exceptions.HTTPError as exc:
-            if response.status_code == 400:
-                try:
-                    error_data = response.json()
-                    return {"error": error_data.get("message", "Lỗi từ API")}
-                except Exception:
-                    pass
-            last_exc = exc
-            print(f"HTTPError on attempt {attempt}/{retries + 1}: {exc}")
-            continue
-        except RuntimeError:
-            raise
+        return payload
 
-    raise last_exc
+    def _on_retry(attempt: int, delay: float, exc: BaseException) -> None:
+        print(
+            f"429 on attempt {attempt}/{retries + 1}, "
+            f"retrying after {delay:g}s..."
+        )
+
+    return call_with_rate_limit_retry(
+        _do_request,
+        retries=retries,
+        on_retry=_on_retry,
+    )
 
 
 def _parse_date(value: Optional[str]) -> Optional[str]:
@@ -688,6 +698,123 @@ def search_one_way_flights_from_api(
     except Exception as e:
         return [{"error": f"Lỗi khi gọi searchFlights: {str(e)}"}]
 
+
+def _outbound_only_pair(outbound_offer: dict, warning: str | None = None) -> dict:
+    offer_id = f"FL-{uuid.uuid4().hex[:6].upper()}"
+    pair = {
+        "Offer_ID": offer_id,
+        "price": outbound_offer.get("price"),
+        "outbound": {
+            key: value
+            for key, value in outbound_offer.items()
+            if key != "returningToken"
+        },
+        "inbound": None,
+    }
+    if warning:
+        pair["warning"] = warning
+    return pair
+
+
+def _flatten_one_way_result(result: list[dict]) -> list[dict]:
+    if not result:
+        return []
+    if isinstance(result[0], dict) and result[0].get("error"):
+        return []
+    payload = result[0]
+    return list(payload.get("topFlights") or []) + list(payload.get("otherFlights") or [])
+
+
+def _pair_one_way_legs(outbound_flights: list[dict], inbound_flights: list[dict]) -> list[dict]:
+    pairs: list[dict] = []
+    if not outbound_flights or not inbound_flights:
+        return pairs
+    for outbound in outbound_flights:
+        for inbound in inbound_flights:
+            offer_id = f"FL-{uuid.uuid4().hex[:6].upper()}"
+            outbound_price = outbound.get("price") or 0
+            inbound_price = inbound.get("price") or 0
+            pairs.append({
+                "Offer_ID": offer_id,
+                "price": outbound_price + inbound_price,
+                "detailToken": inbound.get("detailToken"),
+                "outbound": {
+                    key: value
+                    for key, value in outbound.items()
+                    if key not in ("detailToken", "returningToken")
+                },
+                "inbound": {
+                    key: value
+                    for key, value in inbound.items()
+                    if key != "detailToken"
+                },
+            })
+    return pairs
+
+
+def _roundtrip_one_way_fallback(
+    *,
+    origin: str,
+    destination: str,
+    departure_date: date,
+    return_date: date,
+    adults: int,
+    children: int,
+    infant_on_lap: int,
+    infant_in_seat: int,
+    cabin_class: str,
+    sort_by: str,
+    stops: str,
+    limit: int,
+    **search_kwargs: Any,
+) -> list[dict]:
+    shared = {
+        "adults": adults,
+        "children": children,
+        "infant_on_lap": infant_on_lap,
+        "infant_in_seat": infant_in_seat,
+        "cabin_class": cabin_class,
+        "sort_by": sort_by,
+        "stops": stops,
+        **search_kwargs,
+    }
+    outbound_result = search_one_way_flights_from_api(
+        origin=origin,
+        destination=destination,
+        departure_date=departure_date.isoformat(),
+        limit=limit,
+        **shared,
+    )
+    if outbound_result and outbound_result[0].get("error"):
+        return outbound_result
+
+    inbound_result = search_one_way_flights_from_api(
+        origin=destination,
+        destination=origin,
+        departure_date=return_date.isoformat(),
+        limit=limit,
+        **shared,
+    )
+    if inbound_result and inbound_result[0].get("error"):
+        return inbound_result
+
+    outbound_flights = _flatten_one_way_result(outbound_result)
+    inbound_flights = _flatten_one_way_result(inbound_result)
+    paired = _pair_one_way_legs(outbound_flights[:limit], inbound_flights[:limit])
+    if not paired:
+        return [{"error": "Không tìm thấy chuyến bay khứ hồi từ tìm kiếm một chiều."}]
+
+    return [{
+        "source": "google-flights4.p.rapidapi",
+        "fallback": "one_way",
+        "warnings": [
+            "Roundtrip API không trả cặp khứ hồi; đã ghép từ hai lần tìm một chiều.",
+        ],
+        "topFlights": paired[:limit],
+        "otherFlights": paired[limit:],
+    }]
+
+
 def search_roundtrip_flights_from_api(
     origin: str,
     destination: str,
@@ -785,6 +912,9 @@ def search_roundtrip_flights_from_api(
 
         data = _booking_get("google_flight", "/flights/search-roundtrip", params)
 
+        if isinstance(data, dict) and data.get("error"):
+            return [{"error": data["error"]}]
+
         outbound_top = _normalize_flight_offer(2, data.get("topFlights") or [], retun_assign=True)
         outbound_other = _normalize_flight_offer(2, data.get("otherFlights") or [], retun_assign=True)
 
@@ -848,21 +978,29 @@ def search_roundtrip_flights_from_api(
             )
 
 
-        def _fetch_inbound(outbound_offer: dict) -> dict:
+        def _fetch_inbound(outbound_offer: dict) -> list[dict]:
             """Gọi roundtrip-returning và ghép chuyến về vào chuyến đi tương ứng."""
             token = outbound_offer.get("returningToken")
             if not token:
-                return {**outbound_offer, "inbound_options": []}
+                return [
+                    _outbound_only_pair(
+                        outbound_offer,
+                        warning="Không có returningToken; chỉ hiển thị chiều đi.",
+                    )
+                ]
+            pairs: list[dict] = []
             try:
                 ret_data = _booking_get("google_flight", "/flights/roundtrip-returning", {
                     "returningToken": token,
                     **inbound_params_base,
                 })
-                # inbound = (
-                #     _normalize_flight_offer(2, ret_data.get("topFlights") or []) +
-                #     _normalize_flight_offer(2, ret_data.get("otherFlights") or [])
-                # )
-                pairs = []
+                if isinstance(ret_data, dict) and ret_data.get("error"):
+                    return [
+                        _outbound_only_pair(
+                            outbound_offer,
+                            warning=ret_data["error"],
+                        )
+                    ]
                 inbound = (
                     _normalize_flight_offer(1, ret_data.get("topFlights") or [], retun_assign=True) +
                     _normalize_flight_offer(1, ret_data.get("otherFlights") or [], retun_assign=True)
@@ -875,6 +1013,13 @@ def search_roundtrip_flights_from_api(
                         arrival_after=ret_arr_after,
                         arrival_before=ret_arr_before,
                     )
+                if not inbound:
+                    return [
+                        _outbound_only_pair(
+                            outbound_offer,
+                            warning="Không tìm thấy chuyến về phù hợp; chỉ hiển thị chiều đi.",
+                        )
+                    ]
                 for inb in inbound:
                     offer_id = f"FL-{uuid.uuid4().hex[:6].upper()}"
                     pairs.append({
@@ -882,20 +1027,22 @@ def search_roundtrip_flights_from_api(
                         "price": inb.get("price"),
                         "detailToken": inb.get("detailToken"),
                         "inbound": {
-                            k: v for k, v in inb.items()
-                            if k not in ("detailToken")
+                            key: value for key, value in inb.items()
+                            if key not in ("detailToken",)
                         },
                         "outbound": {
-                            k: v for k, v in outbound_offer.items()
-                            if k not in ("returningToken")
+                            key: value for key, value in outbound_offer.items()
+                            if key not in ("returningToken",)
                         },
                     })
-                
-
-
             except Exception as exc:
-                inbound = [{"error": f"Không lấy được chuyến bay chiều về: {str(exc)}"}]
-            return pairs 
+                return [
+                    _outbound_only_pair(
+                        outbound_offer,
+                        warning=f"Không lấy được chuyến bay chiều về: {exc}",
+                    )
+                ]
+            return pairs
 
         # paired_top   = [_fetch_inbound(o) for o in outbound_top]
         paired_top = []
@@ -905,28 +1052,34 @@ def search_roundtrip_flights_from_api(
         for o in outbound_other:
             paired_other.extend(_fetch_inbound(o))
 
-       
+        if not paired_top and not paired_other:
+            if not outbound_top and not outbound_other:
+                return _roundtrip_one_way_fallback(
+                    origin=origin,
+                    destination=destination,
+                    departure_date=departure_date,
+                    return_date=return_date,
+                    adults=adults,
+                    children=children,
+                    infant_on_lap=infant_on_lap,
+                    infant_in_seat=infant_in_seat,
+                    cabin_class=cabin_class,
+                    sort_by=sort_by,
+                    stops=stops,
+                    limit=limit,
+                    currency_code=currency_code,
+                    languagecode=languagecode,
+                    countrycode=countrycode,
+                    alliances=alliances,
+                    airlines=airlines,
+                    carry_on_bag=carry_on_bag,
+                    max_price=max_price,
+                    emissions=emissions,
+                    layover_duration=layover_duration,
+                    airports=airports,
+                    flight_duration=flight_duration,
+                )
 
-        # # --- Lọc giờ chiều về (bên trong inbound_options của mỗi cặp) ---
-        # ret_dep_after = ret_dep_before = ret_arr_after = ret_arr_before = None
-        # if preferred_return_departure_time:
-        #     ret_dep_after, ret_dep_before = _time_range_from_center(
-        #         preferred_return_departure_time, time_tolerance_minutes
-        #     )
-        # if preferred_return_arrival_time:
-        #     ret_arr_after, ret_arr_before = _time_range_from_center(
-        #         preferred_return_arrival_time, time_tolerance_minutes
-        #     )
-
-        # if ret_dep_after or ret_dep_before or ret_arr_after or ret_arr_before:
-        #     for pair in paired_top + paired_other:
-        #         pair["inbound_options"] = _filter_flights_by_time(
-        #             pair.get("inbound_options") or [],
-        #             outbound_departure_after=ret_dep_after,
-        #             outbound_departure_before=ret_dep_before,
-        #             outbound_arrival_after=ret_arr_after,
-        #             outbound_arrival_before=ret_arr_before,
-        #         )
         return [{
             "source": "google-flights4.p.rapidapi",
             "topFlights": paired_top,

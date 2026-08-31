@@ -30,6 +30,7 @@ async def _run_once() -> None:
                 verifier=build_memory_verifier(settings),
                 embedding_service=embedding_service,
             ),
+            embedding_service=embedding_service,
         )
         result = await worker.process_next()
         logging.info("memory worker result: %s", result)

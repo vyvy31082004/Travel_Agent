@@ -7,9 +7,12 @@ from dotenv import load_dotenv
 from agents.hotel.state import State
 from agents.hotel.tools import get_hotel_tools
 from memory.agent_helpers import domain_chat_with_memory
+from memory.long_term import MemoryDomain
+from memory.recall_nodes import make_domain_memory_recall_node
 from memory.tool_wrapper import wrap_tools_with_result_store
 from prompts.prompt import hotel_prompts
 from repositories.result_store import ResultStoreRepository
+from services.long_term_memory import MemoryService
 from utils.tracing import with_trace_config
 
 load_dotenv()
@@ -19,7 +22,11 @@ llm = ChatGoogleGenerativeAI(
 )
 
 
-async def build_hotel_graph(*, repo: ResultStoreRepository | None = None):
+async def build_hotel_graph(
+    *,
+    repo: ResultStoreRepository | None = None,
+    memory_service: MemoryService | None = None,
+):
     hotel_tools = await get_hotel_tools()
     if repo is not None:
         hotel_tools = wrap_tools_with_result_store(hotel_tools, repo)
@@ -49,9 +56,19 @@ async def build_hotel_graph(*, repo: ResultStoreRepository | None = None):
         )
 
     graph_builder = StateGraph(State)
+    graph_builder.add_node(
+        "memory_recall_hotel",
+        make_domain_memory_recall_node(
+            memory_service,
+            domain=MemoryDomain.HOTEL,
+            llm=llm,
+            node_name="memory_recall_hotel",
+        ),
+    )
     graph_builder.add_node("hotel_chat", hotel_chat)
     graph_builder.add_node("tools", tool_node)
-    graph_builder.add_edge(START, "hotel_chat")
+    graph_builder.add_edge(START, "memory_recall_hotel")
+    graph_builder.add_edge("memory_recall_hotel", "hotel_chat")
     graph_builder.add_conditional_edges("hotel_chat", tools_condition)
     graph_builder.add_edge("tools", "hotel_chat")
     return graph_builder.compile(name="hotel_agent")

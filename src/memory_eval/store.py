@@ -9,6 +9,7 @@ from repositories.long_term_memory import (
     MemoryEmbeddingRecord,
     MemorySearchFilters,
     NoopLongTermMemoryRepository,
+    RankedMemory,
 )
 
 
@@ -51,6 +52,52 @@ class InMemoryLongTermMemoryRepository(NoopLongTermMemoryRepository):
             matched.append(memory)
         return matched[: filters.limit]
 
+    async def fetch_active_domain_memories(
+        self,
+        *,
+        user_id: str,
+        domain: str,
+        limit: int,
+    ) -> list[TravelMemory]:
+        matched: list[TravelMemory] = []
+        for memory in self.memories.values():
+            if memory.user_id != user_id:
+                continue
+            if str(memory.domain) != domain:
+                continue
+            if MemoryFamily(memory.family) != MemoryFamily.TRAVEL_PREFERENCES:
+                continue
+            if MemoryStatus(memory.status) != MemoryStatus.ACTIVE:
+                continue
+            if not memory.is_active:
+                continue
+            matched.append(memory)
+        return matched[:limit]
+
+    async def fetch_transition_comparison_pool(
+        self,
+        *,
+        user_id: str,
+        category: str,
+        domain: str,
+        candidate_embedding: Sequence[float] | None = None,
+        embedding_model: str = "",
+        embedding_dims: int = 0,
+    ) -> list[RankedMemory]:
+        matched: list[TravelMemory] = []
+        for memory in self.memories.values():
+            if memory.user_id != user_id:
+                continue
+            if str(memory.category) != category or str(memory.domain) != domain:
+                continue
+            if MemoryStatus(memory.status) != MemoryStatus.ACTIVE:
+                continue
+            if not memory.is_active:
+                continue
+            matched.append(memory)
+        # Preserve insertion order as a stable rank proxy for offline eval.
+        return [RankedMemory(memory=memory, distance=None) for memory in matched]
+
     async def insert_memory(self, memory: TravelMemory) -> str:
         memory_id = memory.memory_id or str(uuid4())
         stored = replace(memory, memory_id=memory_id)
@@ -62,6 +109,14 @@ class InMemoryLongTermMemoryRepository(NoopLongTermMemoryRepository):
         if current is None:
             return
         self.memories[memory_id] = replace(current, status=MemoryStatus.SUPERSEDED)
+
+    async def commit_supersede(
+        self, *, existing_memory_id: str, new_memory: TravelMemory
+    ) -> str:
+        await self.mark_memory_superseded(existing_memory_id)
+        if not new_memory.supersedes_memory_id:
+            new_memory = replace(new_memory, supersedes_memory_id=existing_memory_id)
+        return await self.insert_memory(new_memory)
 
     async def write_audit_record(
         self,

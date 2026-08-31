@@ -18,6 +18,14 @@ class MemorySearchFilters:
     families: tuple[MemoryFamily, ...]
     limit: int
     query: str | None = None
+    domains: tuple[str, ...] | None = None
+
+
+def _domain_filter_clause(filters: MemorySearchFilters, params: dict[str, Any]) -> str:
+    if not filters.domains:
+        return ""
+    params["domains"] = [str(domain) for domain in filters.domains]
+    return " AND domain = ANY(%(domains)s)"
 
 
 @dataclass(frozen=True)
@@ -36,11 +44,26 @@ class MemoryEmbeddingRecord:
     content_hash: str
 
 
+@dataclass(frozen=True)
+class RankedMemory:
+    memory: TravelMemory
+    distance: float | None = None
+
+
 class LongTermMemoryRepository(Protocol):
     async def search_active_memories(
         self, filters: MemorySearchFilters
     ) -> list[TravelMemory]:
         """Return active memories matching user/family/query filters."""
+
+    async def fetch_active_domain_memories(
+        self,
+        *,
+        user_id: str,
+        domain: str,
+        limit: int,
+    ) -> list[TravelMemory]:
+        """Return active travel-preference memories for one user and domain."""
 
     async def insert_memory(self, memory: TravelMemory) -> str:
         """Insert an approved memory and return its id."""
@@ -68,8 +91,25 @@ class LongTermMemoryRepository(Protocol):
     ) -> list[TravelMemory]:
         """Return active memories ranked by pgvector distance."""
 
+    async def fetch_transition_comparison_pool(
+        self,
+        *,
+        user_id: str,
+        category: str,
+        domain: str,
+        candidate_embedding: Sequence[float] | None = None,
+        embedding_model: str = "",
+        embedding_dims: int = 0,
+    ) -> list[RankedMemory]:
+        """Return active same category/domain memories ranked for transition."""
+
     async def mark_memory_superseded(self, memory_id: str) -> None:
         """Mark an active memory as superseded."""
+
+    async def commit_supersede(
+        self, *, existing_memory_id: str, new_memory: TravelMemory
+    ) -> str:
+        """Atomically supersede one memory and insert its replacement."""
 
     async def write_audit_record(
         self,
@@ -125,6 +165,7 @@ class PostgresLongTermMemoryRepository:
                     OR evidence_text ILIKE ANY(%(patterns)s)
                   )
                 """
+        domain_clause = _domain_filter_clause(filters, params)
 
         async with self._pool.connection() as conn:
             rows = await (
@@ -140,11 +181,47 @@ class PostgresLongTermMemoryRepository:
                       AND status = 'active'
                       AND (valid_from IS NULL OR valid_from <= now())
                       AND (valid_to IS NULL OR valid_to > now())
+                      {domain_clause}
                       {query_clause}
                     ORDER BY updated_at DESC, created_at DESC
                     LIMIT %(limit)s
                     """,
                     params,
+                )
+            ).fetchall()
+        return [TravelMemory.from_record(dict(row)) for row in rows]
+
+    async def fetch_active_domain_memories(
+        self,
+        *,
+        user_id: str,
+        domain: str,
+        limit: int,
+    ) -> list[TravelMemory]:
+        async with self._pool.connection() as conn:
+            rows = await (
+                await conn.execute(
+                    """
+                    SELECT memory_id, user_id, memory_text, category, domain,
+                           condition, evidence_text, source_thread_id, status,
+                           valid_from, valid_to, supersedes_memory_id,
+                           created_at, updated_at, metadata
+                    FROM long_term_memories
+                    WHERE user_id = %(user_id)s
+                      AND domain = %(domain)s
+                      AND family = %(family)s
+                      AND status = 'active'
+                      AND (valid_from IS NULL OR valid_from <= now())
+                      AND (valid_to IS NULL OR valid_to > now())
+                    ORDER BY updated_at DESC, created_at DESC
+                    LIMIT %(limit)s
+                    """,
+                    {
+                        "user_id": user_id,
+                        "domain": domain,
+                        "family": MemoryFamily.TRAVEL_PREFERENCES.value,
+                        "limit": limit,
+                    },
                 )
             ).fetchall()
         return [TravelMemory.from_record(dict(row)) for row in rows]
@@ -271,10 +348,22 @@ class PostgresLongTermMemoryRepository:
         distance_threshold: float,
     ) -> list[TravelMemory]:
         families = [str(family) for family in filters.families]
+        params: dict[str, Any] = {
+            "user_id": filters.user_id,
+            "families": families,
+            "limit": filters.limit,
+            "query_embedding": vector_literal(query_embedding),
+            "embedding_model": embedding_model,
+            "embedding_dims": embedding_dims,
+            "distance_threshold": distance_threshold,
+        }
+        domain_clause = _domain_filter_clause(filters, params).replace(
+            "domain", "m.domain"
+        )
         async with self._pool.connection() as conn:
             rows = await (
                 await conn.execute(
-                    """
+                    f"""
                     SELECT m.memory_id, m.user_id, m.memory_text, m.category, m.domain,
                            m.condition, m.evidence_text, m.source_thread_id, m.status,
                            m.valid_from, m.valid_to, m.supersedes_memory_id,
@@ -287,6 +376,7 @@ class PostgresLongTermMemoryRepository:
                       AND m.status = 'active'
                       AND (m.valid_from IS NULL OR m.valid_from <= now())
                       AND (m.valid_to IS NULL OR m.valid_to > now())
+                      {domain_clause}
                       AND e.is_current = true
                       AND e.embedding_model = %(embedding_model)s
                       AND e.embedding_dims = %(embedding_dims)s
@@ -294,18 +384,88 @@ class PostgresLongTermMemoryRepository:
                     ORDER BY distance ASC, m.updated_at DESC
                     LIMIT %(limit)s
                     """,
-                    {
-                        "user_id": filters.user_id,
-                        "families": families,
-                        "limit": filters.limit,
-                        "query_embedding": vector_literal(query_embedding),
-                        "embedding_model": embedding_model,
-                        "embedding_dims": embedding_dims,
-                        "distance_threshold": distance_threshold,
-                    },
+                    params,
                 )
             ).fetchall()
         return [TravelMemory.from_record(dict(row)) for row in rows]
+
+    async def fetch_transition_comparison_pool(
+        self,
+        *,
+        user_id: str,
+        category: str,
+        domain: str,
+        candidate_embedding: Sequence[float] | None = None,
+        embedding_model: str = "",
+        embedding_dims: int = 0,
+    ) -> list[RankedMemory]:
+        params: dict[str, Any] = {
+            "user_id": user_id,
+            "category": category,
+            "domain": domain,
+            "embedding_model": embedding_model,
+            "embedding_dims": embedding_dims,
+        }
+        if candidate_embedding is not None and embedding_model and embedding_dims > 0:
+            params["candidate_embedding"] = vector_literal(candidate_embedding)
+            distance_expr = "e.embedding <=> %(candidate_embedding)s::vector"
+            join_clause = """
+                LEFT JOIN long_term_memory_embeddings AS e
+                  ON e.memory_id = p.memory_id
+                 AND e.is_current = TRUE
+                 AND e.embedding_model = %(embedding_model)s
+                 AND e.embedding_dims = %(embedding_dims)s
+            """
+        else:
+            distance_expr = "NULL::double precision"
+            join_clause = ""
+
+        async with self._pool.connection() as conn:
+            rows = await (
+                await conn.execute(
+                    f"""
+                    WITH comparison_pool AS (
+                        SELECT
+                            m.memory_id, m.user_id, m.memory_text, m.category, m.domain,
+                            m.condition, m.evidence_text, m.source_thread_id, m.status,
+                            m.valid_from, m.valid_to, m.supersedes_memory_id,
+                            m.created_at, m.updated_at, m.metadata
+                        FROM long_term_memories AS m
+                        WHERE m.user_id = %(user_id)s
+                          AND m.status = 'active'
+                          AND m.category = %(category)s
+                          AND m.domain = %(domain)s
+                          AND (m.valid_from IS NULL OR m.valid_from <= now())
+                          AND (m.valid_to IS NULL OR m.valid_to > now())
+                    ),
+                    ranked_pool AS (
+                        SELECT
+                            p.*,
+                            {distance_expr} AS distance
+                        FROM comparison_pool AS p
+                        {join_clause}
+                    )
+                    SELECT *
+                    FROM ranked_pool
+                    ORDER BY
+                        (distance IS NULL) ASC,
+                        distance ASC,
+                        created_at DESC
+                    """,
+                    params,
+                )
+            ).fetchall()
+        ranked: list[RankedMemory] = []
+        for row in rows:
+            payload = dict(row)
+            distance = payload.pop("distance", None)
+            ranked.append(
+                RankedMemory(
+                    memory=TravelMemory.from_record(payload),
+                    distance=float(distance) if distance is not None else None,
+                )
+            )
+        return ranked
 
     async def mark_memory_superseded(self, memory_id: str) -> None:
         async with self._pool.connection() as conn:
@@ -317,6 +477,45 @@ class PostgresLongTermMemoryRepository:
                 """,
                 {"memory_id": UUID(str(memory_id))},
             )
+
+    async def commit_supersede(
+        self, *, existing_memory_id: str, new_memory: TravelMemory
+    ) -> str:
+        memory_id = uuid4()
+        record = new_memory.to_record()
+        if not record.get("supersedes_memory_id"):
+            record["supersedes_memory_id"] = existing_memory_id
+        async with self._pool.connection() as conn:
+            async with conn.transaction():
+                await conn.execute(
+                    """
+                    UPDATE long_term_memories
+                    SET status = 'superseded', updated_at = now()
+                    WHERE memory_id = %(memory_id)s
+                    """,
+                    {"memory_id": UUID(str(existing_memory_id))},
+                )
+                await conn.execute(
+                    """
+                    INSERT INTO long_term_memories (
+                        memory_id, user_id, family, category, domain, memory_text,
+                        condition, evidence_text, source_thread_id, status,
+                        valid_from, valid_to, supersedes_memory_id, metadata
+                    ) VALUES (
+                        %(memory_id)s, %(user_id)s, %(family)s, %(category)s,
+                        %(domain)s, %(memory_text)s, %(condition)s,
+                        %(evidence_text)s, %(source_thread_id)s, %(status)s,
+                        %(valid_from)s, %(valid_to)s, %(supersedes_memory_id)s,
+                        %(metadata)s
+                    )
+                    """,
+                    {
+                        **record,
+                        "memory_id": memory_id,
+                        "metadata": Jsonb(record.get("metadata") or {}),
+                    },
+                )
+        return str(memory_id)
 
     async def write_audit_record(
         self,
@@ -427,6 +626,15 @@ class NoopLongTermMemoryRepository:
     ) -> list[TravelMemory]:
         return []
 
+    async def fetch_active_domain_memories(
+        self,
+        *,
+        user_id: str,
+        domain: str,
+        limit: int,
+    ) -> list[TravelMemory]:
+        return []
+
     async def insert_memory(self, memory: TravelMemory) -> str:
         return memory.memory_id or "noop-memory"
 
@@ -453,8 +661,25 @@ class NoopLongTermMemoryRepository:
     ) -> list[TravelMemory]:
         return []
 
+    async def fetch_transition_comparison_pool(
+        self,
+        *,
+        user_id: str,
+        category: str,
+        domain: str,
+        candidate_embedding: Sequence[float] | None = None,
+        embedding_model: str = "",
+        embedding_dims: int = 0,
+    ) -> list[RankedMemory]:
+        return []
+
     async def mark_memory_superseded(self, memory_id: str) -> None:
         return None
+
+    async def commit_supersede(
+        self, *, existing_memory_id: str, new_memory: TravelMemory
+    ) -> str:
+        return new_memory.memory_id or "noop-memory"
 
     async def write_audit_record(
         self,

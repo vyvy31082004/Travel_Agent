@@ -91,4 +91,6 @@ Nếu đã sửa logic dựa trên output của test, case đó phải chuyển 
 
 ## 8. Trạng thái dataset hiện tại
 
-Bộ 57 case hiện tại là **pilot gold draft do một annotator tạo**. Chưa có annotator thứ hai, Cohen’s Kappa hoặc adjudication. Vì vậy số đo hiện tại chỉ là **pilot diagnostic**, chưa phải kết quả held-out chính thức để kết luận trước hội đồng.
+Bộ **150 case** (`development`=65, `test`/held-out=85) là **pilot gold draft do một annotator tạo**. Development giữ **VALID=18**, phần còn lại chia gần đều các requirement khác. Held-out giữ **VALID=20** và phân bổ dày hơn cho condition/atomic/an toàn. Chưa có annotator thứ hai, Cohen’s Kappa hoặc adjudication. Vì vậy số đo hiện tại chỉ là **pilot diagnostic**, chưa phải kết quả held-out chính thức để kết luận trước hội đồng.
+
+Mỗi case có `expected_store` (có được phép ghi LTM hay không) và `unsafe` (nhạy cảm/policy) tách biệt khi cần.

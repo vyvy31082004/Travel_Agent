@@ -82,7 +82,7 @@ The system SHALL support deterministic, TrustMem-gated, and TrustMem dry-run ver
 #### Scenario: TrustMem verifier fails or times out
 - **WHEN** `LONG_TERM_MEMORY_VERIFIER=trustmem` and the verifier call fails, times out, or returns malformed output
 - **THEN** the system records the failure in verifier audit metadata
-- **AND** the transition is retried or rejected according to configured safe fallback behavior
+- **AND** the commit decision falls back to the deterministic verifier
 
 ### Requirement: Structured verifier audit output
 The system SHALL persist TrustMem-inspired verifier output in structured audit metadata.
@@ -94,7 +94,7 @@ The system SHALL persist TrustMem-inspired verifier output in structured audit m
 #### Scenario: Malformed score is returned
 - **WHEN** verifier output contains a score outside `[0, 1]` or missing required dimensions
 - **THEN** the output is treated as malformed
-- **AND** the transition is not approved
+- **AND** the transition decision falls back to the deterministic verifier with `fallback_reason` recorded
 
 ### Requirement: Travel-specific verifier fixtures
 The system SHALL include tests or fixtures for travel-memory-specific verifier failures and approvals.
