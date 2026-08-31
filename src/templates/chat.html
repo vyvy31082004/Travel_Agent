@@ -53,6 +53,24 @@
         opacity: 0.9;
       }
 
+      .chat-header-auth {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+      }
+
+      .chat-header-auth a {
+        color: #f9fafb;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .chat-header-auth .chat-button {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+
       .chat-messages {
         flex: 1;
         padding: 12px 12px 4px;
@@ -150,6 +168,16 @@
           <div class="chat-header-subtitle">
             Hỏi về chuyến bay, khách sạn, thuê xe...
           </div>
+        </div>
+        <div class="chat-header-auth">
+          {% if current_user %}
+            <span>{{ current_user.full_name }}</span>
+            <form method="post" action="/logout">
+              <button class="chat-button" type="submit">Đăng xuất</button>
+            </form>
+          {% else %}
+            <a href="/login">Đăng nhập</a>
+          {% endif %}
         </div>
       </header>
 
