@@ -133,7 +133,10 @@ def test_classify_gold_forbidden_and_irrelevant():
     assert irrelevant.classification == MemoryClassification.IRRELEVANT
 
 
-@pytest.mark.skipif(not __import__("os").getenv("DATABASE_URL"), reason="DATABASE_URL required")
+@pytest.mark.skipif(
+    not __import__("os").getenv("RUN_POSTGRES_INTEGRATION"),
+    reason="RUN_POSTGRES_INTEGRATION required",
+)
 def test_collect_case_records_integration():
     import asyncio
     import selectors

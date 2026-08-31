@@ -47,7 +47,8 @@ jobs:
       - name: Run unit tests
         env:
           DATABASE_URL: ""
-        run: python -m pytest -q -m 'not live' tests --ignore=tests/test_retrieval_postgres.py --ignore=tests/test_memory_eval_suites.py
+          RUN_POSTGRES_INTEGRATION: ""
+        run: python -m pytest -q -m 'not live' tests
       - name: Compile application
         run: python -m compileall -q src
       - name: Check repository diff

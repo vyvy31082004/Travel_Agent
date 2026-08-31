@@ -273,6 +273,9 @@ def test_postgres_user_filter_is_in_sql():
     assert "m.user_id = %(user_id)s" in source
 
 
-@pytest.mark.skipif(not os.getenv("DATABASE_URL"), reason="DATABASE_URL is required")
+@pytest.mark.skipif(
+    not os.getenv("RUN_POSTGRES_INTEGRATION"),
+    reason="RUN_POSTGRES_INTEGRATION required",
+)
 def test_postgres_user_filter_live_when_available():
     test_postgres_user_filter_is_in_sql()
