@@ -141,6 +141,7 @@ class MemoryWorker:
                         chunk=tuple(job.get("messages") or ()),
                         old_memories=tuple(existing),
                         new_memories=tuple(project_memory_state(transition, existing)),
+                        candidate_batch=tuple(candidates),
                     ),
                 )
                 logger.info(

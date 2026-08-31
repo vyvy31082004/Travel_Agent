@@ -33,7 +33,10 @@ COMMON_ARGS=(
     DATABASE_URL=secretref:database-url
     COOKIE_SECRET=secretref:cookie-secret
     GOOGLE_API_KEY=secretref:google-api-key
-    LONG_TERM_MEMORY_VECTOR_SEARCH_ENABLED=true
+    LONG_TERM_MEMORY_VECTOR_SEARCH_ENABLED=false
+    LONG_TERM_MEMORY_EMBEDDING_MODEL="${LONG_TERM_MEMORY_EMBEDDING_MODEL:-models/gemini-embedding-001}"
+    LONG_TERM_MEMORY_VECTOR_DIMS="${LONG_TERM_MEMORY_VECTOR_DIMS:-3072}"
+    LONG_TERM_MEMORY_EMBEDDING_BACKFILL_BATCH_SIZE="${LONG_TERM_MEMORY_EMBEDDING_BACKFILL_BATCH_SIZE:-3}"
     RAPIDAPI_LOCK_FILE=/tmp/viettrip-rapidapi.lock
 )
 
@@ -47,4 +50,5 @@ if az containerapp job show --name "${BACKFILL_JOB_NAME}" --resource-group "${AZ
     --yes
 fi
 
-az containerapp job create "${COMMON_ARGS[@]}"
+# Prevent Git Bash/MSYS from rewriting the Linux lock path in --env-vars.
+MSYS_NO_PATHCONV=1 az containerapp job create "${COMMON_ARGS[@]}"

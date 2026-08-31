@@ -426,7 +426,21 @@ def _latest_user_evidence(messages: Sequence[dict[str, Any]]) -> str:
 
 def _looks_like_durable_user_evidence(text: str) -> bool:
     lowered = text.lower()
+    if _is_memory_question(lowered):
+        return False
     return any(marker in lowered for marker in _DURABLE_MARKERS)
+
+
+def _is_memory_question(lowered: str) -> bool:
+    """Do not persist questions that quote a preference being recalled."""
+    question_markers = (
+        "bạn nhớ",
+        "có nhớ",
+        "nhớ tôi",
+        "remember what",
+        "do you remember",
+    )
+    return "?" in lowered and any(marker in lowered for marker in question_markers)
 
 
 def _clean_memory_text(text: str) -> str:

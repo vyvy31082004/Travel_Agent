@@ -358,7 +358,8 @@ class PostgresLongTermMemoryRepository:
             "distance_threshold": distance_threshold,
         }
         domain_clause = _domain_filter_clause(filters, params).replace(
-            "domain", "m.domain"
+            " AND domain = ANY(%(domains)s)",
+            " AND m.domain = ANY(%(domains)s)",
         )
         async with self._pool.connection() as conn:
             rows = await (

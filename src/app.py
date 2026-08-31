@@ -12,7 +12,10 @@ from pydantic import BaseModel, Field
 from agents.primary.agent import build_primary_graph
 from dependencies import get_primary_graph
 from infrastructure.postgres import open_postgres
+from memory.commit import MemoryCommitAdapter
 from memory.embeddings import MemoryEmbeddingService
+from memory.verifier import build_memory_verifier
+from memory.worker import MemoryWorker
 from repositories.long_term_memory import PostgresLongTermMemoryRepository
 from repositories.result_store import ResultStoreRepository
 from services.long_term_memory import MemoryService
@@ -36,9 +39,21 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         repo = ResultStoreRepository(postgres.pool)
         memory_repo = PostgresLongTermMemoryRepository(postgres.pool)
         embedding_service = MemoryEmbeddingService(settings=settings)
+        memory_worker = MemoryWorker(
+            pool=postgres.pool,
+            settings=settings,
+            repository=memory_repo,
+            commit_adapter=MemoryCommitAdapter(
+                repository=memory_repo,
+                verifier=build_memory_verifier(settings),
+                embedding_service=embedding_service,
+            ),
+            embedding_service=embedding_service,
+        )
         memory_service = MemoryService(
             settings=settings,
             repository=memory_repo,
+            processor=memory_worker,
             embedding_service=embedding_service,
         )
         app.state.settings = settings

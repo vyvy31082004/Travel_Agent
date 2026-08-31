@@ -22,9 +22,9 @@ Score a proposed local memory transition z_t = (chunk, M_old, actions, M_new).
 Return scores in [0, 1] with short reasons.
 
 Dimensions:
-- coverage: durable user facts/preferences in the chunk are preserved in proposed memory changes.
+- coverage: durable user facts/preferences in the chunk are preserved across the complete candidate_batch. LangMem intentionally emits one atomic fact per memory, so do not require each individual candidate to repeat facts represented by sibling candidates in the same batch.
 - preservation: valid old memories are not incorrectly deleted, distorted, over-generalized, or merged with lost conditions (e.g. business vs leisure, family vs solo).
-- faithfulness: new/changed memory is supported by the user's own evidence in the chunk or by valid M_old. Tool/API search results alone are not user preferences.
+- faithfulness: the individual candidate being evaluated is supported by the user's own evidence in the chunk or by valid M_old. Tool/API search results alone are not user preferences.
 
 Be conservative. If evidence is missing or the candidate looks like tool output, lower faithfulness sharply."""
 
@@ -85,12 +85,16 @@ class MemoryVerifierContext:
     chunk: Sequence[dict[str, Any]] = ()
     old_memories: Sequence[TravelMemory] = ()
     new_memories: Sequence[TravelMemory] = ()
+    candidate_batch: Sequence[TravelMemory] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "chunk": [dict(message) for message in self.chunk],
             "M_old": [memory.to_record() for memory in self.old_memories],
             "M_new": [memory.to_record() for memory in self.new_memories],
+            "candidate_batch": [
+                memory.to_record() for memory in self.candidate_batch
+            ],
         }
 
 
@@ -323,6 +327,9 @@ class TrustMemInspiredMemoryVerifier:
             "reasons": list(transition.reasons),
             "existing_memory_id": transition.existing_memory_id,
             "candidate": _compact_memory(transition.candidate),
+            "candidate_batch": [
+                _compact_memory(memory) for memory in context.candidate_batch[:20]
+            ],
             "chunk": _compact_chunk(context.chunk),
             "M_old": [_compact_memory(memory) for memory in context.old_memories[:20]],
             "M_new": [_compact_memory(memory) for memory in context.new_memories[:20]],
@@ -349,9 +356,10 @@ class TrustMemInspiredMemoryVerifier:
         context = context or MemoryVerifierContext()
         chunk_text = _chunk_text(context.chunk)
         candidate_text = _candidate_text(transition)
+        coverage_text = _candidate_batch_text(context, transition)
         old_text = "\n".join(m.memory_text for m in context.old_memories)
 
-        coverage_score, coverage_reason = _score_coverage(chunk_text, candidate_text)
+        coverage_score, coverage_reason = _score_coverage(chunk_text, coverage_text)
         preservation_score, preservation_reason = _score_preservation(
             transition, old_text, candidate_text
         )
@@ -488,6 +496,21 @@ def _candidate_text(transition: MemoryTransition) -> str:
     parts = [transition.candidate.memory_text]
     if transition.candidate.condition:
         parts.append(transition.candidate.condition)
+    return "\n".join(parts).lower()
+
+
+def _candidate_batch_text(
+    context: MemoryVerifierContext,
+    transition: MemoryTransition,
+) -> str:
+    memories = list(context.candidate_batch)
+    if not memories and transition.candidate is not None:
+        memories = [transition.candidate]
+    parts: list[str] = []
+    for memory in memories:
+        parts.append(memory.memory_text)
+        if memory.condition:
+            parts.append(memory.condition)
     return "\n".join(parts).lower()
 
 

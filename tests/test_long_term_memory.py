@@ -469,6 +469,34 @@ def test_trustmem_verifier_detects_coverage_preservation_and_faithfulness_failur
     assert coverage.decision == "reject"
     assert coverage.dimensions["coverage"].score < 0.8
 
+    atomic_1 = _flight_memory(
+        "ưu tiên business khi công tác",
+        evidence="Tôi muốn business khi công tác và economy khi du lịch",
+    )
+    atomic_2 = _flight_memory(
+        "ưu tiên economy khi du lịch",
+        condition="du lịch",
+        evidence="Tôi muốn business khi công tác và economy khi du lịch",
+    )
+    batch_coverage = asyncio.run(
+        verifier.evaluate(
+            MemoryTransition(TransitionAction.INSERT, candidate=atomic_1),
+            MemoryVerifierContext(
+                chunk=[
+                    {
+                        "type": "human",
+                        "content": "Tôi muốn business khi công tác và economy khi du lịch",
+                    }
+                ],
+                old_memories=[],
+                new_memories=[atomic_1],
+                candidate_batch=[atomic_1, atomic_2],
+            ),
+        )
+    )
+    assert batch_coverage.decision == "approve"
+    assert batch_coverage.dimensions["coverage"].passed
+
     old = _flight_memory(
         "ưu tiên economy khi du lịch",
         memory_id="old-1",
@@ -949,6 +977,15 @@ def test_candidate_extractor_config_selects_deterministic():
         )
     )
     assert len(candidates) == 1
+
+
+def test_memory_recall_questions_are_not_extracted():
+    candidates = extract_candidate_memories(
+        [{"type": "human", "content": "Bạn nhớ tôi thích khách sạn như thế nào không?"}],
+        user_id="user-1",
+        thread_id="thread-1",
+    )
+    assert candidates == []
 
 
 def test_tool_only_messages_are_not_extracted():
