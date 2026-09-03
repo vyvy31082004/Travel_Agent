@@ -10,6 +10,7 @@ from psycopg_pool import AsyncConnectionPool
 
 from memory.embeddings import vector_literal
 from memory.long_term import MemoryFamily, TravelMemory
+from memory.validity import apply_default_validity_if_missing
 
 
 @dataclass(frozen=True)
@@ -228,7 +229,7 @@ class PostgresLongTermMemoryRepository:
 
     async def insert_memory(self, memory: TravelMemory) -> str:
         memory_id = uuid4()
-        record = memory.to_record()
+        record = apply_default_validity_if_missing(memory).to_record()
         async with self._pool.connection() as conn:
             await conn.execute(
                 """
@@ -482,7 +483,7 @@ class PostgresLongTermMemoryRepository:
         self, *, existing_memory_id: str, new_memory: TravelMemory
     ) -> str:
         memory_id = uuid4()
-        record = new_memory.to_record()
+        record = apply_default_validity_if_missing(new_memory).to_record()
         if not record.get("supersedes_memory_id"):
             record["supersedes_memory_id"] = existing_memory_id
         async with self._pool.connection() as conn:

@@ -15,6 +15,16 @@ KeepRoute = Literal["summarize_conversation", "__end__"]
 
 KEEP_COUNT = 8  # ~2 handoff turns (Human→AI tool→Tool→AI final × 2)
 MAX_MESSAGES = 12  # must be > KEEP_COUNT
+E2E_SUMMARIZE_ALL_KEY = "e2e_summarize_all"
+
+
+def e2e_summarize_all_enabled(config: Any | None = None) -> bool:
+    if not config:
+        return False
+    configurable = config.get("configurable") if isinstance(config, dict) else None
+    if not isinstance(configurable, dict):
+        return False
+    return bool(configurable.get(E2E_SUMMARIZE_ALL_KEY))
 
 
 def message_content_size(message: AnyMessage) -> int:
@@ -27,8 +37,14 @@ def should_summarize(
     max_messages: int = MAX_MESSAGES,
     max_chars: int = 30_000,
     keep_count: int = KEEP_COUNT,
+    config: Any | None = None,
 ) -> KeepRoute:
     messages = state.get("messages") or []
+    if e2e_summarize_all_enabled(config):
+        if choose_complete_turns(list(messages)):
+            return "summarize_conversation"
+        return "__end__"
+
     total_chars = sum(message_content_size(m) for m in messages)
     if len(messages) < max_messages and total_chars < max_chars:
         return "__end__"
@@ -173,9 +189,14 @@ async def summarize_conversation(
     state: dict[str, Any],
     llm: BaseChatModel,
     keep_count: int = KEEP_COUNT,
+    summarize_all: bool = False,
 ) -> dict[str, Any]:
     messages = list(state.get("messages") or [])
-    old_messages = select_messages_to_summarize(messages, keep_count=keep_count)
+    old_messages = (
+        choose_complete_turns(messages)
+        if summarize_all
+        else select_messages_to_summarize(messages, keep_count=keep_count)
+    )
     if not old_messages:
         return {}
 

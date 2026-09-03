@@ -75,15 +75,24 @@ class MemoryWorker:
         return await self._process_claimed_job(job)
 
     async def process_job(self, job_id: str) -> None:
-        """Process a specific memory job (used for sync_finalize)."""
-        job = await self._claim_job(job_id)
-        if not job:
-            print(f"[Worker] process_job: could not claim job {job_id}")
-            return
-        res = await self._process_claimed_job(job)
-        print(f"[Worker] process_job result: {res}")
-        if res.error:
-            print(f"[Worker] error details: {res.error}")
+        """Process a specific memory job (used for sync_finalize).
+
+        Retries while the job remains ``pending`` so sync callers observe a
+        terminal status (``completed`` / ``skipped`` / ``failed``).
+        """
+        max_attempts = max(1, int(self._settings.long_term_memory_worker_retry_limit))
+        for _ in range(max_attempts):
+            job = await self._claim_job(job_id)
+            if not job:
+                print(f"[Worker] process_job: could not claim job {job_id}")
+                return
+            res = await self._process_claimed_job(job)
+            print(f"[Worker] process_job result: {res}")
+            if res.error:
+                print(f"[Worker] error details: {res.error}")
+            if res.status != "failed":
+                return
+        print(f"[Worker] process_job exhausted retries for job {job_id}")
 
     async def _load_existing(self, user_id: str):
         return await self._repository.search_active_memories(
@@ -161,12 +170,12 @@ class MemoryWorker:
                 candidates=len(candidates),
             )
         except Exception as exc:
-            await self._mark_job_failed(job_id, str(exc))
-            logger.warning(
-                "memory job failed", extra={"job_id": job_id, "error": str(exc)}
-            )
+            error_text = repr(exc)
+            await self._mark_job_failed(job_id, error_text)
+            logger.exception("memory job failed job_id=%s", job_id)
+            print(f"[Worker] memory job failed job_id={job_id}: {error_text}")
             return WorkerResult(
-                processed=True, job_id=job_id, status="failed", error=str(exc)
+                processed=True, job_id=job_id, status="failed", error=error_text
             )
 
     async def _claim_next_job(self) -> dict[str, Any] | None:

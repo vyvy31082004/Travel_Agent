@@ -1,0 +1,469 @@
+{
+  "metadata": {
+    "case_id": "e2e_hotel_001",
+    "run_id": "9e3abf511f82",
+    "started_at": "2026-09-01T12:29:03.303564+00:00",
+    "finished_at": "2026-09-01T12:31:06.582796+00:00",
+    "user_id": "e2e-e2e_hotel_001:user_a",
+    "thread_id": "e2e-e2e_hotel_001-9e3abf511f82",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v1",
+    "git_commit": "33651113742b805502b902653208662372e2be36",
+    "fixture_to_uuid": {
+      "m_budget": "de62ae8a-80b8-58a6-bfcf-0199984f6c2c",
+      "m_quiet": "e9e8a6a0-ec66-51ab-82f0-8b71c33a0378",
+      "m_beach": "397ea00f-cba6-5445-9b89-3c207daf17b5",
+      "m_other_user": "cbb4a166-3280-51ab-973a-e91add751201",
+      "m_superseded": "08fd7614-4e37-55c0-b890-5010437c2da6"
+    }
+  },
+  "input": {
+    "messages": [
+      "Tìm khách sạn ở Phú Quốc cho tôi."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-01"
+    }
+  },
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "hotel"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToHotelAssistant",
+        "args": {
+          "request": "Tìm khách sạn ở Phú Quốc"
+        },
+        "timestamp": "2026-09-01T12:31:06.581801+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "hotel_assistant",
+      "join_results",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "hotel": {
+      "candidate_pool_ids": [
+        "m_beach",
+        "m_quiet",
+        "m_budget"
+      ],
+      "applicability": {
+        "m_beach": "uncertain",
+        "m_quiet": "uncertain",
+        "m_budget": "uncertain"
+      },
+      "final_context_ids": [
+        "m_beach",
+        "m_quiet",
+        "m_budget"
+      ],
+      "applied_constraints": [
+        "(soft) [397ea00f-cba6-5445-9b89-3c207daf17b5] Thích khách sạn gần biển",
+        "(soft) [e9e8a6a0-ec66-51ab-82f0-8b71c33a0378] Thích khách sạn yên tĩnh",
+        "(soft) [de62ae8a-80b8-58a6-bfcf-0199984f6c2c] Ngân sách hotel thường 1–2 triệu/đêm"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "location": "Phú Quốc",
+        "destination": "Phú Quốc"
+      },
+      "timestamp": "2026-09-01T12:31:06.581801+00:00",
+      "raw_result": {
+        "search_id": "d63dcd71-a38f-40ba-b341-5ae28832bbc9",
+        "domain": "hotel",
+        "displayed_item_ids": [
+          "1111660",
+          "4632878",
+          "6744856",
+          "3002731",
+          "7006996",
+          "15979413",
+          "872579",
+          "7017600",
+          "4263727",
+          "15590428"
+        ],
+        "labels": [],
+        "total_results": 10
+      },
+      "normalized_result": {
+        "search_id": "d63dcd71-a38f-40ba-b341-5ae28832bbc9",
+        "request_id": "req_hotel_5e3ce032",
+        "domain": "hotel",
+        "total_results": 10,
+        "items": [
+          {
+            "name": "Sea Star Resort",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/87489686.jpg?k=9b70a26e05e82ccc23de361ca89dddfd2e694d49c576ea4c9f76fba9562f2a2f&o=",
+            "price": 860200,
+            "rating": 8.4,
+            "address": null,
+            "item_id": "1111660",
+            "currency": "VND",
+            "location": "Phú Quốc",
+            "price_tier": "mid",
+            "external_hotel_id": "1111660",
+            "accessibilityLabel": [
+              "Sea Star Resort",
+              "3 trên 5 sao",
+              "8,4 Rất tốt 1655 đánh giá",
+              "Duong To • 1,7km từ trung tâm",
+              "Giáp biển",
+              "Ưu Đãi Mùa Du Lịch",
+              "Bao bữa sáng",
+              "1 bungalow nguyên căn – 28 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 2150500 VND",
+              "Giá hiện tại là 860200 VND",
+              "Đã bao gồm thuế và phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 4 căn với giá này trên Booking.com"
+            ],
+            "position": 1
+          },
+          {
+            "name": "Best Western Premier Sonasea Phu Quoc",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/770599803.jpg?k=5e71c4a12688dca49ee41fbe65a99a66fd0f07826f540486a6184082f7604157&o=",
+            "price": 3000000,
+            "rating": 8.2,
+            "address": null,
+            "item_id": "4632878",
+            "currency": "VND",
+            "location": "Phú Quốc",
+            "price_tier": "luxury",
+            "external_hotel_id": "4632878",
+            "accessibilityLabel": [
+              "Best Western Premier Sonasea Phu Quoc",
+              "5 trên 5 sao",
+              "8,2 Rất tốt 683 đánh giá",
+              "Duong To • 10km từ trung tâm",
+              "Giáp biển",
+              "Bao bữa sáng",
+              "1 giường",
+              "3000000 VND",
+              "Đã bao gồm thuế và phí"
+            ],
+            "position": 2
+          },
+          {
+            "name": "Vinholidays Fiesta Phu Quoc",
+            "star": 4,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/302248703.jpg?k=600e0c05a76594df28aef976d935a2e18ef557e5f81ca6e450807b963e874aab&o=",
+            "price": 1190000,
+            "rating": 8.3,
+            "address": null,
+            "item_id": "6744856",
+            "currency": "VND",
+            "location": "Phú Quốc",
+            "price_tier": "mid",
+            "external_hotel_id": "6744856",
+            "accessibilityLabel": [
+              "Vinholidays Fiesta Phu Quoc",
+              "4 trên 5 sao",
+              "8,3 Rất tốt 864 đánh giá",
+              "Ganh Dau • 16,3km từ trung tâm",
+              "Cách biển 0,7km",
+              "1 phòng khách sạn : 2 giường",
+              "Giá gốc là 1487500 VND",
+              "Giá hiện tại là 1190000 VND",
+              "Đã bao gồm thuế và phí"
+            ],
+            "position": 3
+          },
+          {
+            "name": "Dusit Princess Moonrise Beach Resort",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/296411169.jpg?k=7290afafba1527e77526627b10834f9da7137c907834a6540657e79deb434cf8&o=",
+            "price": 4290000,
+            "rating": 9.3,
+            "address": null,
+            "item_id": "3002731",
+            "currency": "VND",
+            "location": "Phú Quốc",
+            "price_tier": "luxury",
+            "external_hotel_id": "3002731",
+            "accessibilityLabel": [
+              "Dusit Princess Moonrise Beach Resort",
+              "5 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "9,3 Tuyệt hảo 1499 đánh giá",
+              "Duong To • 4km từ trung tâm",
+              "Giáp biển",
+              "Bao bữa sáng",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 7800000 VND",
+              "Giá hiện tại là 4290000 VND",
+              "Đã bao gồm thuế và phí",
+              "Chỉ còn 5 căn với giá này trên Booking.com"
+            ],
+            "position": 4
+          },
+          {
+            "name": "New World Phu Quoc Resort",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/744463485.jpg?k=790cc4e6eb761db82f8ef7afce37e8afb5a072597feeaa23d55f2cd95f1436c8&o=",
+            "price": 6940080,
+            "rating": 8.5,
+            "address": null,
+            "item_id": "7006996",
+            "currency": "VND",
+            "location": "Phú Quốc",
+            "price_tier": "luxury",
+            "external_hotel_id": "7006996",
+            "accessibilityLabel": [
+              "New World Phu Quoc Resort",
+              "5 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "8,5 Rất tốt 696 đánh giá",
+              "An Thoi • 21,1km từ trung tâm",
+              "Giáp biển",
+              "Bao bữa sáng",
+              "1 giường",
+              "6940080 VND",
+              "Đã bao gồm thuế và phí",
+              "Chỉ còn 3 căn với giá này trên Booking.com"
+            ],
+            "position": 5
+          },
+          {
+            "name": "Devesun Boutique Hotel Phú Quốc",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/877016766.jpg?k=8f14a27420c89addd276e4e17e585c97ed4d9e8c1045f29da53e6ada9d681a93&o=",
+            "price": 1377000,
+            "rating": 9.4,
+            "address": null,
+            "item_id": "15979413",
+            "currency": "VND",
+            "location": "Phú Quốc",
+            "price_tier": "mid",
+            "external_hotel_id": "15979413",
+            "accessibilityLabel": [
+              "Devesun Boutique Hotel Phú Quốc",
+              "9,4 Tuyệt hảo 24 đánh giá",
+              "An Thoi • 21,9km từ trung tâm",
+              "Bao bữa sáng",
+              "1 phòng khách sạn : 1 giường",
+              "1377000 VND",
+              "Đã bao gồm thuế và phí",
+              "Chỉ còn 2 căn với giá này trên Booking.com"
+            ],
+            "position": 6
+          },
+          {
+            "name": "Coral Bay Resort",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/40356001.jpg?k=8db4e677fac7798141b84ad55fdf8a2a8330ca51921568b3602e15da7fabce77&o=",
+            "price": 1606813,
+            "rating": 8.4,
+            "address": null,
+            "item_id": "872579",
+            "currency": "VND",
+            "location": "Phú Quốc",
+            "price_tier": "luxury",
+            "external_hotel_id": "872579",
+            "accessibilityLabel": [
+              "Coral Bay Resort",
+              "3 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "8,4 Rất tốt 680 đánh giá",
+              "Duong To • 2,7km từ trung tâm",
+              "Giáp biển",
+              "Giá chỉ có trên điện thoại",
+              "Bao bữa sáng",
+              "1 bungalow nguyên căn – 40 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 2380464 VND",
+              "Giá hiện tại là 1606813 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 1 căn với giá này trên Booking.com"
+            ],
+            "position": 7
+          },
+          {
+            "name": "Ocean Bay Resort & Spa Phu Quoc",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/685539137.jpg?k=446f7c9698c694e0fbb5e8d9a174aa83964fac8e3971f34513c62cd1c943ec89&o=",
+            "price": 2502500,
+            "rating": 9,
+            "address": null,
+            "item_id": "7017600",
+            "currency": "VND",
+            "location": "Phú Quốc",
+            "price_tier": "luxury",
+            "external_hotel_id": "7017600",
+            "accessibilityLabel": [
+              "Ocean Bay Resort & Spa Phu Quoc",
+              "5 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "9,0 Tuyệt hảo 3061 đánh giá",
+              "Ong Lang • 4,5km từ trung tâm",
+              "Giáp biển",
+              "Ưu Đãi Mùa Du Lịch",
+              "Bao bữa sáng",
+              "1 bungalow nguyên căn – 52 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 3850000 VND",
+              "Giá hiện tại là 2502500 VND",
+              "Đã bao gồm thuế và phí",
+              "Chỉ còn 4 căn với giá này trên Booking.com"
+            ],
+            "position": 8
+          },
+          {
+            "name": "Premier Residences Phu Quoc Emerald Bay Managed by Accor",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/776022851.jpg?k=3ec4114eadec03cc0027fe7aa2e626170747e60190e01fd808d0c30ed2bc7c9b&o=",
+            "price": 2865720,
+            "rating": 7.9,
+            "address": null,
+            "item_id": "4263727",
+            "currency": "VND",
+            "location": "Phú Quốc",
+            "price_tier": "luxury",
+            "external_hotel_id": "4263727",
+            "accessibilityLabel": [
+              "Premier Residences Phu Quoc Emerald Bay Managed by Accor",
+              "5 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "7,9 Tốt 860 đánh giá",
+              "An Thoi • 21,5km từ trung tâm",
+              "Giáp biển",
+              "Bao bữa sáng",
+              "1 phòng khách sạn : 1 giường",
+              "2865720 VND",
+              "+384006 VND thuế và phí",
+              "Không cần thanh toán trước"
+            ],
+            "position": 9
+          },
+          {
+            "name": "Emerald Boutique Hotel Phú Quốc",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/807807940.jpg?k=cb81791f57b7cce1bb367974cc342c9902281a3dc69aafac18df4cc2d17ba0c2&o=",
+            "price": 1710000,
+            "rating": 9.7,
+            "address": null,
+            "item_id": "15590428",
+            "currency": "VND",
+            "location": "Phú Quốc",
+            "price_tier": "luxury",
+            "external_hotel_id": "15590428",
+            "accessibilityLabel": [
+              "Emerald Boutique Hotel Phú Quốc",
+              "9,7 Xuất sắc 39 đánh giá",
+              "Duong To • 9,5km từ trung tâm",
+              "Cách biển 0,7km",
+              "Giá chỉ có trên điện thoại",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 1900000 VND",
+              "Giá hiện tại là 1710000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 3 căn với giá này trên Booking.com"
+            ],
+            "position": 10
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "hotel",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là danh sách khách sạn tại Phú Quốc (kết quả đã được lọc theo sở thích lưu trữ của bạn - ưu tiên khách sạn giáp biển hoặc gần biển):\\n\\n*   **Sea Star Resort** (ID: 1111660)\\n    *   Địa điểm: Phú Quốc\\n    *   Giá: 860200 VND\\n    *   Đánh giá: 8.4\\n    *   Hạng sao: 3\\n    *   accessibilityLabel:\\n        *   Sea Star Resort\\n        *   3 trên 5 sao\\n        *   8,4 Rất tốt 1655 đánh giá\\n        *   Duong To • 1,7km từ trung tâm\\n        *   Giáp biển\\n        *   Ưu Đãi Mùa Du Lịch\\n        *   Bao bữa sáng\\n        *   1 bungalow nguyên căn – 28 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm\\n        *   Giá gốc là 2150500 VND\\n        *   Giá hiện tại là 860200 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 4 căn với giá này trên Booking.com\\n    *   ![Sea Star Resort](https://cf.bstatic.com/xdata/images/hotel/square500/87489686.jpg?k=9b70a26e05e82ccc23de361ca89dddfd2e694d49c576ea4c9f76fba9562f2a2f&o=)\\n\\n*   **Best Western Premier Sonasea Phu Quoc** (ID: 4632878)\\n    *   Địa điểm: Phú Quốc\\n    *   Giá: 3000000 VND\\n    *   Đánh giá: 8.2\\n    *   Hạng sao: 5\\n    *   accessibilityLabel:\\n        *   Best Western Premier Sonasea Phu Quoc\\n        *   5 trên 5 sao\\n        *   8,2 Rất tốt 683 đánh giá\\n        *   Duong To • 10km từ trung tâm\\n        *   Giáp biển\\n        *   Bao bữa sáng\\n        *   1 giường\\n        *   3000000 VND\\n        *   Đã bao gồm thuế và phí\\n    *   ![Best Western Premier Sonasea Phu Quoc](https://cf.bstatic.com/xdata/images/hotel/square500/770599803.jpg?k=5e71c4a12688dca49ee41fbe65a99a66fd0f07826f540486a6184082f7604157&o=)\\n\\n*   **Vinholidays Fiesta Phu Quoc** (ID: 6744856)\\n    *   Địa điểm: Phú Quốc\\n    *   Giá: 1190000 VND\\n    *   Đánh giá: 8.3\\n    *   Hạng sao: 4\\n    *   accessibilityLabel:\\n        *   Vinholidays Fiesta Phu Quoc\\n        *   4 trên 5 sao\\n        *   8,3 Rất tốt 864 đánh giá\\n        *   Ganh Dau • 16,3km từ trung tâm\\n        *   Cách biển 0,7km\\n        *   1 phòng khách sạn : 2 giường\\n        *   Giá gốc là 1487500 VND\\n        *   Giá hiện tại là 1190000 VND\\n        *   Đã bao gồm thuế và phí\\n    *   ![Vinholidays Fiesta Phu Quoc](https://cf.bstatic.com/xdata/images/hotel/square500/302248703.jpg?k=600e0c05a76594df28aef976d935a2e18ef557e5f81ca6e450807b963e874aab&o=)\\n\\n*   **Dusit Princess Moonrise Beach Resort** (ID: 3002731)\\n    *   Địa điểm: Phú Quốc\\n    *   Giá: 4290000 VND\\n    *   Đánh giá: 9.3\\n    *   Hạng sao: 5\\n    *   accessibilityLabel:\\n        *   Dusit Princess Moonrise Beach Resort\\n        *   5 trên 5 sao\\n        *   Đây là chỗ nghỉ Ưu tiên\\n        *   9,3 Tuyệt hảo 1499 đánh giá\\n        *   Duong To • 4km từ trung tâm\\n        *   Giáp biển\\n        *   Bao bữa sáng\\n        *   1 phòng khách sạn : 1 giường\\n        *   Giá gốc là 7800000 VND\\n        *   Giá hiện tại là 4290000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Chỉ còn 5 căn với giá này trên Booking.com\\n    *   ![Dusit Princess Moonrise Beach Resort](https://cf.bstatic.com/xdata/images/hotel/square500/296411169.jpg?k=7290afafba1527e77526627b10834f9da7137c907834a6540657e79deb434cf8&o=)\\n\\n*   **New World Phu Quoc Resort** (ID: 7006996)\\n    *   Địa điểm: Phú Quốc\\n    *   Giá: 6940080 VND\\n    *   Đánh giá: 8.5\\n    *   Hạng sao: 5\\n    *   accessibilityLabel:\\n        *   New World Phu Quoc Resort\\n        *   5 trên 5 sao\\n        *   Đây là chỗ nghỉ Ưu tiên\\n        *   8,5 Rất tốt 696 đánh giá\\n        *   An Thoi • 21,1km từ trung tâm\\n        *   Giáp biển\\n        *   Bao bữa sáng\\n        *   1 giường\\n        *   6940080 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Chỉ còn 3 căn với giá này trên Booking.com\\n    *   ![New World Phu Quoc Resort](https://cf.bstatic.com/xdata/images/hotel/square500/744463485.jpg?k=790cc4e6eb761db82f8ef7afce37e8afb5a072597feeaa23d55f2cd95f1436c8&o=)\\n\\n*   **Coral Bay Resort** (ID: 872579)\\n    *   Địa điểm: Phú Quốc\\n    *   Giá: 1606813 VND\\n    *   Đánh giá: 8.4\\n    *   Hạng sao: 3\\n    *   accessibilityLabel:\\n        *   Coral Bay Resort\\n        *   3 trên 5 sao\\n        *   Đây là chỗ nghỉ Ưu tiên\\n        *   8,4 Rất tốt 680 đánh giá\\n        *   Duong To • 2,7km từ trung tâm\\n        *   Giáp biển\\n        *   Giá chỉ có trên điện thoại\\n        *   Bao bữa sáng\\n        *   1 bungalow nguyên căn – 40 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm\\n        *   Giá gốc là 2380464 VND\\n        *   Giá hiện tại là 1606813 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 1 căn với giá này trên Booking.com\\n    *   ![Coral Bay Resort](https://cf.bstatic.com/xdata/images/hotel/square500/40356001.jpg?k=8db4e677fac7798141b84ad55fdf8a2a8330ca51921568b3602e15da7fabce77&o=)\\n\\n*   **Ocean Bay Resort & Spa Phu Quoc** (ID: 7017600)\\n    *   Địa điểm: Phú Quốc\\n    *   Giá: 2502500 VND\\n    *   Đánh giá: 9\\n    *   Hạng sao: 5\\n    *   accessibilityLabel:\\n        *   Ocean Bay Resort & Spa Phu Quoc\\n        *   5 trên 5 sao\\n        *   Đây là chỗ nghỉ Ưu tiên\\n        *   9,0 Tuyệt hảo 3061 đánh giá\\n        *   Ong Lang • 4,5km từ trung tâm\\n        *   Giáp biển\\n        *   Ưu Đãi Mùa Du Lịch\\n        *   Bao bữa sáng\\n        *   1 bungalow nguyên căn – 52 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm\\n        *   Giá gốc là 3850000 VND\\n        *   Giá hiện tại là 2502500 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Chỉ còn 4 căn với giá này trên Booking.com\\n    *   ![Ocean Bay Resort & Spa Phu Quoc](https://cf.bstatic.com/xdata/images/hotel/square500/685539137.jpg?k=446f7c9698c694e0fbb5e8d9a174aa83964fac8e3971f34513c62cd1c943ec89&o=)\\n\\n*   **Premier Residences Phu Quoc Emerald Bay Managed by Accor** (ID: 4263727)\\n    *   Địa điểm: Phú Quốc\\n    *   Giá: 2865720 VND\\n    *   Đánh giá: 7.9\\n    *   Hạng sao: 5\\n    *   accessibilityLabel:\\n        *   Premier Residences Phu Quoc Emerald Bay Managed by Accor\\n        *   5 trên 5 sao\\n        *   Đây là chỗ nghỉ Ưu tiên\\n        *   7,9 Tốt 860 đánh giá\\n        *   An Thoi • 21,5km từ trung tâm\\n        *   Giáp biển\\n        *   Bao bữa sáng\\n        *   1 phòng khách sạn : 1 giường\\n        *   2865720 VND\\n        *   +384006 VND thuế và phí\\n        *   Không cần thanh toán trước\\n    *   ![Premier Residences Phu Quoc Emerald Bay Managed by Accor](https://cf.bstatic.com/xdata/images/hotel/square500/776022851.jpg?k=3ec4114eadec03cc0027fe7aa2e626170747e60190e01fd808d0c30ed2bc7c9b&o=)\\n\\n*   **Emerald Boutique Hotel Phú Quốc** (ID: 15590428)\\n    *   Địa điểm: Phú Quốc\\n    *   Giá: 1710000 VND\\n    *   Đánh giá: 9.7\\n    *   Hạng sao: 0\\n    *   accessibilityLabel:\\n        *   Emerald Boutique Hotel Phú Quốc\\n        *   9,7 Xuất sắc 39 đánh giá\\n        *   Duong To • 9,5km từ trung tâm\\n        *   Cách biển 0,7km\\n        *   Giá chỉ có trên điện thoại\\n        *   1 phòng khách sạn : 1 giường\\n        *   Giá gốc là 1900000 VND\\n        *   Giá hiện tại là 1710000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 3 căn với giá này trên Booking.com\\n    *   ![Emerald Boutique Hotel Phú Quốc](https://cf.bstatic.com/xdata/images/hotel/square500/807807940.jpg?k=cb81791f57b7cce1bb367974cc342c9902281a3dc69aafac18df4cc2d17ba0c2&o=)', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "(soft) [397ea00f-cba6-5445-9b89-3c207daf17b5] Thích khách sạn gần biển",
+        "(soft) [e9e8a6a0-ec66-51ab-82f0-8b71c33a0378] Thích khách sạn yên tĩnh",
+        "(soft) [de62ae8a-80b8-58a6-bfcf-0199984f6c2c] Ngân sách hotel thường 1–2 triệu/đêm"
+      ],
+      "domain_action": "search_hotels"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "hotel"
+    ]
+  },
+  "final_answer": "Dưới đây là danh sách các khách sạn nổi bật tại **Phú Quốc** (đặc biệt ưu tiên các chỗ nghỉ giáp biển/gần biển và không khí yên tĩnh):\n\n---\n\n### 🌿 **Phân khúc tầm trung & tiết kiệm (1 – 2 triệu VND/đêm)**\n\n1. **Sea Star Resort** *(ID: 1111660)*\n   * **Hạng sao:** 3 sao | **Đánh giá:** 8.4/10 (Rất tốt)\n   * **Vị trí:** Đường Trần Hưng Đạo, Dương Tơ (cách trung tâm 1,7 km) – **Giáp biển**\n   * **Loại phòng:** Bungalow nguyên căn 28 m² (Bao gồm bữa sáng, không cần thanh toán trước)\n   * **Giá hiện tại:** **860.200 VND/đêm** *(Giá gốc: 2.150.500 VND)*\n   * ![Sea Star Resort](https://cf.bstatic.com/xdata/images/hotel/square500/87489686.jpg?k=9b70a26e05e82ccc23de361ca89dddfd2e694d49c576ea4c9f76fba9562f2a2f&o=)\n\n2. **Vinholidays Fiesta Phu Quoc** *(ID: 6744856)*\n   * **Hạng sao:** 4 sao | **Đánh giá:** 8.3/10 (Rất tốt)\n   * **Vị trí:** Gành Dầu (gần Grand World, cách biển 0,7 km)\n   * **Loại phòng:** Phòng khách sạn 2 giường\n   * **Giá hiện tại:** **1.190.000 VND/đêm** *(Giá gốc: 1.487.500 VND)*\n   * ![Vinholidays Fiesta Phu Quoc](https://cf.bstatic.com/xdata/images/hotel/square500/302248703.jpg?k=600e0c05a76594df28aef976d935a2e18ef557e5f81ca6e450807b963e874aab&o=)\n\n3. **Coral Bay Resort** *(ID: 872579)*\n   * **Hạng sao:** 3 sao | **Đánh giá:** 8.4/10 (Rất tốt)\n   * **Vị trí:** Dương Tơ (cách trung tâm 2,7 km) – **Giáp biển**\n   * **Loại phòng:** Bungalow nguyên căn 40 m² (Bao bữa sáng, hủy miễn phí)\n   * **Giá hiện tại:** **1.606.813 VND/đêm** *(Giá gốc: 2.380.464 VND)*\n   * ![Coral Bay Resort](https://cf.bstatic.com/xdata/images/hotel/square500/40356001.jpg?k=8db4e677fac7798141b84ad55fdf8a2a8330ca51921568b3602e15da7fabce77&o=)\n\n4. **Emerald Boutique Hotel Phú Quốc** *(ID: 15590428)*\n   * **Đánh giá:** 9.7/10 (Xuất sắc)\n   * **Vị trí:** Dương Tơ (cách trung tâm 9,5 km, cách biển 0,7 km)\n   * **Loại phòng:** Phòng khách sạn 1 giường (Hủy miễn phí, không cần thanh toán trước)\n   * **Giá hiện tại:** **1.710.000 VND/đêm** *(Giá gốc: 1.900.000 VND)*\n   * ![Emerald Boutique Hotel Phú Quốc](https://cf.bstatic.com/xdata/images/hotel/square500/807807940.jpg?k=cb81791f57b7cce1bb367974cc342c9902281a3dc69aafac18df4cc2d17ba0c2&o=)\n\n---\n\n### ✨ **Phân khúc cao cấp & Resort 5 sao**\n\n5. **Ocean Bay Resort & Spa Phu Quoc** *(ID: 7017600)*\n   * **Hạng sao:** 5 sao | **Đánh giá:** 9.0/10 (Tuyệt hảo)\n   * **Vị trí:** Bãi Ông Lãng (khu vực rất yên tĩnh, giáp biển)\n   * **Loại phòng:** Bungalow nguyên căn 52 m² (Bao gồm bữa sáng)\n   * **Giá hiện tại:** **2.502.500 VND/đêm** *(Giá gốc: 3.850.000 VND)*\n   * ![Ocean Bay Resort & Spa Phu Quoc](https://cf.bstatic.com/xdata/images/hotel/square500/685539137.jpg?k=446f7c9698c694e0fbb5e8d9a174aa83964fac8e3971f34513c62cd1c943ec89&o=)\n\n6. **Premier Residences Phu Quoc Emerald Bay Managed by Accor** *(ID: 4263727)*\n   * **Hạng sao:** 5 sao | **Đánh giá:** 7.9/10\n   * **Vị trí:** Bãi Kem, An Thới – **Giáp biển**\n   * **Giá hiện tại:** **2.865.720 VND/đêm** *(chưa gồm thuế/phí khoảng 384k)*\n   * ![Premier Residences Phu Quoc](https://cf.bstatic.com/xdata/images/hotel/square500/776022851.jpg?k=3ec4114eadec03cc0027fe7aa2e626170747e60190e01fd808d0c30ed2bc7c9b&o=)\n\n7. **Best Western Premier Sonasea Phu Quoc** *(ID: 4632878)*\n   * **Hạng sao:** 5 sao | **Đánh giá:** 8.2/10 | **Vị trí:** Dương Tơ, giáp biển\n   * **Giá hiện tại:** **3.000.000 VND/đêm** (Bao bữa sáng)\n   * ![Best Western Premier Sonasea Phu Quoc](https://cf.bstatic.com/xdata/images/hotel/square500/770599803.jpg?k=5e71c4a12688dca49ee41fbe65a99a66fd0f07826f540486a6184082f7604157&o=)\n\n8. **Dusit Princess Moonrise Beach Resort** *(ID: 3002731)*\n   * **Hạng sao:** 5 sao | **Đánh giá:** 9.3/10 (Tuyệt hảo) | **Vị trí:** Dương Tơ, giáp biển\n   * **Giá hiện tại:** **4.290.000 VND/đêm** *(Giá gốc: 7.800.000 VND)*\n   * ![Dusit Princess Moonrise Beach Resort](https://cf.bstatic.com/xdata/images/hotel/square500/296411169.jpg?k=7290afafba1527e77526627b10834f9da7137c907834a6540657e79deb434cf8&o=)\n\n---\n\nBạn có muốn xem chi tiết phòng, chính sách đặt phòng hay đặt phòng cho khách sạn nào ở trên không? Bạn cũng có thể cung cấp thêm ngày lưu trú cụ thể hoặc số lượng khách để tôi hỗ trợ chính xác nhất!",
+  "stm": {
+    "summary": null,
+    "message_count": 4
+  },
+  "finalize": {
+    "memory_job_id": "4cfc2f71-cd64-4e6b-a773-b49877f29d06",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "memory_job": {
+      "job_id": "4cfc2f71-cd64-4e6b-a773-b49877f29d06",
+      "status": "pending",
+      "error_summary": "0",
+      "created_at": "2026-09-01T19:31:05.208455+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "hotel"
+        ],
+        "actual": [
+          "hotel"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  }
+}

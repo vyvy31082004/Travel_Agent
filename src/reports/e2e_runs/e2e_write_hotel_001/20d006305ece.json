@@ -1,0 +1,565 @@
+{
+  "metadata": {
+    "case_id": "e2e_write_hotel_001",
+    "run_id": "20d006305ece",
+    "started_at": "2026-09-03T10:46:30.379691+00:00",
+    "finished_at": "2026-09-03T10:47:22.797628+00:00",
+    "user_id": "e2e-e2e_write_hotel_001:user_a",
+    "thread_id": "e2e-e2e_write_hotel_001-20d006305ece",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v1",
+    "git_commit": "33651113742b805502b902653208662372e2be36",
+    "fixture_to_uuid": {
+      "m_quiet": "4a7509df-f06f-52f6-8868-9ae59a394fd0",
+      "m_other_user": "4b9c6ba5-dfcf-5fe1-bfed-404a816c44f9",
+      "m_superseded": "d5a749fa-346c-5684-8354-e6beb775647c"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Từ giờ tôi vẫn ưu tiên khách sạn yên tĩnh. Tìm khách sạn ở Đà Nẵng từ 10–12/10 cho 2 người."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-03"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Từ giờ tôi vẫn ưu tiên khách sạn yên tĩnh. Tìm khách sạn ở Đà Nẵng từ 10–12/10 cho 2 người.",
+      "answer": "Rất tiếc, hiện tại không tìm thấy khách sạn nào tại Đà Nẵng còn phòng trống khả dụng từ ngày **10/10/2026** đến **12/10/2026** dành cho 2 người lớn (đã ưu tiên tìm các chỗ nghỉ yên tĩnh).\n\nBạn có muốn thử thay đổi một số thông tin sau để tìm kiếm lại không?\n- **Thời gian lưu trú:** Đổi sang các ngày khác gần kề.\n- **Khu vực/Tiêu chí:** Mở rộng tiêu chí tìm kiếm hoặc khu vực lân cận.\n- **Ngân sách/Yêu cầu bổ sung:** Tăng/giảm khung giá mong muốn.",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "hotel_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 4
+    }
+  ],
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "hotel"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToHotelAssistant",
+        "args": {
+          "request": "Tìm khách sạn ở Đà Nẵng từ ngày 10/10/2026 đến ngày 12/10/2026 cho 2 người lớn.",
+          "turn_constraints": [
+            "ưu tiên khách sạn yên tĩnh"
+          ]
+        },
+        "timestamp": "2026-09-03T10:47:22.797628+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "hotel_assistant",
+      "memory_recall_hotel",
+      "hotel_chat",
+      "search_hotels_tool",
+      "hotel_chat",
+      "search_hotels_tool",
+      "hotel_chat",
+      "search_hotels_tool",
+      "hotel_chat",
+      "search_hotels_tool",
+      "hotel_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "hotel": {
+      "candidate_pool_ids": [
+        "m_quiet"
+      ],
+      "applicability": {
+        "m_quiet": "uncertain"
+      },
+      "applicability_reasons": {
+        "m_quiet": "Quiet hotel preference cannot be directly filtered or verified through standard hotel search parameters."
+      },
+      "final_context_ids": [
+        "m_quiet"
+      ],
+      "applied_constraints": [
+        "ưu tiên khách sạn yên tĩnh",
+        "(soft) [4a7509df-f06f-52f6-8868-9ae59a394fd0] Thích khách sạn yên tĩnh"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "adults": 2,
+        "location": "Đà Nẵng",
+        "checkin_date": "2026-10-10",
+        "checkout_date": "2026-10-12",
+        "destination": "Đà Nẵng",
+        "check_in": "2026-10-10",
+        "check_out": "2026-10-12"
+      },
+      "timestamp": "2026-09-03T10:47:22.797628+00:00",
+      "raw_result": {
+        "search_id": "0c9d5b0e-e811-4e04-8798-b65e44bf22f0",
+        "domain": "hotel",
+        "displayed_item_ids": [],
+        "labels": [],
+        "total_results": 0
+      },
+      "normalized_result": {
+        "search_id": "0c9d5b0e-e811-4e04-8798-b65e44bf22f0",
+        "request_id": "req_hotel_670ac45a",
+        "domain": "hotel",
+        "total_results": 0,
+        "items": [],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6
+    },
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "adults": 2,
+        "location": "Da Nang",
+        "destination": "Da Nang"
+      },
+      "timestamp": "2026-09-03T10:47:22.797628+00:00",
+      "raw_result": {
+        "search_id": "0a3b1791-0917-41ba-898c-7597de1a6ec5",
+        "domain": "hotel",
+        "displayed_item_ids": [],
+        "labels": [],
+        "total_results": 0
+      },
+      "normalized_result": {
+        "search_id": "0a3b1791-0917-41ba-898c-7597de1a6ec5",
+        "request_id": "req_hotel_5694dbad",
+        "domain": "hotel",
+        "total_results": 0,
+        "items": [],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6
+    },
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "name": "Đà Nẵng",
+        "adults": 2
+      },
+      "timestamp": "2026-09-03T10:47:22.797628+00:00",
+      "raw_result": {
+        "search_id": "459a5f6b-256d-4ee2-87ed-02c6ffb9911b",
+        "domain": "hotel",
+        "displayed_item_ids": [],
+        "labels": [],
+        "total_results": 0
+      },
+      "normalized_result": {
+        "search_id": "459a5f6b-256d-4ee2-87ed-02c6ffb9911b",
+        "request_id": "req_hotel_5da18284",
+        "domain": "hotel",
+        "total_results": 0,
+        "items": [],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6
+    },
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "limit": 10,
+        "adults": 2
+      },
+      "timestamp": "2026-09-03T10:47:22.797628+00:00",
+      "raw_result": {
+        "search_id": "4b3bc9fc-1943-4544-83c2-e73aa05efee7",
+        "domain": "hotel",
+        "displayed_item_ids": [],
+        "labels": [],
+        "total_results": 0
+      },
+      "normalized_result": {
+        "search_id": "4b3bc9fc-1943-4544-83c2-e73aa05efee7",
+        "request_id": "req_hotel_7d23bcc1",
+        "domain": "hotel",
+        "total_results": 0,
+        "items": [],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "hotel",
+      "summary": "[{'type': 'text', 'text': 'Rất tiếc, hiện tại không tìm thấy khách sạn nào tại Đà Nẵng khả dụng cho thời gian từ ngày 10/10/2026 đến 12/10/2026 cho 2 người lớn (đã áp dụng ưu tiên tiêu chuẩn khách sạn yên tĩnh).\\n\\nBạn có muốn thay đổi ngày nhận/trả phòng, mức giá hoặc điều kiện tìm kiếm khác không?', 'extras': {'signature': 'EtQICtEIARFNMg931eW0lAt7PzSBn8f33pRJMX2neq3yBYD3kg0CPzT+3oOlNFlrOpJ8xzntUrTEqNbWeweFZKaTxdnKjmDj70XNxxccf1bHdyxftdB/xOO7+UJubPRYQwx1coHAouho1m0NXQCRFaAbsiAOI35YKhyA6mZsDvfn+OdYugCzQR0LgBtozZntnNM6JSePa5VaUGmrcYau2dkao8YoAM8raCDxiyg5RNB+bEcDmYmsEo2fvtEP+mco+Yj36C1sBa2ofQS5lft0YDL3LJuTxKitQw8lNKctggEk1A7Gq4qR2Lsd4ofy3m+N0osUuPTRH32VPcRnvXEso+WYQDl36FXSc8XJOEfc4fZdxhnPNd5BUCHpre5+wO2fO5qGbsjKFI6g+mS7C8oiJOGXRulbBVT6b33OBpSmvtCr/ViwbHUV6lgtYT+3rl20kYxswjSy2fb08hQ2zeEJFt8AMlQhTlX72dEYpjpGCWJ/k8yyITnPMc+9hDZ/+U8rMkhm5Ij+dVBXO3OcWtIcnY2hcOs1vrdRnAKm4pzHHpskdANhAltujPkzvT6PKyDR5AdieSBRvZRmBhg/EigCrpxqEzs7rpUb3coxKzaI1dmTrzcD0oYXLthUg+tT29ZnTeOBB4fEUIri71KyKgdq4f7I64VqrVqvaq578fcbvP8/TQQA3O8gT9ObSbTTJYn9Iz3P0ub3R6gluHM21YlazfMwbSKVFBhHH3JuX+2VPebaruxmaXsDqeA78/QDRZ1OBwsg6jO2eWgMzZpWSCNQUbk+wp2YxGcjsg1EIaMpn2lURpYDl5IuJD3ntZAQvUxrdREWK9/robMorCCuUGhsh33ZKTjoURl1Hmwb9yebP+RqR8VdadloNvkIw4Y+8zg0Wvg3zjjxcSointaEjuCXb2OIDYYqUcPY+pYUTxGZznclOwQtLoqdGCNA6fWkOzz32VJX2+O/wWcO6kVmWtX5ZrzmPrvDdc5oP03dfutoZ0awqIlkpF4Gc0rUL0uSnvp6/z/6G7G+/21jbxh328fDy4n9QKB6Iuwpo+ajsmICvdUy4Y2jm9MGJaUBRgvSbpsBIT+Yo6mILSA4RJX3qwnSaHDc/szZawcqGdZBcoyrN25WLHeUtB7w/2wSJArU105Km0dwwcTPHJmpGx0rml95XXjmTNAVnyyuN7hyqQCy9vzApMNup1z+PyR+ejt58Xg8wqG55P/t5E9oF7M9u2cd3WASp7Z43rsJzax19qbS4yBsAlzjRx29Xe7SUPwTT22/5SMZ/6GdsFqyFpRU6cTcVHdoMYFBC27yvehUrQAx2I+Fzstwv1CC/2LhaJaEySzmeuABmRWSdLGq1PZf9Eyxu2Y7NwB7B999Z/nLQCuWUORylffw678y0Q2+aepFfbbkQdC/L8jloVetqf1dNSmncEFt9LY8zROZgmIESm7oZhCUz6q+VGXv5BBzOJZVSEQdl1f8u2qEPQ=='}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "ưu tiên khách sạn yên tĩnh",
+        "(soft) [4a7509df-f06f-52f6-8868-9ae59a394fd0] Thích khách sạn yên tĩnh"
+      ],
+      "domain_action": "search_hotels"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "hotel"
+    ]
+  },
+  "final_answer": "Rất tiếc, hiện tại không tìm thấy khách sạn nào tại Đà Nẵng còn phòng trống khả dụng từ ngày **10/10/2026** đến **12/10/2026** dành cho 2 người lớn (đã ưu tiên tìm các chỗ nghỉ yên tĩnh).\n\nBạn có muốn thử thay đổi một số thông tin sau để tìm kiếm lại không?\n- **Thời gian lưu trú:** Đổi sang các ngày khác gần kề.\n- **Khu vực/Tiêu chí:** Mở rộng tiêu chí tìm kiếm hoặc khu vực lân cận.\n- **Ngân sách/Yêu cầu bổ sung:** Tăng/giảm khung giá mong muốn.",
+  "stm": {
+    "summary": null,
+    "message_count": 4,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "a9ce01e8-0b0b-4046-8fe0-142419bc1d2f",
+    "expected_action": "NOOP",
+    "db_mutations": [],
+    "audits": [],
+    "seeded_status": {
+      "m_quiet": {
+        "status": "active",
+        "memory_id": "4a7509df-f06f-52f6-8868-9ae59a394fd0",
+        "memory_text": "Thích khách sạn yên tĩnh",
+        "supersedes_memory_id": null
+      },
+      "m_other_user": {
+        "status": "active",
+        "memory_id": "4b9c6ba5-dfcf-5fe1-bfed-404a816c44f9",
+        "memory_text": "Memory user khác — thích resort cao cấp",
+        "supersedes_memory_id": null
+      },
+      "m_superseded": {
+        "status": "superseded",
+        "memory_id": "d5a749fa-346c-5684-8354-e6beb775647c",
+        "memory_text": "Preference cũ đã superseded — thích hostel",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "a9ce01e8-0b0b-4046-8fe0-142419bc1d2f",
+      "status": "pending",
+      "error_summary": "0",
+      "created_at": "2026-09-03T17:47:21.826827+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "hotel"
+        ],
+        "actual": [
+          "hotel"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "FAIL",
+      "detail": "hotel: m_quiet expected=apply actual=uncertain",
+      "evidence": {
+        "domain_recall": {
+          "hotel": {
+            "candidate_pool_ids": [
+              "m_quiet"
+            ],
+            "applicability": {
+              "m_quiet": "uncertain"
+            },
+            "applicability_reasons": {
+              "m_quiet": "Quiet hotel preference cannot be directly filtered or verified through standard hotel search parameters."
+            },
+            "final_context_ids": [
+              "m_quiet"
+            ],
+            "applied_constraints": [
+              "ưu tiên khách sạn yên tĩnh",
+              "(soft) [4a7509df-f06f-52f6-8868-9ae59a394fd0] Thích khách sạn yên tĩnh"
+            ]
+          }
+        }
+      }
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "FAIL",
+      "detail": "memory job status pending",
+      "evidence": {
+        "job_status": "pending",
+        "new_memories": []
+      }
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "hotel_assistant",
+          "memory_recall_hotel",
+          "hotel_chat",
+          "search_hotels_tool",
+          "search_hotels_tool",
+          "hotel_chat",
+          "search_hotels_tool",
+          "search_hotels_tool",
+          "hotel_chat",
+          "search_hotels_tool",
+          "search_hotels_tool",
+          "hotel_chat",
+          "search_hotels_tool",
+          "search_hotels_tool",
+          "hotel_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "hotel_assistant",
+          "memory_recall_hotel",
+          "hotel_chat",
+          "search_hotels_tool",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "FAIL",
+      "detail": "failed checkpoints: applicability, finalize",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "hotel_assistant",
+      "graph": "primary",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "memory_recall_hotel",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_quiet"
+        ],
+        "applicability": {
+          "m_quiet": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_quiet": "Quiet hotel preference cannot be directly filtered or verified through standard hotel search parameters."
+        },
+        "applied_to_context": [
+          "m_quiet"
+        ]
+      }
+    },
+    {
+      "seq": 5,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "search_hotels_tool",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [
+        {
+          "name": "search_hotels_tool",
+          "arguments": {
+            "adults": 2,
+            "checkin_date": "2026-10-10",
+            "location": "Đà Nẵng",
+            "checkout_date": "2026-10-12"
+          }
+        }
+      ],
+      "parent_chat_node": "hotel_chat"
+    },
+    {
+      "seq": 7,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 8,
+      "node": "search_hotels_tool",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [
+        {
+          "name": "search_hotels_tool",
+          "arguments": {
+            "adults": 2,
+            "location": "Da Nang"
+          }
+        }
+      ],
+      "parent_chat_node": "hotel_chat"
+    },
+    {
+      "seq": 9,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "search_hotels_tool",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [
+        {
+          "name": "search_hotels_tool",
+          "arguments": {
+            "adults": 2,
+            "name": "Đà Nẵng"
+          }
+        }
+      ],
+      "parent_chat_node": "hotel_chat"
+    },
+    {
+      "seq": 11,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 12,
+      "node": "search_hotels_tool",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [
+        {
+          "name": "search_hotels_tool",
+          "arguments": {
+            "adults": 2,
+            "limit": 10
+          }
+        }
+      ],
+      "parent_chat_node": "hotel_chat"
+    },
+    {
+      "seq": 13,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 14,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 15,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 16,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

@@ -6,6 +6,7 @@ from langchain_core.messages import HumanMessage
 from langchain_core.runnables import RunnableConfig
 
 from agents.primary.domain_scope import compact_domain_state, resolve_user_query
+from memory.constraint_hints import derive_turn_constraints, merge_turn_constraints
 from memory.long_term import MemoryDomain
 from services.long_term_memory import MemoryService, config_user_thread
 
@@ -79,12 +80,34 @@ def make_domain_memory_recall_node(
             domain_state=domain_state,
             llm=llm,
         )
+        from memory.applicability import ApplicabilityJudgment, ApplicabilityLabel
+
+        judgments = [
+            ApplicabilityJudgment(
+                memory_id=str(item.get("memory_id") or ""),
+                label=ApplicabilityLabel(str(item.get("label") or "uncertain")),
+                confidence=float(item.get("confidence") or 0.0),
+                reason=str(item.get("reason") or ""),
+            )
+            for item in recall.applicability
+        ]
+        derived_constraints = derive_turn_constraints(
+            recall.memories,
+            judgments,
+            domain=domain_value,
+        )
+        turn_constraints = merge_turn_constraints(
+            state.get("turn_constraints"),
+            derived_constraints,
+        )
         return {
             "domain_action": recall.domain_action,
             "domain_memory_context": recall.memory_context,
             "domain_soft_memory_context": recall.domain_soft_memory_context,
             "recalled_memory_ids": recall.recalled_memory_ids,
             "memory_applicability": recall.applicability,
+            "turn_constraints": turn_constraints,
+            "applied_constraints": derived_constraints,
         }
 
     memory_recall_node.__name__ = node_name or f"memory_recall_{domain_value}"
