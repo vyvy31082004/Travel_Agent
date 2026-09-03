@@ -86,6 +86,8 @@ def test_azure_scripts_are_concrete_and_secret_safe():
         "07-create-backfill-job.sh",
         "08-smoke-test.sh",
         "09-rollback-web.sh",
+        "10-stop-stack.sh",
+        "11-start-stack.sh",
     ]
     for name in expected:
         path = script_dir / name
@@ -99,6 +101,8 @@ def test_azure_scripts_are_concrete_and_secret_safe():
             "05-run-migration-job.sh",
             "08-smoke-test.sh",
             "09-rollback-web.sh",
+            "10-stop-stack.sh",
+            "11-start-stack.sh",
         }
         assert "real-secret" not in content.lower()
 
@@ -148,5 +152,6 @@ def test_docs_and_workflow_cover_deployment_lifecycle():
         assert term in docs
     for term in ["az acr build", "viettrip-migrate", "viettrip-memory-worker", "smoke", "rollback"]:
         assert term in workflow
-    for term in ["azure/login@v2", "id-token: write", "docker push", "04-create-migration-job.sh", "05-run-migration-job.sh", "03-deploy-web.sh", "08-smoke-test.sh", "/login", "/register"]:
+    for term in ["azure/login@v2", "id-token: write", "docker push", "04-create-migration-job.sh", "05-run-migration-job.sh", "03-deploy-web.sh", "08-smoke-test.sh", "/login", "/register", "japanwest"]:
         assert term in production_workflow
+    assert "japaneast" not in production_workflow

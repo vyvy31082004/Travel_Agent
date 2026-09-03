@@ -139,6 +139,18 @@ Rollback web traffic:
 ROLLBACK_REVISION=<old-revision> ./infra/azure/containerapps/09-rollback-web.sh
 ```
 
+Tắt runtime khi không dùng (web + worker cron + PostgreSQL). ACR, Log Analytics và Container Apps Environment vẫn giữ. Chi tiết thứ tự thủ công (và vì sao **không** suspend `viettrip-migrate`): [azure-tat-bat-runtime.md](azure-tat-bat-runtime.md).
+
+```bash
+./infra/azure/containerapps/10-stop-stack.sh
+```
+
+Bật lại (Postgres Ready trước, rồi web, rồi restore cron worker):
+
+```bash
+./infra/azure/containerapps/11-start-stack.sh
+```
+
 ## Image/runtime commands
 
 Một image dùng nhiều command. Image production cài từ `requirements.production.txt`, là subset runtime của `requirements.txt`; các dependency đánh giá/dev như Qdrant, sentence-transformers, pandas, openpyxl và pytest không được đưa vào production image nếu không được runtime import.
