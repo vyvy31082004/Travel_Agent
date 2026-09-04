@@ -9,8 +9,21 @@ FQDN="$(az containerapp show --name "${WEB_APP_NAME}" --resource-group "${AZURE_
 BASE_URL="https://${FQDN}"
 
 echo "Smoke testing ${BASE_URL}"
-curl --max-time 20 --fail --show-error --silent "${BASE_URL}/healthz"
-echo
+health_ready=false
+for attempt in $(seq 1 36); do
+  if curl --max-time 20 --fail --show-error --silent "${BASE_URL}/healthz"; then
+    echo
+    health_ready=true
+    break
+  fi
+  echo "healthz not ready (${attempt}/36); waiting for the web and MCP sidecars" >&2
+  sleep 10
+done
+if [[ "${health_ready}" != "true" ]]; then
+  echo "healthz did not become ready." >&2
+  exit 1
+fi
+
 # FastAPI GET routes may return 405 to HEAD unless HEAD is declared explicitly,
 # so verify the real browser method instead.
 curl --max-time 20 --fail --show-error --silent "${BASE_URL}/" >/dev/null

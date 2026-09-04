@@ -159,3 +159,27 @@ else
     --environment "${AZURE_CONTAINERAPPS_ENV}" \
     --yaml "${TMP_YAML}"
 fi
+
+# Updating a Container App that was explicitly stopped does not start it. A
+# production deploy must make the new revision reachable before smoke tests.
+SUBSCRIPTION_ID="$(az account show --query id -o tsv | tr -d '\r')"
+az rest \
+  --method post \
+  --uri "https://management.azure.com/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${AZURE_RESOURCE_GROUP}/providers/Microsoft.App/containerApps/${WEB_APP_NAME}/start?api-version=2024-03-01" \
+  --only-show-errors >/dev/null
+
+for attempt in $(seq 1 60); do
+  running_status="$(az containerapp show \
+    --name "${WEB_APP_NAME}" \
+    --resource-group "${AZURE_RESOURCE_GROUP}" \
+    --query properties.runningStatus \
+    --output tsv | tr -d '\r')"
+  echo "Web runningStatus=${running_status} (${attempt}/60)"
+  if [[ "${running_status}" == "Running" ]]; then
+    exit 0
+  fi
+  sleep 10
+done
+
+echo "Container App ${WEB_APP_NAME} did not reach Running after deployment." >&2
+exit 1

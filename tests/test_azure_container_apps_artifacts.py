@@ -118,6 +118,8 @@ def test_azure_scripts_are_concrete_and_secret_safe():
     assert "targetPort: 5000" in deploy_web
     assert "start-web-with-mcp-wait.sh" in deploy_web
     assert 'value: "/tmp/viettrip-rapidapi.lock"' in deploy_web
+    assert '/start?api-version=2024-03-01' in deploy_web
+    assert 'did not reach Running after deployment' in deploy_web
     worker = read("infra/azure/containerapps/06-create-memory-worker-job.sh")
     backfill = read("infra/azure/containerapps/07-create-backfill-job.sh")
     assert '--command "scripts/run-memory-worker-once.sh"' in worker
@@ -139,6 +141,8 @@ def test_docs_and_workflow_cover_deployment_lifecycle():
     production_workflow = read(".github/workflows/ci-cd.yml")
     smoke = read("infra/azure/containerapps/08-smoke-test.sh")
     assert 'curl --max-time 20 --fail' in smoke
+    assert 'for attempt in $(seq 1 36)' in smoke
+    assert 'healthz did not become ready' in smoke
     assert 'Root page GET succeeded' in smoke
     assert '--head' not in smoke
     for term in [
