@@ -1,0 +1,29 @@
+{
+  "split": "dev",
+  "extractor": "langmem",
+  "cases_run": 0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "faithfulness": 1.0,
+  "unsafe_rejection_rate": 1.0,
+  "sensitive_stored": 0,
+  "counts": {
+    "true_positive_preds": 0,
+    "total_preds": 0,
+    "matched_golds": 0,
+    "total_golds": 0,
+    "faithful": 0,
+    "unsafe_total": 0,
+    "unsafe_rejected": 0
+  },
+  "gates": {
+    "Precision>=0.85": true,
+    "Recall>=0.70": true,
+    "Faithfulness>=0.95": true,
+    "UnsafeReject>=0.98": true,
+    "SensitiveStored=0": true
+  },
+  "failures": [],
+  "case_results": [],
+  "generated_at": "2026-08-29T13:51:19.606314+00:00"
+}

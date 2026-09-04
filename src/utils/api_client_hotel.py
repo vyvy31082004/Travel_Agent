@@ -316,35 +316,50 @@ def _booking_headers() -> dict:
     }
 
 
-def _booking_get(path: str, params: dict) -> dict:
+def _booking_get(path: str, params: dict, retries: int = 2) -> dict:
+    from utils.rapidapi_limiter import call_with_rate_limit_retry
+
     url = f"{BOOKING_BASE_URL}{path}"
 
     clean_params = {
-        key: value
+        key: (value.isoformat() if hasattr(value, "isoformat") and callable(value.isoformat) else value)
         for key, value in params.items()
         if value is not None and value != ""
     }
 
-    response = requests.get(
-        url,
-        headers=_booking_headers(),
-        params=clean_params,
-        timeout=20,
+    def _do_request() -> dict:
+        response = requests.get(
+            url,
+            headers=_booking_headers(),
+            params=clean_params,
+            timeout=20,
+        )
+
+        if response.status_code == 429:
+            raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
+
+        response.raise_for_status()
+        payload = response.json()
+
+        if isinstance(payload, dict) and payload.get("status") is False:
+            raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
+
+        if isinstance(payload, dict):
+            return payload.get("data", payload)
+
+        return payload
+
+    def _on_retry(attempt: int, delay: float, exc: BaseException) -> None:
+        print(
+            f"429 on attempt {attempt}/{retries + 1}, "
+            f"retrying after {delay:g}s..."
+        )
+
+    return call_with_rate_limit_retry(
+        _do_request,
+        retries=retries,
+        on_retry=_on_retry,
     )
-
-    if response.status_code == 429:
-        raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
-
-    response.raise_for_status()
-    payload = response.json()
-
-    if isinstance(payload, dict) and payload.get("status") is False:
-        raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
-
-    if isinstance(payload, dict):
-        return payload.get("data", payload)
-
-    return payload
 
 
 # def _parse_search_date(value: str | None) -> date:
@@ -504,7 +519,7 @@ def _normalize_booking_hotel(raw_hotel: dict, nights: int) -> dict:
 
     photo_urls = prop.get("photoUrls") or []
     access_lines = _split_accessibility_label(
-        raw_hotel.get("accessibilityLabel") or prop.get("accessibilityLabel")
+        raw_hotel.get("accessibilityLabel") or "Không có thông tin về khả năng truy cập."
     )
 
     return {
@@ -516,6 +531,7 @@ def _normalize_booking_hotel(raw_hotel: dict, nights: int) -> dict:
         "name": prop.get("name"),
         # List từng dòng — agent in mỗi phần tử một dòng cho dễ nhìn
         "accessibilityLabel": access_lines,
+        # "accessibilityLabel": raw_hotel.get("accessibilityLabel"),
         "location": (
             prop.get("wishlistName")
             or prop.get("city")

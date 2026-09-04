@@ -7,20 +7,26 @@ from dotenv import load_dotenv
 from agents.car.state import State
 from agents.car.tools import get_car_tools
 from memory.agent_helpers import domain_chat_with_memory
+from memory.long_term import MemoryDomain
+from memory.recall_nodes import make_domain_memory_recall_node
 from memory.tool_wrapper import wrap_tools_with_result_store
 from prompts.prompt import car_prompts
 from repositories.result_store import ResultStoreRepository
+from services.long_term_memory import MemoryService
 from utils.tracing import with_trace_config
 
 load_dotenv()
 
 llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash",
-    temperature=0.2,
+    model="gemini-3.6-flash",
 )
 
 
-async def build_car_graph(*, repo: ResultStoreRepository | None = None):
+async def build_car_graph(
+    *,
+    repo: ResultStoreRepository | None = None,
+    memory_service: MemoryService | None = None,
+):
     car_tools = await get_car_tools()
     if repo is not None:
         car_tools = wrap_tools_with_result_store(car_tools, repo)
@@ -50,9 +56,19 @@ async def build_car_graph(*, repo: ResultStoreRepository | None = None):
         )
 
     graph_builder = StateGraph(State)
+    graph_builder.add_node(
+        "memory_recall_car",
+        make_domain_memory_recall_node(
+            memory_service,
+            domain=MemoryDomain.CAR,
+            llm=llm,
+            node_name="memory_recall_car",
+        ),
+    )
     graph_builder.add_node("car_chat", car_chat)
     graph_builder.add_node("tools", tool_node)
-    graph_builder.add_edge(START, "car_chat")
+    graph_builder.add_edge(START, "memory_recall_car")
+    graph_builder.add_edge("memory_recall_car", "car_chat")
     graph_builder.add_conditional_edges("car_chat", tools_condition)
     graph_builder.add_edge("tools", "car_chat")
     return graph_builder.compile(name="car_agent")

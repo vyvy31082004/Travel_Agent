@@ -1,0 +1,99 @@
+TABLE 1
+development	65	42	23	51	Tune rule/prompt/threshold
+held_out	85	50	35	64	Held-out báo cáo cuối, khóa trước tune
+all	150	92	58	115	Toàn bộ pilot gold draft
+TABLE 2
+Tổng case	150
+Case store (expected_store=true)	92
+Case no-store (expected_store=false)	58
+Tổng gold memory	115
+Số requirement_id	14
+Số category gold	7
+Số metric tag khác nhau	8
+Case có ≥2 gold memory	12
+Case gold rỗng	58
+TB gold memory / case store	1.25
+TABLE 5.6 development
+REQ-EXTRACT-AMBIGUOUS	4	Từ chối claim mơ hồ (có thể, chưa chắc)
+REQ-EXTRACT-ASSISTANT-EVIDENCE	4	Không lưu gợi ý assistant chưa được user confirm
+REQ-EXTRACT-ATOMIC	4	Tách đúng nhiều gold memory atomic từ một câu
+REQ-EXTRACT-CLASSIFICATION	3	Gán đúng category/domain/family
+REQ-EXTRACT-CONDITION	4	Giữ nguyên điều kiện (condition) trong memory có phạm vi
+REQ-EXTRACT-EVIDENCE	3	Evidence phải đến từ user message, không phải tool/assistant
+REQ-EXTRACT-FAITHFULNESS	3	Không bịa thêm nội dung ngoài evidence user
+REQ-EXTRACT-NEGATIVE	4	Case negative: không có memory cần lưu
+REQ-EXTRACT-PARAPHRASE	3	Nhận diện memory qua paraphrase/diễn đạt khác
+REQ-EXTRACT-SENSITIVE	4	Từ chối lưu dữ liệu nhạy cảm (passport, CVV, thẻ, mật khẩu)
+REQ-EXTRACT-TEMPORARY	4	Từ chối lưu yêu cầu/context tạm thời, one-off
+REQ-EXTRACT-TOOL	4	Không trích xuất từ tool/API output
+REQ-EXTRACT-TOOL-CONFIRM	3	Chỉ lưu preference sau khi user xác nhận sau tool
+REQ-EXTRACT-VALID	18	Trích xuất memory hợp lệ (preference/profile/interaction) từ user message
+TABLE 5.6 held_out
+REQ-EXTRACT-AMBIGUOUS	5	Từ chối claim mơ hồ (có thể, chưa chắc)
+REQ-EXTRACT-ASSISTANT-EVIDENCE	5	Không lưu gợi ý assistant chưa được user confirm
+REQ-EXTRACT-ATOMIC	7	Tách đúng nhiều gold memory atomic từ một câu
+REQ-EXTRACT-CLASSIFICATION	4	Gán đúng category/domain/family
+REQ-EXTRACT-CONDITION	7	Giữ nguyên điều kiện (condition) trong memory có phạm vi
+REQ-EXTRACT-EVIDENCE	3	Evidence phải đến từ user message, không phải tool/assistant
+REQ-EXTRACT-FAITHFULNESS	4	Không bịa thêm nội dung ngoài evidence user
+REQ-EXTRACT-NEGATIVE	4	Case negative: không có memory cần lưu
+REQ-EXTRACT-PARAPHRASE	3	Nhận diện memory qua paraphrase/diễn đạt khác
+REQ-EXTRACT-SENSITIVE	9	Từ chối lưu dữ liệu nhạy cảm (passport, CVV, thẻ, mật khẩu)
+REQ-EXTRACT-TEMPORARY	7	Từ chối lưu yêu cầu/context tạm thời, one-off
+REQ-EXTRACT-TOOL	5	Không trích xuất từ tool/API output
+REQ-EXTRACT-TOOL-CONFIRM	2	Chỉ lưu preference sau khi user xác nhận sau tool
+REQ-EXTRACT-VALID	20	Trích xuất memory hợp lệ (preference/profile/interaction) từ user message
+TABLE 5.6 all
+REQ-EXTRACT-AMBIGUOUS	9	Từ chối claim mơ hồ (có thể, chưa chắc)
+REQ-EXTRACT-ASSISTANT-EVIDENCE	9	Không lưu gợi ý assistant chưa được user confirm
+REQ-EXTRACT-ATOMIC	11	Tách đúng nhiều gold memory atomic từ một câu
+REQ-EXTRACT-CLASSIFICATION	7	Gán đúng category/domain/family
+REQ-EXTRACT-CONDITION	11	Giữ nguyên điều kiện (condition) trong memory có phạm vi
+REQ-EXTRACT-EVIDENCE	6	Evidence phải đến từ user message, không phải tool/assistant
+REQ-EXTRACT-FAITHFULNESS	7	Không bịa thêm nội dung ngoài evidence user
+REQ-EXTRACT-NEGATIVE	8	Case negative: không có memory cần lưu
+REQ-EXTRACT-PARAPHRASE	6	Nhận diện memory qua paraphrase/diễn đạt khác
+REQ-EXTRACT-SENSITIVE	13	Từ chối lưu dữ liệu nhạy cảm (passport, CVV, thẻ, mật khẩu)
+REQ-EXTRACT-TEMPORARY	11	Từ chối lưu yêu cầu/context tạm thời, one-off
+REQ-EXTRACT-TOOL	9	Không trích xuất từ tool/API output
+REQ-EXTRACT-TOOL-CONFIRM	5	Chỉ lưu preference sau khi user xác nhận sau tool
+REQ-EXTRACT-VALID	38	Trích xuất memory hợp lệ (preference/profile/interaction) từ user message
+TABLE 5.7 development
+hotel_preference	18
+flight_preference	15
+car_preference	8
+interaction_rule	3
+profile_fact	3
+excursion_preference	2
+general_preference	2
+TABLE 5.7 held_out
+hotel_preference	18
+car_preference	12
+flight_preference	12
+excursion_preference	10
+profile_fact	5
+general_preference	4
+interaction_rule	3
+TABLE 5.7 all
+hotel_preference	36
+flight_preference	27
+car_preference	20
+excursion_preference	12
+profile_fact	8
+general_preference	6
+interaction_rule	6
+TABLE 5.8
+category_accuracy	Đo đúng category (hotel_preference, profile_fact, ...)	dev=11	held_out=9
+domain_accuracy	Đo đúng domain (hotel, flight, car, ...)	dev=5	held_out=4
+evidence_faithfulness_rate	Đo prediction không bịa nội dung ngoài evidence user	dev=14	held_out=17
+extraction_precision	Đo tỷ lệ prediction khớp gold (tránh false positive / over-extract)	dev=7	held_out=9
+extraction_recall	Đo tỷ lệ gold memory được trích xuất (tránh false negative / bỏ sót)	dev=30	held_out=37
+family_accuracy	Đo đúng family (travel_preferences, profile_facts, interaction_rules)	dev=7	held_out=6
+no_store_rejection_rate	Đo tỷ lệ từ chối case no-store (temporary/ephemeral) đúng cách	dev=3	held_out=7
+unsafe_rejection_rate	Đo tỷ lệ từ chối case nhạy cảm/unsafe đúng cách	dev=21	held_out=30
+RISK development	{'false_negative': 18, 'passport': 2, 'cvv': 1, 'credit_card': 1, 'temporary_request': 3, 'one_off': 1, 'lost_condition': 4, 'multi_fact': 4, 'tool_output': 4, 'unconfirmed_suggestion': 4, 'ambiguous': 3, 'uncertain': 1, 'negative_preference': 4, 'user_evidence': 3, 'category_domain': 3, 'paraphrase': 3, 'assistant_confirmation': 3, 'confirmed_tool_option': 3}
+unsafe flag development	22
+RISK held_out	{'false_negative': 19, 'lost_condition': 7, 'multi_fact': 7, 'paraphrase': 3, 'temporary_request': 6, 'tool_output': 5, 'unconfirmed_suggestion': 5, 'credit_card': 2, 'password': 3, 'user_evidence': 4, 'category_domain': 4, 'negative_preference': 4, 'assistant_suggestion': 1, 'confirmed_tool_option': 2, 'durable_rule': 1, 'uncertain': 3, 'cvv': 2, 'assistant_confirmation': 2, 'one_off': 1, 'ambiguous': 2, 'passport': 2}
+unsafe flag held_out	32
+RISK all	{'false_negative': 37, 'passport': 4, 'cvv': 3, 'credit_card': 3, 'temporary_request': 9, 'one_off': 2, 'lost_condition': 11, 'multi_fact': 11, 'tool_output': 9, 'unconfirmed_suggestion': 9, 'ambiguous': 5, 'uncertain': 4, 'negative_preference': 8, 'user_evidence': 7, 'category_domain': 7, 'paraphrase': 6, 'assistant_confirmation': 5, 'confirmed_tool_option': 5, 'password': 3, 'assistant_suggestion': 1, 'durable_rule': 1}
+unsafe flag all	54

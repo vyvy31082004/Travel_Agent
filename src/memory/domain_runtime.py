@@ -243,5 +243,62 @@ async def invoke_domain_llm_with_temp_payloads(
             *messages,
         ]
 
+    turn_constraints = list(state.get("turn_constraints") or [])
+    if turn_constraints:
+        constraint_lines = "\n".join(f"- {item}" for item in turn_constraints)
+        messages = [
+            SystemMessage(
+                content=(
+                    "Turn constraints for this domain (apply when filtering tool results):\n"
+                    f"{constraint_lines}"
+                )
+            ),
+            *messages,
+        ]
+
+    global_memory = (state.get("memory_context") or "").strip()
+    if global_memory and not (state.get("domain_memory_context") or state.get("domain_soft_memory_context")):
+        messages = [
+            SystemMessage(
+                content=(
+                    "Long-term user memory (durable preferences). "
+                    "After tool results return, when you PRINT results to the user, "
+                    "ONLY include items that match these preferences. "
+                    "Omit mismatched items entirely. Do not invent items. "
+                    "For items you keep, copy fields/prices exactly from tool output.\n"
+                    f"{global_memory}"
+                )
+            ),
+            *messages,
+        ]
+
+    domain_memory_context = (state.get("domain_memory_context") or "").strip()
+    if domain_memory_context:
+        messages = [
+            SystemMessage(
+                content=(
+                    "Domain-specific long-term memory (durable preferences for this domain). "
+                    "The current user request overrides conflicting memories. "
+                    "After tool results return, FILTER what you print to match these preferences. "
+                    "Omit mismatched items; do not invent new ones.\n"
+                    f"{domain_memory_context}"
+                )
+            ),
+            *messages,
+        ]
+
+    domain_soft_memory_context = (state.get("domain_soft_memory_context") or "").strip()
+    if domain_soft_memory_context:
+        messages = [
+            SystemMessage(
+                content=(
+                    "Soft-priority domain memory hints (uncertain applicability). "
+                    "Use only as ranking guidance; do not treat as hard filters.\n"
+                    f"{domain_soft_memory_context}"
+                )
+            ),
+            *messages,
+        ]
+
     invoke_state = {**state, "messages": messages}
     return await runnable.ainvoke(invoke_state, config=config)

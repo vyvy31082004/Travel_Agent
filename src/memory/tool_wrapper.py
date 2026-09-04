@@ -42,7 +42,7 @@ async def persist_search_tool_result(
     config: Optional[RunnableConfig],
     repo: ResultStoreRepository,
     query: Optional[dict[str, Any]] = None,
-    display_limit: int = 5,
+    display_limit: int = 10,
 ) -> dict[str, Any]:
     domain = TOOL_DOMAIN.get(tool_name)
     if not domain:
@@ -84,7 +84,7 @@ class ResultStoreTool(BaseTool):
     description: str
     underlying: Any
     repo: Any
-    display_limit: int = 5
+    display_limit: int = 10
     model_config = ConfigDict(arbitrary_types_allowed=True)
     args_schema: Any = Field(default=None)
 
@@ -120,7 +120,7 @@ class ResultStoreTool(BaseTool):
 def wrap_tools_with_result_store(
     tools: Sequence[BaseTool],
     repo: ResultStoreRepository,
-    display_limit: int = 5,
+    display_limit: int = 10,
 ) -> list[BaseTool]:
     wrapped: list[BaseTool] = []
     for tool in tools:

@@ -51,13 +51,13 @@ def _booking_headers() -> dict:
     }
 
 
-def _booking_get(path: str, params: dict, retries: int = 1) -> dict | list:
-    import time
+def _booking_get(path: str, params: dict, retries: int = 2) -> dict | list:
+    from utils.rapidapi_limiter import call_with_rate_limit_retry
 
     url = f"{BOOKING_BASE_URL}{path}"
 
     clean_params = {
-        key: value
+        key: (value.isoformat() if hasattr(value, "isoformat") and callable(value.isoformat) else value)
         for key, value in params.items()
         if value is not None and value != ""
     }
@@ -65,8 +65,7 @@ def _booking_get(path: str, params: dict, retries: int = 1) -> dict | list:
     print("CALL API:", url)
     print("PARAMS:", clean_params)
 
-    last_error: Exception | None = None
-    for attempt in range(1, retries + 2):
+    def _do_request() -> dict | list:
         response = requests.get(
             url,
             headers=_booking_headers(),
@@ -77,22 +76,9 @@ def _booking_get(path: str, params: dict, retries: int = 1) -> dict | list:
         print("FINAL URL:", response.url)
 
         if response.status_code == 429:
-            last_error = RuntimeError(
+            raise RuntimeError(
                 "RapidAPI bị giới hạn request. Hãy thử lại sau."
             )
-            if attempt <= retries:
-                retry_after = response.headers.get("Retry-After")
-                try:
-                    delay_seconds = min(max(float(retry_after), 0), 10)
-                except (TypeError, ValueError):
-                    delay_seconds = 2 * attempt
-                print(
-                    f"429 on attempt {attempt}/{retries + 1}, "
-                    f"retrying after {delay_seconds:g}s..."
-                )
-                time.sleep(delay_seconds)
-                continue
-            raise last_error
 
         response.raise_for_status()
         payload = response.json()
@@ -105,7 +91,17 @@ def _booking_get(path: str, params: dict, retries: int = 1) -> dict | list:
 
         return payload
 
-    raise last_error or RuntimeError("Booking API thất bại.")
+    def _on_retry(attempt: int, delay: float, exc: BaseException) -> None:
+        print(
+            f"429 on attempt {attempt}/{retries + 1}, "
+            f"retrying after {delay:g}s..."
+        )
+
+    return call_with_rate_limit_retry(
+        _do_request,
+        retries=retries,
+        on_retry=_on_retry,
+    )
 
 
 def _parse_date(value: Optional[str]) -> Optional[str]:

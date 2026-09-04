@@ -1,0 +1,6 @@
+{"case_id":"single_hop_001","group":"single-hop","predicted_answer":"thich khach san boutique gan bien","gold_answer":"thich khach san boutique gan bien"}
+{"case_id":"multi_hop_001","group":"multi-hop","predicted_answer":"economy khi di du lich","gold_answer":"economy khi di du lich"}
+{"case_id":"temporal_001","group":"temporal","predicted_answer":"thich khach san gan trung tam","gold_answer":"thich khach san gan trung tam"}
+{"case_id":"unanswerable_001","group":"unanswerable","predicted_answer":"khong co memory thue xe","gold_answer":"khong co memory thue xe"}
+{"case_id":"partial_f1_001","group":"single-hop","predicted_answer":"thich khach san boutique","gold_answer":"thich khach san boutique gan bien"}
+{"case_id":"unanswerable_fabricated_001","group":"unanswerable","predicted_answer":"thich thue xe so tu dong","gold_answer":"khong co memory thue xe"}

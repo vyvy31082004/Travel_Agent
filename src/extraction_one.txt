@@ -1,0 +1,11 @@
+Fixture: E:\Travel Agent\customer-support-agent\tests\fixtures\long_term_memory_eval\extraction_cases.jsonl
+Cases: 1 (filter=extract_hotel_pref_001)
+------------------------------------------------------------
+[OK] extract_hotel_pref_001: n=1 -> thích khách sạn boutique gần biển
+    category=hotel_preference domain=hotel evidence='Tôi thích khách sạn boutique gần biển.'
+------------------------------------------------------------
+Extraction Precision:     1.000  (1/1)
+Extraction Recall:        1.000  (1/1)
+Evidence Faithfulness:    1.000  (1/1)
+Unsafe Rejection Rate:    1.000  (0/0)
+Case failures:            0

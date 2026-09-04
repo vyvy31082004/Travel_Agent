@@ -1,0 +1,1445 @@
+{
+  "suite": "retrieval",
+  "gold_path": "E:\\Travel Agent\\customer-support-agent\\tests\\fixtures\\long_term_memory_eval\\retrieval_cases.jsonl",
+  "split": "development",
+  "case_count": 65,
+  "applicability_judge": "llm",
+  "applicability_judge_model": "gemini-2.5-flash",
+  "report": {
+    "suite": "retrieval",
+    "metrics": {
+      "candidate_pool_completeness": {
+        "numerator": 93,
+        "denominator": 93,
+        "value": 1.0
+      },
+      "cross_user_candidate_leakage": {
+        "numerator": 0,
+        "denominator": 93,
+        "value": 0.0
+      },
+      "cross_domain_candidate_leakage": {
+        "numerator": 0,
+        "denominator": 93,
+        "value": 0.0
+      },
+      "inactive_candidate_leakage": {
+        "numerator": 0,
+        "denominator": 93,
+        "value": 0.0
+      },
+      "context_recall": {
+        "numerator": 54,
+        "denominator": 57,
+        "value": 0.9473684210526315
+      },
+      "context_precision": {
+        "numerator": 54,
+        "denominator": 66,
+        "value": 0.8181818181818182
+      },
+      "uncertain_context_rate": {
+        "numerator": 7,
+        "denominator": 66,
+        "value": 0.10606060606060606
+      },
+      "overridden_leakage_rate": {
+        "numerator": 0,
+        "denominator": 8,
+        "value": 0.0
+      },
+      "applicability_macro_f1": {
+        "numerator": 455,
+        "denominator": 1000,
+        "value": 0.4558619943759464
+      },
+      "cross_user_context_leakage": {
+        "numerator": 0,
+        "denominator": 66,
+        "value": 0.0
+      },
+      "cross_domain_context_leakage": {
+        "numerator": 0,
+        "denominator": 66,
+        "value": 0.0
+      },
+      "inactive_context_leakage": {
+        "numerator": 0,
+        "denominator": 66,
+        "value": 0.0
+      }
+    },
+    "cases": [
+      {
+        "case_id": "scope_same_user_same_domain_dev_00",
+        "scenario_type": "scope_same_user_same_domain",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_same_dev_00-h1",
+          "scope_same_dev_00-h2",
+          "scope_same_dev_00-h3",
+          "scope_same_dev_00-h4"
+        ],
+        "expected_pool": [
+          "scope_same_dev_00-h1",
+          "scope_same_dev_00-h2",
+          "scope_same_dev_00-h3",
+          "scope_same_dev_00-h4"
+        ],
+        "final_context_ids": [
+          "scope_same_dev_00-h1",
+          "scope_same_dev_00-h2",
+          "scope_same_dev_00-h3",
+          "scope_same_dev_00-h4"
+        ],
+        "judge_labels": {
+          "scope_same_dev_00-h1": "apply",
+          "scope_same_dev_00-h2": "uncertain",
+          "scope_same_dev_00-h3": "uncertain",
+          "scope_same_dev_00-h4": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_same_user_same_domain_dev_01",
+        "scenario_type": "scope_same_user_same_domain",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_same_dev_01-h1",
+          "scope_same_dev_01-h2",
+          "scope_same_dev_01-h3",
+          "scope_same_dev_01-h4"
+        ],
+        "expected_pool": [
+          "scope_same_dev_01-h1",
+          "scope_same_dev_01-h2",
+          "scope_same_dev_01-h3",
+          "scope_same_dev_01-h4"
+        ],
+        "final_context_ids": [
+          "scope_same_dev_01-h1",
+          "scope_same_dev_01-h2",
+          "scope_same_dev_01-h3",
+          "scope_same_dev_01-h4"
+        ],
+        "judge_labels": {
+          "scope_same_dev_01-h1": "uncertain",
+          "scope_same_dev_01-h2": "uncertain",
+          "scope_same_dev_01-h3": "uncertain",
+          "scope_same_dev_01-h4": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_cross_user_dev_00",
+        "scenario_type": "scope_cross_user",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_xuser_dev_00-a1"
+        ],
+        "expected_pool": [
+          "scope_xuser_dev_00-a1"
+        ],
+        "final_context_ids": [
+          "scope_xuser_dev_00-a1"
+        ],
+        "judge_labels": {
+          "scope_xuser_dev_00-a1": "apply"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_cross_user_dev_01",
+        "scenario_type": "scope_cross_user",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_xuser_dev_01-a1"
+        ],
+        "expected_pool": [
+          "scope_xuser_dev_01-a1"
+        ],
+        "final_context_ids": [
+          "scope_xuser_dev_01-a1"
+        ],
+        "judge_labels": {
+          "scope_xuser_dev_01-a1": "apply"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_cross_domain_dev_00",
+        "scenario_type": "scope_cross_domain",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_xdom_dev_00-h"
+        ],
+        "expected_pool": [
+          "scope_xdom_dev_00-h"
+        ],
+        "final_context_ids": [
+          "scope_xdom_dev_00-h"
+        ],
+        "judge_labels": {
+          "scope_xdom_dev_00-h": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_cross_domain_dev_01",
+        "scenario_type": "scope_cross_domain",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_xdom_dev_01-f"
+        ],
+        "expected_pool": [
+          "scope_xdom_dev_01-f"
+        ],
+        "final_context_ids": [
+          "scope_xdom_dev_01-f"
+        ],
+        "judge_labels": {
+          "scope_xdom_dev_01-f": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_inactive_dev_00",
+        "scenario_type": "scope_inactive",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_inact_dev_00-active"
+        ],
+        "expected_pool": [
+          "scope_inact_dev_00-active"
+        ],
+        "final_context_ids": [
+          "scope_inact_dev_00-active"
+        ],
+        "judge_labels": {
+          "scope_inact_dev_00-active": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_inactive_dev_01",
+        "scenario_type": "scope_inactive",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_inact_dev_01-active"
+        ],
+        "expected_pool": [
+          "scope_inact_dev_01-active"
+        ],
+        "final_context_ids": [
+          "scope_inact_dev_01-active"
+        ],
+        "judge_labels": {
+          "scope_inact_dev_01-active": "apply"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_global_not_in_pool_dev_00",
+        "scenario_type": "scope_global_not_in_pool",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_global_dev_00-h1"
+        ],
+        "expected_pool": [
+          "scope_global_dev_00-h1"
+        ],
+        "final_context_ids": [
+          "scope_global_dev_00-h1"
+        ],
+        "judge_labels": {
+          "scope_global_dev_00-h1": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_global_not_in_pool_dev_01",
+        "scenario_type": "scope_global_not_in_pool",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_global_dev_01-h1"
+        ],
+        "expected_pool": [
+          "scope_global_dev_01-h1"
+        ],
+        "final_context_ids": [
+          "scope_global_dev_01-h1"
+        ],
+        "judge_labels": {
+          "scope_global_dev_01-h1": "apply"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_empty_pool_dev_00",
+        "scenario_type": "scope_empty_pool",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [],
+        "expected_pool": [],
+        "final_context_ids": [],
+        "judge_labels": {},
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_empty_pool_dev_01",
+        "scenario_type": "scope_empty_pool",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [],
+        "expected_pool": [],
+        "final_context_ids": [],
+        "judge_labels": {},
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_hotel_search_dev_00",
+        "scenario_type": "action_contrast_hotel_search",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_h_search_dev_00-bathtub",
+          "act_h_search_dev_00-budget"
+        ],
+        "expected_pool": [
+          "act_h_search_dev_00-bathtub",
+          "act_h_search_dev_00-budget"
+        ],
+        "final_context_ids": [
+          "act_h_search_dev_00-bathtub",
+          "act_h_search_dev_00-budget"
+        ],
+        "judge_labels": {
+          "act_h_search_dev_00-bathtub": "uncertain",
+          "act_h_search_dev_00-budget": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_hotel_details_dev_00",
+        "scenario_type": "action_contrast_hotel_details",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "act_h_det_dev_00-bathtub",
+          "act_h_det_dev_00-budget"
+        ],
+        "expected_pool": [
+          "act_h_det_dev_00-bathtub",
+          "act_h_det_dev_00-budget"
+        ],
+        "final_context_ids": [
+          "act_h_det_dev_00-bathtub",
+          "act_h_det_dev_00-budget"
+        ],
+        "judge_labels": {
+          "act_h_det_dev_00-bathtub": "uncertain",
+          "act_h_det_dev_00-budget": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_hotel_select_room_dev_00",
+        "scenario_type": "action_contrast_hotel_select_room",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_h_sel_dev_00-bathtub",
+          "act_h_sel_dev_00-budget"
+        ],
+        "expected_pool": [
+          "act_h_sel_dev_00-bathtub",
+          "act_h_sel_dev_00-budget"
+        ],
+        "final_context_ids": [
+          "act_h_sel_dev_00-bathtub",
+          "act_h_sel_dev_00-budget"
+        ],
+        "judge_labels": {
+          "act_h_sel_dev_00-bathtub": "uncertain",
+          "act_h_sel_dev_00-budget": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_hotel_select_room_dev_01",
+        "scenario_type": "action_contrast_hotel_select_room",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_h_sel_dev_01-bathtub",
+          "act_h_sel_dev_01-budget"
+        ],
+        "expected_pool": [
+          "act_h_sel_dev_01-bathtub",
+          "act_h_sel_dev_01-budget"
+        ],
+        "final_context_ids": [
+          "act_h_sel_dev_01-bathtub",
+          "act_h_sel_dev_01-budget"
+        ],
+        "judge_labels": {
+          "act_h_sel_dev_01-bathtub": "uncertain",
+          "act_h_sel_dev_01-budget": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_hotel_reviews_dev_00",
+        "scenario_type": "action_contrast_hotel_reviews",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_h_rev_dev_00-bathtub",
+          "act_h_rev_dev_00-budget"
+        ],
+        "expected_pool": [
+          "act_h_rev_dev_00-bathtub",
+          "act_h_rev_dev_00-budget"
+        ],
+        "final_context_ids": [],
+        "judge_labels": {
+          "act_h_rev_dev_00-bathtub": "irrelevant",
+          "act_h_rev_dev_00-budget": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_flight_search_dev_00",
+        "scenario_type": "action_contrast_flight_search",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_f_search_dev_00-direct",
+          "act_f_search_dev_00-seat"
+        ],
+        "expected_pool": [
+          "act_f_search_dev_00-direct",
+          "act_f_search_dev_00-seat"
+        ],
+        "final_context_ids": [
+          "act_f_search_dev_00-direct"
+        ],
+        "judge_labels": {
+          "act_f_search_dev_00-direct": "uncertain",
+          "act_f_search_dev_00-seat": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_flight_search_dev_01",
+        "scenario_type": "action_contrast_flight_search",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_f_search_dev_01-direct",
+          "act_f_search_dev_01-seat"
+        ],
+        "expected_pool": [
+          "act_f_search_dev_01-direct",
+          "act_f_search_dev_01-seat"
+        ],
+        "final_context_ids": [
+          "act_f_search_dev_01-direct"
+        ],
+        "judge_labels": {
+          "act_f_search_dev_01-direct": "uncertain",
+          "act_f_search_dev_01-seat": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_flight_compare_dev_00",
+        "scenario_type": "action_contrast_flight_compare",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_f_cmp_dev_00-direct",
+          "act_f_cmp_dev_00-seat"
+        ],
+        "expected_pool": [
+          "act_f_cmp_dev_00-direct",
+          "act_f_cmp_dev_00-seat"
+        ],
+        "final_context_ids": [
+          "act_f_cmp_dev_00-direct"
+        ],
+        "judge_labels": {
+          "act_f_cmp_dev_00-direct": "uncertain",
+          "act_f_cmp_dev_00-seat": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "presented_ok": false
+      },
+      {
+        "case_id": "action_contrast_car_search_dev_00",
+        "scenario_type": "action_contrast_car_search",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_c_search_dev_00-7seat",
+          "act_c_search_dev_00-auto"
+        ],
+        "expected_pool": [
+          "act_c_search_dev_00-7seat",
+          "act_c_search_dev_00-auto"
+        ],
+        "final_context_ids": [
+          "act_c_search_dev_00-auto"
+        ],
+        "judge_labels": {
+          "act_c_search_dev_00-auto": "apply",
+          "act_c_search_dev_00-7seat": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_car_search_dev_01",
+        "scenario_type": "action_contrast_car_search",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_c_search_dev_01-7seat",
+          "act_c_search_dev_01-auto"
+        ],
+        "expected_pool": [
+          "act_c_search_dev_01-7seat",
+          "act_c_search_dev_01-auto"
+        ],
+        "final_context_ids": [
+          "act_c_search_dev_01-auto"
+        ],
+        "judge_labels": {
+          "act_c_search_dev_01-auto": "apply",
+          "act_c_search_dev_01-7seat": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_car_select_dev_00",
+        "scenario_type": "action_contrast_car_select",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_c_sel_dev_00-7seat",
+          "act_c_sel_dev_00-auto"
+        ],
+        "expected_pool": [
+          "act_c_sel_dev_00-7seat",
+          "act_c_sel_dev_00-auto"
+        ],
+        "final_context_ids": [
+          "act_c_sel_dev_00-7seat"
+        ],
+        "judge_labels": {
+          "act_c_sel_dev_00-auto": "irrelevant",
+          "act_c_sel_dev_00-7seat": "apply"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_excursion_search_dev_00",
+        "scenario_type": "action_contrast_excursion_search",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_e_search_dev_00-beach",
+          "act_e_search_dev_00-culture"
+        ],
+        "expected_pool": [
+          "act_e_search_dev_00-beach",
+          "act_e_search_dev_00-culture"
+        ],
+        "final_context_ids": [],
+        "judge_labels": {
+          "act_e_search_dev_00-culture": "irrelevant",
+          "act_e_search_dev_00-beach": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_excursion_search_dev_01",
+        "scenario_type": "action_contrast_excursion_search",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_e_search_dev_01-beach",
+          "act_e_search_dev_01-culture"
+        ],
+        "expected_pool": [
+          "act_e_search_dev_01-beach",
+          "act_e_search_dev_01-culture"
+        ],
+        "final_context_ids": [],
+        "judge_labels": {
+          "act_e_search_dev_01-culture": "irrelevant",
+          "act_e_search_dev_01-beach": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_excursion_details_dev_00",
+        "scenario_type": "action_contrast_excursion_details",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_e_det_dev_00-beach",
+          "act_e_det_dev_00-culture"
+        ],
+        "expected_pool": [
+          "act_e_det_dev_00-beach",
+          "act_e_det_dev_00-culture"
+        ],
+        "final_context_ids": [],
+        "judge_labels": {
+          "act_e_det_dev_00-culture": "irrelevant",
+          "act_e_det_dev_00-beach": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "override_flight_time_dev_00",
+        "scenario_type": "override_flight_time",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "ovr_f_time_dev_00-direct",
+          "ovr_f_time_dev_00-morning"
+        ],
+        "expected_pool": [
+          "ovr_f_time_dev_00-direct",
+          "ovr_f_time_dev_00-morning"
+        ],
+        "final_context_ids": [
+          "ovr_f_time_dev_00-direct"
+        ],
+        "judge_labels": {
+          "ovr_f_time_dev_00-morning": "overridden",
+          "ovr_f_time_dev_00-direct": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "override_flight_time_dev_01",
+        "scenario_type": "override_flight_time",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "ovr_f_time_dev_01-direct",
+          "ovr_f_time_dev_01-morning"
+        ],
+        "expected_pool": [
+          "ovr_f_time_dev_01-direct",
+          "ovr_f_time_dev_01-morning"
+        ],
+        "final_context_ids": [
+          "ovr_f_time_dev_01-direct"
+        ],
+        "judge_labels": {
+          "ovr_f_time_dev_01-morning": "overridden",
+          "ovr_f_time_dev_01-direct": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "override_hotel_budget_dev_00",
+        "scenario_type": "override_hotel_budget",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "ovr_h_budget_dev_00-old",
+          "ovr_h_budget_dev_00-quiet"
+        ],
+        "expected_pool": [
+          "ovr_h_budget_dev_00-old",
+          "ovr_h_budget_dev_00-quiet"
+        ],
+        "final_context_ids": [
+          "ovr_h_budget_dev_00-quiet"
+        ],
+        "judge_labels": {
+          "ovr_h_budget_dev_00-old": "overridden",
+          "ovr_h_budget_dev_00-quiet": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "override_hotel_budget_dev_01",
+        "scenario_type": "override_hotel_budget",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "ovr_h_budget_dev_01-old",
+          "ovr_h_budget_dev_01-quiet"
+        ],
+        "expected_pool": [
+          "ovr_h_budget_dev_01-old",
+          "ovr_h_budget_dev_01-quiet"
+        ],
+        "final_context_ids": [
+          "ovr_h_budget_dev_01-quiet"
+        ],
+        "judge_labels": {
+          "ovr_h_budget_dev_01-old": "overridden",
+          "ovr_h_budget_dev_01-quiet": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "override_hotel_location_irrelevant_dev_00",
+        "scenario_type": "override_hotel_location_irrelevant",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "ovr_h_loc_dev_00-beach",
+          "ovr_h_loc_dev_00-budget"
+        ],
+        "expected_pool": [
+          "ovr_h_loc_dev_00-beach",
+          "ovr_h_loc_dev_00-budget"
+        ],
+        "final_context_ids": [
+          "ovr_h_loc_dev_00-budget"
+        ],
+        "judge_labels": {
+          "ovr_h_loc_dev_00-beach": "overridden",
+          "ovr_h_loc_dev_00-budget": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "override_hotel_location_irrelevant_dev_01",
+        "scenario_type": "override_hotel_location_irrelevant",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "ovr_h_loc_dev_01-beach",
+          "ovr_h_loc_dev_01-budget"
+        ],
+        "expected_pool": [
+          "ovr_h_loc_dev_01-beach",
+          "ovr_h_loc_dev_01-budget"
+        ],
+        "final_context_ids": [
+          "ovr_h_loc_dev_01-budget"
+        ],
+        "judge_labels": {
+          "ovr_h_loc_dev_01-beach": "overridden",
+          "ovr_h_loc_dev_01-budget": "apply"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "override_car_transmission_dev_00",
+        "scenario_type": "override_car_transmission",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "ovr_c_trans_dev_00-auto",
+          "ovr_c_trans_dev_00-wide"
+        ],
+        "expected_pool": [
+          "ovr_c_trans_dev_00-auto",
+          "ovr_c_trans_dev_00-wide"
+        ],
+        "final_context_ids": [],
+        "judge_labels": {
+          "ovr_c_trans_dev_00-auto": "overridden",
+          "ovr_c_trans_dev_00-wide": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "override_car_transmission_dev_01",
+        "scenario_type": "override_car_transmission",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "ovr_c_trans_dev_01-auto",
+          "ovr_c_trans_dev_01-wide"
+        ],
+        "expected_pool": [
+          "ovr_c_trans_dev_01-auto",
+          "ovr_c_trans_dev_01-wide"
+        ],
+        "final_context_ids": [
+          "ovr_c_trans_dev_01-wide"
+        ],
+        "judge_labels": {
+          "ovr_c_trans_dev_01-auto": "overridden",
+          "ovr_c_trans_dev_01-wide": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "override_flight_departure_dev_00",
+        "scenario_type": "override_flight_departure",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "ovr_f_dep_dev_00-direct",
+          "ovr_f_dep_dev_00-sgn"
+        ],
+        "expected_pool": [
+          "ovr_f_dep_dev_00-direct",
+          "ovr_f_dep_dev_00-sgn"
+        ],
+        "final_context_ids": [
+          "ovr_f_dep_dev_00-direct"
+        ],
+        "judge_labels": {
+          "ovr_f_dep_dev_00-sgn": "overridden",
+          "ovr_f_dep_dev_00-direct": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "override_flight_departure_dev_01",
+        "scenario_type": "override_flight_departure",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "ovr_f_dep_dev_01-direct",
+          "ovr_f_dep_dev_01-sgn"
+        ],
+        "expected_pool": [
+          "ovr_f_dep_dev_01-direct",
+          "ovr_f_dep_dev_01-sgn"
+        ],
+        "final_context_ids": [
+          "ovr_f_dep_dev_01-direct"
+        ],
+        "judge_labels": {
+          "ovr_f_dep_dev_01-sgn": "overridden",
+          "ovr_f_dep_dev_01-direct": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_hotel_quiet_apply_dev_00",
+        "scenario_type": "soft_hotel_quiet_apply",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_h_quiet_dev_00-quiet"
+        ],
+        "expected_pool": [
+          "soft_h_quiet_dev_00-quiet"
+        ],
+        "final_context_ids": [
+          "soft_h_quiet_dev_00-quiet"
+        ],
+        "judge_labels": {
+          "soft_h_quiet_dev_00-quiet": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_hotel_quiet_apply_dev_01",
+        "scenario_type": "soft_hotel_quiet_apply",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_h_quiet_dev_01-quiet"
+        ],
+        "expected_pool": [
+          "soft_h_quiet_dev_01-quiet"
+        ],
+        "final_context_ids": [
+          "soft_h_quiet_dev_01-quiet"
+        ],
+        "judge_labels": {
+          "soft_h_quiet_dev_01-quiet": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_hotel_quiet_apply_dev_02",
+        "scenario_type": "soft_hotel_quiet_apply",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_h_quiet_dev_02-quiet"
+        ],
+        "expected_pool": [
+          "soft_h_quiet_dev_02-quiet"
+        ],
+        "final_context_ids": [
+          "soft_h_quiet_dev_02-quiet"
+        ],
+        "judge_labels": {
+          "soft_h_quiet_dev_02-quiet": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_hotel_avoid_groups_uncertain_dev_00",
+        "scenario_type": "soft_hotel_avoid_groups_uncertain",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_h_grp_dev_00-group"
+        ],
+        "expected_pool": [
+          "soft_h_grp_dev_00-group"
+        ],
+        "final_context_ids": [
+          "soft_h_grp_dev_00-group"
+        ],
+        "judge_labels": {
+          "soft_h_grp_dev_00-group": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_hotel_avoid_groups_uncertain_dev_01",
+        "scenario_type": "soft_hotel_avoid_groups_uncertain",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_h_grp_dev_01-group"
+        ],
+        "expected_pool": [
+          "soft_h_grp_dev_01-group"
+        ],
+        "final_context_ids": [
+          "soft_h_grp_dev_01-group"
+        ],
+        "judge_labels": {
+          "soft_h_grp_dev_01-group": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_hotel_avoid_groups_uncertain_dev_02",
+        "scenario_type": "soft_hotel_avoid_groups_uncertain",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_h_grp_dev_02-group"
+        ],
+        "expected_pool": [
+          "soft_h_grp_dev_02-group"
+        ],
+        "final_context_ids": [
+          "soft_h_grp_dev_02-group"
+        ],
+        "judge_labels": {
+          "soft_h_grp_dev_02-group": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_hotel_bathtub_uncertain_dev_00",
+        "scenario_type": "soft_hotel_bathtub_uncertain",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_h_bath_dev_00-bath"
+        ],
+        "expected_pool": [
+          "soft_h_bath_dev_00-bath"
+        ],
+        "final_context_ids": [
+          "soft_h_bath_dev_00-bath"
+        ],
+        "judge_labels": {
+          "soft_h_bath_dev_00-bath": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_hotel_bathtub_uncertain_dev_01",
+        "scenario_type": "soft_hotel_bathtub_uncertain",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_h_bath_dev_01-bath"
+        ],
+        "expected_pool": [
+          "soft_h_bath_dev_01-bath"
+        ],
+        "final_context_ids": [
+          "soft_h_bath_dev_01-bath"
+        ],
+        "judge_labels": {
+          "soft_h_bath_dev_01-bath": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_hotel_bathtub_uncertain_dev_02",
+        "scenario_type": "soft_hotel_bathtub_uncertain",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_h_bath_dev_02-bath"
+        ],
+        "expected_pool": [
+          "soft_h_bath_dev_02-bath"
+        ],
+        "final_context_ids": [
+          "soft_h_bath_dev_02-bath"
+        ],
+        "judge_labels": {
+          "soft_h_bath_dev_02-bath": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_flight_direct_apply_dev_00",
+        "scenario_type": "soft_flight_direct_apply",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_f_dir_dev_00-direct"
+        ],
+        "expected_pool": [
+          "soft_f_dir_dev_00-direct"
+        ],
+        "final_context_ids": [
+          "soft_f_dir_dev_00-direct"
+        ],
+        "judge_labels": {
+          "soft_f_dir_dev_00-direct": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_flight_direct_apply_dev_01",
+        "scenario_type": "soft_flight_direct_apply",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_f_dir_dev_01-direct"
+        ],
+        "expected_pool": [
+          "soft_f_dir_dev_01-direct"
+        ],
+        "final_context_ids": [
+          "soft_f_dir_dev_01-direct"
+        ],
+        "judge_labels": {
+          "soft_f_dir_dev_01-direct": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_flight_direct_apply_dev_02",
+        "scenario_type": "soft_flight_direct_apply",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "soft_f_dir_dev_02-direct"
+        ],
+        "expected_pool": [
+          "soft_f_dir_dev_02-direct"
+        ],
+        "final_context_ids": [
+          "soft_f_dir_dev_02-direct"
+        ],
+        "judge_labels": {
+          "soft_f_dir_dev_02-direct": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "soft_flight_lowest_price_uncertain_dev_00",
+        "scenario_type": "soft_flight_lowest_price_uncertain",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "soft_f_cheap_dev_00-cheap"
+        ],
+        "expected_pool": [
+          "soft_f_cheap_dev_00-cheap"
+        ],
+        "final_context_ids": [],
+        "judge_labels": {
+          "soft_f_cheap_dev_00-cheap": "overridden"
+        },
+        "overridden_leaked": [],
+        "presented_ok": false
+      },
+      {
+        "case_id": "soft_flight_lowest_price_uncertain_dev_01",
+        "scenario_type": "soft_flight_lowest_price_uncertain",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "soft_f_cheap_dev_01-cheap"
+        ],
+        "expected_pool": [
+          "soft_f_cheap_dev_01-cheap"
+        ],
+        "final_context_ids": [],
+        "judge_labels": {
+          "soft_f_cheap_dev_01-cheap": "overridden"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_hotel_bathtub_apply_with_selection_dev_00",
+        "scenario_type": "state_hotel_bathtub_apply_with_selection",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "state_h_bath_y_dev_00-bath"
+        ],
+        "expected_pool": [
+          "state_h_bath_y_dev_00-bath"
+        ],
+        "final_context_ids": [
+          "state_h_bath_y_dev_00-bath"
+        ],
+        "judge_labels": {
+          "state_h_bath_y_dev_00-bath": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_hotel_bathtub_apply_with_selection_dev_01",
+        "scenario_type": "state_hotel_bathtub_apply_with_selection",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "state_h_bath_y_dev_01-bath"
+        ],
+        "expected_pool": [
+          "state_h_bath_y_dev_01-bath"
+        ],
+        "final_context_ids": [
+          "state_h_bath_y_dev_01-bath"
+        ],
+        "judge_labels": {
+          "state_h_bath_y_dev_01-bath": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_hotel_bathtub_apply_with_selection_dev_02",
+        "scenario_type": "state_hotel_bathtub_apply_with_selection",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "state_h_bath_y_dev_02-bath"
+        ],
+        "expected_pool": [
+          "state_h_bath_y_dev_02-bath"
+        ],
+        "final_context_ids": [
+          "state_h_bath_y_dev_02-bath"
+        ],
+        "judge_labels": {
+          "state_h_bath_y_dev_02-bath": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_hotel_bathtub_apply_with_selection_dev_03",
+        "scenario_type": "state_hotel_bathtub_apply_with_selection",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "state_h_bath_y_dev_03-bath"
+        ],
+        "expected_pool": [
+          "state_h_bath_y_dev_03-bath"
+        ],
+        "final_context_ids": [
+          "state_h_bath_y_dev_03-bath"
+        ],
+        "judge_labels": {
+          "state_h_bath_y_dev_03-bath": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_hotel_bathtub_irrelevant_without_selection_dev_00",
+        "scenario_type": "state_hotel_bathtub_irrelevant_without_selection",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "state_h_bath_n_dev_00-bath"
+        ],
+        "expected_pool": [
+          "state_h_bath_n_dev_00-bath"
+        ],
+        "final_context_ids": [
+          "state_h_bath_n_dev_00-bath"
+        ],
+        "judge_labels": {
+          "state_h_bath_n_dev_00-bath": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_hotel_bathtub_irrelevant_without_selection_dev_01",
+        "scenario_type": "state_hotel_bathtub_irrelevant_without_selection",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "state_h_bath_n_dev_01-bath"
+        ],
+        "expected_pool": [
+          "state_h_bath_n_dev_01-bath"
+        ],
+        "final_context_ids": [
+          "state_h_bath_n_dev_01-bath"
+        ],
+        "judge_labels": {
+          "state_h_bath_n_dev_01-bath": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_hotel_bathtub_irrelevant_without_selection_dev_02",
+        "scenario_type": "state_hotel_bathtub_irrelevant_without_selection",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "state_h_bath_n_dev_02-bath"
+        ],
+        "expected_pool": [
+          "state_h_bath_n_dev_02-bath"
+        ],
+        "final_context_ids": [
+          "state_h_bath_n_dev_02-bath"
+        ],
+        "judge_labels": {
+          "state_h_bath_n_dev_02-bath": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_hotel_bathtub_irrelevant_without_selection_dev_03",
+        "scenario_type": "state_hotel_bathtub_irrelevant_without_selection",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "state_h_bath_n_dev_03-bath"
+        ],
+        "expected_pool": [
+          "state_h_bath_n_dev_03-bath"
+        ],
+        "final_context_ids": [
+          "state_h_bath_n_dev_03-bath"
+        ],
+        "judge_labels": {
+          "state_h_bath_n_dev_03-bath": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_flight_seat_with_shortlist_dev_00",
+        "scenario_type": "state_flight_seat_with_shortlist",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "state_f_seat_dev_00-seat"
+        ],
+        "expected_pool": [
+          "state_f_seat_dev_00-seat"
+        ],
+        "final_context_ids": [
+          "state_f_seat_dev_00-seat"
+        ],
+        "judge_labels": {
+          "state_f_seat_dev_00-seat": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_flight_seat_with_shortlist_dev_01",
+        "scenario_type": "state_flight_seat_with_shortlist",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "state_f_seat_dev_01-seat"
+        ],
+        "expected_pool": [
+          "state_f_seat_dev_01-seat"
+        ],
+        "final_context_ids": [
+          "state_f_seat_dev_01-seat"
+        ],
+        "judge_labels": {
+          "state_f_seat_dev_01-seat": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_flight_seat_with_shortlist_dev_02",
+        "scenario_type": "state_flight_seat_with_shortlist",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "state_f_seat_dev_02-seat"
+        ],
+        "expected_pool": [
+          "state_f_seat_dev_02-seat"
+        ],
+        "final_context_ids": [
+          "state_f_seat_dev_02-seat"
+        ],
+        "judge_labels": {
+          "state_f_seat_dev_02-seat": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_flight_seat_with_shortlist_dev_03",
+        "scenario_type": "state_flight_seat_with_shortlist",
+        "sql_pool_ok": true,
+        "action_ok": false,
+        "actual_pool": [
+          "state_f_seat_dev_03-seat"
+        ],
+        "expected_pool": [
+          "state_f_seat_dev_03-seat"
+        ],
+        "final_context_ids": [
+          "state_f_seat_dev_03-seat"
+        ],
+        "judge_labels": {
+          "state_f_seat_dev_03-seat": "uncertain"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_car_capacity_with_trip_context_dev_00",
+        "scenario_type": "state_car_capacity_with_trip_context",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "state_c_cap_dev_00-7seat"
+        ],
+        "expected_pool": [
+          "state_c_cap_dev_00-7seat"
+        ],
+        "final_context_ids": [
+          "state_c_cap_dev_00-7seat"
+        ],
+        "judge_labels": {
+          "state_c_cap_dev_00-7seat": "apply"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_car_capacity_with_trip_context_dev_01",
+        "scenario_type": "state_car_capacity_with_trip_context",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "state_c_cap_dev_01-7seat"
+        ],
+        "expected_pool": [
+          "state_c_cap_dev_01-7seat"
+        ],
+        "final_context_ids": [
+          "state_c_cap_dev_01-7seat"
+        ],
+        "judge_labels": {
+          "state_c_cap_dev_01-7seat": "apply"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      },
+      {
+        "case_id": "state_car_capacity_with_trip_context_dev_02",
+        "scenario_type": "state_car_capacity_with_trip_context",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "state_c_cap_dev_02-7seat"
+        ],
+        "expected_pool": [
+          "state_c_cap_dev_02-7seat"
+        ],
+        "final_context_ids": [
+          "state_c_cap_dev_02-7seat"
+        ],
+        "judge_labels": {
+          "state_c_cap_dev_02-7seat": "apply"
+        },
+        "overridden_leaked": [],
+        "presented_ok": true
+      }
+    ]
+  }
+}
