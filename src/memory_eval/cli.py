@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import sys
 from pathlib import Path
 from typing import Sequence
 
@@ -33,10 +34,18 @@ from memory_eval.short_term import (
     evaluate_state_file,
     evaluate_success_file,
 )
+from memory_eval.stm_report import (
+    default_stm_report_paths,
+    write_stm_reports,
+)
+
+STM_SUITES = frozenset(
+    {"state", "reference", "factual-recall", "success", "stm-all"}
+)
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Evaluate long-term memory gold JSONL suites."
+        description="Evaluate long-term and short-term memory gold JSONL suites."
     )
     parser.add_argument(
         "--suite",
@@ -114,7 +123,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--no-report",
         action="store_true",
-        help="Skip writing default reports/retrieval_{split}.json and .md",
+        help="Skip writing default reports under reports/ (retrieval and STM suites)",
     )
     return parser
 
@@ -163,6 +172,8 @@ async def evaluate_file(
 
 
 async def evaluate_suite(args: argparse.Namespace) -> dict:
+    if args.suite in STM_SUITES:
+        return evaluate_stm_suite(args)
     if args.suite == "extraction":
         if not args.gold:
             raise ValueError("--gold is required for extraction")
@@ -280,6 +291,7 @@ async def evaluate_suite(args: argparse.Namespace) -> dict:
 
 def evaluate_stm_suite(args: argparse.Namespace) -> dict:
     gold = Path(args.gold) if args.gold else Path("tests/fixtures/short_term_memory_eval")
+    split = getattr(args, "split", "all")
     single = {
         "state": ("state_cases.jsonl", evaluate_state_file),
         "reference": ("reference_cases.jsonl", evaluate_reference_file),
@@ -289,22 +301,40 @@ def evaluate_stm_suite(args: argparse.Namespace) -> dict:
     if args.suite in single:
         filename, evaluator = single[args.suite]
         path = gold if gold.is_file() else gold / filename
-        report = evaluator(path)
-        return {"suite": args.suite, "gold_path": str(path), "report": report.to_dict()}
+        report = evaluator(path, split=split)
+        return {
+            "suite": args.suite,
+            "gold_path": str(path),
+            "split": split,
+            "case_count": len(report.cases),
+            "report": report.to_dict(),
+        }
     directory = gold if gold.is_dir() else gold.parent
-    state = evaluate_state_file(directory / "state_cases.jsonl")
-    reference = evaluate_reference_file(directory / "reference_cases.jsonl")
-    factual = evaluate_factual_recall_file(directory / "factual_recall_cases.jsonl")
-    success = evaluate_success_file(directory / "success_cases.jsonl")
+    state = evaluate_state_file(directory / "state_cases.jsonl", split=split)
+    reference = evaluate_reference_file(
+        directory / "reference_cases.jsonl", split=split
+    )
+    factual = evaluate_factual_recall_file(
+        directory / "factual_recall_cases.jsonl", split=split
+    )
+    success = evaluate_success_file(directory / "success_cases.jsonl", split=split)
     combined = {
         **state.metrics,
         **reference.metrics,
         **factual.metrics,
         **success.metrics,
     }
+    case_count = (
+        len(state.cases)
+        + len(reference.cases)
+        + len(factual.cases)
+        + len(success.cases)
+    )
     return {
         "suite": "stm-all",
         "gold_path": str(directory),
+        "split": split,
+        "case_count": case_count,
         "report": {
             "metrics": {name: metric.to_dict() for name, metric in combined.items()},
             "state": state.to_dict(),
@@ -343,11 +373,26 @@ def main(argv: Sequence[str] | None = None) -> int:
         write_retrieval_reports(result, json_path=json_path, md_path=md_path)
         print(f"Wrote {json_path}", flush=True)
         print(f"Wrote {md_path}", flush=True)
+    elif args.suite in STM_SUITES and not args.no_report:
+        if args.output:
+            json_path = Path(args.output)
+            md_path = json_path.with_suffix(".md")
+        else:
+            json_path, md_path = default_stm_report_paths(
+                split=args.split,
+                suite=args.suite,
+            )
+        write_stm_reports(result, json_path=json_path, md_path=md_path)
+        print(f"Wrote {json_path}", flush=True)
+        print(f"Wrote {md_path}", flush=True)
     elif args.output:
         output_path = Path(args.output)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(payload + "\n", encoding="utf-8")
-    print(payload)
+    try:
+        print(payload)
+    except UnicodeEncodeError:
+        sys.stdout.buffer.write((payload + "\n").encode("utf-8", errors="replace"))
     return 0
 
 

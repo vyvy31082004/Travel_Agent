@@ -21,10 +21,30 @@ Score a proposed local memory transition z_t = (chunk, M_old, actions, M_new).
 
 Return scores in [0, 1] with short reasons.
 
+The payload may include sibling_candidates: other memory candidates from the same
+finalize job that are proposed alongside this candidate (atomic split of one
+user utterance into multiple memories). Treat THIS candidate + sibling_candidates
+as one collective write set for coverage.
+
+Each memory in M_old / M_new includes status. For action=supersede, M_new correctly
+keeps the replaced memory with status=superseded and adds the candidate as active.
+That is successful replacement — do NOT penalize preservation for seeing the old
+text still listed when its status is superseded. Only penalize if a contradicted
+old preference remains status=active, or if valid unrelated memories were deleted /
+distorted / over-generalized / merged with lost conditions.
+
 Dimensions:
-- coverage: durable user facts/preferences in the chunk are preserved in proposed memory changes.
+- coverage: durable user facts/preferences in the chunk are collectively preserved
+  across THIS candidate AND sibling_candidates. A candidate may cover only part of
+  the chunk when siblings cover the remainder. Penalize coverage only if a durable
+  fact is missing from BOTH this candidate AND all siblings.
 - preservation: valid old memories are not incorrectly deleted, distorted, over-generalized, or merged with lost conditions (e.g. business vs leisure, family vs solo).
+  Correct supersede (old status=superseded + new active preference) preserves history
+  and should score high.
 - faithfulness: new/changed memory is supported by the user's own evidence in the chunk or by valid M_old. Tool/API search results alone are not user preferences.
+  An atomic split that states only one supported attribute (with other attributes in
+  sibling_candidates) is faithful — do not treat omitted sibling attributes as
+  over-generalization.
 
 Be conservative. If evidence is missing or the candidate looks like tool output, lower faithfulness sharply."""
 
@@ -85,12 +105,16 @@ class MemoryVerifierContext:
     chunk: Sequence[dict[str, Any]] = ()
     old_memories: Sequence[TravelMemory] = ()
     new_memories: Sequence[TravelMemory] = ()
+    sibling_candidates: Sequence[TravelMemory] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "chunk": [dict(message) for message in self.chunk],
             "M_old": [memory.to_record() for memory in self.old_memories],
             "M_new": [memory.to_record() for memory in self.new_memories],
+            "sibling_candidates": [
+                memory.to_record() for memory in self.sibling_candidates
+            ],
         }
 
 
@@ -323,6 +347,9 @@ class TrustMemInspiredMemoryVerifier:
             "reasons": list(transition.reasons),
             "existing_memory_id": transition.existing_memory_id,
             "candidate": _compact_memory(transition.candidate),
+            "sibling_candidates": [
+                _compact_memory(memory) for memory in context.sibling_candidates[:20]
+            ],
             "chunk": _compact_chunk(context.chunk),
             "M_old": [_compact_memory(memory) for memory in context.old_memories[:20]],
             "M_new": [_compact_memory(memory) for memory in context.new_memories[:20]],
@@ -349,9 +376,12 @@ class TrustMemInspiredMemoryVerifier:
         context = context or MemoryVerifierContext()
         chunk_text = _chunk_text(context.chunk)
         candidate_text = _candidate_text(transition)
+        collective_text = _collective_candidate_text(
+            candidate_text, context.sibling_candidates
+        )
         old_text = "\n".join(m.memory_text for m in context.old_memories)
 
-        coverage_score, coverage_reason = _score_coverage(chunk_text, candidate_text)
+        coverage_score, coverage_reason = _score_coverage(chunk_text, collective_text)
         preservation_score, preservation_reason = _score_preservation(
             transition, old_text, candidate_text
         )
@@ -454,6 +484,7 @@ def _compact_memory(memory: TravelMemory | None) -> dict[str, Any] | None:
     return {
         "memory_id": memory.memory_id,
         "memory_text": memory.memory_text,
+        "status": str(memory.status),
         "category": str(memory.category),
         "condition": memory.condition,
         "evidence_text": (memory.evidence_text or "")[:500],
@@ -489,6 +520,23 @@ def _candidate_text(transition: MemoryTransition) -> str:
     if transition.candidate.condition:
         parts.append(transition.candidate.condition)
     return "\n".join(parts).lower()
+
+
+def _memory_text(memory: TravelMemory) -> str:
+    parts = [memory.memory_text]
+    if memory.condition:
+        parts.append(memory.condition)
+    return "\n".join(parts).lower()
+
+
+def _collective_candidate_text(
+    candidate_text: str,
+    siblings: Sequence[TravelMemory],
+) -> str:
+    parts = [candidate_text]
+    for sibling in siblings:
+        parts.append(_memory_text(sibling))
+    return "\n".join(part for part in parts if part.strip())
 
 
 def _score_coverage(chunk_text: str, candidate_text: str) -> tuple[float, str]:

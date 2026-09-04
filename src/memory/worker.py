@@ -14,7 +14,7 @@ from memory.consolidation import (
     calculate_transition,
 )
 from memory.embeddings import MemoryEmbeddingService
-from memory.long_term import MemoryFamily
+from memory.long_term import MemoryFamily, TravelMemory
 from memory.transition import (
     RelationJudge,
     ScopeJudge,
@@ -139,8 +139,12 @@ class MemoryWorker:
                     processed=True, job_id=job_id, status="skipped", candidates=0
                 )
 
-            for candidate in candidates:
+            remaining = list(candidates)
+            approved_siblings: list[TravelMemory] = []
+            while remaining:
+                candidate = remaining.pop(0)
                 transition = await self._decide_transition(candidate, existing)
+                sibling_candidates = tuple([*approved_siblings, *remaining])
                 result = await self._commit_adapter.verify_and_commit(
                     transition=transition,
                     user_id=user_id,
@@ -150,6 +154,7 @@ class MemoryWorker:
                         chunk=tuple(job.get("messages") or ()),
                         old_memories=tuple(existing),
                         new_memories=tuple(project_memory_state(transition, existing)),
+                        sibling_candidates=sibling_candidates,
                     ),
                 )
                 logger.info(
@@ -161,6 +166,7 @@ class MemoryWorker:
                     },
                 )
                 if result.decision in {"approve", "noop"} and result.affected_memory_ids:
+                    approved_siblings.append(candidate)
                     existing = await self._load_existing(user_id)
             await self._mark_job(job_id, "completed")
             return WorkerResult(

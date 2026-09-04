@@ -25,6 +25,35 @@ def _last_user_text(state: dict[str, Any]) -> str:
     return ""
 
 
+def applicability_user_query(state: dict[str, Any]) -> str:
+    """Build the utterance used for applicability / action inference.
+
+    Primary often rewrites ``delegated_request`` to a search-only slice and moves
+    preference updates into ``turn_constraints``. Applicability must still see
+    those preference flips (e.g. nhóm lớn → nhóm nhỏ), so prefer the full
+    user utterance and append any constraints missing from it.
+    """
+    full = (
+        (state.get("trip_plan_user_message") or "").strip()
+        or (state.get("user_query") or "").strip()
+    )
+    delegated = (state.get("delegated_request") or "").strip()
+    base = full or delegated or resolve_user_query(state)
+    constraints = [
+        str(item).strip()
+        for item in (state.get("turn_constraints") or [])
+        if str(item).strip()
+    ]
+    if not constraints:
+        return base
+    missing = [item for item in constraints if item.lower() not in base.lower()]
+    if not missing:
+        return base
+    if not base:
+        return "\n".join(missing)
+    return f"{base}\n" + "\n".join(missing)
+
+
 def make_global_recall_node(
     memory_service: MemoryService | None,
 ) -> Callable[[dict[str, Any], RunnableConfig], Any]:
@@ -64,7 +93,7 @@ def make_domain_memory_recall_node(
                 "memory_applicability": [],
             }
         user_id, _ = config_user_thread(config)
-        user_query = resolve_user_query(state)
+        user_query = applicability_user_query(state)
         if not user_query:
             return {
                 "domain_memory_context": "",
@@ -73,6 +102,7 @@ def make_domain_memory_recall_node(
                 "memory_applicability": [],
             }
         domain_state = compact_domain_state(state, domain_value)
+        domain_state["turn_constraints"] = list(state.get("turn_constraints") or [])
         recall = await memory_service.recall_domain_with_applicability(
             user_id=state.get("user_id") or user_id,
             query=user_query,

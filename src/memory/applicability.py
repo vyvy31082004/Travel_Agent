@@ -129,6 +129,13 @@ class RuleBasedApplicabilityJudge:
         candidates: Sequence[TravelMemory],
     ) -> list[ApplicabilityJudgment]:
         query = (user_query or "").lower()
+        constraints = [
+            str(item).lower()
+            for item in (domain_state or {}).get("turn_constraints") or []
+            if str(item).strip()
+        ]
+        if constraints:
+            query = f"{query} {' '.join(constraints)}".strip()
         results: list[ApplicabilityJudgment] = []
         for memory in candidates:
             memory_id = str(memory.memory_id or "")
@@ -261,7 +268,22 @@ class RuleBasedApplicabilityJudge:
                         label = ApplicabilityLabel.APPLY
                         reason = "7-seat applies for family capacity"
             elif domain == "excursion" and domain_action == "search_attractions":
-                if (
+                memory_large = any(
+                    token in text for token in ("nhóm lớn", "large group", "đoàn lớn")
+                )
+                query_small = any(
+                    token in query for token in ("nhóm nhỏ", "small group", "tour nhỏ")
+                )
+                memory_small = any(
+                    token in text for token in ("nhóm nhỏ", "small group", "tour nhỏ")
+                )
+                query_large = any(
+                    token in query for token in ("nhóm lớn", "large group", "đoàn lớn")
+                )
+                if (memory_large and query_small) or (memory_small and query_large):
+                    label = ApplicabilityLabel.OVERRIDDEN
+                    reason = "group-size preference overridden by current request"
+                elif (
                     ("nghìn" in text or "ngân sách" in text)
                     and ("người" in text or "mỗi người" in text or "/người" in text)
                     and any(
@@ -294,6 +316,9 @@ class RuleBasedApplicabilityJudge:
                 elif "biển" in text and "văn hóa" not in text:
                     label = ApplicabilityLabel.UNCERTAIN
                     reason = "beach tour soft preference at search"
+                elif memory_large or memory_small:
+                    label = ApplicabilityLabel.APPLY
+                    reason = "group-size preference applies to attraction search"
             elif domain == "excursion" and domain_action == "get_details":
                 label = ApplicabilityLabel.UNCERTAIN
                 reason = "generic tour prefs uncertain at details"
@@ -341,27 +366,44 @@ class LlmApplicabilityJudge:
                 for memory in batch
             ]
             prompt = (
-                "Judge whether each long-term memory applies to the current request.\n"
+                "Judge each stored memory against the CURRENT user request.\n"
+                "Priority:\n"
+                "1) Explicit preference updates in the user message win over stored memory.\n"
+                "2) Antonym / opposite value on the same topic = overridden "
+                "(nhóm lớn↔nhóm nhỏ, sáng↔tối, economy↔business, auto↔manual).\n"
+                "3) Phrases like 'Từ giờ', 'thay vì', 'không còn', 'đổi sang' signal preference update.\n"
+                "4) apply only if the stored preference still holds AND does not conflict.\n"
+                "Turn constraints are part of the current request — treat them like the user query "
+                "when detecting conflicts (e.g. turn_constraints=['ưu tiên nhóm nhỏ'] overrides "
+                "memory 'Ưu tiên tour nhóm lớn').\n"
                 "Labels:\n"
-                "- apply: relevant constraint for this action — use when preference maps to "
-                "tool/API fields (budget, beach, economy, direct flight, origin, car seats, nature)\n"
-                "- overridden: conflicts with the current user request\n"
+                "- apply: still-valid constraint for this action — preference maps to "
+                "tool/API fields (budget, beach, economy, direct flight, origin, car seats, nature) "
+                "and is not contradicted by the query\n"
+                "- overridden: user request contradicts or replaces this memory "
+                "(even if the topic is still relevant to search)\n"
                 "- irrelevant: not relevant to the current action\n"
                 "- uncertain: preference cannot be verified from tool data alone "
                 "(e.g. quiet hotel, crowd avoidance without crowd field) — still rank/trade-off\n"
-                "Current user request has priority over stored memories.\n"
+                "Do NOT choose apply just because the preference is 'about' the domain/search.\n"
+                "If relevant but contradicted → overridden, not apply.\n"
                 "Do NOT mark budget/beach/economy/direct/origin/seats/nature as uncertain just "
-                "because the user query omits them — apply when the action is a domain search.\n"
+                "because the user query omits them — apply when the action is a domain search "
+                "and there is no conflict.\n"
                 "\nExamples (search actions):\n"
                 "- hotel search_hotels + 'Ngân sách 1–2 triệu' + 'Tìm KS Phú Quốc' → apply\n"
                 "- hotel search_hotels + 'Thích gần biển' + leisure query → apply\n"
                 "- hotel search_hotels + 'Thích yên tĩnh' → uncertain (no quiet field)\n"
                 "- flight search_one_way + economy/direct/SGN prefs + 'Bay HN sáng thứ Hai' → apply\n"
+                "- flight + memory 'ưu tiên bay sáng' + query 'tìm chuyến tối' → overridden\n"
                 "- car search_cars + automatic/7-seat prefs → apply; phụ phí avoidance → uncertain\n"
                 "- excursion search_attractions + nature pref → apply; avoid crowded → uncertain\n"
+                "- excursion + memory 'Ưu tiên tour nhóm lớn' + query "
+                "'Từ giờ ưu tiên nhóm nhỏ. Tìm tour Hội An' → overridden\n"
                 f"Domain: {domain}\n"
                 f"Action: {domain_action}\n"
                 f"User query: {user_query}\n"
+                f"Turn constraints: {json.dumps((domain_state or {}).get('turn_constraints') or [], ensure_ascii=False)}\n"
                 f"Domain state: {json.dumps(domain_state, ensure_ascii=False)}\n"
                 f"Candidates: {json.dumps(payload, ensure_ascii=False)}"
             )
