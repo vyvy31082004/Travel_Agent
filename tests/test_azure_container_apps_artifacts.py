@@ -162,3 +162,6 @@ def test_docs_and_workflow_cover_deployment_lifecycle():
     for term in ["azure/login@v2", "id-token: write", "docker push", "04-create-migration-job.sh", "05-run-migration-job.sh", "03-deploy-web.sh", "08-smoke-test.sh", "/login", "/register", "japanwest"]:
         assert term in production_workflow
     assert "japaneast" not in production_workflow
+    assert "az containerapp revision list" in production_workflow
+    assert "properties.trafficWeight" in production_workflow
+    assert "[?revisionName=='$latest'].weight" not in production_workflow

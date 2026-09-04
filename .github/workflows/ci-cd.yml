@@ -249,7 +249,11 @@ jobs:
       - name: Verify ready revision has all traffic
         run: |
           set -euo pipefail
-          latest=$(az containerapp show --name "$WEB_APP_NAME" --resource-group "$AZURE_RESOURCE_GROUP" --query properties.latestReadyRevisionName -o tsv)
-          weight=$(az containerapp ingress traffic show --name "$WEB_APP_NAME" --resource-group "$AZURE_RESOURCE_GROUP" --query "[?revisionName=='$latest'].weight" -o tsv)
+          latest=$(az containerapp show --name "$WEB_APP_NAME" --resource-group "$AZURE_RESOURCE_GROUP" --query properties.latestReadyRevisionName -o tsv | tr -d '\r')
+          test -n "$latest"
+          # In latest-revision traffic mode, ingress traffic is represented as
+          # {latestRevision: true, weight: 100} and has no revisionName field.
+          # Query the resolved revision instead to avoid a false failure.
+          weight=$(az containerapp revision list --name "$WEB_APP_NAME" --resource-group "$AZURE_RESOURCE_GROUP" --query "[?name=='$latest'].properties.trafficWeight | [0]" -o tsv | tr -d '\r')
           test "$weight" = 100
           echo "Traffic is 100% on $latest"
