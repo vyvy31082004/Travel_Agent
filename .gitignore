@@ -64,3 +64,4 @@ __init__.py
 update_data.py
 
 infra/azure/containerapps/00-vars.local.sh
+pyproject.toml
