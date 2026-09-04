@@ -21,3 +21,4 @@ def test_retrieval_suite_covers_applicability_scenarios():
     )
     assert report.metrics["applicability_macro_f1"].value is not None
     assert report.metrics["applicability_macro_f1"].value >= 0.9
+    assert all(case["action_ok"] for case in report.cases)

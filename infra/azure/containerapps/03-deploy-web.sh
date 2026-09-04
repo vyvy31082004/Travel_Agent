@@ -101,7 +101,7 @@ properties:
           - name: LONG_TERM_MEMORY_TRUSTMEM_MODEL
             value: "${LONG_TERM_MEMORY_TRUSTMEM_MODEL:-gemini-2.5-flash}"
           - name: LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION
-            value: "${LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION:-trustmem-verifier-v1}"
+            value: "${LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION:-trustmem-verifier-v2}"
           - name: LONG_TERM_MEMORY_TRUSTMEM_TIMEOUT_SECONDS
             value: "${LONG_TERM_MEMORY_TRUSTMEM_TIMEOUT_SECONDS:-30}"
           - name: LONG_TERM_MEMORY_TRUSTMEM_COVERAGE_THRESHOLD

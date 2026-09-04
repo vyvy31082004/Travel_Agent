@@ -33,14 +33,35 @@ class ActionInferrer(Protocol):
 _KEYWORD_RULES: dict[str, list[tuple[re.Pattern[str], str]]] = {
     "hotel": [
         (re.compile(r"đánh giá|review", re.I), HotelAction.GET_REVIEWS.value),
-        (re.compile(r"chọn phòng|select room|đặt phòng", re.I), HotelAction.SELECT_ROOM.value),
-        (re.compile(r"chi tiết|detail|thông tin khách sạn", re.I), HotelAction.GET_HOTEL_DETAILS.value),
-        (re.compile(r"tìm khách sạn|search hotel|đặt khách sạn", re.I), HotelAction.SEARCH_HOTELS.value),
+        (
+            re.compile(r"chọn(?: giúp)?(?: tôi)?[^.]*phòng|select room|đặt phòng", re.I),
+            HotelAction.SELECT_ROOM.value,
+        ),
+        (
+            re.compile(r"chi tiết|detail|thông tin khách sạn|loại phòng", re.I),
+            HotelAction.GET_HOTEL_DETAILS.value,
+        ),
+        (
+            re.compile(r"khách sạn|hotel|search hotel|đặt khách sạn", re.I),
+            HotelAction.SEARCH_HOTELS.value,
+        ),
     ],
     "flight": [
-        (re.compile(r"so sánh|compare", re.I), FlightAction.COMPARE_OFFERS.value),
+        (
+            re.compile(
+                r"so sánh|compare|chọn chuyến[^.]*danh sách|phù hợp nhất[^.]*danh sách",
+                re.I,
+            ),
+            FlightAction.COMPARE_OFFERS.value,
+        ),
         (re.compile(r"khứ hồi|round.?trip|bay về", re.I), FlightAction.SEARCH_ROUND_TRIP.value),
-        (re.compile(r"tìm chuyến|search flight|bay đi|một chiều|one.?way", re.I), FlightAction.SEARCH_ONE_WAY.value),
+        (
+            re.compile(
+                r"tìm chuyến|tìm vé|search flight|chuyến bay|bay đi|bay từ|một chiều|one.?way",
+                re.I,
+            ),
+            FlightAction.SEARCH_ONE_WAY.value,
+        ),
     ],
     "excursion": [
         (re.compile(r"lịch trình|day plan|kế hoạch ngày", re.I), ExcursionAction.BUILD_DAY_PLAN.value),

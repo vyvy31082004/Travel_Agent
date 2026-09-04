@@ -86,6 +86,11 @@ class SearchResultItem(Base):
             "position",
             name="uq_search_result_items_position",
         ),
+        UniqueConstraint(
+            "search_id",
+            "api_position",
+            name="uq_search_result_items_api_position",
+        ),
     )
 
     search_id: Mapped[Any] = mapped_column(
