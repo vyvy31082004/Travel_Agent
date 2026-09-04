@@ -290,9 +290,10 @@ Tạo environment `production` và đặt các secret sau, không đặt trong r
 Các biến resource dưới đây là cấu hình mục tiêu cho Environment `production`; chúng chưa được tạo tự động trong GitHub:
 
 - `AZURE_RESOURCE_GROUP=viettrip-rg`
-- `AZURE_ACR_NAME=viettripacr20260831`
+- `AZURE_ACR_NAME=viettripacr`
 - `AZURE_CONTAINERAPPS_ENV=viettrip-aca-env`
-- `AZURE_LOG_ANALYTICS=viettrip-logs-jpe`
+- `AZURE_LOG_ANALYTICS=viettrip-logs`
+- `AZURE_LOCATION=japanwest`
 - `WEB_APP_NAME=viettrip-web`
 - `MIGRATION_JOB_NAME=viettrip-migrate`
 - `MEMORY_WORKER_JOB_NAME=viettrip-memory-worker`
