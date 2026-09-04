@@ -216,7 +216,9 @@ jobs:
           started_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           export MIGRATION_START_ONLY=true
           execution=$(bash infra/azure/containerapps/05-run-migration-job.sh)
+          execution=$(printf '%s\n' "$execution" | tail -n 1 | tr -d '\r')
           test -n "$execution"
+          [[ "$execution" == "${MIGRATION_JOB_NAME}"-* ]]
           echo "Migration execution: $execution (started $started_at)"
           for attempt in $(seq 1 60); do
             status=$(az containerapp job execution show --name "$MIGRATION_JOB_NAME" --resource-group "$AZURE_RESOURCE_GROUP" --job-execution-name "$execution" --query properties.status -o tsv)
