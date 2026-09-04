@@ -14,6 +14,7 @@ from memory.applicability import (
     build_applicability_judge,
     format_applied_context,
     partition_judgments,
+    reconcile_judgments,
 )
 from memory.task_router import ActionInferrer, build_action_inferrer
 from memory.long_term import (
@@ -202,6 +203,15 @@ class MemoryService:
                 domain_state=state,
                 candidates=candidates,
             )
+            if llm is not None:
+                judgments = await reconcile_judgments(
+                    candidates,
+                    judgments,
+                    user_query=text,
+                    domain=domain_value,
+                    domain_action=action,
+                    domain_state=state,
+                )
         else:
             from memory.applicability import ApplicabilityJudgment, ApplicabilityLabel
 

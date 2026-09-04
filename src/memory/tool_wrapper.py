@@ -140,6 +140,28 @@ def wrap_tools_with_result_store(
     return wrapped
 
 
+_DOMAIN_REF_ALIASES: dict[str, set[str]] = {
+    "hotel": {"hotel"},
+    "car": {"car"},
+    "flight": {"flight"},
+    "tour": {"tour", "excursion"},
+    "excursion": {"tour", "excursion"},
+}
+
+
+def _domain_matches(ref_domain: str | None, domain_hint: str | None) -> bool:
+    if not domain_hint:
+        return True
+    ref_value = str(ref_domain or "").strip().lower()
+    hint = str(domain_hint).strip().lower()
+    if not ref_value:
+        return True
+    if ref_value == hint:
+        return True
+    aliases = _DOMAIN_REF_ALIASES.get(hint, {hint})
+    return ref_value in aliases
+
+
 def extract_refs_from_messages(messages: Sequence[Any]) -> list[dict[str, Any]]:
     refs: list[dict[str, Any]] = []
     for message in messages:
@@ -165,6 +187,23 @@ def extract_refs_from_messages(messages: Sequence[Any]) -> list[dict[str, Any]]:
             if "search_id" in data and "displayed_item_ids" in data:
                 refs.append(data)
     return refs
+
+
+def latest_search_ref(
+    messages: Sequence[Any],
+    *,
+    domain_hint: str | None = None,
+) -> dict[str, Any] | None:
+    refs = extract_refs_from_messages(messages)
+    if not refs:
+        return None
+    if domain_hint:
+        domain_refs = [
+            ref for ref in refs if _domain_matches(ref.get("domain"), domain_hint)
+        ]
+        if domain_refs:
+            return domain_refs[-1]
+    return refs[-1]
 
 
 def state_updates_from_refs(
