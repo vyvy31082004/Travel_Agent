@@ -127,7 +127,10 @@ def test_azure_scripts_are_concrete_and_secret_safe():
     assert 'az containerapp job delete' in worker
     assert 'az containerapp job delete' in backfill
     migration = read("infra/azure/containerapps/04-create-migration-job.sh")
+    migration_runner = read("infra/azure/containerapps/05-run-migration-job.sh")
     assert 'az containerapp job delete' in migration
+    assert 'run_vector_preflight >&2' in migration_runner
+    assert '--query name' in migration_runner
 
 
 def test_docs_and_workflow_cover_deployment_lifecycle():
