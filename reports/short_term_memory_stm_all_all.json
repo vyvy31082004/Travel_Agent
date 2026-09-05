@@ -1,0 +1,4254 @@
+{
+  "suite": "stm-all",
+  "gold_path": "tests\\fixtures\\short_term_memory_eval",
+  "split": "all",
+  "case_count": 600,
+  "report": {
+    "metrics": {
+      "joint_goal_accuracy": {
+        "numerator": 125,
+        "denominator": 150,
+        "value": 0.8333333333333334
+      },
+      "slot_f1": {
+        "numerator": 577,
+        "denominator": 602,
+        "value": 0.9382113821138212
+      },
+      "resolution_accuracy": {
+        "numerator": 150,
+        "denominator": 150,
+        "value": 1.0
+      },
+      "factual_recall_accuracy": {
+        "numerator": 114,
+        "denominator": 150,
+        "value": 0.76
+      },
+      "success_rate": {
+        "numerator": 113,
+        "denominator": 150,
+        "value": 0.7533333333333333
+      }
+    },
+    "state": {
+      "suite": "state",
+      "metrics": {
+        "joint_goal_accuracy": {
+          "numerator": 125,
+          "denominator": 150,
+          "value": 0.8333333333333334
+        },
+        "slot_f1": {
+          "numerator": 577,
+          "denominator": 602,
+          "value": 0.9382113821138212
+        }
+      },
+      "extra": {
+        "slot_counts": {
+          "true_positive": 577,
+          "false_positive": 51,
+          "false_negative": 25,
+          "precision": 0.9187898089171974,
+          "recall": 0.9584717607973422
+        }
+      },
+      "cases": [
+        {
+          "case_id": "state_full_001",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_001",
+          "joint_correct": false,
+          "true_positive": 5,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_001",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_004",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_005",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_006",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_007",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_008",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_009",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_010",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_011",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_012",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_013",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_014",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_015",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_016",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_017",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_018",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_019",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_020",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_021",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_022",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_023",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_024",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_025",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_026",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_027",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_028",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_029",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_030",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_031",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_032",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_033",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_034",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_035",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_036",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_037",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_038",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_039",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_040",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_041",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_042",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_043",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_044",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_045",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_046",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_047",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_048",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_049",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_050",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_051",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_052",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_053",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_054",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_055",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_056",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_057",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_058",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_059",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_060",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_061",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_062",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_063",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_064",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_065",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_001",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_001",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_068",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_069",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_070",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_071",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_072",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_073",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_074",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_075",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_076",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_077",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_078",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_079",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_080",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_081",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_082",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_083",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_084",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_085",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_086",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_087",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_088",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_089",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_090",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_091",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_092",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_093",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_094",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_095",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_096",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_097",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_098",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_099",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_100",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_101",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_102",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_103",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_104",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_105",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_106",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_107",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_108",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_109",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_110",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_111",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_112",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_113",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_114",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_115",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_116",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_117",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_118",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_119",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_120",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_121",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_122",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_123",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_124",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_125",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_126",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_127",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_128",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_129",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_130",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_131",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_132",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_133",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_134",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_135",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_136",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_137",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_138",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_139",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_140",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_141",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_142",
+          "joint_correct": true,
+          "true_positive": 5,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_143",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_144",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_full_145",
+          "joint_correct": true,
+          "true_positive": 6,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_one_slot_wrong_146",
+          "joint_correct": false,
+          "true_positive": 2,
+          "false_positive": 1,
+          "false_negative": 1
+        },
+        {
+          "case_id": "state_normalized_date_147",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_selected_item_148",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_extra_slot_149",
+          "joint_correct": true,
+          "true_positive": 3,
+          "false_positive": 1,
+          "false_negative": 0
+        },
+        {
+          "case_id": "state_budget_norm_150",
+          "joint_correct": true,
+          "true_positive": 4,
+          "false_positive": 0,
+          "false_negative": 0
+        }
+      ]
+    },
+    "reference": {
+      "suite": "reference",
+      "metrics": {
+        "resolution_accuracy": {
+          "numerator": 150,
+          "denominator": 150,
+          "value": 1.0
+        }
+      },
+      "extra": {},
+      "cases": [
+        {
+          "case_id": "ref_ordinal_001",
+          "expected": {
+            "item_id": "hotel_2"
+          },
+          "resolved_item_id": "hotel_2",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_001",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_001",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_004",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_005",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_006",
+          "expected": {
+            "item_id": "flight_3"
+          },
+          "resolved_item_id": "flight_3",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_007",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_008",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_009",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_010",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_011",
+          "expected": {
+            "item_id": "car_3"
+          },
+          "resolved_item_id": "car_3",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_012",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_013",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_014",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_015",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_016",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_017",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_018",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_019",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_020",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_021",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_022",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_023",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_024",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_025",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_026",
+          "expected": {
+            "item_id": "flight_2"
+          },
+          "resolved_item_id": "flight_2",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_027",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_028",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_029",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_030",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_031",
+          "expected": {
+            "item_id": "car_3"
+          },
+          "resolved_item_id": "car_3",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_032",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_033",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_034",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_035",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_036",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_037",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_038",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_039",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_040",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_041",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_042",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_043",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_044",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_045",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_046",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_047",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_048",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_049",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_050",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_051",
+          "expected": {
+            "item_id": "car_3"
+          },
+          "resolved_item_id": "car_3",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_052",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_053",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_054",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_055",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_056",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_057",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_058",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_059",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_060",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_061",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_062",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_063",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_064",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_065",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_001",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_wrong_item_expected_001",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_068",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_069",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_070",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_071",
+          "expected": {
+            "item_id": "car_3"
+          },
+          "resolved_item_id": "car_3",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_072",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_073",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_074",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_075",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_076",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_077",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_078",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_079",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_080",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_081",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_082",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_083",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_084",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_085",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_086",
+          "expected": {
+            "item_id": "flight_2"
+          },
+          "resolved_item_id": "flight_2",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_087",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_088",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_089",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_090",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_091",
+          "expected": {
+            "item_id": "car_3"
+          },
+          "resolved_item_id": "car_3",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_092",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_093",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_094",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_095",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_096",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_097",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_098",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_099",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_100",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_101",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_102",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_103",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_104",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_105",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_106",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_107",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_108",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_109",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_110",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_111",
+          "expected": {
+            "item_id": "car_3"
+          },
+          "resolved_item_id": "car_3",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_112",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_113",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_114",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_115",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_116",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_117",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_118",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_119",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_120",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_121",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_122",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_123",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_124",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_125",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_126",
+          "expected": {
+            "item_id": "flight_3"
+          },
+          "resolved_item_id": "flight_3",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_127",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_128",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_129",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_130",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_131",
+          "expected": {
+            "item_id": "car_3"
+          },
+          "resolved_item_id": "car_3",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_132",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_133",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_134",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_135",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_136",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_137",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_138",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_139",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_140",
+          "expected": {
+            "item_id": "excursion_1"
+          },
+          "resolved_item_id": "excursion_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_141",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_142",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_143",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_144",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_145",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ordinal_146",
+          "expected": {
+            "item_id": "flight_2"
+          },
+          "resolved_item_id": "flight_2",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_first_147",
+          "expected": {
+            "item_id": "car_1"
+          },
+          "resolved_item_id": "car_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "ref_ambiguous_148",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_out_of_range_149",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "ref_item_id_150",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        }
+      ]
+    },
+    "factual_recall": {
+      "suite": "factual_recall",
+      "metrics": {
+        "factual_recall_accuracy": {
+          "numerator": 114,
+          "denominator": 150,
+          "value": 0.76
+        }
+      },
+      "extra": {
+        "by_position": {
+          "đầu": {
+            "numerator": 40,
+            "denominator": 51,
+            "value": 0.7843137254901961
+          },
+          "giữa": {
+            "numerator": 37,
+            "denominator": 50,
+            "value": 0.74
+          },
+          "cuối": {
+            "numerator": 37,
+            "denominator": 49,
+            "value": 0.7551020408163265
+          }
+        },
+        "by_phase": {
+          "before": {
+            "numerator": 38,
+            "denominator": 73,
+            "value": 0.5205479452054794
+          },
+          "after": {
+            "numerator": 76,
+            "denominator": 77,
+            "value": 0.987012987012987
+          }
+        }
+      },
+      "cases": [
+        {
+          "case_id": "recall_head_before_001",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_head_after_001",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_mid_after_001",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_cover_004",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_005",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_006",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_007",
+          "position": "đầu",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_008",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_009",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_010",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_011",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_012",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_013",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_014",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_015",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_016",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_017",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_018",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_019",
+          "position": "đầu",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_020",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_021",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_022",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_023",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_024",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_025",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_026",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_027",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_028",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_029",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_030",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_031",
+          "position": "đầu",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_032",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_033",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_034",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_035",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_036",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_037",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_038",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_039",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_040",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_041",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_042",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_043",
+          "position": "đầu",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_044",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_045",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_046",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_047",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_048",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_049",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_050",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_051",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_052",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_053",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_054",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_055",
+          "position": "đầu",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_056",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_057",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_058",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_059",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_060",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_061",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_062",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_063",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_064",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_065",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_tail_after_001",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_mid_lost_001",
+          "position": "giữa",
+          "phase": "after",
+          "correct": false
+        },
+        {
+          "case_id": "recall_head_after_002",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_069",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_070",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_071",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_072",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_073",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_074",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_075",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_076",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_077",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_078",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_079",
+          "position": "đầu",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_080",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_081",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_082",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_083",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_084",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_085",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_086",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_087",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_088",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_089",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_090",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_091",
+          "position": "đầu",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_092",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_093",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_094",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_095",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_096",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_097",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_098",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_099",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_100",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_101",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_102",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_103",
+          "position": "đầu",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_104",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_105",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_106",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_107",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_108",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_109",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_110",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_111",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_112",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_113",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_114",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_115",
+          "position": "đầu",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_116",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_117",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_118",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_119",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_120",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_121",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_122",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_123",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_124",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_125",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_126",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_127",
+          "position": "đầu",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_128",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_129",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_130",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_131",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_132",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_133",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_134",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_135",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_136",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_137",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_138",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_139",
+          "position": "đầu",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_140",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_141",
+          "position": "cuối",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_142",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_143",
+          "position": "giữa",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_144",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_145",
+          "position": "đầu",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_146",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_lost_147",
+          "position": "cuối",
+          "phase": "before",
+          "correct": false
+        },
+        {
+          "case_id": "recall_ok_cover_148",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_para_149",
+          "position": "giữa",
+          "phase": "before",
+          "correct": true
+        },
+        {
+          "case_id": "recall_ok_exact_150",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        }
+      ]
+    },
+    "success": {
+      "suite": "success",
+      "metrics": {
+        "success_rate": {
+          "numerator": 113,
+          "denominator": 150,
+          "value": 0.7533333333333333
+        }
+      },
+      "extra": {},
+      "cases": [
+        {
+          "case_id": "success_full_001",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_001",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_003",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_004",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_005",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_006",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_007",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_008",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_009",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_010",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_011",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_012",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_013",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_014",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_015",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_016",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_017",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_018",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_019",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_020",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_021",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_022",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_023",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_024",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_025",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_026",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_027",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_028",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_029",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_030",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_031",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_032",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_033",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_034",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_035",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_036",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_037",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_038",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_039",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_040",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_041",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_042",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_043",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_044",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_045",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_046",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_047",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_048",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_049",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_050",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_051",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_052",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_053",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_054",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_055",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_056",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_057",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_058",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_059",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_060",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_061",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_062",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_063",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_064",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_065",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_001",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_full_002",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_car_like_068",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_069",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_070",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_071",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_072",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_073",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_074",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_075",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_076",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_077",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_078",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_079",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_080",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_081",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_082",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_083",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_084",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_085",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_086",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_087",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_088",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_089",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_090",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_091",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_092",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_093",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_094",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_095",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_096",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_097",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_098",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_099",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_100",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_101",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_102",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_103",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_104",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_105",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_106",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_107",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_108",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_109",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_110",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_111",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_112",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_113",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_114",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_115",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_116",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_117",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_118",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_119",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_120",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_121",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_122",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_123",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_124",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_125",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_126",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_127",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_128",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_129",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_130",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_131",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_132",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_133",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_134",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_135",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_136",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_137",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_138",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_139",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_140",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_141",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_142",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_143",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_144",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_145",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_146",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_violation_147",
+          "success": false,
+          "violated_constraints": [
+            "date"
+          ]
+        },
+        {
+          "case_id": "success_car_like_148",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_full_149",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "success_change_mind_150",
+          "success": true,
+          "violated_constraints": []
+        }
+      ]
+    }
+  }
+}

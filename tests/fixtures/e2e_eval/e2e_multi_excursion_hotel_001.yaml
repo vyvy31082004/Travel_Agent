@@ -1,0 +1,98 @@
+id: e2e_multi_excursion_hotel_001
+scenario: "Excursion nhóm nhỏ+tránh đông và hotel budget+gần phố cổ — không cross-attribute"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_excursion_private_small
+      text: "Ưu tiên tour riêng hoặc nhóm nhỏ"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_excursion_no_crowd
+      text: "Tránh tour quá đông đúc"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_excursion_other_user
+      text: "Memory user khác — thích tour văn hóa"
+      domain: excursion
+      category: excursion_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_excursion_superseded
+      text: "Preference cũ — chỉ đi biển"
+      domain: excursion
+      category: excursion_preference
+      status: superseded
+      expect_in_context: false
+    - id: m_hotel_budget
+      text: "Ngân sách hotel thường 2–3 triệu/đêm"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_hotel_old_town
+      text: "Thích khách sạn gần phố cổ"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_hotel_other_user
+      text: "Memory user khác — thích resort cao cấp"
+      domain: hotel
+      category: hotel_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_hotel_superseded
+      text: "Preference cũ — thích hostel"
+      domain: hotel
+      category: hotel_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Tìm tour Hội An và khách sạn ở gần phố cổ cho 2 đêm."
+
+expected_trace:
+  expected_route: [excursion, hotel]
+  expected_context:
+    excursion:
+      must_include: [m_excursion_private_small, m_excursion_no_crowd]
+      must_exclude: [m_excursion_other_user, m_excursion_superseded, m_hotel_budget, m_hotel_old_town]
+    hotel:
+      must_include: [m_hotel_budget, m_hotel_old_town]
+      must_exclude: [m_hotel_other_user, m_hotel_superseded, m_excursion_private_small, m_excursion_no_crowd]
+  expected_tools:
+    - name: search_attractions_tool
+      required_arguments: [location]
+    - name: search_hotels_tool
+      required_arguments: [destination]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - excursion_assistant
+    - hotel_assistant
+    - join_results
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "excursion: tour Hội An, nhóm nhỏ/riêng, tránh đông"
+    - "hotel: budget 2–3 triệu + gần phố cổ, 2 đêm"
+    - "final answer nhóm đúng 2 phần tour / khách sạn"
+  tradeoff_rule:
+    - "Nếu không thỏa điều kiện, nêu rõ theo từng domain"
+  forbidden_claims:
+    - "gán gần phố cổ cho tour"
+    - "gán tour riêng/nhóm nhỏ cho hotel"
+    - "Giá/tour/phòng không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

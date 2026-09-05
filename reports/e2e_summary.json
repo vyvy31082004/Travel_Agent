@@ -1,0 +1,12 @@
+{
+  "run_count": 0,
+  "metrics": {
+    "task_success_rate": null,
+    "answer_faithfulness_rate": null,
+    "answer_relevance_rate": null,
+    "memory_grounded_accuracy_rate": null,
+    "unanswerable_f1": null,
+    "trace_integrity_rate": null
+  },
+  "cases": []
+}

@@ -118,8 +118,80 @@ def _query_specifies_origin(query: str) -> bool:
     )
 
 
+# Tool-field rubric (search actions):
+# - APPLY: preference maps to a tool/API arg for this action and is not contradicted
+#   (hotel: price_min/max; car: user_needs capacity/transmission; flight: cabin/direct/origin)
+# - UNCERTAIN: may still matter for ranking/reading results but has no tool arg
+#   (hotel: quiet, beach; car: surcharge; excursion: crowd)
+# - IRRELEVANT: not usable for this action (hotel bathtub on search_hotels; flight seat before offers)
+# - OVERRIDDEN: same topic, user request replaces the stored value
+
+
+def build_applicability_llm_prompt(
+    *,
+    user_query: str,
+    domain: str,
+    domain_action: str,
+    domain_state: dict[str, Any],
+    payload: list[dict[str, Any]],
+) -> str:
+    """Prompt for LlmApplicabilityJudge — tool-field mapping, not soft-rank⇒apply."""
+    return (
+        "Judge each stored memory against the CURRENT user request.\n"
+        "Priority:\n"
+        "1) Explicit preference updates in the user message win over stored memory.\n"
+        "2) Antonym / opposite value on the same topic = overridden "
+        "(nhóm lớn↔nhóm nhỏ, sáng↔tối, economy↔business, auto↔manual).\n"
+        "3) Phrases like 'Từ giờ', 'thay vì', 'không còn', 'đổi sang' signal preference update.\n"
+        "4) apply only if the preference maps to a tool/API field for THIS action "
+        "AND is not contradicted by the query.\n"
+        "Turn constraints are part of the current request — treat them like the user query "
+        "when detecting conflicts (e.g. turn_constraints=['ưu tiên nhóm nhỏ'] overrides "
+        "memory 'Ưu tiên tour nhóm lớn').\n"
+        "Labels:\n"
+        "- apply: still-valid preference that maps to tool/API fields for this action "
+        "(hotel price_min/price_max; car user_needs capacity/transmission; flight cabin_class, "
+        "direct/nonstop, origin; excursion searchable tour-type filters) and is not contradicted\n"
+        "- overridden: user request contradicts or replaces this memory "
+        "(even if the topic is still relevant to search)\n"
+        "- irrelevant: not usable for the current action "
+        "(e.g. room bathtub amenity on hotel search_hotels; seat/window prefs before flight offers exist)\n"
+        "- uncertain: may still matter when reading/ranking results but cannot be passed as a "
+        "tool arg yet (e.g. hotel quiet/yên tĩnh, gần biển on search_hotels; car phụ phí without "
+        "breakdown; crowd avoidance without crowd data)\n"
+        "Do NOT choose apply just because the preference is 'about' the domain/search.\n"
+        "Do NOT choose apply only because the preference could soft-rank results — "
+        "if there is no matching tool/API field for this action, use uncertain or irrelevant.\n"
+        "If relevant but contradicted → overridden, not apply.\n"
+        "Car seat capacity (7 chỗ) maps via user_needs on search_cars → apply even if the query "
+        "omits capacity. Hotel quiet/beach do NOT map to search_hotels args → uncertain.\n"
+        "\nExamples (search actions):\n"
+        "- hotel search_hotels + 'Ngân sách 1–2 triệu' + 'Tìm KS Phú Quốc' → apply\n"
+        "- hotel search_hotels + 'Thích yên tĩnh' + 'Tìm KS Phú Quốc' → uncertain "
+        "(no quiet tool field)\n"
+        "- hotel search_hotels + 'Thích gần biển' + any search query → uncertain "
+        "(no beach tool field)\n"
+        "- hotel search_hotels + 'phòng có bồn tắm' → irrelevant "
+        "(room amenity not a search_hotels arg)\n"
+        "- hotel search_hotels công tác + budget/beach/bathtub → apply / uncertain / irrelevant\n"
+        "- flight search_one_way + economy/direct/SGN prefs + 'Bay HN sáng thứ Hai' → apply\n"
+        "- flight + memory 'ưu tiên bay sáng' + query 'tìm chuyến tối' → overridden\n"
+        "- car search_cars + automatic pref → apply; 'tối thiểu 7 chỗ' → apply "
+        "(capacity via user_needs); phụ phí avoidance → uncertain\n"
+        "- excursion search_attractions + nature pref → apply; avoid crowded → uncertain\n"
+        "- excursion + memory 'Ưu tiên tour nhóm lớn' + query "
+        "'Từ giờ ưu tiên nhóm nhỏ. Tìm tour Hội An' → overridden\n"
+        f"Domain: {domain}\n"
+        f"Action: {domain_action}\n"
+        f"User query: {user_query}\n"
+        f"Turn constraints: {json.dumps((domain_state or {}).get('turn_constraints') or [], ensure_ascii=False)}\n"
+        f"Domain state: {json.dumps(domain_state, ensure_ascii=False)}\n"
+        f"Candidates: {json.dumps(payload, ensure_ascii=False)}"
+    )
+
+
 class RuleBasedApplicabilityJudge:
-    """Lightweight heuristic judge used when LLM judge is disabled."""
+    """Heuristic fallback judge aligned with the tool-field applicability rubric."""
 
     async def judge_batch(
         self,
@@ -171,36 +243,19 @@ class RuleBasedApplicabilityJudge:
             elif domain == "hotel" and domain_action == "search_hotels":
                 if "ngân sách" in text or "triệu" in text:
                     label = ApplicabilityLabel.APPLY
-                    reason = "budget preference applies to hotel search"
-                elif ("biển" in text or "gần biển" in text or "resort" in text) and (
-                    "công tác" in query or "business" in query or "trung tâm" in query
-                ):
-                    label = ApplicabilityLabel.IRRELEVANT
-                    reason = "beach preference irrelevant for business search"
-                elif "biển" in text or "gần biển" in text:
-                    label = ApplicabilityLabel.APPLY
-                    reason = "beach preference applies to leisure hotel search"
-                elif "yên tĩnh" in text or "quiet" in text:
-                    label = ApplicabilityLabel.APPLY
-                    reason = "quiet preference applies as a hotel ranking constraint"
+                    reason = "budget maps to price_min/price_max on search_hotels"
                 elif "bồn tắm" in text or "bathtub" in text:
-                    if any(
-                        token in query
-                        for token in (
-                            "nghỉ dưỡng",
-                            "cuối tuần",
-                            "leisure",
-                            "weekend",
-                        )
-                    ):
-                        label = ApplicabilityLabel.UNCERTAIN
-                        reason = "room amenity may matter for a leisure stay"
-                    else:
-                        label = ApplicabilityLabel.IRRELEVANT
-                        reason = "room amenity irrelevant for this search action"
+                    label = ApplicabilityLabel.IRRELEVANT
+                    reason = "room bathtub amenity is not a search_hotels tool field"
+                elif "biển" in text or "gần biển" in text or "resort" in text:
+                    label = ApplicabilityLabel.UNCERTAIN
+                    reason = "beach preference has no search_hotels tool field"
+                elif "yên tĩnh" in text or "quiet" in text:
+                    label = ApplicabilityLabel.UNCERTAIN
+                    reason = "quiet preference has no search_hotels tool field"
                 elif "đoàn" in text and "tránh" in text:
                     label = ApplicabilityLabel.UNCERTAIN
-                    reason = "group avoidance is soft preference at search"
+                    reason = "group avoidance has no search_hotels tool field"
             elif domain == "hotel" and domain_action == "get_hotel_details":
                 if "bồn tắm" in text or "bathtub" in text:
                     label = ApplicabilityLabel.UNCERTAIN
@@ -262,23 +317,10 @@ class RuleBasedApplicabilityJudge:
             elif domain == "car" and domain_action == "search_cars":
                 if "tự động" in text or "automatic" in text:
                     label = ApplicabilityLabel.APPLY
-                    reason = "transmission preference applies to car search"
+                    reason = "transmission maps to user_needs on search_cars"
                 elif "7 chỗ" in text or "bảy chỗ" in text or "tối thiểu 7" in text:
-                    if any(
-                        token in query
-                        for token in (
-                            "7 chỗ",
-                            "bảy chỗ",
-                            "6 người",
-                            "gia đình",
-                            "tối thiểu 7",
-                        )
-                    ):
-                        label = ApplicabilityLabel.APPLY
-                        reason = "seat capacity preference applies to car search"
-                    else:
-                        label = ApplicabilityLabel.IRRELEVANT
-                        reason = "seat capacity is not relevant to the current car request"
+                    label = ApplicabilityLabel.APPLY
+                    reason = "seat capacity maps to user_needs on search_cars"
                 elif "phụ phí" in text or "surcharge" in text:
                     label = ApplicabilityLabel.UNCERTAIN
                     reason = "surcharge avoidance soft until tool payload has breakdown"
@@ -394,50 +436,12 @@ class LlmApplicabilityJudge:
                 }
                 for memory in batch
             ]
-            prompt = (
-                "Judge each stored memory against the CURRENT user request.\n"
-                "Priority:\n"
-                "1) Explicit preference updates in the user message win over stored memory.\n"
-                "2) Antonym / opposite value on the same topic = overridden "
-                "(nhóm lớn↔nhóm nhỏ, sáng↔tối, economy↔business, auto↔manual).\n"
-                "3) Phrases like 'Từ giờ', 'thay vì', 'không còn', 'đổi sang' signal preference update.\n"
-                "4) apply only if the stored preference still holds AND does not conflict.\n"
-                "Turn constraints are part of the current request — treat them like the user query "
-                "when detecting conflicts (e.g. turn_constraints=['ưu tiên nhóm nhỏ'] overrides "
-                "memory 'Ưu tiên tour nhóm lớn').\n"
-                "Labels:\n"
-                "- apply: still-valid constraint for this action — preference maps to "
-                "tool/API fields or can rank presented results (budget, beach, quiet, economy, "
-                "direct flight, origin, contextually requested car seats, nature) and is not "
-                "contradicted by the query\n"
-                "- overridden: user request contradicts or replaces this memory "
-                "(even if the topic is still relevant to search)\n"
-                "- irrelevant: not relevant to the current action\n"
-                "- uncertain: preference may matter but cannot yet be evaluated for this action "
-                "(e.g. bathtub for a leisure hotel search, crowd avoidance without crowd data) "
-                "— still rank/trade-off\n"
-                "Do NOT choose apply just because the preference is 'about' the domain/search.\n"
-                "If relevant but contradicted → overridden, not apply.\n"
-                "Do NOT mark budget/beach/economy/direct/origin/seats/nature as uncertain just "
-                "because the user query omits them — apply when the action is a domain search "
-                "and there is no conflict.\n"
-                "\nExamples (search actions):\n"
-                "- hotel search_hotels + 'Ngân sách 1–2 triệu' + 'Tìm KS Phú Quốc' → apply\n"
-                "- hotel search_hotels + 'Thích gần biển' + leisure query → apply\n"
-                "- hotel search_hotels + 'Thích yên tĩnh' → apply as a ranking constraint\n"
-                "- flight search_one_way + economy/direct/SGN prefs + 'Bay HN sáng thứ Hai' → apply\n"
-                "- flight + memory 'ưu tiên bay sáng' + query 'tìm chuyến tối' → overridden\n"
-                "- car search_cars + automatic pref → apply; 7-seat applies only when the current "
-                "request implies capacity; phụ phí avoidance → uncertain\n"
-                "- excursion search_attractions + nature pref → apply; avoid crowded → uncertain\n"
-                "- excursion + memory 'Ưu tiên tour nhóm lớn' + query "
-                "'Từ giờ ưu tiên nhóm nhỏ. Tìm tour Hội An' → overridden\n"
-                f"Domain: {domain}\n"
-                f"Action: {domain_action}\n"
-                f"User query: {user_query}\n"
-                f"Turn constraints: {json.dumps((domain_state or {}).get('turn_constraints') or [], ensure_ascii=False)}\n"
-                f"Domain state: {json.dumps(domain_state, ensure_ascii=False)}\n"
-                f"Candidates: {json.dumps(payload, ensure_ascii=False)}"
+            prompt = build_applicability_llm_prompt(
+                user_query=user_query,
+                domain=domain,
+                domain_action=domain_action,
+                domain_state=domain_state or {},
+                payload=payload,
             )
             try:
                 response = await structured.ainvoke(prompt)

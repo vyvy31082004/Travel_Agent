@@ -1,0 +1,73 @@
+id: e2e_override_flight_001
+scenario: "Chuyến này override hạng bay seeded (economy → business class); NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_economy
+      text: "Thường bay hạng phổ thông (economy) khi đi du lịch"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_direct
+      text: "Ưu tiên bay thẳng, tránh nối chuyến"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích business class"
+      domain: flight
+      category: flight_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ — chỉ bay economy"
+      domain: flight
+      category: flight_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Chuyến này tìm chuyến TP.HCM–Hà Nội ngày 10/10, bay business class."
+
+expected_trace:
+  expected_route: [flight]
+  expected_context:
+    flight:
+      must_include: [m_direct]
+      must_exclude: [m_other_user, m_superseded]
+      expected_applicability:
+        m_economy: overridden
+        m_direct: apply
+  expected_tools:
+    - name: search_one_way_flights_tool
+      required_arguments: [origin, destination, departure_date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - flight_assistant
+    - memory_recall_flight
+    - flight_chat
+    - search_one_way_flights_tool
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "TP.HCM–Hà Nội ngày 10/10, business class từ query"
+    - "ưu tiên bay thẳng nếu tool có evidence"
+  tradeoff_rule:
+    - "Không đề xuất economy thay thế nếu chưa hỏi lại"
+  forbidden_claims:
+    - "Viện dẫn economy như constraint hiện tại"
+    - "Giá/hạng không có trong tool result"
+
+expected_finalize:
+  action: NO_STORE

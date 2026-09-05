@@ -1,0 +1,112 @@
+id: e2e_tools_all_001
+scenario: "Một thread 4 turns phủ đủ 13 domain tools (hotel/car/excursion/flight search+detail+book); NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_flight_economy
+      text: "Thường bay hạng phổ thông (economy) khi đi du lịch"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_flight_nonstop
+      text: "Ưu tiên bay thẳng, tránh nối chuyến"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_flight_other_user
+      text: "Memory user khác — thích business class"
+      domain: flight
+      category: flight_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_flight_superseded
+      text: "Preference cũ — chỉ bay Vietnam Airlines"
+      domain: flight
+      category: flight_preference
+      status: superseded
+      expect_in_context: false
+    - id: m_hotel_quiet
+      text: "Thích khách sạn yên tĩnh"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_car_automatic
+      text: "Thích xe số tự động"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_excursion_outdoor
+      text: "Thích hoạt động ngoài trời khi đi chơi"
+      domain: excursion
+      category: excursion_preference
+      status: active
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  force_summarize_penultimate: false
+  messages:
+    - "Tìm khách sạn ở Đà Nẵng check-in 10/10 check-out 12/10, 2 người lớn. Ngay sau khi có kết quả, với khách sạn đầu tiên hãy gọi tool xem danh sách phòng (10/10–12/10), review, tiện nghi và chính sách."
+    - "Thuê xe ở Đà Nẵng nhận 10/10 10:00 trả 12/10 10:00. Ngay sau khi có kết quả, gọi tool xem chi tiết xe đầu tiên."
+    - "Tìm tour hoặc điểm tham quan ở Đà Nẵng ngày 11/10. Ngay sau khi có kết quả, gọi tool xem chi tiết và review của attraction đầu tiên."
+    - "Tìm vé một chiều từ TP.HCM ra Đà Nẵng ngày 10/10, đồng thời tìm vé khứ hồi TP.HCM–Đà Nẵng đi 10/10 về 12/10, rồi book giúp chuyến one-way đầu tiên."
+
+expected_trace:
+  expected_route: [flight]
+  expected_context:
+    flight:
+      must_include: [m_flight_economy, m_flight_nonstop]
+      must_exclude: [m_flight_other_user, m_flight_superseded]
+  expected_tools:
+    - name: search_hotels_tool
+      required_arguments: [destination]
+    - name: get_hotel_room_list_tool
+      required_arguments: [hotel_id, check_in, check_out]
+    - name: get_hotel_reviews_tool
+      required_arguments: [hotel_id]
+    - name: get_hotel_facility_tool
+      required_arguments: [hotel_id]
+    - name: get_hotel_policy_tool
+      required_arguments: [hotel_id]
+    - name: search_cars_tool
+      required_arguments: [location, pickup_date, return_date]
+    - name: get_car_details_tool
+      required_arguments: [car_id, car_name]
+    - name: search_attractions_tool
+      required_arguments: [location]
+    - name: fetch_attraction_details_tool
+      required_arguments: [slug]
+    - name: fetch_attraction_reviews_tool
+      required_arguments: [id]
+    - name: search_one_way_flights_tool
+      required_arguments: [origin, destination, departure_date]
+    - name: search_round_trip_flights_tool
+      required_arguments: [origin, destination, departure_date]
+    - name: book_flight_by_id
+      required_arguments: [flight_id]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - hotel_assistant
+    - car_assistant
+    - excursion_assistant
+    - flight_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "trace chứa đủ 13 domain tools: hotel search+4 detail, car search+detail, excursion search+2 detail, flight one-way+round-trip+book"
+    - "ngày giữ 10/10–12/10 (hotel/car/flight) và 11/10 (excursion) khi tool có date args"
+    - "final answer phản ánh kết quả tool, không bịa giá/hãng/phòng"
+  tradeoff_rule:
+    - "Nếu thiếu id/slug để gọi detail/book, nêu rõ cần search trước"
+  forbidden_claims:
+    - "Giá/hãng/phòng/xe/tour không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

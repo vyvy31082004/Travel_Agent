@@ -1,0 +1,98 @@
+id: e2e_multi_flight_car_001
+scenario: "Flight economy+sáng và car automatic+5 chỗ — không leak flight pref sang car"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_flight_economy
+      text: "Thường bay hạng phổ thông (economy) khi đi du lịch"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_flight_morning
+      text: "Ưu tiên bay buổi sáng"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_flight_other_user
+      text: "Memory user khác — thích business class"
+      domain: flight
+      category: flight_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_flight_superseded
+      text: "Preference cũ — chỉ bay Vietnam Airlines"
+      domain: flight
+      category: flight_preference
+      status: superseded
+      expect_in_context: false
+    - id: m_car_automatic
+      text: "Thích xe số tự động"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_car_5seats
+      text: "Cần xe tối thiểu 5 chỗ"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_car_other_user
+      text: "Memory user khác — thích xe số sàn"
+      domain: car
+      category: car_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_car_superseded
+      text: "Preference cũ — chỉ thuê xe 4 chỗ"
+      domain: car
+      category: car_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Bay từ TP.HCM ra Đà Nẵng ngày 10/10 rồi thuê xe từ sân bay đến 12/10."
+
+expected_trace:
+  expected_route: [flight, car]
+  expected_context:
+    flight:
+      must_include: [m_flight_economy, m_flight_morning]
+      must_exclude: [m_flight_other_user, m_flight_superseded, m_car_automatic, m_car_5seats]
+    car:
+      must_include: [m_car_automatic, m_car_5seats]
+      must_exclude: [m_car_other_user, m_car_superseded, m_flight_economy, m_flight_morning]
+  expected_tools:
+    - name: search_one_way_flights_tool
+      required_arguments: [origin, destination, departure_date]
+    - name: search_cars_tool
+      required_arguments: [location, pickup_date, return_date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - flight_assistant
+    - car_assistant
+    - join_results
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "flight: economy + ưu tiên bay buổi sáng"
+    - "car: số tự động + tối thiểu 5 chỗ"
+    - "final answer nhóm đúng 2 phần flight / thuê xe"
+  tradeoff_rule:
+    - "Cho phép car dùng arrival_airport/ngày từ kết quả flight như state nghiệp vụ"
+    - "Nếu không thỏa điều kiện, nêu rõ theo từng domain"
+  forbidden_claims:
+    - "dùng flight preference (economy/sáng) để chọn xe"
+    - "Giá/chuyến/xe không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE
