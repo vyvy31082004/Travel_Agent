@@ -1,0 +1,67 @@
+id: e2e_write_global_name_001
+scenario: "Chưa có profile name; nhớ tên Quỳnh Anh + search hotel Đà Nẵng; INSERT profile_fact, tên không vào tool"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_other_user
+      text: "Memory user khác — thích resort cao cấp"
+      domain: hotel
+      category: hotel_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ đã superseded — thích hostel"
+      domain: hotel
+      category: hotel_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Tôi tên là Quỳnh Anh, hãy nhớ nhé. Tìm khách sạn ở Đà Nẵng từ 10–12/10 cho 2 người."
+
+expected_trace:
+  expected_route: [hotel]
+  expected_context:
+    hotel:
+      must_include: []
+      must_exclude: [m_other_user, m_superseded]
+  expected_tools:
+    - name: search_hotels_tool
+      required_arguments: [destination, check_in, check_out]
+      forbidden_arguments: [guest_name, full_name, traveler_name]
+      forbidden_value_substrings: ["Quỳnh Anh"]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - hotel_assistant
+    - memory_recall_hotel
+    - hotel_chat
+    - search_hotels_tool
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "khách sạn Đà Nẵng 10–12/10 cho 2 người"
+    - "không đưa tên vào search/tool arguments"
+  tradeoff_rule:
+    - "Có thể xưng hô Quỳnh Anh nếu policy cho phép; search vẫn theo location/date/guests"
+  forbidden_claims:
+    - "Giá/đặc điểm không có trong tool result"
+    - "Viện dẫn hotel preference seeded không tồn tại"
+
+expected_finalize:
+  action: INSERT
+  memories:
+    - domain: general
+      category: profile_fact
+      family: profile_facts
+      text_contains: ["Quỳnh Anh"]

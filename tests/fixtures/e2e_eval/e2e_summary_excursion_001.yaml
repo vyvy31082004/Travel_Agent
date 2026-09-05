@@ -1,0 +1,81 @@
+id: e2e_summary_excursion_001
+scenario: "T1–T2 rồi summarize_conversation; T3 search excursion từ summary (Hội An 12/10, 2 người, không 11/10) + buổi chiều; LTM nhóm nhỏ + afternoon; NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_small_group
+      text: "Ưu tiên tour nhóm nhỏ"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_afternoon
+      text: "Thích hoạt động buổi chiều"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích tour văn hóa"
+      domain: excursion
+      category: excursion_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ — tránh tour ngoài trời"
+      domain: excursion
+      category: excursion_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Mình đang tính đi chơi ở Hội An, chưa cần tìm tour."
+    - "Ngày 11/10, 2 người; à đổi lại thành ngày 12/10."
+    - "Tìm hoạt động buổi chiều nhé."
+
+expected_trace:
+  expected_route: [excursion]
+  expected_context:
+    excursion:
+      must_include: [m_small_group, m_afternoon]
+      must_exclude: [m_other_user, m_superseded]
+      expected_applicability:
+        m_small_group: apply
+        m_afternoon: apply
+  expected_tools:
+    - name: search_attractions_tool
+      required_arguments: [location, date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - summarize_conversation
+    - memory_finalize
+    - memory_recall_global
+    - primary_assistant
+    - excursion_assistant
+    - memory_recall_excursion
+    - excursion_chat
+    - searchLocation
+    - searchAttractions
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "search/answer giữ Hội An, ngày 12/10, 2 người từ summary"
+    - "ưu tiên buổi chiều và nhóm nhỏ nếu tool có evidence"
+  tradeoff_rule:
+    - "Nếu tool không có giờ/nhóm, nêu giới hạn dữ liệu"
+  forbidden_claims:
+    - "Viện dẫn ngày 11/10 đã bị override"
+    - "Giá/đặc điểm không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

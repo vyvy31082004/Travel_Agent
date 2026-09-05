@@ -1,0 +1,631 @@
+{
+  "metadata": {
+    "case_id": "e2e_override_car_001",
+    "run_id": "edab484b0f55",
+    "started_at": "2026-09-02T16:47:18.925138+00:00",
+    "finished_at": "2026-09-02T16:48:03.018060+00:00",
+    "user_id": "e2e-e2e_override_car_001:user_a",
+    "thread_id": "e2e-e2e_override_car_001-edab484b0f55",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v1",
+    "git_commit": "33651113742b805502b902653208662372e2be36",
+    "fixture_to_uuid": {
+      "m_automatic": "6b4b233a-60ac-59dc-9f0b-2feb97bf9e43",
+      "m_seats": "26498171-5ed1-5337-a551-c477a72219d3",
+      "m_other_user": "c064e264-7449-58cc-b52f-2a782b3e0b5c",
+      "m_superseded": "24263373-ce76-5fbe-a4ac-8d61ac8436ab"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": false
+  },
+  "input": {
+    "messages": [
+      "Lần này tìm xe số sàn ở Đà Nẵng từ 10–12/10."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-02"
+    }
+  },
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "car"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToCarAssistant",
+        "args": {
+          "turn_constraints": [
+            "ưu tiên xe số sàn (manual transmission)",
+            "địa điểm: Đà Nẵng",
+            "thời gian: 10/10/2026 - 12/10/2026"
+          ],
+          "request": "Tìm xe cho thuê số sàn ở Đà Nẵng từ ngày 10/10/2026 đến ngày 12/10/2026"
+        },
+        "timestamp": "2026-09-02T16:48:03.018060+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "car_assistant",
+      "memory_recall_car",
+      "car_chat",
+      "search_cars_tool",
+      "car_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "car": {
+      "candidate_pool_ids": [
+        "m_seats",
+        "m_automatic"
+      ],
+      "applicability": {
+        "m_seats": "apply",
+        "m_automatic": "overridden"
+      },
+      "applicability_reasons": {
+        "m_seats": "The memory specifies a preference for at least 7 seats, which is a standard filter field for car searches and does not conflict with the current request.",
+        "m_automatic": "The user explicitly requested a manual transmission car ('số sàn'), which directly conflicts with the saved preference for automatic transmission ('số tự động')."
+      },
+      "final_context_ids": [
+        "m_seats",
+        "m_automatic"
+      ],
+      "applied_constraints": [
+        "ưu tiên xe số sàn (manual transmission)",
+        "địa điểm: Đà Nẵng",
+        "thời gian: 10/10/2026 - 12/10/2026",
+        "[26498171-5ed1-5337-a551-c477a72219d3] Cần xe tối thiểu 7 chỗ"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "car",
+      "name": "search_cars_tool",
+      "arguments": {
+        "end_ms": "2026-10-12 20:00",
+        "address": "Đà Nẵng",
+        "start_ms": "2026-10-10 08:00",
+        "user_needs": "Thuê xe số sàn 7 chỗ tại Đà Nẵng"
+      },
+      "timestamp": "2026-09-02T16:48:03.018060+00:00",
+      "raw_result": {
+        "search_id": "fa43d209-a267-475a-b0d8-b3b702d3a375",
+        "domain": "car",
+        "displayed_item_ids": [
+          "KE1FA1?carSearchIndex=1"
+        ],
+        "labels": [],
+        "total_results": 1
+      },
+      "normalized_result": {
+        "search_id": "fa43d209-a267-475a-b0d8-b3b702d3a375",
+        "request_id": "req_car_68eb117f",
+        "domain": "car",
+        "total_results": 1,
+        "items": [
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2020/KE1FA1?carSearchIndex=1",
+            "Tags": "Miễn thế chấp",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2020/KE1FA1?carSearchIndex=1",
+            "name": "MITSUBISHI XPANDER 2020",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2024/06/31/12/YvwXVHvldczHMGEIKqFteg.jpg",
+            "price": "792K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2024/06/31/12/YvwXVHvldczHMGEIKqFteg.jpg",
+            "Rating": "5.0",
+            "car_id": "KE1FA1?carSearchIndex=1",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2020",
+            "address": "Phường Xuân Hà, Quận Thanh Khê",
+            "item_id": "KE1FA1?carSearchIndex=1",
+            "Giá gốc": "832K",
+            "Hộp số": "Số sàn",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Xuân Hà, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "63 chuyến",
+            "Giá sau giảm": "792K",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf6-eco-2025/KH4Y1J?carSearchIndex=2",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf6-eco-2025/KH4Y1J?carSearchIndex=2",
+            "name": "VINFAST VF6 ECO 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf6_eco_2025/p/g/2026/01/02/17/t0bd3OKH22CSOU_R5yHZnA.jpg",
+            "price": "1.005K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf6_eco_2025/p/g/2026/01/02/17/t0bd3OKH22CSOU_R5yHZnA.jpg",
+            "Rating": "5.0",
+            "car_id": "KH4Y1J?carSearchIndex=2",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF6 ECO 2025",
+            "address": "Phường Hòa Khê, Quận Thanh Khê",
+            "item_id": "KH4Y1J?carSearchIndex=2",
+            "Giá gốc": "1.032K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hòa Khê, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "28 chuyến",
+            "Giá sau giảm": "1.005K",
+            "position": null,
+            "api_position": 2,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=3",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=3",
+            "name": "MITSUBISHI OUTLANDER Premium 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg",
+            "price": "1.108K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg",
+            "Rating": "5.0",
+            "car_id": "KEQ7PS?carSearchIndex=3",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI OUTLANDER Premium 2019",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KEQ7PS?carSearchIndex=3",
+            "Giá gốc": "1.148K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "1 chuyến",
+            "Giá sau giảm": "1.108K",
+            "position": null,
+            "api_position": 3,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=4",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=4",
+            "name": "VINFAST LIMO GREEN 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg",
+            "price": "1.405K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg",
+            "Rating": "5.0",
+            "car_id": "KLDAEP?carSearchIndex=4",
+            "rating": "5.0",
+            "Tên xe": "VINFAST LIMO GREEN 2026",
+            "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "item_id": "KLDAEP?carSearchIndex=4",
+            "Giá gốc": "1.431K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "2 chuyến",
+            "Giá sau giảm": "1.405K",
+            "position": null,
+            "api_position": 4,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2021/KJHL8A?carSearchIndex=5",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2021/KJHL8A?carSearchIndex=5",
+            "name": "MITSUBISHI XPANDER 2021",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2021/p/g/2024/04/14/17/l-Y_Ocgd5YlnmLTLgDoE9w.jpg",
+            "price": "807K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2021/p/g/2024/04/14/17/l-Y_Ocgd5YlnmLTLgDoE9w.jpg",
+            "Rating": "5.0",
+            "car_id": "KJHL8A?carSearchIndex=5",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2021",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KJHL8A?carSearchIndex=5",
+            "Giá gốc": "847K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "100+ chuyến",
+            "Giá sau giảm": "807K",
+            "position": null,
+            "api_position": 5,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2024/KLSN1M?carSearchIndex=6",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2024/KLSN1M?carSearchIndex=6",
+            "name": "MITSUBISHI XPANDER 2024",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/09/16/07/dVXESlRjv14aUmmrHIlCcg.jpg",
+            "price": "992K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/09/16/07/dVXESlRjv14aUmmrHIlCcg.jpg",
+            "Rating": "5.0",
+            "car_id": "KLSN1M?carSearchIndex=6",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2024",
+            "address": "Phường Hòa Thuận Tây, Quận Hải Châu",
+            "item_id": "KLSN1M?carSearchIndex=6",
+            "Giá gốc": "1.032K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Tây, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "27 chuyến",
+            "Giá sau giảm": "992K",
+            "position": null,
+            "api_position": 6,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2023/KGASGK?carSearchIndex=7",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2023/KGASGK?carSearchIndex=7",
+            "name": "MITSUBISHI XPANDER 2023",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2023/10/19/09/H_T4uEjzI0lyglsa0x-N9Q.jpg",
+            "price": "1.061K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2023/10/19/09/H_T4uEjzI0lyglsa0x-N9Q.jpg",
+            "Rating": "5.0",
+            "car_id": "KGASGK?carSearchIndex=7",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2023",
+            "address": "Phường Thạch Thang, Quận Hải Châu",
+            "item_id": "KGASGK?carSearchIndex=7",
+            "Giá gốc": "1.101K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Thạch Thang, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "49 chuyến",
+            "Giá sau giảm": "1.061K",
+            "position": null,
+            "api_position": 7,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KKXHM8?carSearchIndex=8",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KKXHM8?carSearchIndex=8",
+            "name": "VINFAST LIMO GREEN 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/19/11/wfwa0ktq2UwEjHcnXw-mLg.jpg",
+            "price": "1.255K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/19/11/wfwa0ktq2UwEjHcnXw-mLg.jpg",
+            "Rating": "5.0",
+            "car_id": "KKXHM8?carSearchIndex=8",
+            "rating": "5.0",
+            "Tên xe": "VINFAST LIMO GREEN 2026",
+            "address": "Phường Thanh Bình, Quận Hải Châu",
+            "item_id": "KKXHM8?carSearchIndex=8",
+            "Giá gốc": "1.282K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Thanh Bình, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "3 chuyến",
+            "Giá sau giảm": "1.255K",
+            "position": null,
+            "api_position": 8,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/toyota-veloz-cross-2022/KI16T7?carSearchIndex=9",
+            "Tags": "Miễn thế chấp",
+            "link": "https://www.mioto.vn/car/toyota-veloz-cross-2022/KI16T7?carSearchIndex=9",
+            "name": "TOYOTA VELOZ CROSS 2022",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2022/p/g/2024/09/23/13/yRDrU9SkZhQrUrXKEZeyaw.jpg",
+            "price": "948K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2022/p/g/2024/09/23/13/yRDrU9SkZhQrUrXKEZeyaw.jpg",
+            "Rating": "5.0",
+            "car_id": "KI16T7?carSearchIndex=9",
+            "rating": "5.0",
+            "Tên xe": "TOYOTA VELOZ CROSS 2022",
+            "address": "Phường Xuân Hà, Quận Thanh Khê",
+            "item_id": "KI16T7?carSearchIndex=9",
+            "Giá gốc": "988K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Xuân Hà, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "20 chuyến",
+            "Giá sau giảm": "948K",
+            "position": null,
+            "api_position": 9,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KHUNR7?carSearchIndex=10",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KHUNR7?carSearchIndex=10",
+            "name": "VINFAST LIMO GREEN 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/04/12/g7BU6Mwcg25pEG4cx9Y0UQ.jpg",
+            "price": "1.263K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/04/12/g7BU6Mwcg25pEG4cx9Y0UQ.jpg",
+            "Rating": "5.0",
+            "car_id": "KHUNR7?carSearchIndex=10",
+            "rating": "5.0",
+            "Tên xe": "VINFAST LIMO GREEN 2026",
+            "address": "Phường Phước Ninh, Quận Hải Châu",
+            "item_id": "KHUNR7?carSearchIndex=10",
+            "Giá gốc": "1.289K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Phước Ninh, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "9 chuyến",
+            "Giá sau giảm": "1.263K",
+            "position": null,
+            "api_position": 10,
+            "eligible": false
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "KE1FA1?carSearchIndex=1"
+        ],
+        "items": [
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2020/KE1FA1?carSearchIndex=1",
+            "Tags": "Miễn thế chấp",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2020/KE1FA1?carSearchIndex=1",
+            "name": "MITSUBISHI XPANDER 2020",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2024/06/31/12/YvwXVHvldczHMGEIKqFteg.jpg",
+            "price": "792K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2024/06/31/12/YvwXVHvldczHMGEIKqFteg.jpg",
+            "Rating": "5.0",
+            "car_id": "KE1FA1?carSearchIndex=1",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2020",
+            "address": "Phường Xuân Hà, Quận Thanh Khê",
+            "item_id": "KE1FA1?carSearchIndex=1",
+            "Giá gốc": "832K",
+            "Hộp số": "Số sàn",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Xuân Hà, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "63 chuyến",
+            "Giá sau giảm": "792K",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          }
+        ]
+      }
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "car",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là xe 7 chỗ, số sàn phù hợp với yêu cầu của bạn tại Đà Nẵng từ ngày 10/10/2026 đến 12/10/2026:\\n\\n- **car_id**: KE1FA1?carSearchIndex=1\\n- **Tên xe**: MITSUBISHI XPANDER 2020\\n- **Giá sau giảm**: 792K\\n- **Giá gốc**: 832K\\n- **Hộp số**: Số sàn\\n- **Số chỗ**: 7 chỗ\\n- **Nhiên liệu**: Xăng\\n- **Địa chỉ**: Phường Xuân Hà, Quận Thanh Khê\\n- **Rating**: 5.0\\n- **Số chuyến**: 63 chuyến\\n- **Tags**: Miễn thế chấp\\n- **Ảnh**: ![MITSUBISHI XPANDER 2020](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2024/06/31/12/YvwXVHvldczHMGEIKqFteg.jpg)\\n- **Link**: https://www.mioto.vn/car/mitsubishi-xpander-2020/KE1FA1?carSearchIndex=1', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "ưu tiên xe số sàn (manual transmission)",
+        "địa điểm: Đà Nẵng",
+        "thời gian: 10/10/2026 - 12/10/2026",
+        "[26498171-5ed1-5337-a551-c477a72219d3] Cần xe tối thiểu 7 chỗ"
+      ],
+      "domain_action": "search_cars"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "car"
+    ]
+  },
+  "final_answer": "Dưới đây là thông tin xe số sàn (7 chỗ) phù hợp với yêu cầu của bạn tại Đà Nẵng từ ngày **10/10/2026 đến 12/10/2026**:\n\n### 🚗 **MITSUBISHI XPANDER 2020**\n* **ID xe**: `KE1FA1?carSearchIndex=1`\n* **Loại xe**: 7 chỗ | Hộp số: **Số sàn** | Nhiên liệu: Xăng\n* **Giá thuê**: **792.000 VNĐ / ngày** *(Giá gốc: 832.000 VNĐ)*\n* **Đánh giá**: 5.0 ⭐ (63 chuyến)\n* **Địa điểm nhận xe**: Phường Xuân Hà, Quận Thanh Khê, Đà Nẵng\n* **Ưu đãi / Tiện ích**: Miễn thế chấp\n\n![MITSUBISHI XPANDER 2020](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2024/06/31/12/YvwXVHvldczHMGEIKqFteg.jpg)\n\n🔗 [**Xem chi tiết và đặt xe trên Mioto**](https://www.mioto.vn/car/mitsubishi-xpander-2020/KE1FA1?carSearchIndex=1)\n\n---\nNếu bạn cần hỗ trợ thêm thông tin hoặc muốn tìm kiếm các tiêu chí khác, vui lòng cho mình biết nhé!",
+  "stm": {
+    "summary": null,
+    "message_count": 4
+  },
+  "finalize": {
+    "memory_job_id": "3b8a9dbc-c5f9-4daa-8d46-102ae9ceacb1",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "memory_job": {
+      "job_id": "3b8a9dbc-c5f9-4daa-8d46-102ae9ceacb1",
+      "status": "pending",
+      "error_summary": "0",
+      "created_at": "2026-09-02T23:48:01.776840+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "car"
+        ],
+        "actual": [
+          "car"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "PASS",
+      "detail": "applicability labels match",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "car_assistant",
+          "memory_recall_car",
+          "car_chat",
+          "search_cars_tool",
+          "search_cars_tool",
+          "car_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "car_assistant",
+          "memory_recall_car",
+          "car_chat",
+          "search_cars_tool",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "car_assistant",
+      "graph": "primary",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "memory_recall_car",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_seats",
+          "m_automatic"
+        ],
+        "applicability": {
+          "m_seats": "apply",
+          "m_automatic": "overridden"
+        },
+        "applicability_reasons": {
+          "m_seats": "The memory specifies a preference for at least 7 seats, which is a standard filter field for car searches and does not conflict with the current request.",
+          "m_automatic": "The user explicitly requested a manual transmission car ('số sàn'), which directly conflicts with the saved preference for automatic transmission ('số tự động')."
+        },
+        "applied_to_context": [
+          "m_seats"
+        ]
+      }
+    },
+    {
+      "seq": 5,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "search_cars_tool",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [
+        {
+          "name": "search_cars_tool",
+          "arguments": {
+            "user_needs": "Thuê xe số sàn 7 chỗ tại Đà Nẵng",
+            "start_ms": "2026-10-10 08:00",
+            "end_ms": "2026-10-12 20:00",
+            "address": "Đà Nẵng"
+          }
+        }
+      ],
+      "parent_chat_node": "car_chat"
+    },
+    {
+      "seq": 7,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 8,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 9,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

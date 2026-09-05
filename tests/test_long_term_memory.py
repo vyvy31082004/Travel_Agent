@@ -48,6 +48,7 @@ from memory.verifier import (
     MemoryVerifierContext,
     TrustMemInspiredMemoryVerifier,
     VerifierDimensionScore,
+    _compact_memory,
     build_memory_verifier,
     project_memory_state,
 )
@@ -439,6 +440,39 @@ def _flight_memory(text, *, memory_id=None, condition=None, evidence=None):
     )
 
 
+def test_compact_memory_includes_superseded_status_after_project():
+    old = TravelMemory(
+        memory_id="m_large_group",
+        user_id="user-1",
+        memory_text="Ưu tiên tour nhóm lớn",
+        category=MemoryCategory.EXCURSION_PREFERENCE,
+        domain=MemoryDomain.EXCURSION,
+        evidence_text="Ưu tiên tour nhóm lớn",
+        source_thread_id="thread-1",
+        status=MemoryStatus.ACTIVE,
+    )
+    candidate = TravelMemory(
+        user_id="user-1",
+        memory_text="Ưu tiên tour nhóm nhỏ",
+        category=MemoryCategory.EXCURSION_PREFERENCE,
+        domain=MemoryDomain.EXCURSION,
+        evidence_text="Từ giờ ưu tiên nhóm nhỏ",
+        source_thread_id="thread-1",
+        status=MemoryStatus.ACTIVE,
+    )
+    transition = MemoryTransition(
+        TransitionAction.SUPERSEDE,
+        candidate=candidate,
+        existing_memory_id="m_large_group",
+        reasons=["relation_supersedes"],
+    )
+    projected = project_memory_state(transition, [old])
+    compact = [_compact_memory(memory) for memory in projected]
+    by_text = {item["memory_text"]: item for item in compact if item}
+    assert by_text["Ưu tiên tour nhóm lớn"]["status"] == "superseded"
+    assert by_text["Ưu tiên tour nhóm nhỏ"]["status"] == "active"
+
+
 def test_trustmem_verifier_detects_coverage_preservation_and_faithfulness_failures():
     verifier = TrustMemInspiredMemoryVerifier(
         model="heuristic-trustmem-v1",
@@ -774,9 +808,13 @@ class FakeLangMemManager:
     def __init__(self, outputs):
         self.outputs = outputs
         self.inputs = []
+        self.parent_configs = []
 
-    async def ainvoke(self, payload):
+    async def ainvoke(self, payload, config=None, **kwargs):
+        from langchain_core.runnables.config import var_child_runnable_config
+
         self.inputs.append(payload)
+        self.parent_configs.append(var_child_runnable_config.get())
         return self.outputs
 
 
@@ -808,6 +846,61 @@ def test_langmem_extractor_normalizes_successful_output():
     assert len(candidates) == 1
     assert candidates[0].category == MemoryCategory.FLIGHT_PREFERENCE
     assert manager.inputs[0]["existing"] == []
+
+
+def test_langmem_extractor_passes_existing_as_id_model_tuples():
+    manager = FakeLangMemManager([])
+    extractor = LangMemCandidateExtractor(manager=manager)
+    existing = [
+        TravelMemory(
+            memory_id="mem-1",
+            user_id="user-1",
+            memory_text="Thích khách sạn yên tĩnh",
+            category=MemoryCategory.HOTEL_PREFERENCE,
+            domain=MemoryDomain.HOTEL,
+            evidence_text="Tôi thích khách sạn yên tĩnh",
+            source_thread_id="thread-old",
+        )
+    ]
+    candidates = asyncio.run(
+        extractor.extract(
+            [{"type": "human", "content": "Từ giờ tôi vẫn ưu tiên khách sạn yên tĩnh"}],
+            user_id="user-1",
+            thread_id="thread-1",
+            existing_active=existing,
+        )
+    )
+    assert candidates == []
+    payload = manager.inputs[0]["existing"]
+    assert len(payload) == 1
+    memory_id, model = payload[0]
+    assert memory_id == "mem-1"
+    assert isinstance(model, LangMemTravelMemory)
+    assert model.memory_text == "Thích khách sạn yên tĩnh"
+
+
+def test_langmem_extractor_clears_parent_sync_durability_config():
+    """Parent graph durability=sync must not leak into LangMem Pregel ainvoke."""
+    from langchain_core.runnables.config import var_child_runnable_config
+
+    manager = FakeLangMemManager([])
+    extractor = LangMemCandidateExtractor(manager=manager)
+    parent = {"configurable": {"__pregel_durability": "sync", "thread_id": "parent"}}
+    token = var_child_runnable_config.set(parent)
+    try:
+        candidates = asyncio.run(
+            extractor.extract(
+                [{"type": "human", "content": "Tôi thích khách sạn yên tĩnh"}],
+                user_id="user-1",
+                thread_id="thread-1",
+            )
+        )
+        # Parent config restored after extract returns.
+        assert var_child_runnable_config.get() == parent
+    finally:
+        var_child_runnable_config.reset(token)
+    assert candidates == []
+    assert manager.parent_configs == [None]
 
 
 def test_langmem_extractor_skips_assistant_only_turn():

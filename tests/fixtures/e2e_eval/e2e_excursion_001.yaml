@@ -1,0 +1,73 @@
+id: e2e_excursion_001
+scenario: "Áp dụng nature + avoid crowded + response language vi khi gợi ý điểm tham quan"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_nature
+      text: "Thích điểm tham quan thiên nhiên"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_crowded
+      text: "Tránh điểm quá đông đúc"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_lang
+      text: "Trả lời bằng tiếng Việt"
+      domain: general
+      category: interaction_rule
+      family: interaction_rules
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích tour văn hóa"
+      domain: excursion
+      category: excursion_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ — chỉ đi biển"
+      domain: excursion
+      category: excursion_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Mai ở Đà Nẵng nên đi đâu?"
+
+expected_trace:
+  expected_route: [excursion]
+  expected_context:
+    excursion:
+      must_include: [m_nature, m_crowded]
+      must_exclude: [m_other_user, m_superseded]
+  expected_tools:
+    - name: search_attractions_tool
+      required_arguments: [location, date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - excursion_assistant
+    - join_results
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "đề xuất điểm thiên nhiên phù hợp dữ liệu ngày mai"
+    - "tránh điểm quá đông nếu tool có evidence"
+    - "trả lời tiếng Việt"
+  tradeoff_rule:
+    - "Không thay tool bằng trí nhớ cũ; nếu thiếu dữ liệu phải nêu rõ"
+  forbidden_claims:
+    - "Điểm/giờ/giá không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

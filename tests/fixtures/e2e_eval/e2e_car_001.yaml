@@ -1,0 +1,72 @@
+id: e2e_car_001
+scenario: "Áp dụng automatic + 7 seats + avoid surcharge khi thuê xe"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_automatic
+      text: "Thích xe số tự động"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_seats
+      text: "Cần xe tối thiểu 7 chỗ"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_surcharge
+      text: "Tránh xe có phụ phí cao"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích xe số sàn"
+      domain: car
+      category: car_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ — chỉ thuê xe 4 chỗ"
+      domain: car
+      category: car_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Tôi cần xe ở Đà Nẵng từ 10 đến 13/10."
+
+expected_trace:
+  expected_route: [car]
+  expected_context:
+    car:
+      must_include: [m_automatic, m_seats, m_surcharge]
+      must_exclude: [m_other_user, m_superseded]
+  expected_tools:
+    - name: search_cars_tool
+      required_arguments: [location, pickup_date, return_date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - car_assistant
+    - join_results
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "xe 7 chỗ trở lên"
+    - "số tự động"
+    - "báo giá gồm phụ phí theo dữ liệu tool"
+  tradeoff_rule:
+    - "Nếu không có xe thỏa điều kiện, nêu rõ trade-off"
+  forbidden_claims:
+    - "Giá/phụ phí không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

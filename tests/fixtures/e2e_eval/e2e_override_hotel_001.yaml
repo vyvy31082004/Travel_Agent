@@ -1,0 +1,73 @@
+id: e2e_override_hotel_001
+scenario: "Lần này override ngân sách hotel seeded (2–3 triệu → dưới 1 triệu/đêm); NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_budget
+      text: "Ngân sách hotel thường 2–3 triệu/đêm"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_quiet
+      text: "Thích khách sạn yên tĩnh"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích resort cao cấp"
+      domain: hotel
+      category: hotel_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ đã superseded — thích hostel"
+      domain: hotel
+      category: hotel_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Lần này tìm khách sạn ở Đà Nẵng từ 10–12/10, dưới 1 triệu/đêm."
+
+expected_trace:
+  expected_route: [hotel]
+  expected_context:
+    hotel:
+      must_include: [m_quiet]
+      must_exclude: [m_other_user, m_superseded]
+      expected_applicability:
+        m_budget: overridden
+        m_quiet: uncertain
+  expected_tools:
+    - name: search_hotels_tool
+      required_arguments: [destination, check_in, check_out]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - hotel_assistant
+    - memory_recall_hotel
+    - hotel_chat
+    - search_hotels_tool
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "khách sạn Đà Nẵng 10–12/10, dưới 1 triệu/đêm từ query"
+    - "ưu tiên yên tĩnh nếu tool có evidence"
+  tradeoff_rule:
+    - "Nếu không có kết quả phù hợp, nêu rõ — không nới lại ngân sách 2–3 triệu seeded"
+  forbidden_claims:
+    - "Viện dẫn ngân sách 2–3 triệu như constraint hiện tại"
+    - "Giá/đặc điểm không có trong tool result"
+
+expected_finalize:
+  action: NO_STORE
