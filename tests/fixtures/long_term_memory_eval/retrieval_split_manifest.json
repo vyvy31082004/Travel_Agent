@@ -78,11 +78,11 @@
     "override_hotel_budget_tes_00": "test",
     "override_hotel_budget_tes_01": "test",
     "override_hotel_budget_tes_02": "test",
-    "override_hotel_location_irrelevant_dev_00": "development",
-    "override_hotel_location_irrelevant_dev_01": "development",
-    "override_hotel_location_irrelevant_tes_00": "test",
-    "override_hotel_location_irrelevant_tes_01": "test",
-    "override_hotel_location_irrelevant_tes_02": "test",
+    "override_hotel_location_uncertain_dev_00": "development",
+    "override_hotel_location_uncertain_dev_01": "development",
+    "override_hotel_location_uncertain_tes_00": "test",
+    "override_hotel_location_uncertain_tes_01": "test",
+    "override_hotel_location_uncertain_tes_02": "test",
     "override_car_transmission_dev_00": "development",
     "override_car_transmission_dev_01": "development",
     "override_car_transmission_tes_00": "test",
@@ -93,12 +93,12 @@
     "override_flight_departure_tes_00": "test",
     "override_flight_departure_tes_01": "test",
     "override_flight_departure_tes_02": "test",
-    "soft_hotel_quiet_apply_dev_00": "development",
-    "soft_hotel_quiet_apply_dev_01": "development",
-    "soft_hotel_quiet_apply_dev_02": "development",
-    "soft_hotel_quiet_apply_tes_00": "test",
-    "soft_hotel_quiet_apply_tes_01": "test",
-    "soft_hotel_quiet_apply_tes_02": "test",
+    "soft_hotel_quiet_uncertain_dev_00": "development",
+    "soft_hotel_quiet_uncertain_dev_01": "development",
+    "soft_hotel_quiet_uncertain_dev_02": "development",
+    "soft_hotel_quiet_uncertain_tes_00": "test",
+    "soft_hotel_quiet_uncertain_tes_01": "test",
+    "soft_hotel_quiet_uncertain_tes_02": "test",
     "soft_hotel_avoid_groups_uncertain_dev_00": "development",
     "soft_hotel_avoid_groups_uncertain_dev_01": "development",
     "soft_hotel_avoid_groups_uncertain_dev_02": "development",
@@ -227,7 +227,7 @@
       "development": 2,
       "test": 3
     },
-    "override_hotel_location_irrelevant": {
+    "override_hotel_location_uncertain": {
       "development": 2,
       "test": 3
     },
@@ -239,7 +239,7 @@
       "development": 2,
       "test": 3
     },
-    "soft_hotel_quiet_apply": {
+    "soft_hotel_quiet_uncertain": {
       "development": 3,
       "test": 3
     },
