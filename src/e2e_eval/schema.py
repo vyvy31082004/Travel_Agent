@@ -59,6 +59,7 @@ class CaseSeed(BaseModel):
 
 class CaseInput(BaseModel):
     messages: list[str]
+    force_summarize_penultimate: bool = True
 
     @field_validator("messages")
     @classmethod

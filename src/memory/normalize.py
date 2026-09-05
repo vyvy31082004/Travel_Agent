@@ -76,7 +76,18 @@ def normalize_flight_offers(raw: Any) -> list[dict[str, Any]]:
             or flight.get("item_id")
             or f"flight_{index}"
         )
-        detail_token = flight.get("detailToken") or flight.get("detail_token")
+        detail_token = (
+            flight.get("detailToken")
+            or flight.get("detail_token")
+            or flight.get("booking_token")
+        )
+        if not detail_token and isinstance(flight.get("inbound"), dict):
+            inbound = flight["inbound"]
+            detail_token = (
+                inbound.get("detailToken")
+                or inbound.get("detail_token")
+                or inbound.get("booking_token")
+            )
         payload = {
             "item_id": item_id,
             "offer_id": item_id,

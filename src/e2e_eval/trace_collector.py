@@ -246,10 +246,10 @@ class TraceCollector:
         )
 
     def begin_scored_turn(self) -> None:
-        """Keep execution_path; reset route/tools/recall so auto-score uses this turn."""
+        """Keep execution_path and accumulated tools; reset route/recall for this turn."""
         self._delegated_domains = set()
         self._assistant_graphs_started = set()
-        self.trace["tools"] = []
+        # Keep trace["tools"] so multi-turn cases can assert tools from earlier turns.
         self.trace["sub_agents"] = []
         self.trace["domain_recall"] = {}
         self.trace["join"] = {"branch_count": 0, "merged_domains": []}

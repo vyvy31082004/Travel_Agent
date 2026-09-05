@@ -396,7 +396,11 @@ async def run_case(
             collector.trace["input"]["resolved_dates"] = dict(merged_dates)
 
             is_last = index == last_index
-            summarize_turn = (not is_last) and index == last_index - 1
+            summarize_turn = (
+                bool(case.input.force_summarize_penultimate)
+                and (not is_last)
+                and index == last_index - 1
+            )
             turn_number = index + 1
 
             if is_last and last_index > 0:
