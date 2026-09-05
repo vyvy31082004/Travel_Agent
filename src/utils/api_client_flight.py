@@ -186,7 +186,6 @@ def search_flight_location_from_api(
 
     query = remove_vietnamese_accents(query).strip()
     query_upper = query.upper()
-
     if query_upper == "SAI GON":
         query = "Ho Chi Minh"
         query_upper = "HO CHI MINH"
