@@ -1,3 +1,4 @@
+import logging
 import os
 import requests
 from dotenv import load_dotenv
@@ -14,6 +15,7 @@ from typing import Any, Optional
 
 from utils.rapidapi_limiter import call_with_rate_limit_retry
 
+logger = logging.getLogger(__name__)
 
 BOOKING_HOST = os.getenv(
     "BOOKING_RAPIDAPI_HOST",
@@ -77,8 +79,9 @@ def _booking_get(header: str, path: str, params: dict, retries: int = 2) -> dict
 
     clean_params = _clean_request_params(params)
 
-    print("CALL API:", url)
-    print("PARAMS:", clean_params)
+    # Do not log query parameters or final URLs: booking/next tokens are
+    # capability-bearing values and must not be copied into production logs.
+    logger.info("Calling flight API endpoint %s", path)
 
     def _do_request() -> dict | list:
         response = requests.get(
@@ -87,8 +90,6 @@ def _booking_get(header: str, path: str, params: dict, retries: int = 2) -> dict
             params=clean_params,
             timeout=40,
         )
-
-        print("FINAL URL:", response.url)
 
         if response.status_code == 429:
             raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
@@ -112,9 +113,11 @@ def _booking_get(header: str, path: str, params: dict, retries: int = 2) -> dict
         return payload
 
     def _on_retry(attempt: int, delay: float, exc: BaseException) -> None:
-        print(
-            f"429 on attempt {attempt}/{retries + 1}, "
-            f"retrying after {delay:g}s..."
+        logger.warning(
+            "Flight API rate-limited on attempt %s/%s; retrying after %ss",
+            attempt,
+            retries + 1,
+            f"{delay:g}",
         )
 
     return call_with_rate_limit_retry(
@@ -669,6 +672,125 @@ def _filter_flights_by_time(
 
     return filtered
 
+
+def _validate_flight_constraints(
+    *,
+    stops: str,
+    alliances: Optional[str],
+    carry_on_bag: int,
+    emissions: int,
+    layover_duration: Optional[str],
+    airports: Optional[str],
+    flight_duration: Optional[str],
+    limit: int,
+) -> str | None:
+    if str(stops) not in {"0", "1", "2", "3"}:
+        return 'stops phải là "0", "1", "2" hoặc "3".'
+    if limit < 1:
+        return "limit phải >= 1."
+
+    unsupported: list[str] = []
+    if alliances:
+        unsupported.append("alliances")
+    if carry_on_bag:
+        unsupported.append("carry_on_bag")
+    if emissions:
+        unsupported.append("emissions")
+    if layover_duration:
+        unsupported.append("layover_duration")
+    if airports:
+        unsupported.append("airports")
+    if flight_duration:
+        unsupported.append("flight_duration")
+    if unsupported:
+        return (
+            "Nhà cung cấp flight hiện tại chưa hỗ trợ đáng tin cậy các bộ lọc: "
+            + ", ".join(unsupported)
+            + "."
+        )
+    return None
+
+
+def _offer_stop_count(offer: dict) -> int | None:
+    value = offer.get("stops")
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, (int, float)):
+        return int(value)
+    if isinstance(value, str):
+        digits = "".join(ch for ch in value if ch.isdigit())
+        if digits:
+            return int(digits)
+        if value.strip().lower() in {"nonstop", "non-stop", "direct"}:
+            return 0
+    segments = offer.get("segments")
+    if isinstance(segments, list) and segments:
+        return max(len(segments) - 1, 0)
+    return None
+
+
+def _price_value(offer: dict) -> float | None:
+    value = offer.get("price")
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        try:
+            return float(value.replace(",", "").strip())
+        except ValueError:
+            return None
+    return None
+
+
+def _filter_flight_constraints(
+    flights: list[dict],
+    *,
+    stops: str = "0",
+    airlines: Optional[str] = None,
+    max_price: Optional[int] = None,
+) -> list[dict]:
+    max_stops = {"1": 0, "2": 1, "3": 2}.get(str(stops))
+    airline_codes = {
+        code.strip().upper()
+        for code in (_resolve_airline_codes(airlines) or "").split(",")
+        if code.strip()
+    }
+
+    filtered: list[dict] = []
+    for offer in flights:
+        if max_stops is not None:
+            stop_count = _offer_stop_count(offer)
+            if stop_count is None or stop_count > max_stops:
+                continue
+        if airline_codes:
+            raw_codes = offer.get("airline_code")
+            if isinstance(raw_codes, list):
+                offer_codes = {str(code).upper() for code in raw_codes}
+            else:
+                offer_codes = {
+                    code.strip().upper()
+                    for code in str(raw_codes or "").split(",")
+                    if code.strip()
+                }
+            if not offer_codes.intersection(airline_codes):
+                continue
+        if max_price is not None:
+            price = _price_value(offer)
+            if price is None or price > max_price:
+                continue
+        filtered.append(offer)
+    return filtered
+
+
+def _limit_flight_groups(
+    top: list[dict],
+    other: list[dict],
+    limit: int,
+) -> tuple[list[dict], list[dict]]:
+    limited_top = top[:limit]
+    remaining = max(limit - len(limited_top), 0)
+    return limited_top, other[:remaining]
+
+
 def search_one_way_flights_from_api(
     origin: str,
     destination: str,
@@ -711,6 +833,18 @@ def search_one_way_flights_from_api(
         return [{"error": "Bạn cần cung cấp ngày bay departure_date để tìm chuyến bay."}]
     if adults < 1:
         return [{"error": "Số người lớn adults phải >= 1."}]
+    constraint_error = _validate_flight_constraints(
+        stops=stops,
+        alliances=alliances,
+        carry_on_bag=carry_on_bag,
+        emissions=emissions,
+        layover_duration=layover_duration,
+        airports=airports,
+        flight_duration=flight_duration,
+        limit=limit,
+    )
+    if constraint_error:
+        return [{"error": constraint_error}]
 
     departure_date = to_date(departure_date) if departure_date else None
 
@@ -757,9 +891,18 @@ def search_one_way_flights_from_api(
         top = _normalize_flight_offer(1, top_raw, retun_assign=False)
         other = _normalize_flight_offer(1, other_raw, retun_assign=False)
 
-        if max_price is not None:
-            top = [f for f in top if (f.get("price") or 0) <= max_price]
-            other = [f for f in other if (f.get("price") or 0) <= max_price]
+        top = _filter_flight_constraints(
+            top,
+            stops=stops,
+            airlines=airlines,
+            max_price=max_price,
+        )
+        other = _filter_flight_constraints(
+            other,
+            stops=stops,
+            airlines=airlines,
+            max_price=max_price,
+        )
 
         dep_after = dep_before = arr_after = arr_before = None
         if preferred_departure_time:
@@ -787,10 +930,11 @@ def search_one_way_flights_from_api(
                 arrival_before=arr_before,
             )
 
+        top, other = _limit_flight_groups(top, other, limit)
         return [{
             "source": "google_flights2_searchFlights",
             "topFlights": top,
-            "otherFlights": other[:limit],
+            "otherFlights": other,
         }]
 
     except Exception as e:
@@ -830,8 +974,10 @@ def _pair_one_way_legs(outbound_flights: list[dict], inbound_flights: list[dict]
     for outbound in outbound_flights:
         for inbound in inbound_flights:
             offer_id = f"FL-{uuid.uuid4().hex[:6].upper()}"
-            outbound_price = outbound.get("price") or 0
-            inbound_price = inbound.get("price") or 0
+            outbound_price = _price_value(outbound)
+            inbound_price = _price_value(inbound)
+            if outbound_price is None or inbound_price is None:
+                continue
             pairs.append({
                 "Offer_ID": offer_id,
                 "price": outbound_price + inbound_price,
@@ -876,6 +1022,11 @@ def _roundtrip_one_way_fallback(
     sort_by: str,
     stops: str,
     limit: int,
+    preferred_departure_time: Optional[str] = None,
+    preferred_arrival_time: Optional[str] = None,
+    preferred_return_departure_time: Optional[str] = None,
+    preferred_return_arrival_time: Optional[str] = None,
+    time_tolerance_minutes: int = 90,
     **search_kwargs: Any,
 ) -> list[dict]:
     shared = {
@@ -892,6 +1043,9 @@ def _roundtrip_one_way_fallback(
         origin=origin,
         destination=destination,
         departure_date=departure_date.isoformat(),
+        preferred_departure_time=preferred_departure_time,
+        preferred_arrival_time=preferred_arrival_time,
+        time_tolerance_minutes=time_tolerance_minutes,
         limit=limit,
         **shared,
     )
@@ -902,15 +1056,33 @@ def _roundtrip_one_way_fallback(
         origin=destination,
         destination=origin,
         departure_date=return_date.isoformat(),
+        preferred_departure_time=preferred_return_departure_time,
+        preferred_arrival_time=preferred_return_arrival_time,
+        time_tolerance_minutes=time_tolerance_minutes,
         limit=limit,
         **shared,
     )
     if inbound_result and inbound_result[0].get("error"):
         return inbound_result
 
-    outbound_flights = _flatten_one_way_result(outbound_result)
-    inbound_flights = _flatten_one_way_result(inbound_result)
+    outbound_flights = _filter_flight_constraints(
+        _flatten_one_way_result(outbound_result),
+        stops=stops,
+        airlines=search_kwargs.get("airlines"),
+    )
+    inbound_flights = _filter_flight_constraints(
+        _flatten_one_way_result(inbound_result),
+        stops=stops,
+        airlines=search_kwargs.get("airlines"),
+    )
     paired = _pair_one_way_legs(outbound_flights[:limit], inbound_flights[:limit])
+    max_price = search_kwargs.get("max_price")
+    if max_price is not None:
+        paired = [
+            pair
+            for pair in paired
+            if (_price_value(pair) is not None and _price_value(pair) <= max_price)
+        ]
     if not paired:
         return [{"error": "Không tìm thấy chuyến bay khứ hồi từ tìm kiếm một chiều."}]
 
@@ -965,6 +1137,18 @@ def search_roundtrip_flights_from_api(
         return [{"error": "Bạn cần cung cấp ngày bay return_date để tìm chuyến bay."}]
     if adults < 1:
         return [{"error": "Số người lớn adults phải >= 1."}]
+    constraint_error = _validate_flight_constraints(
+        stops=stops,
+        alliances=alliances,
+        carry_on_bag=carry_on_bag,
+        emissions=emissions,
+        layover_duration=layover_duration,
+        airports=airports,
+        flight_duration=flight_duration,
+        limit=limit,
+    )
+    if constraint_error:
+        return [{"error": constraint_error}]
 
     departure_date = to_date(departure_date) if departure_date else None
     return_date = to_date(return_date) if return_date else None
@@ -1027,6 +1211,17 @@ def search_roundtrip_flights_from_api(
                 preferred_arrival_time, time_tolerance_minutes
             )
 
+        outbound_top = _filter_flight_constraints(
+            outbound_top,
+            stops=stops,
+            airlines=airlines,
+        )
+        outbound_other = _filter_flight_constraints(
+            outbound_other,
+            stops=stops,
+            airlines=airlines,
+        )
+
         if dep_after or dep_before or arr_after or arr_before:
             outbound_top = _filter_flights_by_time(
                 outbound_top,
@@ -1087,6 +1282,11 @@ def search_roundtrip_flights_from_api(
                     _normalize_flight_offer(1, ret_top, retun_assign=True)
                     + _normalize_flight_offer(1, ret_other, retun_assign=True)
                 )
+                inbound = _filter_flight_constraints(
+                    inbound,
+                    stops=stops,
+                    airlines=airlines,
+                )
                 if ret_dep_after or ret_dep_before or ret_arr_after or ret_arr_before:
                     inbound = _filter_flights_by_time(
                         inbound,
@@ -1102,12 +1302,20 @@ def search_roundtrip_flights_from_api(
                             warning="Không tìm thấy chuyến về phù hợp; chỉ hiển thị chiều đi.",
                         )
                     ]
-                for inb in inbound:
+                for inb in inbound[:limit]:
                     offer_id = f"FL-{uuid.uuid4().hex[:6].upper()}"
                     booking_token = inb.get("booking_token") or inb.get("detailToken")
+                    # getNextFlights returns the complete selected round-trip
+                    # fare. Do not add the outbound search price a second time.
+                    total_price = _price_value(inb)
+                    if (
+                        max_price is not None
+                        and (total_price is None or total_price > max_price)
+                    ):
+                        continue
                     pairs.append({
                         "Offer_ID": offer_id,
-                        "price": inb.get("price"),
+                        "price": total_price,
                         "booking_token": booking_token,
                         "detailToken": booking_token,
                         "next_token": inb.get("next_token"),
@@ -1129,12 +1337,19 @@ def search_roundtrip_flights_from_api(
                 ]
             return pairs
 
+        # Bound sequential getNextFlights calls and the returned Cartesian
+        # combinations. This protects RapidAPI quota and request latency.
+        outbound_top, outbound_other = _limit_flight_groups(
+            outbound_top,
+            outbound_other,
+            limit,
+        )
         paired_top: list[dict] = []
-        for o in outbound_top:
-            paired_top.extend(_fetch_inbound(o))
+        for outbound_offer in outbound_top:
+            paired_top.extend(_fetch_inbound(outbound_offer))
         paired_other: list[dict] = []
-        for o in outbound_other:
-            paired_other.extend(_fetch_inbound(o))
+        for outbound_offer in outbound_other:
+            paired_other.extend(_fetch_inbound(outbound_offer))
 
         if not paired_top and not paired_other:
             if not outbound_top and not outbound_other:
@@ -1151,6 +1366,11 @@ def search_roundtrip_flights_from_api(
                     sort_by=sort_by,
                     stops=stops,
                     limit=limit,
+                    preferred_departure_time=preferred_departure_time,
+                    preferred_arrival_time=preferred_arrival_time,
+                    preferred_return_departure_time=preferred_return_departure_time,
+                    preferred_return_arrival_time=preferred_return_arrival_time,
+                    time_tolerance_minutes=time_tolerance_minutes,
                     currency_code=currency_code,
                     languagecode=languagecode,
                     countrycode=countrycode,
@@ -1164,6 +1384,19 @@ def search_roundtrip_flights_from_api(
                     flight_duration=flight_duration,
                 )
 
+        paired_top = _filter_flight_constraints(
+            paired_top,
+            max_price=max_price,
+        )
+        paired_other = _filter_flight_constraints(
+            paired_other,
+            max_price=max_price,
+        )
+        paired_top, paired_other = _limit_flight_groups(
+            paired_top,
+            paired_other,
+            limit,
+        )
         return [{
             "source": "google_flights2_searchFlights",
             "topFlights": paired_top,

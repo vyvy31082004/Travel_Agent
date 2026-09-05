@@ -404,7 +404,8 @@ async def run_case(
             turn_number = index + 1
 
             if is_last and last_index > 0:
-                collector.begin_scored_turn()
+                prior_messages = final_state.get("messages") or []
+                collector.begin_scored_turn(message_start=len(prior_messages))
                 existing = await _count_new_memories(
                     pool,
                     user_prefix=e2e_user_prefix(case.id),

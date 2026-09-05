@@ -178,6 +178,10 @@ def test_docs_and_workflow_cover_deployment_lifecycle():
     for term in ["azure/login@v2", "id-token: write", "docker push", "04-create-migration-job.sh", "05-run-migration-job.sh", "03-deploy-web.sh", "08-smoke-test.sh", "/login", "/register", "japanwest"]:
         assert term in production_workflow
     assert "japaneast" not in production_workflow
+    assert "Validate notebooks" in production_workflow
+    assert 'Path("src/notebooks").glob("*.ipynb")' in production_workflow
+    assert 'cell.get("outputs")' in production_workflow
+    assert 'cell.get("execution_count") is not None' in production_workflow
     assert "LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION: trustmem-verifier-v2" in production_workflow
     assert "trustmem-verifier-v1" not in production_workflow
     assert "az containerapp revision list" in production_workflow

@@ -56,6 +56,21 @@ async def persist_search_tool_result(
     )
 
     parsed = parse_tool_content(raw_result)
+    error_payload: dict[str, Any] | None = None
+    if isinstance(parsed, dict) and parsed.get("error"):
+        error_payload = parsed
+    elif (
+        isinstance(parsed, list)
+        and len(parsed) == 1
+        and isinstance(parsed[0], dict)
+        and parsed[0].get("error")
+    ):
+        error_payload = parsed[0]
+    if error_payload is not None:
+        # Do not turn upstream failures into empty successful searches or persist
+        # a synthetic result item. Preserve the tool's original error contract.
+        return error_payload
+
     items = normalize_search_results(domain, parsed)
     saved = await repo.save_search(
         user_id=user_id,

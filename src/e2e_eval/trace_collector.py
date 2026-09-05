@@ -221,6 +221,7 @@ class TraceCollector:
         self._execution_seq = 0
         self._delegated_domains: set[str] = set()
         self._assistant_graphs_started: set[str] = set()
+        self._scored_turn_message_start = 0
 
     def record_turn(
         self,
@@ -245,8 +246,9 @@ class TraceCollector:
             }
         )
 
-    def begin_scored_turn(self) -> None:
-        """Keep execution_path and accumulated tools; reset route/recall for this turn."""
+    def begin_scored_turn(self, *, message_start: int = 0) -> None:
+        """Keep execution_path/tools; reset route/recall for the scored turn."""
+        self._scored_turn_message_start = max(message_start, 0)
         self._delegated_domains = set()
         self._assistant_graphs_started = set()
         # Keep trace["tools"] so multi-turn cases can assert tools from earlier turns.
@@ -505,8 +507,9 @@ class TraceCollector:
             for tool_call in getattr(message, "tool_calls", None) or []:
                 name = tool_call.get("name") or ""
                 domain = DELEGATION_TOOL_TO_DOMAIN.get(name)
-                if domain:
-                    domains.add(domain)
+                if not domain:
+                    continue
+                domains.add(domain)
                 tool_calls.append(
                     {
                         "name": name,
@@ -751,8 +754,9 @@ class TraceCollector:
         expected_finalize_action: str | None = None,
     ) -> dict[str, Any]:
         messages = final_state.get("messages") or []
-        self.record_delegation_from_messages(messages)
-        self.record_tool_messages(messages)
+        scored_messages = messages[self._scored_turn_message_start :]
+        self.record_delegation_from_messages(scored_messages)
+        self.record_tool_messages(scored_messages)
 
         branches = final_state.get("domain_branch_results") or []
         inferred = self._infer_mcp_tools_from_visible_results(final_state)
