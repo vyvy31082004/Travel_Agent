@@ -597,7 +597,7 @@ def test_llm_prompt_encodes_tool_field_rubric():
     )
     assert "no quiet tool field" in prompt
     assert "tối thiểu 7 chỗ" in prompt and "user_needs" in prompt
-    assert "nature/beach tour-type prefs → uncertain" in prompt
+    assert "nature/beach/culture tour-type prefs → uncertain" in prompt
     assert "apply as a ranking constraint" not in prompt
     assert "7-seat applies only when the current" not in prompt
     assert "nature pref → apply" not in prompt
