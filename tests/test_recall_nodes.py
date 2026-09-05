@@ -174,14 +174,15 @@ def test_fetch_domain_candidates_uses_sql_pool():
     assert repo.last_domain_fetch == ("user-1", "hotel", 50)
 
 
-def test_recall_domain_with_applicability_filters_irrelevant():
-    hotel = TravelMemory(
+def test_recall_domain_with_applicability_filters_irrelevant_bathtub():
+    """Bathtub has no search_hotels arg → IRRELEVANT and must leave recalled ids."""
+    bathtub = TravelMemory(
         memory_id="hotel-1",
         user_id="user-1",
-        memory_text="resort gần biển",
+        memory_text="phòng có bồn tắm",
         category=MemoryCategory.HOTEL_PREFERENCE,
         domain=MemoryDomain.HOTEL,
-        evidence_text="resort gần biển",
+        evidence_text="phòng có bồn tắm",
         source_thread_id="thread-1",
     )
     budget = TravelMemory(
@@ -193,7 +194,7 @@ def test_recall_domain_with_applicability_filters_irrelevant():
         evidence_text="ngân sách 1-2 triệu",
         source_thread_id="thread-1",
     )
-    repo = FilteringRepo([hotel, budget])
+    repo = FilteringRepo([bathtub, budget])
     service = MemoryService(
         settings=make_settings(),
         repository=repo,
