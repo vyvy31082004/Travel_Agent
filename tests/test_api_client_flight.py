@@ -312,7 +312,7 @@ def test_search_one_way_uses_search_flights(mock_booking_get, mock_location):
     result = search_one_way_flights_from_api(
         origin="SGN",
         destination="DAD",
-        departure_date="05/09/2026",
+        departure_date="05/09/2030",
         adults=1,
     )
 
@@ -400,8 +400,8 @@ def test_roundtrip_uses_get_next_flights(mock_booking_get, mock_location):
     result = search_roundtrip_flights_from_api(
         origin="SGN",
         destination="DAD",
-        departure_date="05/09/2026",
-        return_date="07/09/2026",
+        departure_date="05/09/2030",
+        return_date="07/09/2030",
         adults=1,
     )
 
@@ -438,8 +438,8 @@ def test_roundtrip_falls_back_to_one_way_when_empty(mock_booking_get, mock_locat
         result = search_roundtrip_flights_from_api(
             origin="SGN",
             destination="DAD",
-            departure_date="05/09/2026",
-            return_date="07/09/2026",
+            departure_date="05/09/2030",
+            return_date="07/09/2030",
             adults=2,
         )
 
