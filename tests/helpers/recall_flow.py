@@ -150,7 +150,7 @@ def _hotel_case() -> DomainFlowCase:
             ),
             _pref(
                 memory_id=exclude_id,
-                text="resort gần biển",
+                text="phòng có bồn tắm",
                 domain=MemoryDomain.HOTEL,
                 category=MemoryCategory.HOTEL_PREFERENCE,
             ),
@@ -159,7 +159,7 @@ def _hotel_case() -> DomainFlowCase:
         apply_ids=frozenset({apply_id}),
         exclude_ids=frozenset({exclude_id}),
         apply_snippet="ngân sách",
-        exclude_snippet="biển",
+        exclude_snippet="bồn tắm",
         noise_domain="flight",
         judge=RuleBasedApplicabilityJudge(),
     )
