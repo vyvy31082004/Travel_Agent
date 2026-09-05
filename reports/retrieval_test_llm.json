@@ -1063,8 +1063,8 @@
         "presented_ok": true
       },
       {
-        "case_id": "override_hotel_location_irrelevant_tes_00",
-        "scenario_type": "override_hotel_location_irrelevant",
+        "case_id": "override_hotel_location_uncertain_tes_00",
+        "scenario_type": "override_hotel_location_uncertain",
         "sql_pool_ok": true,
         "action_ok": false,
         "actual_pool": [
@@ -1086,8 +1086,8 @@
         "presented_ok": true
       },
       {
-        "case_id": "override_hotel_location_irrelevant_tes_01",
-        "scenario_type": "override_hotel_location_irrelevant",
+        "case_id": "override_hotel_location_uncertain_tes_01",
+        "scenario_type": "override_hotel_location_uncertain",
         "sql_pool_ok": true,
         "action_ok": false,
         "actual_pool": [
@@ -1109,8 +1109,8 @@
         "presented_ok": true
       },
       {
-        "case_id": "override_hotel_location_irrelevant_tes_02",
-        "scenario_type": "override_hotel_location_irrelevant",
+        "case_id": "override_hotel_location_uncertain_tes_02",
+        "scenario_type": "override_hotel_location_uncertain",
         "sql_pool_ok": true,
         "action_ok": false,
         "actual_pool": [
@@ -1264,8 +1264,8 @@
         "presented_ok": true
       },
       {
-        "case_id": "soft_hotel_quiet_apply_tes_00",
-        "scenario_type": "soft_hotel_quiet_apply",
+        "case_id": "soft_hotel_quiet_uncertain_tes_00",
+        "scenario_type": "soft_hotel_quiet_uncertain",
         "sql_pool_ok": true,
         "action_ok": false,
         "actual_pool": [
@@ -1284,8 +1284,8 @@
         "presented_ok": true
       },
       {
-        "case_id": "soft_hotel_quiet_apply_tes_01",
-        "scenario_type": "soft_hotel_quiet_apply",
+        "case_id": "soft_hotel_quiet_uncertain_tes_01",
+        "scenario_type": "soft_hotel_quiet_uncertain",
         "sql_pool_ok": true,
         "action_ok": false,
         "actual_pool": [
@@ -1304,8 +1304,8 @@
         "presented_ok": true
       },
       {
-        "case_id": "soft_hotel_quiet_apply_tes_02",
-        "scenario_type": "soft_hotel_quiet_apply",
+        "case_id": "soft_hotel_quiet_uncertain_tes_02",
+        "scenario_type": "soft_hotel_quiet_uncertain",
         "sql_pool_ok": true,
         "action_ok": false,
         "actual_pool": [

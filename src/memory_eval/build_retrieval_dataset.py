@@ -54,10 +54,10 @@ SPLIT_COUNTS: dict[str, tuple[int, int]] = {
     "action_contrast_excursion_details": (1, 2),
     "override_flight_time": (2, 3),
     "override_hotel_budget": (2, 3),
-    "override_hotel_location_irrelevant": (2, 3),
+    "override_hotel_location_uncertain": (2, 3),
     "override_car_transmission": (2, 3),
     "override_flight_departure": (2, 3),
-    "soft_hotel_quiet_apply": (3, 3),
+    "soft_hotel_quiet_uncertain": (3, 3),
     "soft_hotel_avoid_groups_uncertain": (3, 3),
     "soft_hotel_bathtub_uncertain": (3, 3),
     "soft_flight_direct_apply": (3, 4),
@@ -684,7 +684,7 @@ def _override_hotel_budget(split: str, index: int) -> dict[str, Any]:
     )
 
 
-def _override_hotel_location_irrelevant(split: str, index: int) -> dict[str, Any]:
+def _override_hotel_location_uncertain(split: str, index: int) -> dict[str, Any]:
     uid = f"user-a-{_suffix(split, index)}"
     prefix = f"ovr_h_loc_{_suffix(split, index)}"
     beach_id = f"{prefix}-beach"
@@ -694,9 +694,9 @@ def _override_hotel_location_irrelevant(split: str, index: int) -> dict[str, Any
         _mem(budget_id, user_id=uid, text="ngân sách 1-2 triệu", domain="hotel"),
     ]
     return _case(
-        case_id=f"override_hotel_location_irrelevant_{_suffix(split, index)}",
+        case_id=f"override_hotel_location_uncertain_{_suffix(split, index)}",
         split=split,
-        scenario_type="override_hotel_location_irrelevant",
+        scenario_type="override_hotel_location_uncertain",
         user_id=uid,
         user_query="Tìm hotel trung tâm Hà Nội cho chuyến công tác",
         domain="hotel",
@@ -762,7 +762,7 @@ def _override_flight_departure(split: str, index: int) -> dict[str, Any]:
 OVERRIDE_BUILDERS: dict[str, Callable[[str, int], dict[str, Any]]] = {
     "override_flight_time": _override_flight_time,
     "override_hotel_budget": _override_hotel_budget,
-    "override_hotel_location_irrelevant": _override_hotel_location_irrelevant,
+    "override_hotel_location_uncertain": _override_hotel_location_uncertain,
     "override_car_transmission": _override_car_transmission,
     "override_flight_departure": _override_flight_departure,
 }
@@ -777,9 +777,9 @@ def _soft_hotel_quiet(split: str, index: int) -> dict[str, Any]:
     quiet_id = f"{prefix}-quiet"
     store = [_mem(quiet_id, user_id=uid, text="thích khách sạn yên tĩnh", domain="hotel")]
     return _case(
-        case_id=f"soft_hotel_quiet_apply_{_suffix(split, index)}",
+        case_id=f"soft_hotel_quiet_uncertain_{_suffix(split, index)}",
         split=split,
-        scenario_type="soft_hotel_quiet_apply",
+        scenario_type="soft_hotel_quiet_uncertain",
         user_id=uid,
         user_query="Tìm hotel công tác Hà Nội",
         domain="hotel",
@@ -895,7 +895,7 @@ def _soft_flight_lowest_price(split: str, index: int) -> dict[str, Any]:
 
 
 SOFT_BUILDERS: dict[str, Callable[[str, int], dict[str, Any]]] = {
-    "soft_hotel_quiet_apply": _soft_hotel_quiet,
+    "soft_hotel_quiet_uncertain": _soft_hotel_quiet,
     "soft_hotel_avoid_groups_uncertain": _soft_hotel_avoid_groups,
     "soft_hotel_bathtub_uncertain": _soft_hotel_bathtub,
     "soft_flight_direct_apply": _soft_flight_direct,
