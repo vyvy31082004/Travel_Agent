@@ -43,7 +43,7 @@ expected_trace:
       must_exclude: [m_other_user, m_superseded]
       expected_applicability:
         m_budget: overridden
-        m_nature: apply
+        m_nature: uncertain
   expected_tools:
     - name: search_attractions_tool
       required_arguments: [location, date]
