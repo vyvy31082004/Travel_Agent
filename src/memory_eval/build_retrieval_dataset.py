@@ -238,8 +238,13 @@ def _scope_cross_domain(split: str, index: int) -> dict[str, Any]:
         "car": "search_cars",
         "excursion": "search_attractions",
     }
-    # Hotel quiet has no search_hotels tool field → uncertain; other domains stay apply.
-    label = "uncertain" if target_domain == "hotel" else "apply"
+    # Soft prefs without concrete tool args → uncertain; mapped filters stay apply.
+    if target_domain == "hotel":
+        label = "uncertain"  # quiet
+    elif target_domain == "excursion":
+        label = "uncertain"  # culture tour-type
+    else:
+        label = "apply"
     return _case(
         case_id=f"scope_cross_domain_{_suffix(split, index)}",
         split=split,
@@ -580,9 +585,9 @@ def _action_excursion_search(split: str, index: int) -> dict[str, Any]:
         domain="excursion",
         memory_store=store,
         expected_sql_pool=[culture_id, beach_id],
-        expected_applicability={culture_id: "apply", beach_id: "uncertain"},
+        expected_applicability={culture_id: "uncertain", beach_id: "uncertain"},
         expected_action="search_attractions",
-        rationale="Culture tour preference applies at search.",
+        rationale="Culture and beach tour-types are too general for concrete location tool args.",
     )
 
 
