@@ -531,9 +531,9 @@ def _action_car_search(split: str, index: int) -> dict[str, Any]:
         domain="car",
         memory_store=store,
         expected_sql_pool=[auto_id, seven_id],
-        expected_applicability={auto_id: "apply", seven_id: "irrelevant"},
+        expected_applicability={auto_id: "apply", seven_id: "apply"},
         expected_action="search_cars",
-        rationale="7-seat preference irrelevant for automatic transmission query.",
+        rationale="Both transmission and 7-seat capacity map via user_needs on search_cars.",
     )
 
 

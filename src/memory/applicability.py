@@ -157,14 +157,16 @@ def build_applicability_llm_prompt(
         "- irrelevant: not usable for the current action "
         "(e.g. room bathtub amenity on hotel search_hotels; seat/window prefs before flight offers exist)\n"
         "- uncertain: may still matter when reading/ranking results but cannot be passed as a "
-        "tool arg yet (e.g. hotel quiet/yên tĩnh, gần biển on search_hotels; car phụ phí without "
-        "breakdown; crowd avoidance without crowd data)\n"
+        "tool arg yet (e.g. hotel quiet/yên tĩnh, gần biển on search_hotels; excursion nature/beach "
+        "tour-type prefs that are too general for location; car phụ phí without breakdown; "
+        "crowd avoidance without crowd data)\n"
         "Do NOT choose apply just because the preference is 'about' the domain/search.\n"
         "Do NOT choose apply only because the preference could soft-rank results — "
         "if there is no matching tool/API field for this action, use uncertain or irrelevant.\n"
         "If relevant but contradicted → overridden, not apply.\n"
         "Car seat capacity (7 chỗ) maps via user_needs on search_cars → apply even if the query "
-        "omits capacity. Hotel quiet/beach do NOT map to search_hotels args → uncertain.\n"
+        "omits capacity. Hotel quiet/beach and excursion nature/beach tour-types are too general "
+        "for concrete tool args → uncertain.\n"
         "\nExamples (search actions):\n"
         "- hotel search_hotels + 'Ngân sách 1–2 triệu' + 'Tìm KS Phú Quốc' → apply\n"
         "- hotel search_hotels + 'Thích yên tĩnh' + 'Tìm KS Phú Quốc' → uncertain "
@@ -178,7 +180,8 @@ def build_applicability_llm_prompt(
         "- flight + memory 'ưu tiên bay sáng' + query 'tìm chuyến tối' → overridden\n"
         "- car search_cars + automatic pref → apply; 'tối thiểu 7 chỗ' → apply "
         "(capacity via user_needs); phụ phí avoidance → uncertain\n"
-        "- excursion search_attractions + nature pref → apply; avoid crowded → uncertain\n"
+        "- excursion search_attractions + nature/beach tour-type prefs → uncertain "
+        "(too general vs concrete location); avoid crowded → uncertain\n"
         "- excursion + memory 'Ưu tiên tour nhóm lớn' + query "
         "'Từ giờ ưu tiên nhóm nhỏ. Tìm tour Hội An' → overridden\n"
         f"Domain: {domain}\n"
@@ -369,8 +372,8 @@ class RuleBasedApplicabilityJudge:
                     token in text
                     for token in ("thiên nhiên", "nature", "trek", "rừng", "núi")
                 ):
-                    label = ApplicabilityLabel.APPLY
-                    reason = "nature preference applies to attraction search"
+                    label = ApplicabilityLabel.UNCERTAIN
+                    reason = "nature tour-type is too general for concrete attraction tool args"
                 elif any(
                     token in text
                     for token in ("đông", "crowded", "crowd", "tránh điểm")

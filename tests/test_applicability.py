@@ -338,7 +338,7 @@ def test_flight_monday_hn_tool_mapped_prefs_apply():
     assert by_id["m_departure"] == ApplicabilityLabel.APPLY
 
 
-def test_excursion_danang_nature_apply_crowd_uncertain():
+def test_excursion_danang_nature_uncertain_crowd_uncertain():
     memories = [
         _memory(
             "m_nature",
@@ -364,7 +364,7 @@ def test_excursion_danang_nature_apply_crowd_uncertain():
         )
     )
     by_id = {item.memory_id: item.label for item in judgments}
-    assert by_id["m_nature"] == ApplicabilityLabel.APPLY
+    assert by_id["m_nature"] == ApplicabilityLabel.UNCERTAIN
     assert by_id["m_crowded"] == ApplicabilityLabel.UNCERTAIN
 
 
@@ -425,7 +425,7 @@ def test_override_excursion_higher_budget():
     )
     by_id = {item.memory_id: item.label for item in judgments}
     assert by_id["m_budget"] == ApplicabilityLabel.OVERRIDDEN
-    assert by_id["m_nature"] == ApplicabilityLabel.APPLY
+    assert by_id["m_nature"] == ApplicabilityLabel.UNCERTAIN
 
 
 def test_override_excursion_group_size():
@@ -458,7 +458,7 @@ def test_override_excursion_group_size():
     )
     by_id = {item.memory_id: item.label for item in judgments}
     assert by_id["m_large_group"] == ApplicabilityLabel.OVERRIDDEN
-    assert by_id["m_nature"] == ApplicabilityLabel.APPLY
+    assert by_id["m_nature"] == ApplicabilityLabel.UNCERTAIN
 
 
 def test_override_excursion_group_size_via_turn_constraints():
@@ -597,5 +597,7 @@ def test_llm_prompt_encodes_tool_field_rubric():
     )
     assert "no quiet tool field" in prompt
     assert "tối thiểu 7 chỗ" in prompt and "user_needs" in prompt
+    assert "nature/beach tour-type prefs → uncertain" in prompt
     assert "apply as a ranking constraint" not in prompt
     assert "7-seat applies only when the current" not in prompt
+    assert "nature pref → apply" not in prompt
