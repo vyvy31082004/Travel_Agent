@@ -1,0 +1,278 @@
+{
+  "metadata": {
+    "case_id": "e2e_flight_001",
+    "run_id": "7503704d7ab0",
+    "started_at": "2026-09-02T07:57:21.287421+00:00",
+    "finished_at": "2026-09-02T07:58:50.369240+00:00",
+    "user_id": "e2e-e2e_flight_001:user_a",
+    "thread_id": "e2e-e2e_flight_001-7503704d7ab0",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v1",
+    "git_commit": "33651113742b805502b902653208662372e2be36",
+    "fixture_to_uuid": {
+      "m_economy": "231790c3-3bcc-55cd-be08-81f0492c2ea0",
+      "m_direct": "269b86d9-e499-5b31-bead-577c0f0bfd28",
+      "m_departure": "ac67b978-9d3d-5dc5-8606-7897a9c5cba6",
+      "m_other_user": "4c1f20f5-68bc-57be-b855-44a901b7a540",
+      "m_superseded": "7cffe2c6-e3fa-546e-8d90-796f7bcc70a9"
+    },
+    "postgres_persist": true,
+    "teardown": false,
+    "fresh_seed": false
+  },
+  "input": {
+    "messages": [
+      "Bay ra Hà Nội sáng thứ Hai nhé."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-02",
+      "next_monday": "2026-09-07"
+    }
+  },
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "flight"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToFlightAssistant",
+        "args": {
+          "request": "Tìm chuyến bay đến Hà Nội vào sáng thứ Hai, ngày 07/09/2026"
+        },
+        "timestamp": "2026-09-02T07:58:50.369240+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "flight_assistant",
+      "join_results",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "flight": {
+      "candidate_pool_ids": [
+        "m_departure",
+        "m_direct",
+        "m_economy"
+      ],
+      "applicability": {
+        "m_departure": "apply",
+        "m_direct": "uncertain",
+        "m_economy": "uncertain"
+      },
+      "final_context_ids": [
+        "m_departure",
+        "m_direct",
+        "m_economy"
+      ],
+      "applied_constraints": [
+        "[ac67b978-9d3d-5dc5-8606-7897a9c5cba6] Thường bay từ TP.HCM (SGN)",
+        "(soft) [269b86d9-e499-5b31-bead-577c0f0bfd28] Ưu tiên bay thẳng, tránh nối chuyến",
+        "(soft) [231790c3-3bcc-55cd-be08-81f0492c2ea0] Thường bay hạng phổ thông (economy) khi đi du lịch"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "origin": "SGN",
+        "destination": "HAN",
+        "departure_date": "2026-09-07",
+        "time_tolerance_minutes": 240,
+        "preferred_departure_time": "08:00"
+      },
+      "timestamp": "2026-09-02T07:58:50.369240+00:00",
+      "raw_result": {
+        "search_id": "316d5716-0253-4337-87e5-e659d91494fa",
+        "domain": "flight",
+        "displayed_item_ids": [],
+        "labels": [],
+        "total_results": 0
+      },
+      "normalized_result": {
+        "search_id": "316d5716-0253-4337-87e5-e659d91494fa",
+        "request_id": "req_flight_c079bd83",
+        "domain": "flight",
+        "total_results": 0,
+        "items": [],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true
+    },
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "origin": "SGN",
+        "destination": "HAN",
+        "departure_date": "2026-09-07"
+      },
+      "timestamp": "2026-09-02T07:58:50.369240+00:00",
+      "raw_result": {
+        "search_id": "b3e1a331-b14d-48bd-939e-951f334734ce",
+        "domain": "flight",
+        "displayed_item_ids": [],
+        "labels": [],
+        "total_results": 0
+      },
+      "normalized_result": {
+        "search_id": "b3e1a331-b14d-48bd-939e-951f334734ce",
+        "request_id": "req_flight_06420b60",
+        "domain": "flight",
+        "total_results": 0,
+        "items": [],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true
+    },
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "origin": "SGN",
+        "cabin_class": "economy",
+        "destination": "HAN",
+        "departure_date": "2026-09-07"
+      },
+      "timestamp": "2026-09-02T07:58:50.369240+00:00",
+      "raw_result": {
+        "search_id": "be7d8c37-8fac-4b42-a3e1-a26708a8dea3",
+        "domain": "flight",
+        "displayed_item_ids": [],
+        "labels": [],
+        "total_results": 0
+      },
+      "normalized_result": {
+        "search_id": "be7d8c37-8fac-4b42-a3e1-a26708a8dea3",
+        "request_id": "req_flight_6c33995d",
+        "domain": "flight",
+        "total_results": 0,
+        "items": [],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true
+    },
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "origin": "SGN",
+        "destination": "HAN",
+        "departure_date": "2026-09-06"
+      },
+      "timestamp": "2026-09-02T07:58:50.369240+00:00",
+      "raw_result": {
+        "search_id": "cabe440e-e6ea-4331-aea1-d95e1b8801f8",
+        "domain": "flight",
+        "displayed_item_ids": [],
+        "labels": [],
+        "total_results": 0
+      },
+      "normalized_result": {
+        "search_id": "cabe440e-e6ea-4331-aea1-d95e1b8801f8",
+        "request_id": "req_flight_cbea8dc2",
+        "domain": "flight",
+        "total_results": 0,
+        "items": [],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "flight",
+      "summary": "[{'type': 'text', 'text': 'Rất tiếc, hiện tại không tìm thấy chuyến bay nào từ TP.HCM (SGN) đến Hà Nội (HAN) vào sáng thứ Hai, ngày 07/09/2026.\\n\\nQuý khách có thể điều chỉnh ngày bay hoặc khoảng thời gian khởi hành để tìm kiếm các lựa chọn chuyến bay khác.', 'extras': {'signature': 'EtUKCtIKARFNMg+Gd0wO8mcTGB/HVRaAuysSEQXw+skmWP5zJ9qGtEDcx5VNnFCmGCC6QG1WfWSZJe0ZYqMU3xDguVKAvVTTHtVUU6KvMT8kjVNW7D9qJc+oAnOK3M5dLVbncoKOFtyc+nTaP9cqKBQ+iNO8xZ3pUkG4KxQbzANRb7XhQxb9ipr46nDd2MFwIqzr0591QgBJgBMZ7yGIXHpkMi9gly/RpJXTwChVIjJM7/KqnLDohTWCqQfXRJtwaAE8Q4MRD+SYSlPox+qKJ8TzfOEAN79VkttwmOkCR5Lk7ddPr7ShumHZA3Edep0ASG0wBhwhJ4gTBhyUpB4Qnb2VqkgnRJR2sD+M4avLa5dvBNhHCCSS83BWox62JETQqq6fBglfNu2DaD5Ps556HjVUiuEdQnfXrd8YK3vsLnT92v9o7wHQ/GnUJ+/USwojS0NGhUWK+UFqiV0LgelpCdTQJNrw2KIncmbM++PTuxuJqQk/7pOm9gykx08cJBWvqhNOluM5MEPbbRsF6O+DROWpjckaToujB/3gt1xK1/KK0MLvswCDNPCyhodd/N5V3fuXSWcKvNz4ityBwMIoH8Vsb7WwV/WTPpYUOnqo+YdezCPGBdvBkP31u2YQbUBSTkRBHmfH9acQ+GswfgQD3d3WIZzHrATrMoeQ43h1Vl8Td4FMMIPnlDB/UBTmGY4DMXiNIQh+O3w7B3kGJdO9wlK7vYHB66L8u1t8AbDwzf9HwJIOk4pf6L4+oVoa2/2tH820Qv0OFI0rJNpKmp4D0muKeCqWTvmQu/BWBOzG9NWpbQjmtbMcRWXiFitOttAoLJ5kBsTdJJvVF8FGm4s8WHjHijg5162nSu8ecmOxS5IyWbVxKI2qawFIM/bVmmRQQ9RZ1rJqW42JUhl0114ChwBAfXjKR3gbxY+VSwOr8GB3qJ12ad7rnNiz/IF8i8IEpBA75pnSf06KLbo1hmmwIBdElSxKr6I1HkBE06zsvWYl+lL4lXPi0VeY0M0NYE20dXeUempRobKbz1Ra/EUWzWYvf6BlgvpfYafsD1E3L2CV0ZtK/dVs0WBIXZ1MJZenNi0UvW/VunADOiRRpd70VTPrQKmurGoyK7IFVwv8PK3OcYi/5tXSEH30vDcJvP8fIV+PKHKFycXYGiGmAqAFpxhGbbooUpOgWzhEu27QE7J53Kt5Ep9w50Olkh41CB9yyoioDviGIiwrhPxChu7wC3BnkYUU6xCKjxbqvgzhHfMfdc+kkAmXnkzwtVsNTBz6qTfKFhCA08Av8AIh7d8Gh8gnodTxYjTvCrDAMvgwZqUZXTn0vChflLHgufIpJC/mlu1rurXOJ/A0w+l9TXIXgytQFb6ruq/kSBq5kxkSQJJzPeEtOHtz1KuvBB0ceYCAJEJ3v9BmvMfRsqYxEFiTEpbke5N6ofLNcgj+e/Dyl108WFo63XkHF9xHLYkhCXNFc6P4YB6Utf660ygvGNJj/pMwWBoxpN1uDQQy3jJEnRtnj1gmPTdojpsfibbIcW2mt8waSSewjqL3dARMLIwjszssI9pnm6kD4c7js9+IfGW9wFJP4bP5MlyieidjissF+OkN9idkGTIeYrgzgEs6ADSFScmwpjElYdB8mo+8hu2aIGF38mTnGh8I7c8Cz3+KWVi6eOHXONKTKqSzLjDuaoGAqo0tX31fGBRgbrek+NGCBorkrwHuNn1K+MBmav7TtTjCHfWC+x+R2hwJVIBHL9F/YTPAwa/eQaCDnHZIIRWrWlcE6bs5blGys42KsHfxZ6WD90YXK7KcciywEVPdgsv+QUo9ATVG'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "[ac67b978-9d3d-5dc5-8606-7897a9c5cba6] Thường bay từ TP.HCM (SGN)",
+        "(soft) [269b86d9-e499-5b31-bead-577c0f0bfd28] Ưu tiên bay thẳng, tránh nối chuyến",
+        "(soft) [231790c3-3bcc-55cd-be08-81f0492c2ea0] Thường bay hạng phổ thông (economy) khi đi du lịch"
+      ],
+      "domain_action": "search_one_way"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "flight"
+    ]
+  },
+  "final_answer": "Rất tiếc, hiện tại không tìm thấy chuyến bay phù hợp từ TP.HCM (SGN) đến Hà Nội (HAN) vào sáng thứ Hai, ngày 07/09/2026.\n\nAnh/chị có thể cân nhắc:\n1. **Thay đổi khung giờ bay**: Mở rộng tìm kiếm sang các chuyến bay vào buổi chiều hoặc buổi tối cùng ngày.\n2. **Điều chỉnh ngày bay**: Đổi sang bay vào Chủ nhật (06/09/2026) hoặc thứ Ba (08/09/2026).\n3. **Xác nhận lại điểm khởi hành**: Nếu anh/chị khởi hành từ một thành phố khác (không phải TP.HCM), xin vui lòng cho biết để hỗ trợ tìm kiếm lại chính xác nhất.",
+  "stm": {
+    "summary": null,
+    "message_count": 4
+  },
+  "finalize": {
+    "memory_job_id": "b71fd397-a0dc-45ef-98b4-9bd193fcac58",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "memory_job": {
+      "job_id": "b71fd397-a0dc-45ef-98b4-9bd193fcac58",
+      "status": "pending",
+      "error_summary": "0",
+      "created_at": "2026-09-02T14:58:49.431509+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "flight"
+        ],
+        "actual": [
+          "flight"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  }
+}

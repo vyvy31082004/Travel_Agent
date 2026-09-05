@@ -11,6 +11,9 @@ from memory_eval.candidate_extraction import MetricValue
 from memory_eval.common import load_jsonl
 from services.reference_resolver import ClarificationNeeded, resolve_item_reference
 
+DEV_COUNT = 65
+TEST_COUNT = 85
+
 
 def _ratio(numerator: int, denominator: int) -> MetricValue:
     return MetricValue(
@@ -18,6 +21,15 @@ def _ratio(numerator: int, denominator: int) -> MetricValue:
         denominator,
         None if denominator == 0 else numerator / denominator,
     )
+
+
+def _filter_split(rows: list[dict[str, Any]], split: str) -> list[dict[str, Any]]:
+    if split == "all":
+        return rows
+    filtered = [row for row in rows if row.get("split") == split]
+    if not filtered:
+        raise ValueError(f"no cases found for split={split!r}")
+    return filtered
 
 
 @dataclass(frozen=True)
@@ -86,8 +98,8 @@ def _flatten_state(state: dict[str, Any]) -> dict[str, str]:
 # ---------------------------------------------------------------------------
 
 
-def evaluate_state_file(path: str | Path) -> SuiteReport:
-    rows = load_jsonl(path)
+def evaluate_state_file(path: str | Path, *, split: str = "all") -> SuiteReport:
+    rows = _filter_split(load_jsonl(path), split)
     jga_correct = 0
     true_positive = 0
     false_positive = 0
@@ -161,8 +173,8 @@ def evaluate_state_file(path: str | Path) -> SuiteReport:
 # ---------------------------------------------------------------------------
 
 
-def evaluate_reference_file(path: str | Path) -> SuiteReport:
-    rows = load_jsonl(path)
+def evaluate_reference_file(path: str | Path, *, split: str = "all") -> SuiteReport:
+    rows = _filter_split(load_jsonl(path), split)
     correct = 0
     case_rows: list[dict[str, Any]] = []
     for raw in rows:
@@ -222,8 +234,10 @@ def _probe_correct(predicted: str, gold: str) -> bool:
     return covered
 
 
-def evaluate_factual_recall_file(path: str | Path) -> SuiteReport:
-    rows = load_jsonl(path)
+def evaluate_factual_recall_file(
+    path: str | Path, *, split: str = "all"
+) -> SuiteReport:
+    rows = _filter_split(load_jsonl(path), split)
     correct = 0
     by_position: dict[str, list[int]] = {}
     by_phase: dict[str, list[int]] = {}
@@ -268,8 +282,8 @@ def evaluate_factual_recall_file(path: str | Path) -> SuiteReport:
 # ---------------------------------------------------------------------------
 
 
-def evaluate_success_file(path: str | Path) -> SuiteReport:
-    rows = load_jsonl(path)
+def evaluate_success_file(path: str | Path, *, split: str = "all") -> SuiteReport:
+    rows = _filter_split(load_jsonl(path), split)
     correct = 0
     case_rows: list[dict[str, Any]] = []
     for raw in rows:

@@ -172,7 +172,7 @@ RETRIEVAL_SMOKE_IDS = {
     "scope_cross_user_dev_00",
     "action_contrast_hotel_search_dev_00",
     "override_flight_time_dev_00",
-    "soft_hotel_quiet_apply_dev_00",
+    "soft_hotel_quiet_uncertain_dev_00",
     "state_hotel_bathtub_apply_with_selection_dev_00",
 }
 

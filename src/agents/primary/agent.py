@@ -26,7 +26,12 @@ from agents.primary.domain_scope import build_domain_scoped_state
 from prompts.prompt import primary_prompts
 from repositories.result_store import ResultStoreRepository
 from services.long_term_memory import MemoryService, config_user_thread
-from services.summarize import should_summarize, summarize_conversation
+from services.summarize import (
+    e2e_summarize_all_enabled,
+    should_summarize,
+    summarize_conversation,
+)
+from e2e_eval.trace_collector import trace_collector_from_config
 from utils.tracing import with_trace_config
 
 warnings.filterwarnings("ignore")
@@ -116,7 +121,13 @@ primary_runnable = (
 def _format_domain_branch_results(results: list[dict]) -> str:
     if not results:
         return ""
-    lines = ["Structured domain branch results (canonical for synthesis):"]
+    lines = [
+        "Structured domain branch results (canonical for synthesis):",
+        "MANDATORY: For each branch option below, your final answer MUST include "
+        "EVERY item_id in displayed_item_ids — same count, preserve list order. "
+        "Do NOT omit, merge away, or skip any displayed item. "
+        "Do NOT add items outside displayed_item_ids.",
+    ]
     for item in results:
         domain = item.get("domain", "unknown")
         lines.append(f"\n[{domain}]")
@@ -127,8 +138,16 @@ def _format_domain_branch_results(results: list[dict]) -> str:
             )
         if item.get("warnings"):
             lines.append("Warnings: " + "; ".join(str(w) for w in item["warnings"]))
-        if item.get("options"):
-            lines.append(f"Options count: {len(item['options'])}")
+        for idx, option in enumerate(item.get("options") or [], start=1):
+            displayed = list(option.get("displayed_item_ids") or [])
+            if not displayed:
+                continue
+            lines.append(
+                f"Option {idx} displayed_item_ids ({len(displayed)} items, include ALL): "
+                + ", ".join(str(item_id) for item_id in displayed)
+            )
+            if option.get("search_id"):
+                lines.append(f"  search_id: {option['search_id']}")
         if item.get("summary"):
             lines.append(f"Summary: {item['summary']}")
     return "\n".join(lines)
@@ -166,6 +185,7 @@ async def primary_chat(state: State, config: RunnableConfig) -> dict:
                     "You received results from specialized domain assistants. "
                     "Synthesize the final answer or trip itinerary from these results. "
                     "Check compatibility (dates, budget, constraints). "
+                    "Include EVERY item in each option's displayed_item_ids — do not drop any. "
                     "Do NOT call delegation tools again.\n"
                     f"{_format_domain_branch_results(branch_results)}"
                 )
@@ -284,6 +304,46 @@ def _format_turn_constraints(constraints: list[str]) -> str:
     return f"\n\nTurn constraints for this domain (apply now):\n{lines}\n"
 
 
+async def _invoke_assistant_graph(
+    assistant_graph,
+    assistant_input: dict,
+    config: RunnableConfig,
+    *,
+    collector,
+    dialog_state: str,
+    domain: str,
+) -> dict:
+    if collector is None:
+        return await assistant_graph.ainvoke(assistant_input, config=config)
+
+    result: dict | None = None
+    try:
+        async for event in assistant_graph.astream(
+            assistant_input,
+            config=config,
+            stream_mode=["updates", "values"],
+        ):
+            if not isinstance(event, tuple) or len(event) != 2:
+                continue
+            mode, payload = event
+            if mode == "values":
+                result = payload
+            elif mode == "updates":
+                for node_name, update in payload.items():
+                    collector.record_subgraph_node(
+                        node_name,
+                        graph=dialog_state,
+                        domain=domain,
+                        update=update,
+                    )
+    except (TypeError, ValueError):
+        result = await assistant_graph.ainvoke(assistant_input, config=config)
+
+    if result is None:
+        result = await assistant_graph.ainvoke(assistant_input, config=config)
+    return result
+
+
 async def run_delegated_assistant(
     state: State,
     assistant_graph,
@@ -365,7 +425,18 @@ async def run_delegated_assistant(
             "tool_call_id": tcid,
         },
     )
-    result = await assistant_graph.ainvoke(assistant_input, config=delegated_config)
+    collector = trace_collector_from_config(delegated_config)
+    if collector:
+        collector.record_assistant_boundary(dialog_state, domain)
+
+    result = await _invoke_assistant_graph(
+        assistant_graph,
+        assistant_input,
+        delegated_config,
+        collector=collector,
+        dialog_state=dialog_state,
+        domain=domain,
+    )
     result_messages = result.get("messages", [])
     summary = _assistant_result_text(
         result_messages,
@@ -397,7 +468,7 @@ async def run_delegated_assistant(
     return output
 
 
-def route_primary_assistant(state: State):
+def route_primary_assistant(state: State, config: RunnableConfig | None = None):
     tool_calls = getattr(state["messages"][-1], "tool_calls", None) or []
     sends = []
 
@@ -410,7 +481,7 @@ def route_primary_assistant(state: State):
 
     if sends:
         return sends
-    return should_summarize(state)
+    return should_summarize(state, config=config)
 
 
 def join_results(state: State) -> dict:
@@ -422,7 +493,11 @@ def join_results(state: State) -> dict:
 
 
 async def summarize_node(state: State, config: RunnableConfig) -> dict:
-    return await summarize_conversation(state, llm)
+    return await summarize_conversation(
+        state,
+        llm,
+        summarize_all=e2e_summarize_all_enabled(config),
+    )
 
 
 def _last_ai_message_id(state: State) -> str | None:

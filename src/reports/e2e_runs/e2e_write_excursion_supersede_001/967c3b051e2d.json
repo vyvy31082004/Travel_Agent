@@ -1,0 +1,662 @@
+{
+  "metadata": {
+    "case_id": "e2e_write_excursion_supersede_001",
+    "run_id": "967c3b051e2d",
+    "started_at": "2026-09-03T13:24:11.433630+00:00",
+    "finished_at": "2026-09-03T13:25:25.266379+00:00",
+    "user_id": "e2e-e2e_write_excursion_supersede_001:user_a",
+    "thread_id": "e2e-e2e_write_excursion_supersede_001-967c3b051e2d",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v1",
+    "git_commit": "33651113742b805502b902653208662372e2be36",
+    "fixture_to_uuid": {
+      "m_large_group": "4e09ba08-8687-5cd7-9e3a-8ad97f1b3d0c",
+      "m_other_user": "4171384d-deec-52b6-8e5c-df86c1d81d41",
+      "m_superseded": "72f5e142-fa71-5ffe-b54e-d129eab8fa26"
+    },
+    "postgres_persist": true,
+    "teardown": false,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Từ giờ, khi chọn tour tôi ưu tiên nhóm nhỏ. Tìm hoạt động ở Hội An cho 2 người vào chiều 12/10."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-03"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Từ giờ, khi chọn tour tôi ưu tiên nhóm nhỏ. Tìm hoạt động ở Hội An cho 2 người vào chiều 12/10.",
+      "answer": "Dưới đây là các hoạt động/tour nhóm nhỏ phù hợp cho 2 người vào chiều ngày 12/10/2026 tại khu vực Hội An / Đà Nẵng:\n\n1. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times**\n   * **Mã tour (ID):** `PRbeRPTXGXPd`\n   * **Giá:** 1,284,755 VND / người\n   * **Mô tả:** Tour nhóm nhỏ tham quan Bà Nà Hills và Cầu Vàng với giờ khởi hành linh hoạt, bao gồm dịch vụ đưa đón tại trung tâm.\n   * **Đánh giá:** Chưa có đánh giá (0 đánh giá)\n   * **Hình ảnh:** ![Ba Na Hills - Golden Bridge Full-Day Tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\n\n2. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\n   * **Mã tour (ID):** `PRFhLYK7act7`\n   * **Giá:** 578,600 VND / người\n   * **Mô tả:** Tour ngắm hoàng hôn nhóm nhỏ tham quan 3 điểm nổi tiếng: Ngũ Hành Sơn, Động Âm Phủ và Bán đảo Sơn Trà.\n   * **Đánh giá:** Chưa có đánh giá (0 đánh giá)\n   * **Hình ảnh:** ![Marble Mountains Sunset tour](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\n\nSở thích ưu tiên **tour nhóm nhỏ** của bạn đã được ghi nhận cho các lượt tìm kiếm tiếp theo. Bạn hãy cho mình biết nếu cần hỗ trợ thêm thông tin chi tiết hoặc đặt vé nhé!",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "excursion_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 4
+    }
+  ],
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "excursion"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToExcursionAssistant",
+        "args": {
+          "turn_constraints": [
+            "ưu tiên tour nhóm nhỏ"
+          ],
+          "request": "Tìm hoạt động/tour ở Hội An cho 2 người vào chiều ngày 12/10/2026"
+        },
+        "timestamp": "2026-09-03T13:25:25.266379+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "excursion_assistant",
+      "memory_recall_excursion",
+      "excursion_chat",
+      "search_attractions_tool",
+      "excursion_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "excursion": {
+      "candidate_pool_ids": [
+        "m_large_group"
+      ],
+      "applicability": {
+        "m_large_group": "apply"
+      },
+      "applicability_reasons": {
+        "m_large_group": "reconciled: default apply (llm: Sở thích ưu tiên tour nhóm lớn không có trường bộ lọc trực tiếp trong công cụ tìm kiếm điểm đến/hoạt động, cần đối chiếu chi tiết các tour.)"
+      },
+      "final_context_ids": [
+        "m_large_group"
+      ],
+      "applied_constraints": [
+        "ưu tiên tour nhóm nhỏ",
+        "[4e09ba08-8687-5cd7-9e3a-8ad97f1b3d0c] Ưu tiên tour nhóm lớn"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "tour",
+      "name": "search_attractions_tool",
+      "arguments": {
+        "end_date": "2026-10-12",
+        "location": "Hội An",
+        "start_date": "2026-10-12",
+        "destination": "Hội An"
+      },
+      "timestamp": "2026-09-03T13:25:25.266379+00:00",
+      "raw_result": {
+        "search_id": "60dd3240-f0d4-4073-a103-0be82674c815",
+        "domain": "excursion",
+        "displayed_item_ids": [
+          "PRbeRPTXGXPd",
+          "PRFhLYK7act7"
+        ],
+        "labels": [],
+        "total_results": 2
+      },
+      "normalized_result": {
+        "search_id": "60dd3240-f0d4-4073-a103-0be82674c815",
+        "request_id": "req_tour_402b750a",
+        "domain": "excursion",
+        "total_results": 2,
+        "items": [
+          {
+            "name": "Vé Sun World Ba Na Hills",
+            "slug": "pr9of7hahjy9-sun-world-ba-na-hills-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=",
+            "price": 1018340,
+            "rating": null,
+            "item_id": "PR9oF7hAhjy9",
+            "currency": "VND",
+            "description": "Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills",
+            "review_count": null,
+            "external_attraction_id": "PR9oF7hAhjy9",
+            "position": null,
+            "api_position": 1,
+            "eligible": false
+          },
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 1,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 107556,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": null,
+            "api_position": 3,
+            "eligible": false
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": null,
+            "api_position": 4,
+            "eligible": false
+          },
+          {
+            "name": "Hoi An Riverside Cooking Class(Local market,Basket Boat,Fishing)",
+            "slug": "prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725318021.jpg?k=249e14a9efe4c29605d6ecba8dbe9f24eafedf0c8de67a493fd21d7c08efa919&o=",
+            "price": 762700,
+            "rating": null,
+            "item_id": "PRVwSAVvgpO5",
+            "currency": "VND",
+            "description": "Morning tour: 8:30am to 1:00pm Afternoon tour: 2:00pm to 6:30pm You will be pick up by car by loc...",
+            "review_count": null,
+            "external_attraction_id": "PRVwSAVvgpO5",
+            "position": null,
+            "api_position": 5,
+            "eligible": false
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 2,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Tour Bà Nà Hills trọn ngày với bữa trưa buffet",
+            "slug": "prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=",
+            "price": 1709500,
+            "rating": null,
+            "item_id": "PRdCygydpY9o",
+            "currency": "VND",
+            "description": "Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa",
+            "review_count": null,
+            "external_attraction_id": "PRdCygydpY9o",
+            "position": null,
+            "api_position": 7,
+            "eligible": false
+          },
+          {
+            "name": "Hoi An Memories Show & Hoi An Impression Theme Park Ticket",
+            "slug": "prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=",
+            "price": 631200,
+            "rating": null,
+            "item_id": "PRWX9rush6bp",
+            "currency": "VND",
+            "description": "Located on the Hoi An Memories Land, the Hoi An Memories show is one of the outdoor performances ...",
+            "review_count": null,
+            "external_attraction_id": "PRWX9rush6bp",
+            "position": null,
+            "api_position": 8,
+            "eligible": false
+          },
+          {
+            "name": "Lớp hướng dẫn làm lồng đèn",
+            "slug": "prpc0nrrr1qm-lantern-making-class",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=",
+            "price": 259154,
+            "rating": null,
+            "item_id": "PRPC0NRRR1QM",
+            "currency": "VND",
+            "description": "Workshop làm đèn lồng Việt Nam từ nhiều chất liệu",
+            "review_count": null,
+            "external_attraction_id": "PRPC0NRRR1QM",
+            "position": null,
+            "api_position": 9,
+            "eligible": false
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": null,
+            "api_position": 10,
+            "eligible": false
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "PRbeRPTXGXPd",
+          "PRFhLYK7act7"
+        ],
+        "items": [
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 1,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 2,
+            "api_position": 6,
+            "eligible": true
+          }
+        ]
+      }
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "excursion",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là các tour nhóm nhỏ tại khu vực Hội An / Đà Nẵng phù hợp cho 2 người vào chiều ngày 12/10/2026:\\n\\n* **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times**\\n  * **Mã tour (external_attraction_id):** `PRbeRPTXGXPd`\\n  * **Giá:** 1,284,755 VND\\n  * **Đánh giá:** Chưa có đánh giá\\n  * **Số lượng đánh giá:** 0\\n  * **Slug:** `prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group`\\n  * **Mô tả:** Tour nhóm nhỏ tham quan Bà Nà Hills và Cầu Vàng với giờ khởi hành linh hoạt, bao gồm dịch vụ đưa đón tại trung tâm.\\n  * **Hình ảnh:** ![Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\\n\\n* **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\\n  * **Mã tour (external_attraction_id):** `PRFhLYK7act7`\\n  * **Giá:** 578,600 VND\\n  * **Đánh giá:** Chưa có đánh giá\\n  * **Số lượng đánh giá:** 0\\n  * **Slug:** `prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour`\\n  * **Mô tả:** Tour ngắm hoàng hôn nhóm nhỏ tham quan 3 điểm: Ngũ Hành Sơn, Động Âm Phủ và Bán đảo Sơn Trà.\\n  * **Hình ảnh:** ![Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "ưu tiên tour nhóm nhỏ",
+        "[4e09ba08-8687-5cd7-9e3a-8ad97f1b3d0c] Ưu tiên tour nhóm lớn"
+      ],
+      "domain_action": "search_attractions"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "excursion"
+    ]
+  },
+  "final_answer": "Dưới đây là các hoạt động/tour nhóm nhỏ phù hợp cho 2 người vào chiều ngày 12/10/2026 tại khu vực Hội An / Đà Nẵng:\n\n1. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times**\n   * **Mã tour (ID):** `PRbeRPTXGXPd`\n   * **Giá:** 1,284,755 VND / người\n   * **Mô tả:** Tour nhóm nhỏ tham quan Bà Nà Hills và Cầu Vàng với giờ khởi hành linh hoạt, bao gồm dịch vụ đưa đón tại trung tâm.\n   * **Đánh giá:** Chưa có đánh giá (0 đánh giá)\n   * **Hình ảnh:** ![Ba Na Hills - Golden Bridge Full-Day Tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\n\n2. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\n   * **Mã tour (ID):** `PRFhLYK7act7`\n   * **Giá:** 578,600 VND / người\n   * **Mô tả:** Tour ngắm hoàng hôn nhóm nhỏ tham quan 3 điểm nổi tiếng: Ngũ Hành Sơn, Động Âm Phủ và Bán đảo Sơn Trà.\n   * **Đánh giá:** Chưa có đánh giá (0 đánh giá)\n   * **Hình ảnh:** ![Marble Mountains Sunset tour](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\n\nSở thích ưu tiên **tour nhóm nhỏ** của bạn đã được ghi nhận cho các lượt tìm kiếm tiếp theo. Bạn hãy cho mình biết nếu cần hỗ trợ thêm thông tin chi tiết hoặc đặt vé nhé!",
+  "stm": {
+    "summary": null,
+    "message_count": 4,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "bff102bd-e88b-4e3b-b9db-bdf24d13f779",
+    "expected_action": "SUPERSEDE",
+    "db_mutations": [],
+    "audits": [
+      {
+        "audit_id": "044acebc-8d1d-4d04-ab17-ba9519fa8b1c",
+        "job_id": "bff102bd-e88b-4e3b-b9db-bdf24d13f779",
+        "decision": "reject",
+        "proposed_transition": {
+          "action": "supersede",
+          "reasons": [
+            "relation_supersedes"
+          ],
+          "candidate": {
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "status": "active",
+            "user_id": "e2e-e2e_write_excursion_supersede_001:user_a",
+            "category": "excursion_preference",
+            "metadata": {},
+            "valid_to": null,
+            "condition": null,
+            "memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "valid_from": null,
+            "memory_text": "ưu tiên nhóm nhỏ",
+            "evidence_text": "Từ giờ, khi chọn tour tôi ưu tiên nhóm nhỏ.",
+            "source_thread_id": "e2e-e2e_write_excursion_supersede_001-967c3b051e2d",
+            "supersedes_memory_id": null
+          },
+          "existing_memory_id": "4e09ba08-8687-5cd7-9e3a-8ad97f1b3d0c"
+        },
+        "rule_result": {
+          "reasons": [
+            "relation_supersedes"
+          ]
+        },
+        "verifier_result": {
+          "mode": "trustmem",
+          "model": "gemini-2.5-flash",
+          "reasons": [
+            "relation_supersedes",
+            "preservation below threshold: The action is 'supersede', implying the old memory 'Ưu tiên tour nhóm lớn' should be replaced or removed. However, M_new contains both the old, contradictory memory and the new memory, leading to a conflict and incorrect preservation of the old, superseded fact."
+          ],
+          "decision": "reject",
+          "dimensions": {
+            "coverage": {
+              "score": 1.0,
+              "passed": true,
+              "reason": "The new memory 'ưu tiên nhóm nhỏ' directly captures the user's stated preference in the chunk: 'Từ giờ, khi chọn tour tôi ưu tiên nhóm nhỏ.'",
+              "threshold": 0.8
+            },
+            "faithfulness": {
+              "score": 1.0,
+              "passed": true,
+              "reason": "The new memory 'ưu tiên nhóm nhỏ' is directly supported by the user's explicit statement in the chunk: 'Từ giờ, khi chọn tour tôi ưu tiên nhóm nhỏ.'",
+              "threshold": 0.95
+            },
+            "preservation": {
+              "score": 0.0,
+              "passed": false,
+              "reason": "The action is 'supersede', implying the old memory 'Ưu tiên tour nhóm lớn' should be replaced or removed. However, M_new contains both the old, contradictory memory and the new memory, leading to a conflict and incorrect preservation of the old, superseded fact.",
+              "threshold": 0.9
+            }
+          },
+          "prompt_version": "trustmem-verifier-v1",
+          "fallback_reason": null
+        },
+        "affected_memory_ids": [],
+        "created_at": "2026-09-03T20:25:25.240658+07:00"
+      }
+    ],
+    "seeded_status": {
+      "m_large_group": {
+        "status": "active",
+        "memory_id": "4e09ba08-8687-5cd7-9e3a-8ad97f1b3d0c",
+        "memory_text": "Ưu tiên tour nhóm lớn",
+        "supersedes_memory_id": null
+      },
+      "m_other_user": {
+        "status": "active",
+        "memory_id": "4171384d-deec-52b6-8e5c-df86c1d81d41",
+        "memory_text": "Memory user khác — thích tour văn hóa",
+        "supersedes_memory_id": null
+      },
+      "m_superseded": {
+        "status": "superseded",
+        "memory_id": "72f5e142-fa71-5ffe-b54e-d129eab8fa26",
+        "memory_text": "Preference cũ — tránh tour ngoài trời",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "bff102bd-e88b-4e3b-b9db-bdf24d13f779",
+      "status": "completed",
+      "error_summary": null,
+      "created_at": "2026-09-03T20:25:04.692539+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "excursion"
+        ],
+        "actual": [
+          "excursion"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "FAIL",
+      "detail": "excursion: m_large_group expected=overridden actual=apply",
+      "evidence": {
+        "domain_recall": {
+          "excursion": {
+            "candidate_pool_ids": [
+              "m_large_group"
+            ],
+            "applicability": {
+              "m_large_group": "apply"
+            },
+            "applicability_reasons": {
+              "m_large_group": "reconciled: default apply (llm: Sở thích ưu tiên tour nhóm lớn không có trường bộ lọc trực tiếp trong công cụ tìm kiếm điểm đến/hoạt động, cần đối chiếu chi tiết các tour.)"
+            },
+            "final_context_ids": [
+              "m_large_group"
+            ],
+            "applied_constraints": [
+              "ưu tiên tour nhóm nhỏ",
+              "[4e09ba08-8687-5cd7-9e3a-8ad97f1b3d0c] Ưu tiên tour nhóm lớn"
+            ]
+          }
+        }
+      }
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "FAIL",
+      "detail": "expected SUPERSEDE but no new memories stored",
+      "evidence": {
+        "job_status": "completed"
+      }
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "excursion_assistant",
+          "memory_recall_excursion",
+          "excursion_chat",
+          "search_attractions_tool",
+          "search_attractions_tool",
+          "searchLocation",
+          "searchAttractions",
+          "excursion_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "excursion_assistant",
+          "memory_recall_excursion",
+          "excursion_chat",
+          "searchLocation",
+          "searchAttractions",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "FAIL",
+      "detail": "failed checkpoints: applicability, finalize",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "excursion_assistant",
+      "graph": "primary",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "memory_recall_excursion",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_large_group"
+        ],
+        "applicability": {
+          "m_large_group": "apply"
+        },
+        "applicability_reasons": {
+          "m_large_group": "reconciled: default apply (llm: Sở thích ưu tiên tour nhóm lớn không có trường bộ lọc trực tiếp trong công cụ tìm kiếm điểm đến/hoạt động, cần đối chiếu chi tiết các tour.)"
+        },
+        "applied_to_context": [
+          "m_large_group"
+        ]
+      }
+    },
+    {
+      "seq": 5,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "search_attractions_tool",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [
+        {
+          "name": "search_attractions_tool",
+          "arguments": {
+            "start_date": "2026-10-12",
+            "location": "Hội An",
+            "end_date": "2026-10-12"
+          },
+          "sub_steps": [
+            "searchLocation",
+            "searchAttractions"
+          ]
+        }
+      ],
+      "parent_chat_node": "excursion_chat"
+    },
+    {
+      "seq": 7,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 8,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 9,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

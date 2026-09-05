@@ -1,0 +1,953 @@
+{
+  "metadata": {
+    "case_id": "e2e_override_hotel_001",
+    "run_id": "b7a65a14197e",
+    "started_at": "2026-09-02T16:44:26.527992+00:00",
+    "finished_at": "2026-09-02T16:45:36.918680+00:00",
+    "user_id": "e2e-e2e_override_hotel_001:user_a",
+    "thread_id": "e2e-e2e_override_hotel_001-b7a65a14197e",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v1",
+    "git_commit": "33651113742b805502b902653208662372e2be36",
+    "fixture_to_uuid": {
+      "m_budget": "7e701ea1-d448-5c60-817b-50ccff81241d",
+      "m_quiet": "4646ca8d-fc61-5df9-981d-52e2295cc43d",
+      "m_other_user": "21f8ef15-f20a-50c6-a688-cbc6690cfc5c",
+      "m_superseded": "6438c0a0-0460-55a8-b538-ef5e80f184fc"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": false
+  },
+  "input": {
+    "messages": [
+      "Lần này tìm khách sạn ở Đà Nẵng từ 10–12/10, dưới 1 triệu/đêm."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-02"
+    }
+  },
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "hotel"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToHotelAssistant",
+        "args": {
+          "request": "Tìm khách sạn ở Đà Nẵng từ 10/10/2026 đến 12/10/2026, giá dưới 1 triệu/đêm.",
+          "turn_constraints": [
+            "price_max=1000000"
+          ]
+        },
+        "timestamp": "2026-09-02T16:45:36.918680+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "hotel_assistant",
+      "memory_recall_hotel",
+      "hotel_chat",
+      "search_hotels_tool",
+      "hotel_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "hotel": {
+      "candidate_pool_ids": [
+        "m_quiet",
+        "m_budget"
+      ],
+      "applicability": {
+        "m_quiet": "uncertain",
+        "m_budget": "overridden"
+      },
+      "applicability_reasons": {
+        "m_quiet": "Quiet hotel preference cannot be directly filtered using standard hotel search parameters.",
+        "m_budget": "The current user request explicitly sets a budget of under 1 million VND per night, overriding the default memory of 2-3 million VND per night."
+      },
+      "final_context_ids": [
+        "m_quiet",
+        "m_budget"
+      ],
+      "applied_constraints": [
+        "price_max=1000000",
+        "(soft) [4646ca8d-fc61-5df9-981d-52e2295cc43d] Thích khách sạn yên tĩnh"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "location": "Đà Nẵng",
+        "price_max": 1000000,
+        "checkin_date": "2026-10-10",
+        "checkout_date": "2026-10-12",
+        "destination": "Đà Nẵng",
+        "check_in": "2026-10-10",
+        "check_out": "2026-10-12"
+      },
+      "timestamp": "2026-09-02T16:45:36.918680+00:00",
+      "raw_result": {
+        "search_id": "b929b3ab-d92a-4641-8794-fd375e8d8d51",
+        "domain": "hotel",
+        "displayed_item_ids": [
+          "17168385",
+          "15777609",
+          "17113830",
+          "16993066",
+          "14675223",
+          "11440047",
+          "332564",
+          "14371033",
+          "4231547",
+          "10009298"
+        ],
+        "labels": [],
+        "total_results": 10
+      },
+      "normalized_result": {
+        "search_id": "b929b3ab-d92a-4641-8794-fd375e8d8d51",
+        "request_id": "req_hotel_8152c5e8",
+        "domain": "hotel",
+        "total_results": 10,
+        "items": [
+          {
+            "name": "HomeNay Homestay&Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/912626252.jpg?k=2a42ae64e76dcca8772472a0bc660995912cd1376fb2f4c6e2eb05849ee563d7&o=",
+            "price": 472000,
+            "rating": 0,
+            "address": null,
+            "item_id": "17168385",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "17168385",
+            "accessibilityLabel": [
+              "HomeNay Homestay&Apartment",
+              "3,4km từ trung tâm",
+              "Cách biển 0,9km",
+              "Mới trên Booking.com",
+              "1 phòng riêng : 2 giường",
+              "Giá gốc là 1180000 VND",
+              "Giá hiện tại là 944000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 1 căn với giá này trên Booking.com"
+            ],
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Lumina Star Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/850371012.jpg?k=800f62b36ad45875cf35d026e153a90675a467592dbbcf9cc0af729c5e359b06&o=",
+            "price": 486000,
+            "rating": 7.6,
+            "address": null,
+            "item_id": "15777609",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "15777609",
+            "accessibilityLabel": [
+              "Lumina Star Hotel",
+              "3 trên 5 sao",
+              "7,6 Tốt 155 đánh giá",
+              "2,5km từ trung tâm",
+              "Cách biển 0,5km",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 2160000 VND",
+              "Giá hiện tại là 972000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 2 căn với giá này trên Booking.com"
+            ],
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Bona Hostel",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/909290961.jpg?k=44d5ce9959a20748746b89d0875fd44af83546a20f5541c5cf713d061a2bd26d&o=",
+            "price": 345971,
+            "rating": 0,
+            "address": null,
+            "item_id": "17113830",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "17113830",
+            "accessibilityLabel": [
+              "Bona Hostel",
+              "Sông Hàn • 1,4km từ trung tâm",
+              "Cách biển 1,7km",
+              "Mới trên Booking.com",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 1032750 VND",
+              "Giá hiện tại là 691942 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 4 căn với giá này trên Booking.com"
+            ],
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "The Coastel Hotel & Apartment",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/903389455.jpg?k=aa59602166e85d150579579a436a6929b6ef84373c6adcfa807801aaa2385ea2&o=",
+            "price": 461619,
+            "rating": 9.2,
+            "address": null,
+            "item_id": "16993066",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "16993066",
+            "accessibilityLabel": [
+              "The Coastel Hotel & Apartment",
+              "3 trên 5 sao",
+              "9,2 Tuyệt hảo 25 đánh giá",
+              "2,4km từ trung tâm",
+              "Cách biển 0,5km",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 2051640 VND",
+              "Giá hiện tại là 923238 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 4 căn với giá này trên Booking.com"
+            ],
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Cỏ Lá Homestay",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/880151845.jpg?k=a9572918df3428931df60f75a131f63de99da292772bb4014eaf8b42a6b54168&o=",
+            "price": 440000,
+            "rating": 9.3,
+            "address": null,
+            "item_id": "14675223",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "14675223",
+            "accessibilityLabel": [
+              "Cỏ Lá Homestay",
+              "9,3 Tuyệt hảo 38 đánh giá",
+              "Tại trung tâm thành phố",
+              "Cách biển 2,7km",
+              "1 phòng riêng : 1 giường",
+              "880000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Chỉ còn 1 căn với giá này trên Booking.com"
+            ],
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Phu My Hai Hotel",
+            "star": 2,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/524217049.jpg?k=381dff7c9042bdc62911e2c46c18f114e8165f86cf7db87309ff2daa158dbfbf&o=",
+            "price": 396000,
+            "rating": 8.8,
+            "address": null,
+            "item_id": "11440047",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "11440047",
+            "accessibilityLabel": [
+              "Phu My Hai Hotel",
+              "2 trên 5 sao",
+              "8,8 Tuyệt vời 46 đánh giá",
+              "Vịnh Đà Nẵng • 1,9km từ trung tâm",
+              "Giáp biển",
+              "1 phòng khách sạn : 1 giường",
+              "792000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 1 căn với giá này trên Booking.com"
+            ],
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Zenta Sea View Hotel",
+            "star": 2,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/587114885.jpg?k=efcd1a7b85bff8abf6c57a759fc68c9b9133d32a2ffe267fae9a013106a0f3e2&o=",
+            "price": 410400,
+            "rating": 7.2,
+            "address": null,
+            "item_id": "332564",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "332564",
+            "accessibilityLabel": [
+              "Zenta Sea View Hotel",
+              "2 trên 5 sao",
+              "7,2 Tốt 562 đánh giá",
+              "3,8km từ trung tâm",
+              "Giáp biển",
+              "Ưu Đãi Trong Thời Gian Có Hạn",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 3040000 VND",
+              "Giá hiện tại là 820800 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 2 căn với giá này trên Booking.com"
+            ],
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "88 ngày là tới HOUSE - 88 days to go HOUSE",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/697296112.jpg?k=2cc4edbb4525724de8c0f052ed27e282344699a16f5a296e6f70225ea3478c2f&o=",
+            "price": 324900,
+            "rating": 9.6,
+            "address": null,
+            "item_id": "14371033",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "14371033",
+            "accessibilityLabel": [
+              "88 ngày là tới HOUSE - 88 days to go HOUSE",
+              "9,6 Xuất sắc 62 đánh giá",
+              "Vịnh Đà Nẵng • 1,6km từ trung tâm",
+              "Cách biển 1,4km",
+              "1 phòng sử dụng phòng tắm chung : 1 giường",
+              "649800 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 2 căn với giá này trên Booking.com"
+            ],
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Van apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/167733533.jpg?k=cf4ab35bf81ef2d9d95fbb33dec32a8101de52ea24c005ccd149853e9310f137&o=",
+            "price": 500000,
+            "rating": 8.5,
+            "address": null,
+            "item_id": "4231547",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "4231547",
+            "accessibilityLabel": [
+              "Van apartment",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "8,5 Rất tốt 167 đánh giá",
+              "3,3km từ trung tâm",
+              "Giáp biển",
+              "1 căn hộ nguyên căn – 40 m² : 1 giường • 1 phòng ngủ • 1 phòng khách • 1 phòng tắm",
+              "1000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 4 căn với giá này trên Booking.com"
+            ],
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "name": "Dubai Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/565431044.jpg?k=a3828f1a7b5a252252186f3eaf05b2f1122b391ef4963ce6bbe9537c73276c20&o=",
+            "price": 334862,
+            "rating": 6.7,
+            "address": null,
+            "item_id": "10009298",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "10009298",
+            "accessibilityLabel": [
+              "Dubai Hotel",
+              "3 trên 5 sao",
+              "6,7 Dễ chịu 481 đánh giá",
+              "3,2km từ trung tâm",
+              "Cách biển 0,5km",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 1913500 VND",
+              "Giá hiện tại là 669725 VND",
+              "+89743 VND thuế và phí",
+              "Hủy miễn phí",
+              "Chỉ còn 5 căn với giá này trên Booking.com"
+            ],
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "17168385",
+          "15777609",
+          "17113830",
+          "16993066",
+          "14675223",
+          "11440047",
+          "332564",
+          "14371033",
+          "4231547",
+          "10009298"
+        ],
+        "items": [
+          {
+            "name": "HomeNay Homestay&Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/912626252.jpg?k=2a42ae64e76dcca8772472a0bc660995912cd1376fb2f4c6e2eb05849ee563d7&o=",
+            "price": 472000,
+            "rating": 0,
+            "address": null,
+            "item_id": "17168385",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "17168385",
+            "accessibilityLabel": [
+              "HomeNay Homestay&Apartment",
+              "3,4km từ trung tâm",
+              "Cách biển 0,9km",
+              "Mới trên Booking.com",
+              "1 phòng riêng : 2 giường",
+              "Giá gốc là 1180000 VND",
+              "Giá hiện tại là 944000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 1 căn với giá này trên Booking.com"
+            ],
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Lumina Star Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/850371012.jpg?k=800f62b36ad45875cf35d026e153a90675a467592dbbcf9cc0af729c5e359b06&o=",
+            "price": 486000,
+            "rating": 7.6,
+            "address": null,
+            "item_id": "15777609",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "15777609",
+            "accessibilityLabel": [
+              "Lumina Star Hotel",
+              "3 trên 5 sao",
+              "7,6 Tốt 155 đánh giá",
+              "2,5km từ trung tâm",
+              "Cách biển 0,5km",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 2160000 VND",
+              "Giá hiện tại là 972000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 2 căn với giá này trên Booking.com"
+            ],
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Bona Hostel",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/909290961.jpg?k=44d5ce9959a20748746b89d0875fd44af83546a20f5541c5cf713d061a2bd26d&o=",
+            "price": 345971,
+            "rating": 0,
+            "address": null,
+            "item_id": "17113830",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "17113830",
+            "accessibilityLabel": [
+              "Bona Hostel",
+              "Sông Hàn • 1,4km từ trung tâm",
+              "Cách biển 1,7km",
+              "Mới trên Booking.com",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 1032750 VND",
+              "Giá hiện tại là 691942 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 4 căn với giá này trên Booking.com"
+            ],
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "The Coastel Hotel & Apartment",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/903389455.jpg?k=aa59602166e85d150579579a436a6929b6ef84373c6adcfa807801aaa2385ea2&o=",
+            "price": 461619,
+            "rating": 9.2,
+            "address": null,
+            "item_id": "16993066",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "16993066",
+            "accessibilityLabel": [
+              "The Coastel Hotel & Apartment",
+              "3 trên 5 sao",
+              "9,2 Tuyệt hảo 25 đánh giá",
+              "2,4km từ trung tâm",
+              "Cách biển 0,5km",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 2051640 VND",
+              "Giá hiện tại là 923238 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 4 căn với giá này trên Booking.com"
+            ],
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Cỏ Lá Homestay",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/880151845.jpg?k=a9572918df3428931df60f75a131f63de99da292772bb4014eaf8b42a6b54168&o=",
+            "price": 440000,
+            "rating": 9.3,
+            "address": null,
+            "item_id": "14675223",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "14675223",
+            "accessibilityLabel": [
+              "Cỏ Lá Homestay",
+              "9,3 Tuyệt hảo 38 đánh giá",
+              "Tại trung tâm thành phố",
+              "Cách biển 2,7km",
+              "1 phòng riêng : 1 giường",
+              "880000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Chỉ còn 1 căn với giá này trên Booking.com"
+            ],
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Phu My Hai Hotel",
+            "star": 2,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/524217049.jpg?k=381dff7c9042bdc62911e2c46c18f114e8165f86cf7db87309ff2daa158dbfbf&o=",
+            "price": 396000,
+            "rating": 8.8,
+            "address": null,
+            "item_id": "11440047",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "11440047",
+            "accessibilityLabel": [
+              "Phu My Hai Hotel",
+              "2 trên 5 sao",
+              "8,8 Tuyệt vời 46 đánh giá",
+              "Vịnh Đà Nẵng • 1,9km từ trung tâm",
+              "Giáp biển",
+              "1 phòng khách sạn : 1 giường",
+              "792000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 1 căn với giá này trên Booking.com"
+            ],
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Zenta Sea View Hotel",
+            "star": 2,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/587114885.jpg?k=efcd1a7b85bff8abf6c57a759fc68c9b9133d32a2ffe267fae9a013106a0f3e2&o=",
+            "price": 410400,
+            "rating": 7.2,
+            "address": null,
+            "item_id": "332564",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "332564",
+            "accessibilityLabel": [
+              "Zenta Sea View Hotel",
+              "2 trên 5 sao",
+              "7,2 Tốt 562 đánh giá",
+              "3,8km từ trung tâm",
+              "Giáp biển",
+              "Ưu Đãi Trong Thời Gian Có Hạn",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 3040000 VND",
+              "Giá hiện tại là 820800 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 2 căn với giá này trên Booking.com"
+            ],
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "88 ngày là tới HOUSE - 88 days to go HOUSE",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/697296112.jpg?k=2cc4edbb4525724de8c0f052ed27e282344699a16f5a296e6f70225ea3478c2f&o=",
+            "price": 324900,
+            "rating": 9.6,
+            "address": null,
+            "item_id": "14371033",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "14371033",
+            "accessibilityLabel": [
+              "88 ngày là tới HOUSE - 88 days to go HOUSE",
+              "9,6 Xuất sắc 62 đánh giá",
+              "Vịnh Đà Nẵng • 1,6km từ trung tâm",
+              "Cách biển 1,4km",
+              "1 phòng sử dụng phòng tắm chung : 1 giường",
+              "649800 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 2 căn với giá này trên Booking.com"
+            ],
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Van apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/167733533.jpg?k=cf4ab35bf81ef2d9d95fbb33dec32a8101de52ea24c005ccd149853e9310f137&o=",
+            "price": 500000,
+            "rating": 8.5,
+            "address": null,
+            "item_id": "4231547",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "4231547",
+            "accessibilityLabel": [
+              "Van apartment",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "8,5 Rất tốt 167 đánh giá",
+              "3,3km từ trung tâm",
+              "Giáp biển",
+              "1 căn hộ nguyên căn – 40 m² : 1 giường • 1 phòng ngủ • 1 phòng khách • 1 phòng tắm",
+              "1000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 4 căn với giá này trên Booking.com"
+            ],
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "name": "Dubai Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/565431044.jpg?k=a3828f1a7b5a252252186f3eaf05b2f1122b391ef4963ce6bbe9537c73276c20&o=",
+            "price": 334862,
+            "rating": 6.7,
+            "address": null,
+            "item_id": "10009298",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "10009298",
+            "accessibilityLabel": [
+              "Dubai Hotel",
+              "3 trên 5 sao",
+              "6,7 Dễ chịu 481 đánh giá",
+              "3,2km từ trung tâm",
+              "Cách biển 0,5km",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 1913500 VND",
+              "Giá hiện tại là 669725 VND",
+              "+89743 VND thuế và phí",
+              "Hủy miễn phí",
+              "Chỉ còn 5 căn với giá này trên Booking.com"
+            ],
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "hotel",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là danh sách khách sạn tại Đà Nẵng từ 10/10/2026 đến 12/10/2026 với giá dưới 1.000.000 VND/đêm. *Lưu ý: Do chưa thể xác minh trực tiếp mức độ yên tĩnh từ thông tin hệ thống, dưới đây là các lựa chọn phù hợp ngân sách để bạn tham khảo:*\\n\\n*   **HomeNay Homestay&Apartment** (ID: 17168385)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 472000 VND\\n    *   Đánh giá: 0\\n    *   Hạng sao: 0\\n    *   accessibilityLabel:\\n        *   HomeNay Homestay&Apartment\\n        *   3,4km từ trung tâm\\n        *   Cách biển 0,9km\\n        *   Mới trên Booking.com\\n        *   1 phòng riêng : 2\\xa0giường\\n        *   Giá gốc là 1180000 VND\\n        *   Giá hiện tại là 944000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 1 căn với giá này trên Booking.com\\n    *   ![HomeNay Homestay&Apartment](https://cf.bstatic.com/xdata/images/hotel/square500/912626252.jpg?k=2a42ae64e76dcca8772472a0bc660995912cd1376fb2f4c6e2eb05849ee563d7&o=)\\n\\n*   **Lumina Star Hotel** (ID: 15777609)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 486000 VND\\n    *   Đánh giá: 7.6\\n    *   Hạng sao: 3\\n    *   accessibilityLabel:\\n        *   Lumina Star Hotel\\n        *   3 trên 5 sao\\n        *   7,6 Tốt 155 đánh giá\\n        *   2,5km từ trung tâm\\n        *   Cách biển 0,5km\\n        *   1 phòng khách sạn : 1\\xa0giường\\n        *   Giá gốc là 2160000 VND\\n        *   Giá hiện tại là 972000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 2 căn với giá này trên Booking.com\\n    *   ![Lumina Star Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/850371012.jpg?k=800f62b36ad45875cf35d026e153a90675a467592dbbcf9cc0af729c5e359b06&o=)\\n\\n*   **Bona Hostel** (ID: 17113830)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 345971 VND\\n    *   Đánh giá: 0\\n    *   Hạng sao: 0\\n    *   accessibilityLabel:\\n        *   Bona Hostel\\n        *   Sông Hàn • 1,4km từ trung tâm\\n        *   Cách biển 1,7km\\n        *   Mới trên Booking.com\\n        *   1 phòng khách sạn : 1\\xa0giường\\n        *   Giá gốc là 1032750 VND\\n        *   Giá hiện tại là 691942 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 4 căn với giá này trên Booking.com\\n    *   ![Bona Hostel](https://cf.bstatic.com/xdata/images/hotel/square500/909290961.jpg?k=44d5ce9959a20748746b89d0875fd44af83546a20f5541c5cf713d061a2bd26d&o=)\\n\\n*   **The Coastel Hotel & Apartment** (ID: 16993066)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 461619 VND\\n    *   Đánh giá: 9.2\\n    *   Hạng sao: 3\\n    *   accessibilityLabel:\\n        *   The Coastel Hotel & Apartment\\n        *   3 trên 5 sao\\n        *   9,2 Tuyệt hảo 25 đánh giá\\n        *   2,4km từ trung tâm\\n        *   Cách biển 0,5km\\n        *   1 phòng khách sạn : 1\\xa0giường\\n        *   Giá gốc là 2051640 VND\\n        *   Giá hiện tại là 923238 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 4 căn với giá này trên Booking.com\\n    *   ![The Coastel Hotel & Apartment](https://cf.bstatic.com/xdata/images/hotel/square500/903389455.jpg?k=aa59602166e85d150579579a436a6929b6ef84373c6adcfa807801aaa2385ea2&o=)\\n\\n*   **Cỏ Lá Homestay** (ID: 14675223)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 440000 VND\\n    *   Đánh giá: 9.3\\n    *   Hạng sao: 0\\n    *   accessibilityLabel:\\n        *   Cỏ Lá Homestay\\n        *   9,3 Tuyệt hảo 38 đánh giá\\n        *   Tại trung tâm thành phố\\n        *   Cách biển 2,7km\\n        *   1 phòng riêng : 1\\xa0giường\\n        *   880000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Chỉ còn 1 căn với giá này trên Booking.com\\n    *   ![Cỏ Lá Homestay](https://cf.bstatic.com/xdata/images/hotel/square500/880151845.jpg?k=a9572918df3428931df60f75a131f63de99da292772bb4014eaf8b42a6b54168&o=)\\n\\n*   **Phu My Hai Hotel** (ID: 11440047)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 396000 VND\\n    *   Đánh giá: 8.8\\n    *   Hạng sao: 2\\n    *   accessibilityLabel:\\n        *   Phu My Hai Hotel\\n        *   2 trên 5 sao\\n        *   8,8 Tuyệt vời 46 đánh giá\\n        *   Vịnh Đà Nẵng • 1,9km từ trung tâm\\n        *   Giáp biển\\n        *   1 phòng khách sạn : 1\\xa0giường\\n        *   792000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 1 căn với giá này trên Booking.com\\n    *   ![Phu My Hai Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/524217049.jpg?k=381dff7c9042bdc62911e2c46c18f114e8165f86cf7db87309ff2daa158dbfbf&o=)\\n\\n*   **Zenta Sea View Hotel** (ID: 332564)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 410400 VND\\n    *   Đánh giá: 7.2\\n    *   Hạng sao: 2\\n    *   accessibilityLabel:\\n        *   Zenta Sea View Hotel\\n        *   2 trên 5 sao\\n        *   7,2 Tốt 562 đánh giá\\n        *   3,8km từ trung tâm\\n        *   Giáp biển\\n        *   Ưu Đãi Trong Thời Gian Có Hạn\\n        *   1 phòng khách sạn : 1\\xa0giường\\n        *   Giá gốc là 3040000 VND\\n        *   Giá hiện tại là 820800 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 2 căn với giá này trên Booking.com\\n    *   ![Zenta Sea View Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/587114885.jpg?k=efcd1a7b85bff8abf6c57a759fc68c9b9133d32a2ffe267fae9a013106a0f3e2&o=)\\n\\n*   **88 ngày là tới HOUSE - 88 days to go HOUSE** (ID: 14371033)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 324900 VND\\n    *   Đánh giá: 9.6\\n    *   Hạng sao: 0\\n    *   accessibilityLabel:\\n        *   88 ngày là tới HOUSE - 88 days to go HOUSE\\n        *   9,6 Xuất sắc 62 đánh giá\\n        *   Vịnh Đà Nẵng • 1,6km từ trung tâm\\n        *   Cách biển 1,4km\\n        *   1 phòng sử dụng phòng tắm chung : 1\\xa0giường\\n        *   649800 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 2 căn với giá này trên Booking.com\\n    *   ![88 ngày là tới HOUSE - 88 days to go HOUSE](https://cf.bstatic.com/xdata/images/hotel/square500/697296112.jpg?k=2cc4edbb4525724de8c0f052ed27e282344699a16f5a296e6f70225ea3478c2f&o=)\\n\\n*   **Van apartment** (ID: 4231547)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 500000 VND\\n    *   Đánh giá: 8.5\\n    *   Hạng sao: 0\\n    *   accessibilityLabel:\\n        *   Van apartment\\n        *   3 trên 5 cho xếp hạng chỗ nghỉ\\n        *   8,5 Rất tốt 167 đánh giá\\n        *   3,3km từ trung tâm\\n        *   Giáp biển\\n        *   1 căn hộ nguyên căn – 40\\xa0m² : 1\\xa0giường • 1\\xa0phòng ngủ • 1\\xa0phòng khách • 1\\xa0phòng tắm\\n        *   1000000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 4 căn với giá này trên Booking.com\\n    *   ![Van apartment](https://cf.bstatic.com/xdata/images/hotel/square500/167733533.jpg?k=cf4ab35bf81ef2d9d95fbb33dec32a8101de52ea24c005ccd149853e9310f137&o=)\\n\\n*   **Dubai Hotel** (ID: 10009298)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 334862 VND\\n    *   Đánh giá: 6.7\\n    *   Hạng sao: 3\\n    *   accessibilityLabel:\\n        *   Dubai Hotel\\n        *   3 trên 5 sao\\n        *   6,7 Dễ chịu 481 đánh giá\\n        *   3,2km từ trung tâm\\n        *   Cách biển 0,5km\\n        *   1 phòng khách sạn : 1\\xa0giường\\n        *   Giá gốc là 1913500 VND\\n        *   Giá hiện tại là 669725 VND\\n        *   +89743 VND thuế và phí\\n        *   Hủy miễn phí\\n        *   Chỉ còn 5 căn với giá này trên Booking.com\\n    *   ![Dubai Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/565431044.jpg?k=a3828f1a7b5a252252186f3eaf05b2f1122b391ef4963ce6bbe9537c73276c20&o=)', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "price_max=1000000",
+        "(soft) [4646ca8d-fc61-5df9-981d-52e2295cc43d] Thích khách sạn yên tĩnh"
+      ],
+      "domain_action": "search_hotels"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "hotel"
+    ]
+  },
+  "final_answer": "Dưới đây là danh sách các khách sạn tại Đà Nẵng cho thời gian từ **10/10/2026 đến 12/10/2026** với mức giá dưới **1.000.000 VND/đêm**:\n\n---\n\n### 1. **HomeNay Homestay&Apartment** *(ID: 17168385)*\n* **Giá:** ~472.000 VND/đêm *(Tổng khoảng 944.000 VND/2 đêm, đã gồm thuế & phí)*\n* **Vị trí:** Đà Nẵng (3,4 km từ trung tâm, cách biển 0,9 km)\n* **Loại phòng:** 1 phòng riêng (2 giường)\n* **Chính sách:** Hủy miễn phí, không cần thanh toán trước\n* ![HomeNay Homestay&Apartment](https://cf.bstatic.com/xdata/images/hotel/square500/912626252.jpg?k=2a42ae64e76dcca8772472a0bc660995912cd1376fb2f4c6e2eb05849ee563d7&o=)\n\n---\n\n### 2. **Lumina Star Hotel** *(ID: 15777609)*\n* **Hạng sao / Đánh giá:** 3 sao | **7.6** Tốt (155 đánh giá)\n* **Giá:** ~486.000 VND/đêm *(Tổng khoảng 972.000 VND/2 đêm, đã gồm thuế & phí)*\n* **Vị trí:** Đà Nẵng (2,5 km từ trung tâm, cách biển 0,5 km)\n* **Loại phòng:** 1 phòng khách sạn (1 giường)\n* **Chính sách:** Hủy miễn phí, không cần thanh toán trước\n* ![Lumina Star Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/850371012.jpg?k=800f62b36ad45875cf35d026e153a90675a467592dbbcf9cc0af729c5e359b06&o=)\n\n---\n\n### 3. **Bona Hostel** *(ID: 17113830)*\n* **Giá:** ~345.971 VND/đêm *(Tổng khoảng 691.942 VND/2 đêm, đã gồm thuế & phí)*\n* **Vị trí:** Khu vực Sông Hàn, Đà Nẵng (1,4 km từ trung tâm, cách biển 1,7 km)\n* **Loại phòng:** 1 phòng khách sạn (1 giường)\n* **Chính sách:** Hủy miễn phí, không cần thanh toán trước\n* ![Bona Hostel](https://cf.bstatic.com/xdata/images/hotel/square500/909290961.jpg?k=44d5ce9959a20748746b89d0875fd44af83546a20f5541c5cf713d061a2bd26d&o=)\n\n---\n\n### 4. **The Coastel Hotel & Apartment** *(ID: 16993066)*\n* **Hạng sao / Đánh giá:** 3 sao | **9.2** Tuyệt hảo (25 đánh giá)\n* **Giá:** ~461.619 VND/đêm *(Tổng khoảng 923.238 VND/2 đêm, đã gồm thuế & phí)*\n* **Vị trí:** Đà Nẵng (2,4 km từ trung tâm, cách biển 0,5 km)\n* **Loại phòng:** 1 phòng khách sạn (1 giường)\n* **Chính sách:** Hủy miễn phí, không cần thanh toán trước\n* ![The Coastel Hotel & Apartment](https://cf.bstatic.com/xdata/images/hotel/square500/903389455.jpg?k=aa59602166e85d150579579a436a6929b6ef84373c6adcfa807801aaa2385ea2&o=)\n\n---\n\n### 5. **Cỏ Lá Homestay** *(ID: 14675223)*\n* **Đánh giá:** **9.3** Tuyệt hảo (38 đánh giá)\n* **Giá:** ~440.000 VND/đêm *(Tổng 880.000 VND/2 đêm, đã gồm thuế & phí)*\n* **Vị trí:** Tại trung tâm thành phố Đà Nẵng (Cách biển 2,7 km)\n* **Loại phòng:** 1 phòng riêng (1 giường)\n* **Chính sách:** Hủy miễn phí\n* ![Cỏ Lá Homestay](https://cf.bstatic.com/xdata/images/hotel/square500/880151845.jpg?k=a9572918df3428931df60f75a131f63de99da292772bb4014eaf8b42a6b54168&o=)\n\n---\n\n### 6. **Phu My Hai Hotel** *(ID: 11440047)*\n* **Hạng sao / Đánh giá:** 2 sao | **8.8** Tuyệt vời (46 đánh giá)\n* **Giá:** ~396.000 VND/đêm *(Tổng 792.000 VND/2 đêm, đã gồm thuế & phí)*\n* **Vị trí:** Vịnh Đà Nẵng (1,9 km từ trung tâm, giáp biển)\n* **Loại phòng:** 1 phòng khách sạn (1 giường)\n* **Chính sách:** Hủy miễn phí, không cần thanh toán trước\n* ![Phu My Hai Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/524217049.jpg?k=381dff7c9042bdc62911e2c46c18f114e8165f86cf7db87309ff2daa158dbfbf&o=)\n\n---\n\n### 7. **Zenta Sea View Hotel** *(ID: 332564)*\n* **Hạng sao / Đánh giá:** 2 sao | **7.2** Tốt (562 đánh giá)\n* **Giá:** ~410.400 VND/đêm *(Giá ưu đãi hiện tại khoảng 820.800 VND/2 đêm, đã gồm thuế & phí)*\n* **Vị trí:** Đà Nẵng (3,8 km từ trung tâm, giáp biển)\n* **Loại phòng:** 1 phòng khách sạn (1 giường)\n* **Chính sách:** Hủy miễn phí, không cần thanh toán trước\n* ![Zenta Sea View Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/587114885.jpg?k=efcd1a7b85bff8abf6c57a759fc68c9b9133d32a2ffe267fae9a013106a0f3e2&o=)\n\n---\n\n### 8. **88 ngày là tới HOUSE - 88 days to go HOUSE** *(ID: 14371033)*\n* **Đánh giá:** **9.6** Xuất sắc (62 đánh giá)\n* **Giá:** ~324.900 VND/đêm *(Tổng 649.800 VND/2 đêm, đã gồm thuế & phí)*\n* **Vị trí:** Vịnh Đà Nẵng (1,6 km từ trung tâm, cách biển 1,4 km)\n* **Loại phòng:** 1 phòng sử dụng phòng tắm chung (1 giường)\n* **Chính sách:** Hủy miễn phí, không cần thanh toán trước\n* ![88 ngày là tới HOUSE - 88 days to go HOUSE](https://cf.bstatic.com/xdata/images/hotel/square500/697296112.jpg?k=2cc4edbb4525724de8c0f052ed27e282344699a16f5a296e6f70225ea3478c2f&o=)\n\n---\n\n### 9. **Van apartment** *(ID: 4231547)*\n* **Đánh giá:** **8.5** Rất tốt (167 đánh giá)\n* **Giá:** ~500.000 VND/đêm *(Tổng 1.000.000 VND/2 đêm, đã gồm thuế & phí)*\n* **Vị trí:** Đà Nẵng (3,3 km từ trung tâm, giáp biển)\n* **Loại phòng:** Căn hộ nguyên căn – 40 m² (1 phòng ngủ, 1 phòng khách, 1 phòng tắm, 1 giường)\n* **Chính sách:** Hủy miễn phí, không cần thanh toán trước\n* ![Van apartment](https://cf.bstatic.com/xdata/images/hotel/square500/167733533.jpg?k=cf4ab35bf81ef2d9d95fbb33dec32a8101de52ea24c005ccd149853e9310f137&o=)\n\n---\n\n### 10. **Dubai Hotel** *(ID: 10009298)*\n* **Hạng sao / Đánh giá:** 3 sao | **6.7** Dễ chịu (481 đánh giá)\n* **Giá:** ~334.862 VND/đêm *(Giá phòng 669.725 VND + 89.743 VND thuế/phí cho 2 đêm)*\n* **Vị trí:** Đà Nẵng (3,2 km từ trung tâm, cách biển 0,5 km)\n* **Loại phòng:** 1 phòng khách sạn (1 giường)\n* **Chính sách:** Hủy miễn phí\n* ![Dubai Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/565431044.jpg?k=a3828f1a7b5a252252186f3eaf05b2f1122b391ef4963ce6bbe9537c73276c20&o=)\n\n---\n\nBạn muốn xem chi tiết hoặc đặt phòng/kiểm tra đánh giá thêm của chỗ nghỉ nào trong danh sách trên?",
+  "stm": {
+    "summary": null,
+    "message_count": 4
+  },
+  "finalize": {
+    "memory_job_id": "f373d6ea-d41c-43e3-a7fe-47af5d875888",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "memory_job": {
+      "job_id": "f373d6ea-d41c-43e3-a7fe-47af5d875888",
+      "status": "pending",
+      "error_summary": "0",
+      "created_at": "2026-09-02T23:45:35.402615+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "hotel"
+        ],
+        "actual": [
+          "hotel"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "PASS",
+      "detail": "applicability labels match",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "hotel_assistant",
+          "memory_recall_hotel",
+          "hotel_chat",
+          "search_hotels_tool",
+          "search_hotels_tool",
+          "hotel_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "hotel_assistant",
+          "memory_recall_hotel",
+          "hotel_chat",
+          "search_hotels_tool",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "hotel_assistant",
+      "graph": "primary",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "memory_recall_hotel",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_quiet",
+          "m_budget"
+        ],
+        "applicability": {
+          "m_quiet": "uncertain",
+          "m_budget": "overridden"
+        },
+        "applicability_reasons": {
+          "m_quiet": "Quiet hotel preference cannot be directly filtered using standard hotel search parameters.",
+          "m_budget": "The current user request explicitly sets a budget of under 1 million VND per night, overriding the default memory of 2-3 million VND per night."
+        },
+        "applied_to_context": [
+          "m_quiet"
+        ]
+      }
+    },
+    {
+      "seq": 5,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "search_hotels_tool",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [
+        {
+          "name": "search_hotels_tool",
+          "arguments": {
+            "price_max": 1000000,
+            "location": "Đà Nẵng",
+            "checkout_date": "2026-10-12",
+            "checkin_date": "2026-10-10"
+          }
+        }
+      ],
+      "parent_chat_node": "hotel_chat"
+    },
+    {
+      "seq": 7,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 8,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 9,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

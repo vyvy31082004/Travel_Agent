@@ -54,6 +54,27 @@ jobs:
         run: python -m pytest -q -m 'not live' tests
       - name: Compile application
         run: python -m compileall -q src
+      - name: Validate notebooks
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          for notebook in Path("src/notebooks").glob("*.ipynb"):
+              payload = json.loads(notebook.read_text(encoding="utf-8"))
+              dirty_cells = [
+                  index
+                  for index, cell in enumerate(payload.get("cells", []))
+                  if cell.get("cell_type") == "code"
+                  and (cell.get("outputs") or cell.get("execution_count") is not None)
+              ]
+              if dirty_cells:
+                  raise SystemExit(
+                      f"{notebook} contains committed outputs/execution counts "
+                      f"in cells {dirty_cells}"
+                  )
+              print(f"validated clean notebook {notebook}")
+          PY
       - name: Check repository diff
         run: git diff --check
       - name: Build production image
@@ -105,7 +126,7 @@ jobs:
       LONG_TERM_MEMORY_LANGMEM_MODEL: gemini-3.6-flash
       LONG_TERM_MEMORY_VERIFIER: trustmem
       LONG_TERM_MEMORY_TRUSTMEM_MODEL: gemini-2.5-flash
-      LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION: trustmem-verifier-v1
+      LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION: trustmem-verifier-v2
       LONG_TERM_MEMORY_TRUSTMEM_TIMEOUT_SECONDS: "30"
       LONG_TERM_MEMORY_TRUSTMEM_COVERAGE_THRESHOLD: "0.80"
       LONG_TERM_MEMORY_TRUSTMEM_PRESERVATION_THRESHOLD: "0.90"

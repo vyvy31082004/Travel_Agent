@@ -1,0 +1,80 @@
+id: e2e_summary_car_001
+scenario: "T1–T2 rồi summarize_conversation; T3 search car từ summary (Đà Nẵng, sân bay→trung tâm, 10–12/10) + 4 người; LTM automatic + 5 chỗ; NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_automatic
+      text: "Thích xe số tự động"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_seats
+      text: "Cần xe 5 chỗ"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích xe số sàn"
+      domain: car
+      category: car_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ — chỉ thuê xe 4 chỗ"
+      domain: car
+      category: car_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Mình đang tính thuê xe ở Đà Nẵng, chưa cần tìm xe."
+    - "Nhận xe sân bay ngày 10/10, trả ở trung tâm ngày 12/10."
+    - "Tìm xe luôn, tôi đi 4 người."
+
+expected_trace:
+  expected_route: [car]
+  expected_context:
+    car:
+      must_include: [m_automatic, m_seats]
+      must_exclude: [m_other_user, m_superseded]
+      expected_applicability:
+        m_automatic: apply
+        m_seats: apply
+  expected_tools:
+    - name: search_cars_tool
+      required_arguments: [location, pickup_date, return_date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - summarize_conversation
+    - memory_finalize
+    - memory_recall_global
+    - primary_assistant
+    - car_assistant
+    - memory_recall_car
+    - car_chat
+    - search_cars_tool
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "search/answer giữ Đà Nẵng, nhận sân bay, trả trung tâm, 10–12/10 từ summary"
+    - "đi 4 người từ T3"
+    - "ưu tiên xe tự động / 5 chỗ từ memory; không hỏi lại thông tin đã có"
+  tradeoff_rule:
+    - "Nếu tool chỉ có một địa chỉ, ghi nhận sân bay; nêu nếu chưa lọc được điểm trả trung tâm"
+  forbidden_claims:
+    - "Giá/phụ phí không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

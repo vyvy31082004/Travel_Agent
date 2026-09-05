@@ -1,0 +1,74 @@
+id: e2e_override_excursion_001
+scenario: "Lần này override ngân sách tour seeded (<300k → 700k/người); NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_budget
+      text: "Ngân sách tour thường dưới 300 nghìn/người"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_nature
+      text: "Thích điểm tham quan thiên nhiên"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích tour văn hóa"
+      domain: excursion
+      category: excursion_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ — tránh tour ngoài trời"
+      domain: excursion
+      category: excursion_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Lần này tìm hoạt động ở Đà Nẵng ngày 10/10, ngân sách tối đa 700 nghìn/người."
+
+expected_trace:
+  expected_route: [excursion]
+  expected_context:
+    excursion:
+      must_include: [m_nature]
+      must_exclude: [m_other_user, m_superseded]
+      expected_applicability:
+        m_budget: overridden
+        m_nature: uncertain
+  expected_tools:
+    - name: search_attractions_tool
+      required_arguments: [location, date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - excursion_assistant
+    - memory_recall_excursion
+    - excursion_chat
+    - searchLocation
+    - searchAttractions
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "ngân sách tối đa 700 nghìn/người từ query, không 300 nghìn seeded"
+    - "ưu tiên thiên nhiên nếu tool có evidence"
+  tradeoff_rule:
+    - "Nếu tool không có giá → nêu giới hạn dữ liệu, không áp lại trần 300 nghìn"
+  forbidden_claims:
+    - "Viện dẫn ngân sách 300 nghìn như constraint hiện tại"
+    - "Giá/đặc điểm không có trong tool result"
+
+expected_finalize:
+  action: NO_STORE

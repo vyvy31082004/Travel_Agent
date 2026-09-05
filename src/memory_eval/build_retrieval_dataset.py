@@ -54,10 +54,10 @@ SPLIT_COUNTS: dict[str, tuple[int, int]] = {
     "action_contrast_excursion_details": (1, 2),
     "override_flight_time": (2, 3),
     "override_hotel_budget": (2, 3),
-    "override_hotel_location_irrelevant": (2, 3),
+    "override_hotel_location_uncertain": (2, 3),
     "override_car_transmission": (2, 3),
     "override_flight_departure": (2, 3),
-    "soft_hotel_quiet_apply": (3, 3),
+    "soft_hotel_quiet_uncertain": (3, 3),
     "soft_hotel_avoid_groups_uncertain": (3, 3),
     "soft_hotel_bathtub_uncertain": (3, 3),
     "soft_flight_direct_apply": (3, 4),
@@ -164,6 +164,13 @@ def _scope_same_user(split: str, index: int) -> dict[str, Any]:
         _mem(f"{prefix}-h4", user_id=uid, text="gần trung tâm", domain="hotel"),
     ]
     pool = [m["memory_id"] for m in store]
+    # Tool-field rubric on search_hotels: budget→apply; quiet/boutique/location soft→uncertain.
+    expected_applicability = {
+        f"{prefix}-h1": "apply",
+        f"{prefix}-h2": "uncertain",
+        f"{prefix}-h3": "uncertain",
+        f"{prefix}-h4": "uncertain",
+    }
     return _case(
         case_id=f"scope_same_user_same_domain_{_suffix(split, index)}",
         split=split,
@@ -173,7 +180,7 @@ def _scope_same_user(split: str, index: int) -> dict[str, Any]:
         domain="hotel",
         memory_store=store,
         expected_sql_pool=pool,
-        expected_applicability={mid: "apply" for mid in pool},
+        expected_applicability=expected_applicability,
         expected_action="search_hotels",
         rationale="All active hotel memories for user must enter SQL pool.",
     )
@@ -231,6 +238,13 @@ def _scope_cross_domain(split: str, index: int) -> dict[str, Any]:
         "car": "search_cars",
         "excursion": "search_attractions",
     }
+    # Soft prefs without concrete tool args → uncertain; mapped filters stay apply.
+    if target_domain == "hotel":
+        label = "uncertain"  # quiet
+    elif target_domain == "excursion":
+        label = "uncertain"  # culture tour-type
+    else:
+        label = "apply"
     return _case(
         case_id=f"scope_cross_domain_{_suffix(split, index)}",
         split=split,
@@ -240,7 +254,7 @@ def _scope_cross_domain(split: str, index: int) -> dict[str, Any]:
         domain=target_domain,
         memory_store=store,
         expected_sql_pool=[pool_id],
-        expected_applicability={pool_id: "apply"},
+        expected_applicability={pool_id: label},
         expected_action=actions[target_domain],
         rationale="Cross-domain memories must not leak into domain SQL pool.",
     )
@@ -522,9 +536,9 @@ def _action_car_search(split: str, index: int) -> dict[str, Any]:
         domain="car",
         memory_store=store,
         expected_sql_pool=[auto_id, seven_id],
-        expected_applicability={auto_id: "apply", seven_id: "irrelevant"},
+        expected_applicability={auto_id: "apply", seven_id: "apply"},
         expected_action="search_cars",
-        rationale="7-seat preference irrelevant for automatic transmission query.",
+        rationale="Both transmission and 7-seat capacity map via user_needs on search_cars.",
     )
 
 
@@ -571,9 +585,9 @@ def _action_excursion_search(split: str, index: int) -> dict[str, Any]:
         domain="excursion",
         memory_store=store,
         expected_sql_pool=[culture_id, beach_id],
-        expected_applicability={culture_id: "apply", beach_id: "uncertain"},
+        expected_applicability={culture_id: "uncertain", beach_id: "uncertain"},
         expected_action="search_attractions",
-        rationale="Culture tour preference applies at search.",
+        rationale="Culture and beach tour-types are too general for concrete location tool args.",
     )
 
 
@@ -669,13 +683,13 @@ def _override_hotel_budget(split: str, index: int) -> dict[str, Any]:
         domain="hotel",
         memory_store=store,
         expected_sql_pool=[old_id, quiet_id],
-        expected_applicability={old_id: "overridden", quiet_id: "apply"},
+        expected_applicability={old_id: "overridden", quiet_id: "uncertain"},
         expected_action="search_hotels",
-        rationale="Stored budget overridden by explicit higher cap.",
+        rationale="Stored budget overridden by explicit higher cap; quiet has no tool field.",
     )
 
 
-def _override_hotel_location_irrelevant(split: str, index: int) -> dict[str, Any]:
+def _override_hotel_location_uncertain(split: str, index: int) -> dict[str, Any]:
     uid = f"user-a-{_suffix(split, index)}"
     prefix = f"ovr_h_loc_{_suffix(split, index)}"
     beach_id = f"{prefix}-beach"
@@ -685,17 +699,17 @@ def _override_hotel_location_irrelevant(split: str, index: int) -> dict[str, Any
         _mem(budget_id, user_id=uid, text="ngân sách 1-2 triệu", domain="hotel"),
     ]
     return _case(
-        case_id=f"override_hotel_location_irrelevant_{_suffix(split, index)}",
+        case_id=f"override_hotel_location_uncertain_{_suffix(split, index)}",
         split=split,
-        scenario_type="override_hotel_location_irrelevant",
+        scenario_type="override_hotel_location_uncertain",
         user_id=uid,
         user_query="Tìm hotel trung tâm Hà Nội cho chuyến công tác",
         domain="hotel",
         memory_store=store,
         expected_sql_pool=[beach_id, budget_id],
-        expected_applicability={beach_id: "irrelevant", budget_id: "apply"},
+        expected_applicability={beach_id: "uncertain", budget_id: "apply"},
         expected_action="search_hotels",
-        rationale="Beach preference irrelevant for business downtown search — not overridden.",
+        rationale="Beach preference has no search_hotels tool field → uncertain (not irrelevant).",
     )
 
 
@@ -753,7 +767,7 @@ def _override_flight_departure(split: str, index: int) -> dict[str, Any]:
 OVERRIDE_BUILDERS: dict[str, Callable[[str, int], dict[str, Any]]] = {
     "override_flight_time": _override_flight_time,
     "override_hotel_budget": _override_hotel_budget,
-    "override_hotel_location_irrelevant": _override_hotel_location_irrelevant,
+    "override_hotel_location_uncertain": _override_hotel_location_uncertain,
     "override_car_transmission": _override_car_transmission,
     "override_flight_departure": _override_flight_departure,
 }
@@ -768,20 +782,20 @@ def _soft_hotel_quiet(split: str, index: int) -> dict[str, Any]:
     quiet_id = f"{prefix}-quiet"
     store = [_mem(quiet_id, user_id=uid, text="thích khách sạn yên tĩnh", domain="hotel")]
     return _case(
-        case_id=f"soft_hotel_quiet_apply_{_suffix(split, index)}",
+        case_id=f"soft_hotel_quiet_uncertain_{_suffix(split, index)}",
         split=split,
-        scenario_type="soft_hotel_quiet_apply",
+        scenario_type="soft_hotel_quiet_uncertain",
         user_id=uid,
         user_query="Tìm hotel công tác Hà Nội",
         domain="hotel",
         memory_store=store,
         expected_sql_pool=[quiet_id],
-        expected_applicability={quiet_id: "apply"},
+        expected_applicability={quiet_id: "uncertain"},
         expected_action="search_hotels",
         expected_presented_constraints=[
             {"memory_id": quiet_id, "constraint": "prefer_quiet", "strength": "soft_preference"},
         ],
-        rationale="Quiet preference applies as soft filter at search.",
+        rationale="Quiet preference has no search_hotels tool field → uncertain soft preference.",
     )
 
 
@@ -886,7 +900,7 @@ def _soft_flight_lowest_price(split: str, index: int) -> dict[str, Any]:
 
 
 SOFT_BUILDERS: dict[str, Callable[[str, int], dict[str, Any]]] = {
-    "soft_hotel_quiet_apply": _soft_hotel_quiet,
+    "soft_hotel_quiet_uncertain": _soft_hotel_quiet,
     "soft_hotel_avoid_groups_uncertain": _soft_hotel_avoid_groups,
     "soft_hotel_bathtub_uncertain": _soft_hotel_bathtub,
     "soft_flight_direct_apply": _soft_flight_direct,

@@ -1,0 +1,73 @@
+id: e2e_override_car_001
+scenario: "Lần này override hộp số seeded (automatic → số sàn); NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_automatic
+      text: "Thích xe số tự động"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_seats
+      text: "Cần xe tối thiểu 7 chỗ"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích xe số sàn"
+      domain: car
+      category: car_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ — chỉ thuê xe 4 chỗ"
+      domain: car
+      category: car_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Lần này tìm xe số sàn ở Đà Nẵng từ 10–12/10."
+
+expected_trace:
+  expected_route: [car]
+  expected_context:
+    car:
+      must_include: [m_seats]
+      must_exclude: [m_other_user, m_superseded]
+      expected_applicability:
+        m_automatic: overridden
+        m_seats: apply
+  expected_tools:
+    - name: search_cars_tool
+      required_arguments: [location, pickup_date, return_date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - car_assistant
+    - memory_recall_car
+    - car_chat
+    - search_cars_tool
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "xe số sàn ở Đà Nẵng 10–12/10 từ query"
+    - "cần 7 chỗ nếu tool có evidence"
+  tradeoff_rule:
+    - "Nếu tool không trả hộp số, nói chưa lọc chính xác — không fallback xe tự động theo memory cũ"
+  forbidden_claims:
+    - "Viện dẫn số tự động như constraint hiện tại"
+    - "Giá/phụ phí không có trong tool result"
+
+expected_finalize:
+  action: NO_STORE

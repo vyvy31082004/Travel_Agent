@@ -1,0 +1,525 @@
+{
+  "metadata": {
+    "case_id": "e2e_multi_hotel_flight_001",
+    "run_id": "94d410537218",
+    "started_at": "2026-09-02T14:34:34.710761+00:00",
+    "finished_at": "2026-09-02T14:36:37.099965+00:00",
+    "user_id": "e2e-e2e_multi_hotel_flight_001:user_a",
+    "thread_id": "e2e-e2e_multi_hotel_flight_001-94d410537218",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v1",
+    "git_commit": "33651113742b805502b902653208662372e2be36",
+    "fixture_to_uuid": {
+      "m_flight_economy": "ee53d5cc-e5c9-560b-8ece-3d01f6ecb42d",
+      "m_flight_nonstop": "72d97ae3-a93c-5520-a1ef-1ec8ec993356",
+      "m_flight_other_user": "8382a1a2-4868-5727-8ea9-59d35fa84376",
+      "m_flight_superseded": "2fdbf261-3d17-544d-8e5d-dd8745b44823",
+      "m_hotel_budget": "d5bd77db-0213-53fd-a470-5e57ed4b0ad7",
+      "m_hotel_quiet": "3b579345-c448-54fd-985c-4235a6cb4553",
+      "m_hotel_other_user": "8c5690dc-6130-5492-bfb2-8546e5132d55",
+      "m_hotel_superseded": "8211adf3-b0c2-5b0e-8b36-42e2b3c296a1"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Tìm chuyến bay từ TP.HCM ra Đà Nẵng ngày 10/10 và khách sạn 2 đêm."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-02"
+    }
+  },
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "flight",
+      "hotel"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToFlightAssistant",
+        "args": {
+          "request": "Tìm chuyến bay từ TP.HCM (SGN) đi Đà Nẵng (DAD) ngày 10/10/2026"
+        },
+        "timestamp": "2026-09-02T14:36:37.098964+00:00"
+      },
+      {
+        "name": "ToHotelAssistant",
+        "args": {
+          "request": "Tìm khách sạn ở Đà Nẵng, check-in 10/10/2026, check-out 12/10/2026 (2 đêm)"
+        },
+        "timestamp": "2026-09-02T14:36:37.098964+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "hotel_assistant",
+      "flight_assistant",
+      "join_results",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "hotel": {
+      "candidate_pool_ids": [
+        "m_hotel_quiet",
+        "m_hotel_budget"
+      ],
+      "applicability": {
+        "m_hotel_quiet": "uncertain",
+        "m_hotel_budget": "apply"
+      },
+      "applicability_reasons": {
+        "m_hotel_quiet": "Preference for quiet hotels cannot be directly filtered or verified via search_hotels API fields.",
+        "m_hotel_budget": "Hotel budget preference of 2-3 million VND per night applies directly to search_hotels action filters."
+      },
+      "final_context_ids": [
+        "m_hotel_quiet",
+        "m_hotel_budget"
+      ],
+      "applied_constraints": [
+        "[d5bd77db-0213-53fd-a470-5e57ed4b0ad7] Ngân sách hotel thường 2–3 triệu/đêm",
+        "(soft) [3b579345-c448-54fd-985c-4235a6cb4553] Thích khách sạn yên tĩnh"
+      ]
+    },
+    "flight": {
+      "candidate_pool_ids": [
+        "m_flight_nonstop",
+        "m_flight_economy"
+      ],
+      "applicability": {
+        "m_flight_nonstop": "apply",
+        "m_flight_economy": "apply"
+      },
+      "applicability_reasons": {
+        "m_flight_nonstop": "Ưu tiên bay thẳng là tiêu chuẩn lọc trực tiếp cho tác vụ tìm kiếm chuyến bay.",
+        "m_flight_economy": "Sở thích hạng vé phổ thông (economy) là trường dữ liệu lọc phù hợp cho tác vụ tìm kiếm chuyến bay."
+      },
+      "final_context_ids": [
+        "m_flight_nonstop",
+        "m_flight_economy"
+      ],
+      "applied_constraints": [
+        "[72d97ae3-a93c-5520-a1ef-1ec8ec993356] Ưu tiên bay thẳng, tránh nối chuyến",
+        "[ee53d5cc-e5c9-560b-8ece-3d01f6ecb42d] Thường bay hạng phổ thông (economy) khi đi du lịch"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "stops": "1",
+        "origin": "SGN",
+        "cabin_class": "economy",
+        "destination": "DAD",
+        "departure_date": "2026-10-10"
+      },
+      "timestamp": "2026-09-02T14:36:37.098964+00:00",
+      "raw_result": {
+        "search_id": "5d21e6a3-5747-4ec0-bf0c-1cfd04aca85b",
+        "domain": "flight",
+        "displayed_item_ids": [],
+        "labels": [],
+        "total_results": 0
+      },
+      "normalized_result": {
+        "search_id": "5d21e6a3-5747-4ec0-bf0c-1cfd04aca85b",
+        "request_id": "req_flight_fe46c978",
+        "domain": "flight",
+        "total_results": 0,
+        "items": [],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true
+    },
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "stops": "0",
+        "origin": "SGN",
+        "cabin_class": "economy",
+        "destination": "DAD",
+        "departure_date": "2026-10-10"
+      },
+      "timestamp": "2026-09-02T14:36:37.098964+00:00",
+      "raw_result": {
+        "search_id": "96c577e9-bb36-4a78-9926-590ddf166826",
+        "domain": "flight",
+        "displayed_item_ids": [],
+        "labels": [],
+        "total_results": 0
+      },
+      "normalized_result": {
+        "search_id": "96c577e9-bb36-4a78-9926-590ddf166826",
+        "request_id": "req_flight_2614d8cd",
+        "domain": "flight",
+        "total_results": 0,
+        "items": [],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true
+    },
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "origin": "SGN",
+        "destination": "DAD",
+        "departure_date": "2026-10-10"
+      },
+      "timestamp": "2026-09-02T14:36:37.098964+00:00",
+      "raw_result": {
+        "search_id": "ce08b590-a3c0-4f39-8fc0-dac4d457b3e9",
+        "domain": "flight",
+        "displayed_item_ids": [],
+        "labels": [],
+        "total_results": 0
+      },
+      "normalized_result": {
+        "search_id": "ce08b590-a3c0-4f39-8fc0-dac4d457b3e9",
+        "request_id": "req_flight_c9e0ead5",
+        "domain": "flight",
+        "total_results": 0,
+        "items": [],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true
+    },
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "adults": 2,
+        "location": "Đà Nẵng",
+        "price_max": 2000000,
+        "price_min": 2000000,
+        "checkin_date": "2026-10-10",
+        "checkout_date": "2026-10-12",
+        "destination": "Đà Nẵng",
+        "check_in": "2026-10-10",
+        "check_out": "2026-10-12"
+      },
+      "timestamp": "2026-09-02T14:36:37.098964+00:00",
+      "raw_result": {
+        "search_id": "848914bc-d6ef-4d6f-8c11-5bdb62d29472",
+        "domain": "hotel",
+        "displayed_item_ids": [
+          "15180703",
+          "1071090",
+          "408551"
+        ],
+        "labels": [],
+        "total_results": 3
+      },
+      "normalized_result": {
+        "search_id": "848914bc-d6ef-4d6f-8c11-5bdb62d29472",
+        "request_id": "req_hotel_59379d00",
+        "domain": "hotel",
+        "total_results": 3,
+        "items": [
+          {
+            "name": "Coastal Nest - Steps to Sand",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/769680338.jpg?k=139ec568332886261be8d07d2ddae57690b2f4a3ed99d8bddcbc9f9ddd345b2f&o=",
+            "price": 1000000,
+            "rating": 9.5,
+            "address": null,
+            "item_id": "15180703",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "15180703",
+            "accessibilityLabel": [
+              "Coastal Nest - Steps to Sand",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "9,5 Xuất sắc 71 đánh giá",
+              "2,8km từ trung tâm",
+              "Giáp biển",
+              "1 phòng riêng : 2 giường",
+              "2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 1 căn với giá này trên Booking.com"
+            ],
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Dragon Sea Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/745735497.jpg?k=f62d4c25f609cc54d1c584d0093b80ae26a99bee1e2144d572492fae6cdbdd15&o=",
+            "price": 1000000,
+            "rating": 7,
+            "address": null,
+            "item_id": "1071090",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "1071090",
+            "accessibilityLabel": [
+              "Dragon Sea Hotel",
+              "3 trên 5 sao",
+              "7,0 Tốt 157 đánh giá",
+              "2,7km từ trung tâm",
+              "Cách biển 200m",
+              "1 phòng khách sạn : 2 giường",
+              "Giá gốc là 8000000 VND",
+              "Giá hiện tại là 2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Chỉ còn 3 căn với giá này trên Booking.com"
+            ],
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Tarasa Hotel by Elite24",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/688825034.jpg?k=81928776e9da1b406337dcf812f3127e060d6988170a596be583d722c553d033&o=",
+            "price": 1000000,
+            "rating": 7.7,
+            "address": null,
+            "item_id": "408551",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "408551",
+            "accessibilityLabel": [
+              "Tarasa Hotel by Elite24",
+              "3 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "7,7 Tốt 104 đánh giá",
+              "1km từ trung tâm",
+              "Cách biển 1,6km",
+              "1 suite riêng tư : 1 giường",
+              "Giá gốc là 5000000 VND",
+              "Giá hiện tại là 2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 2 căn với giá này trên Booking.com"
+            ],
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "15180703",
+          "1071090",
+          "408551"
+        ],
+        "items": [
+          {
+            "name": "Coastal Nest - Steps to Sand",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/769680338.jpg?k=139ec568332886261be8d07d2ddae57690b2f4a3ed99d8bddcbc9f9ddd345b2f&o=",
+            "price": 1000000,
+            "rating": 9.5,
+            "address": null,
+            "item_id": "15180703",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "15180703",
+            "accessibilityLabel": [
+              "Coastal Nest - Steps to Sand",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "9,5 Xuất sắc 71 đánh giá",
+              "2,8km từ trung tâm",
+              "Giáp biển",
+              "1 phòng riêng : 2 giường",
+              "2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 1 căn với giá này trên Booking.com"
+            ],
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Dragon Sea Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/745735497.jpg?k=f62d4c25f609cc54d1c584d0093b80ae26a99bee1e2144d572492fae6cdbdd15&o=",
+            "price": 1000000,
+            "rating": 7,
+            "address": null,
+            "item_id": "1071090",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "1071090",
+            "accessibilityLabel": [
+              "Dragon Sea Hotel",
+              "3 trên 5 sao",
+              "7,0 Tốt 157 đánh giá",
+              "2,7km từ trung tâm",
+              "Cách biển 200m",
+              "1 phòng khách sạn : 2 giường",
+              "Giá gốc là 8000000 VND",
+              "Giá hiện tại là 2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Chỉ còn 3 căn với giá này trên Booking.com"
+            ],
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Tarasa Hotel by Elite24",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/688825034.jpg?k=81928776e9da1b406337dcf812f3127e060d6988170a596be583d722c553d033&o=",
+            "price": 1000000,
+            "rating": 7.7,
+            "address": null,
+            "item_id": "408551",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "408551",
+            "accessibilityLabel": [
+              "Tarasa Hotel by Elite24",
+              "3 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "7,7 Tốt 104 đánh giá",
+              "1km từ trung tâm",
+              "Cách biển 1,6km",
+              "1 suite riêng tư : 1 giường",
+              "Giá gốc là 5000000 VND",
+              "Giá hiện tại là 2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 2 căn với giá này trên Booking.com"
+            ],
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          }
+        ]
+      }
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "hotel",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là danh sách khách sạn tại Đà Nẵng từ ngày 10/10/2026 đến 12/10/2026 (2 đêm), đã được lọc theo ngân sách ưu tiên của bạn (2–3 triệu VND/đêm hoặc tổng 2 triệu VND/2 đêm). Lưu ý: Tiêu chí \"yên tĩnh\" hiện chưa thể xác nhận trực tiếp từ thông tin mô tả của các chỗ nghỉ này.\\n\\n*   **Coastal Nest - Steps to Sand** (ID: 15180703)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 1000000 VND\\n    *   Đánh giá: 9.5\\n    *   Hạng sao: 0\\n    *   accessibilityLabel:\\n        *   Coastal Nest - Steps to Sand\\n        *   3 trên 5 cho xếp hạng chỗ nghỉ\\n        *   9,5 Xuất sắc 71 đánh giá\\n        *   2,8km từ trung tâm\\n        *   Giáp biển\\n        *   1 phòng riêng : 2\\xa0giường\\n        *   2000000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 1 căn với giá này trên Booking.com\\n    *   ![Coastal Nest - Steps to Sand](https://cf.bstatic.com/xdata/images/hotel/square500/769680338.jpg?k=139ec568332886261be8d07d2ddae57690b2f4a3ed99d8bddcbc9f9ddd345b2f&o=)\\n\\n*   **Dragon Sea Hotel** (ID: 1071090)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 1000000 VND\\n    *   Đánh giá: 7\\n    *   Hạng sao: 3\\n    *   accessibilityLabel:\\n        *   Dragon Sea Hotel\\n        *   3 trên 5 sao\\n        *   7,0 Tốt 157 đánh giá\\n        *   2,7km từ trung tâm\\n        *   Cách biển 200m\\n        *   1 phòng khách sạn : 2\\xa0giường\\n        *   Giá gốc là 8000000 VND\\n        *   Giá hiện tại là 2000000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Chỉ còn 3 căn với giá này trên Booking.com\\n    *   ![Dragon Sea Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/745735497.jpg?k=f62d4c25f609cc54d1c584d0093b80ae26a99bee1e2144d572492fae6cdbdd15&o=)\\n\\n*   **Tarasa Hotel by Elite24** (ID: 408551)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 1000000 VND\\n    *   Đánh giá: 7.7\\n    *   Hạng sao: 3\\n    *   accessibilityLabel:\\n        *   Tarasa Hotel by Elite24\\n        *   3 trên 5 sao\\n        *   Đây là chỗ nghỉ Ưu tiên\\n        *   7,7 Tốt 104 đánh giá\\n        *   1km từ trung tâm\\n        *   Cách biển 1,6km\\n        *   1 suite riêng tư : 1\\xa0giường\\n        *   Giá gốc là 5000000 VND\\n        *   Giá hiện tại là 2000000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 2 căn với giá này trên Booking.com\\n    *   ![Tarasa Hotel by Elite24](https://cf.bstatic.com/xdata/images/hotel/square500/688825034.jpg?k=81928776e9da1b406337dcf812f3127e060d6988170a596be583d722c553d033&o=)', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "[d5bd77db-0213-53fd-a470-5e57ed4b0ad7] Ngân sách hotel thường 2–3 triệu/đêm",
+        "(soft) [3b579345-c448-54fd-985c-4235a6cb4553] Thích khách sạn yên tĩnh"
+      ],
+      "domain_action": "search_hotels"
+    },
+    {
+      "domain": "flight",
+      "summary": "[{'type': 'text', 'text': 'Hiện tại không tìm thấy chuyến bay nào từ TP.HCM (SGN) đi Đà Nẵng (DAD) vào ngày 10/10/2026. \\n\\nQuý khách vui lòng kiểm tra lại ngày bay hoặc cân nhắc thay đổi thời gian/hành trình bay khác.', 'extras': {'signature': 'EvcFCvQFARFNMg/wPbpW1USiEds5NBVox0Jahl/xSykmSnEzFsiBeGXTLhQN3Fmx/3Ow+qpYOXMW4Rmv/vpAz55+yEjPUa5kdYuWbmcewPKlwuYRU3xdJsR0R+z7NFn92AODEBQPJdeS2VZfQWZ0fE1QCfgkmDoX2G7+AHr16A35Azu0yTm1TuHCM/aC9daeNQw9h0m9v680rOmZie+LV+/dnCrbrZgjwDzZTLdrfJKNXbvgA+wUcQP6j+cg7aMJfO6281vAibH2zrtYIlk2JB6bma0QPXpF2naYfWqBGPLejDt3deuVzMNXRASe9cvyEXM7DkC6087ramMma2O/ZM+nrKQ0UV5iBDqXG2Fyn8t4Dh6oMoCn4NPQUTy/kb9MSu8ZOqNnh3QSpWVqt5zz4BX1s2kpvIM2upJqG1MQ4ScRrAKhfm9+BI/OB7Xoff+WLpAgRCi/gzqWsRWRv43cffS14jAJKF6E1TEoLOn/vsmpUeLSJwHzIn1dw1ogcswNdct332mhJr1qrxYEltE/4F8CxtJ1KGqRTFwEuZKmsboYfIBHSSS5P4ZKrwUK4CuHETu7Duga/AEJiijoPhOf2afGZaH0jWLmrcOJYcZcN1Ckg408G9P+dbHAhYlJq38gyI4x2pZ+E/FWgMxnx30Zr6roTTglvPbW8L1DzU/t+CXZcGbesINT05Upp6FTc+1XjvTA/KHzlLGMzPYb2p36Y13IK/98vJg3z34rHTC5CGWnDQk44PmDW+kXyXpmPR0CcEPXYn7Qt24beKa2qyY3s4lKJo9ld3aPv18TUE0weiM7eTkwhUfY+v+LRcwCj0F2sqeO2oTueaI+rhvbMewexopJJcKbq4lQ86zpPvPqjBjaqIuHnyoTUmR/YlnIwYxBYmBMHen49IGlyc442b6bRzMUASwlf41Ea5JTaRqInUugi4pRx6tXRJxXR6TD9K7oSenT4zUljU4KVCBp7//7NE+JHobRRNmllwEMzripOTC3YIXm2JO6L/+Y'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "[72d97ae3-a93c-5520-a1ef-1ec8ec993356] Ưu tiên bay thẳng, tránh nối chuyến",
+        "[ee53d5cc-e5c9-560b-8ece-3d01f6ecb42d] Thường bay hạng phổ thông (economy) khi đi du lịch"
+      ],
+      "domain_action": "search_one_way"
+    }
+  ],
+  "join": {
+    "branch_count": 2,
+    "merged_domains": [
+      "flight",
+      "hotel"
+    ]
+  },
+  "final_answer": "Dưới đây là thông tin chi tiết về chuyến bay và các lựa chọn khách sạn tại Đà Nẵng cho chuyến đi của bạn từ ngày **10/10/2026 đến 12/10/2026**:\n\n---\n\n### 1. Chuyến bay (TP.HCM ➔ Đà Nẵng - Ngày 10/10/2026)\n* **Trạng thái:** Hiện tại không tìm thấy chuyến bay thẳng phù hợp từ TP.HCM (SGN) đi Đà Nẵng (DAD) vào ngày **10/10/2026**.\n* **Gợi ý:** Quý khách vui lòng kiểm tra lại ngày bay hoặc cân nhắc thay đổi lịch trình/thời gian bay khác.\n\n---\n\n### 2. Danh sách khách sạn (10/10/2026 – 12/10/2026, 2 đêm)\nDanh sách khách sạn phù hợp với ngân sách ưu tiên (khoảng 1.000.000 VND/đêm, tổng 2.000.000 VND cho 2 đêm):\n\n1. **Coastal Nest - Steps to Sand** (ID: `15180703`)\n   * **Giá tổng (2 đêm):** 2.000.000 VND (Đã bao gồm thuế & phí)\n   * **Đánh giá:** 9.5/10 (Xuất sắc - 71 đánh giá)\n   * **Vị trí:** Giáp biển, cách trung tâm 2,8 km\n   * **Cấu trúc phòng:** 1 phòng riêng (2 giường)\n   * **Chính sách:** Hủy miễn phí, không cần thanh toán trước\n\n2. **Dragon Sea Hotel** (ID: `1071090`)\n   * **Hạng sao:** 3 sao\n   * **Giá tổng (2 đêm):** 2.000.000 VND (Đã bao gồm thuế & phí)\n   * **Đánh giá:** 7.0/10 (Tốt - 157 đánh giá)\n   * **Vị trí:** Cách biển 200m, cách trung tâm 2,7 km\n   * **Cấu trúc phòng:** 1 phòng khách sạn (2 giường)\n\n3. **Tarasa Hotel by Elite24** (ID: `408551`)\n   * **Hạng sao:** 3 sao\n   * **Giá tổng (2 đêm):** 2.000.000 VND (Đã bao gồm thuế & phí)\n   * **Đánh giá:** 7.7/10 (Tốt - 104 đánh giá)\n   * **Vị trí:** Cách trung tâm 1 km, cách biển 1,6 km\n   * **Cấu trúc phòng:** 1 suite riêng tư (1 giường)\n   * **Chính sách:** Hủy miễn phí, không cần thanh toán trước\n\n---\n\nNếu quý khách muốn thay đổi ngày bay hoặc cần thêm thông tin về các dịch vụ khác, xin vui lòng cho tôi biết!",
+  "stm": {
+    "summary": null,
+    "message_count": 5
+  },
+  "finalize": {
+    "memory_job_id": "d70f7ff8-8790-4f62-b27a-e10f63a6f17d",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "memory_job": {
+      "job_id": "d70f7ff8-8790-4f62-b27a-e10f63a6f17d",
+      "status": "pending",
+      "error_summary": "0",
+      "created_at": "2026-09-02T21:36:36.175837+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "flight",
+          "hotel"
+        ],
+        "actual": [
+          "flight",
+          "hotel"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "join_integrity": {
+      "status": "PASS",
+      "detail": "join integrity satisfied",
+      "evidence": {
+        "merged_domains": [
+          "flight",
+          "hotel"
+        ]
+      }
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  }
+}

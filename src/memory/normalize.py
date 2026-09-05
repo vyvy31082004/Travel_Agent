@@ -68,44 +68,63 @@ def normalize_flight_offers(raw: Any) -> list[dict[str, Any]]:
         flattened.append(candidate)
 
     for index, flight in enumerate(flattened, start=1):
-        if not isinstance(flight, dict):
+        if not isinstance(flight, dict) or flight.get("error"):
             continue
+        outbound = flight.get("outbound")
+        if not isinstance(outbound, dict):
+            outbound = {}
+        display = {**outbound, **flight}
         item_id = str(
-            flight.get("Offer_ID")
-            or flight.get("flight_id")
-            or flight.get("item_id")
+            display.get("Offer_ID")
+            or display.get("flight_id")
+            or display.get("item_id")
             or f"flight_{index}"
         )
-        detail_token = flight.get("detailToken") or flight.get("detail_token")
+        detail_token = (
+            display.get("detailToken")
+            or display.get("detail_token")
+            or display.get("booking_token")
+        )
+        if not detail_token and isinstance(flight.get("inbound"), dict):
+            inbound = flight["inbound"]
+            detail_token = (
+                inbound.get("detailToken")
+                or inbound.get("detail_token")
+                or inbound.get("booking_token")
+            )
         payload = {
             "item_id": item_id,
             "offer_id": item_id,
-            "airline": flight.get("airline_name") or flight.get("airline"),
-            "airline_code": flight.get("airline_code"),
-            "flight_number": flight.get("flight_number"),
-            "departure_airport": flight.get("departure_airport_code")
-            or flight.get("departure_airport"),
-            "arrival_airport": flight.get("arrival_airport_code")
-            or flight.get("arrival_airport"),
-            "departure_time": flight.get("departure_time"),
-            "departure_date": flight.get("departure_date"),
-            "arrival_time": flight.get("arrival_time"),
-            "arrival_date": flight.get("arrival_date"),
-            "duration_minutes": flight.get("duration_minutes"),
-            "stops": flight.get("stops"),
-            "cabin_class": flight.get("cabin_class") or flight.get("cabinClass"),
-            "price": flight.get("total_price") or flight.get("price"),
-            "currency": flight.get("currency") or "VND",
-            "segments": flight.get("segments"),
+            "airline": display.get("airline_name") or display.get("airline"),
+            "airline_code": display.get("airline_code"),
+            "flight_number": display.get("flight_number"),
+            "departure_airport": display.get("departure_airport_code")
+            or display.get("departure_airport"),
+            "arrival_airport": display.get("arrival_airport_code")
+            or display.get("arrival_airport"),
+            "departure_time": display.get("departure_time"),
+            "departure_date": display.get("departure_date"),
+            "arrival_time": display.get("arrival_time"),
+            "arrival_date": display.get("arrival_date"),
+            "duration_minutes": display.get("duration_minutes"),
+            "stops": display.get("stops"),
+            "cabin_class": display.get("cabin_class") or display.get("cabinClass"),
+            "price": display.get("total_price") or display.get("price"),
+            "currency": display.get("currency") or "VND",
+            "segments": display.get("segments"),
+            "outbound": outbound or None,
+            "inbound": flight.get("inbound"),
             "inbound_options": flight.get("inbound_options") or flight.get("inbound"),
-            "refundable": flight.get("refundable"),
-            "baggage": flight.get("baggage"),
+            "warning": flight.get("warning"),
+            "complete_roundtrip": bool(outbound and flight.get("inbound")),
+            "refundable": display.get("refundable"),
+            "baggage": display.get("baggage"),
             # Keep useful display fields without dumping entire provider blob.
             "Offer_ID": item_id,
-            "airline_name": flight.get("airline_name"),
-            "departure_airport_code": flight.get("departure_airport_code"),
-            "arrival_airport_code": flight.get("arrival_airport_code"),
-            "total_price": flight.get("total_price") or flight.get("price"),
+            "airline_name": display.get("airline_name"),
+            "departure_airport_code": display.get("departure_airport_code"),
+            "arrival_airport_code": display.get("arrival_airport_code"),
+            "total_price": display.get("total_price") or display.get("price"),
         }
         items.append(
             {

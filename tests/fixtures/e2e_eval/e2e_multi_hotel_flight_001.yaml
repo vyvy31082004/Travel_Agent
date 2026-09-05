@@ -1,0 +1,98 @@
+id: e2e_multi_hotel_flight_001
+scenario: "Flight economy+nonstop và hotel budget+quiet — không leak cross-domain"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_flight_economy
+      text: "Thường bay hạng phổ thông (economy) khi đi du lịch"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_flight_nonstop
+      text: "Ưu tiên bay thẳng, tránh nối chuyến"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_flight_other_user
+      text: "Memory user khác — thích business class"
+      domain: flight
+      category: flight_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_flight_superseded
+      text: "Preference cũ — chỉ bay Vietnam Airlines"
+      domain: flight
+      category: flight_preference
+      status: superseded
+      expect_in_context: false
+    - id: m_hotel_budget
+      text: "Ngân sách hotel thường 2–3 triệu/đêm"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_hotel_quiet
+      text: "Thích khách sạn yên tĩnh"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_hotel_other_user
+      text: "Memory user khác — thích resort cao cấp"
+      domain: hotel
+      category: hotel_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_hotel_superseded
+      text: "Preference cũ — thích hostel"
+      domain: hotel
+      category: hotel_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Tìm chuyến bay từ TP.HCM ra Đà Nẵng ngày 10/10 và khách sạn 2 đêm."
+
+expected_trace:
+  expected_route: [flight, hotel]
+  expected_context:
+    flight:
+      must_include: [m_flight_economy, m_flight_nonstop]
+      must_exclude: [m_flight_other_user, m_flight_superseded, m_hotel_budget, m_hotel_quiet]
+    hotel:
+      must_include: [m_hotel_budget, m_hotel_quiet]
+      must_exclude: [m_hotel_other_user, m_hotel_superseded, m_flight_economy, m_flight_nonstop]
+  expected_tools:
+    - name: search_one_way_flights_tool
+      required_arguments: [origin, destination, departure_date]
+    - name: search_hotels_tool
+      required_arguments: [destination]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - flight_assistant
+    - hotel_assistant
+    - join_results
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "flight: economy + ưu tiên bay thẳng"
+    - "hotel: budget 2–3 triệu + yên tĩnh"
+    - "final answer nhóm đúng 2 phần flight / hotel"
+  tradeoff_rule:
+    - "Nếu không thỏa điều kiện, nêu rõ theo từng domain"
+  forbidden_claims:
+    - "hotel preference xuất hiện trong flight answer"
+    - "flight preference dùng để chọn hotel"
+    - "Giá/chuyến/phòng không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

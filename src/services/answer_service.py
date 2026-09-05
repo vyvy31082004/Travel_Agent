@@ -168,12 +168,24 @@ async def enrich_invoke_messages_with_payloads(
         if not search_id or not item_ids:
             continue
         try:
-            items = await repo.load_items(
+            if await repo.has_display_decisions(
                 search_id=str(search_id),
-                item_ids=list(item_ids),
                 user_id=user_id,
                 thread_id=thread_id,
-            )
+            ):
+                items = await repo.load_displayed_items(
+                    search_id=str(search_id),
+                    user_id=user_id,
+                    thread_id=thread_id,
+                    include_detail_token=False,
+                )
+            else:
+                items = await repo.load_items(
+                    search_id=str(search_id),
+                    item_ids=list(item_ids),
+                    user_id=user_id,
+                    thread_id=thread_id,
+                )
         except (ResultStoreExpiredError, ResultStoreNotFoundError):
             enriched.append(
                 HumanMessage(

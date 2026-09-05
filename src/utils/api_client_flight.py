@@ -1,3 +1,4 @@
+import logging
 import os
 import requests
 from dotenv import load_dotenv
@@ -14,6 +15,7 @@ from typing import Any, Optional
 
 from utils.rapidapi_limiter import call_with_rate_limit_retry
 
+logger = logging.getLogger(__name__)
 
 BOOKING_HOST = os.getenv(
     "BOOKING_RAPIDAPI_HOST",
@@ -25,16 +27,18 @@ BOOKING_CURRENCY_CODE = os.getenv("BOOKING_CURRENCY_CODE", "VND")
 COUNTRY_CODE = os.getenv("COUNTRY_CODE", "VN")
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
 
-GOOGLE_FLIGHT_HOST = os.getenv("GOOGLE_FLIGHT_RAPIDAPI_HOST", "google-flights4.p.rapidapi.com")
+GOOGLE_FLIGHT_HOST = os.getenv("GOOGLE_FLIGHT_RAPIDAPI_HOST", "google-flights2.p.rapidapi.com")
 GOOGLE_FLIGHT_BASE_URL = f"https://{GOOGLE_FLIGHT_HOST}"
 # =========================
 # FLIGHT ENDPOINTS
 # Nếu endpoint trên RapidAPI khác, chỉ sửa 3 dòng này
 # =========================
 
-# FLIGHT_LOCATION_ENDPOINT = "/flights/searchAirport"
-# FLIGHT_SEARCH_ENDPOINT = "/flights/searchFlights"
-# FLIGHT_DETAILS_ENDPOINT = "/flights/getFlightDetails"
+FLIGHT_LOCATION_ENDPOINT = "/api/v1/searchAirport"
+FLIGHT_SEARCH_ENDPOINT = "/api/v1/searchFlights"
+FLIGHT_NEXT_ENDPOINT = "/api/v1/getNextFlights"
+FLIGHT_BOOKING_DETAILS_ENDPOINT = "/api/v1/getBookingDetails"
+FLIGHT_BOOKING_URL_ENDPOINT = "/api/v1/getBookingURL"
 
 
 
@@ -75,8 +79,9 @@ def _booking_get(header: str, path: str, params: dict, retries: int = 2) -> dict
 
     clean_params = _clean_request_params(params)
 
-    print("CALL API:", url)
-    print("PARAMS:", clean_params)
+    # Do not log query parameters or final URLs: booking/next tokens are
+    # capability-bearing values and must not be copied into production logs.
+    logger.info("Calling flight API endpoint %s", path)
 
     def _do_request() -> dict | list:
         response = requests.get(
@@ -85,8 +90,6 @@ def _booking_get(header: str, path: str, params: dict, retries: int = 2) -> dict
             params=clean_params,
             timeout=40,
         )
-
-        print("FINAL URL:", response.url)
 
         if response.status_code == 429:
             raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
@@ -110,9 +113,11 @@ def _booking_get(header: str, path: str, params: dict, retries: int = 2) -> dict
         return payload
 
     def _on_retry(attempt: int, delay: float, exc: BaseException) -> None:
-        print(
-            f"429 on attempt {attempt}/{retries + 1}, "
-            f"retrying after {delay:g}s..."
+        logger.warning(
+            "Flight API rate-limited on attempt %s/%s; retrying after %ss",
+            attempt,
+            retries + 1,
+            f"{delay:g}",
         )
 
     return call_with_rate_limit_retry(
@@ -148,7 +153,7 @@ def remove_vietnamese_accents(text: str) -> str:
     return text
 
 def _as_location_list(data: Any) -> list[dict]:
-    """Normalize searchDestination payload to a list of location dicts."""
+    """Normalize searchAirport payload to a list of location dicts."""
     if isinstance(data, list):
         return [item for item in data if isinstance(item, dict)]
     if isinstance(data, dict):
@@ -159,52 +164,13 @@ def _as_location_list(data: Any) -> list[dict]:
     return []
 
 
-def _pick_best_airport(data: Any, query: str) -> dict | None:
+def _pick_best_airport(data: Any, query: str = "") -> dict | None:
     """
-    Prefer exact IATA/city code match over Booking's default ranking.
-
-    Booking searchDestination for 'HAN' can rank unrelated metros (e.g. TYO) first.
+    Always take data[0] — Google Flights searchAirport ranks the best match first.
     """
     items = _as_location_list(data)
     if not items:
         return None
-
-    q = (query or "").strip().upper()
-    country = (COUNTRY_CODE or "").strip().upper()
-
-    def _code(item: dict) -> str:
-        return str(item.get("code") or item.get("id") or "").strip().upper()
-
-    # Exact IATA / city code match (SGN, HAN, ...)
-    if len(q) == 3 and q.isalpha():
-        exact = [item for item in items if _code(item) == q]
-        if exact:
-            if country:
-                in_country = [
-                    item
-                    for item in exact
-                    if str(item.get("country") or item.get("countryCode") or "")
-                    .strip()
-                    .upper()
-                    == country
-                ]
-                if in_country:
-                    return in_country[0]
-            return exact[0]
-
-    # Prefer same-country results when searching by city name
-    if country:
-        in_country = [
-            item
-            for item in items
-            if str(item.get("country") or item.get("countryCode") or "")
-            .strip()
-            .upper()
-            == country
-        ]
-        if in_country:
-            return in_country[0]
-
     return items[0]
 
 
@@ -213,7 +179,7 @@ def search_flight_location_from_api(
     languagecode: str = BOOKING_LANGUAGE_CODE,
 ) -> dict:
     """
-    Tìm airport/city id cho flight.
+    Resolve place name / city to IATA via Google Flights searchAirport (data[0].id).
     """
 
     if not query:
@@ -223,13 +189,11 @@ def search_flight_location_from_api(
 
     query = remove_vietnamese_accents(query).strip()
     query_upper = query.upper()
-    
     if query_upper == "SAI GON":
         query = "Ho Chi Minh"
         query_upper = "HO CHI MINH"
 
-    # Google Flights accepts IATA/city codes directly — avoid bad ranking from
-    # searchDestination when the agent already passed SGN/HAN/etc.
+    # Google Flights accepts IATA/city codes directly.
     if len(query_upper) == 3 and query_upper.isalpha():
         return {
             "source": "iata_passthrough",
@@ -244,8 +208,8 @@ def search_flight_location_from_api(
 
     try:
         data = _booking_get(
-            "booking",
-            "/flights/searchDestination",
+            "google_flight",
+            FLIGHT_LOCATION_ENDPOINT,
             {
                 "query": query,
                 "language_code": languagecode,
@@ -260,58 +224,167 @@ def search_flight_location_from_api(
                 "error": f"Không tìm được flight location cho '{query}'.",
                 "raw": data,
             }
+
         airport_id = airport.get("id")
-        airport_code = airport.get("code")
-        airport_name = airport.get("name")
-        city = airport.get("city")
-        country = airport.get("country")
         return {
-            "source": "booking_com15_rapidapi",
+            "source": "google_flights2_searchAirport",
             "query": query,
             "id": airport_id,
-            "code": airport_code,
-            "name": airport_name,
-            "city": city,
-            "country": country,
+            "code": airport_id,
+            "name": airport.get("title") or airport.get("name"),
+            "city": airport.get("city"),
+            "country": COUNTRY_CODE,
             "raw": airport,
         }
 
     except Exception as e:
         return {
-            "error": f"Lỗi khi gọi flight searchDestination: {str(e)}"
+            "error": f"Lỗi khi gọi flight searchAirport: {str(e)}"
         }
 
 
 
 
-def _normalize_flight_offer(choice: 1|2, flight_offers: list[dict], retun_assign: True|False) -> list[dict]:
-    """
-    Chuẩn hóa flight offers từ Google Flights2 API.
+def _extract_top_other(data: Any) -> tuple[list[dict], list[dict]]:
+    """Pull topFlights/otherFlights from data or data.itineraries."""
+    if not isinstance(data, dict):
+        return [], []
+    if "topFlights" in data or "otherFlights" in data:
+        top = data.get("topFlights") or []
+        other = data.get("otherFlights") or []
+        return (
+            [x for x in top if isinstance(x, dict)],
+            [x for x in other if isinstance(x, dict)],
+        )
+    itineraries = data.get("itineraries")
+    if isinstance(itineraries, dict):
+        top = itineraries.get("topFlights") or []
+        other = itineraries.get("otherFlights") or []
+        return (
+            [x for x in top if isinstance(x, dict)],
+            [x for x in other if isinstance(x, dict)],
+        )
+    if isinstance(itineraries, list):
+        return [x for x in itineraries if isinstance(x, dict)], []
+    return [], []
 
-    Cấu trúc thực tế của API:
-    - price, detailToken, airlineCode, airlineNames ở cấp offer
-    - segments[]: mỗi leg có departureAirportCode/Name, arrivalAirportCode/Name,
-                  departureTime (HH:MM), arrivalTime, durationMinutes,
-                  airline.flightNumber, aircraftName, overnight
-    choice = 1 -> one way
-    choice = 2 -> round way
+
+def _build_search_flights_params(
+    *,
+    departure_id: str,
+    arrival_id: str,
+    outbound_date: date | str,
+    return_date: date | str | None = None,
+    adults: int = 1,
+    children: int = 0,
+    infant_on_lap: int = 0,
+    infant_in_seat: int = 0,
+    cabin_class: str = "economy",
+    sort_by: str = "best",
+    currency_code: str = BOOKING_CURRENCY_CODE,
+    languagecode: str = BOOKING_LANGUAGE_CODE,
+    countrycode: str = COUNTRY_CODE,
+    show_hidden: str = "1",
+) -> dict:
+    return {
+        "departure_id": departure_id,
+        "arrival_id": arrival_id,
+        "outbound_date": outbound_date,
+        "return_date": return_date,
+        "adults": str(adults),
+        "children": str(children),
+        "infant_on_lap": str(infant_on_lap),
+        "infant_in_seat": str(infant_in_seat),
+        "travel_class": _map_cabin_class(cabin_class),
+        "search_type": _map_search_type(sort_by),
+        "show_hidden": str(show_hidden),
+        "currency": currency_code,
+        "language_code": languagecode,
+        "country_code": countrycode,
+    }
+
+
+def _build_next_flights_params(
+    next_token: str,
+    *,
+    currency_code: str = BOOKING_CURRENCY_CODE,
+    languagecode: str = BOOKING_LANGUAGE_CODE,
+    countrycode: str = COUNTRY_CODE,
+    show_hidden: str = "1",
+) -> dict:
+    return {
+        "next_token": next_token,
+        "show_hidden": str(show_hidden),
+        "currency": currency_code,
+        "language_code": languagecode,
+        "country_code": countrycode,
+    }
+
+
+def _airline_code_from_flight_number(flight_number: Any) -> str | None:
+    if not flight_number:
+        return None
+    token = str(flight_number).strip().split()[0]
+    # Keep alphanumeric designator (B6, VN, 3K, ...)
+    code = "".join(ch for ch in token if ch.isalnum())
+    return code.upper() or None
+
+
+def _split_airport_time(value: Any) -> tuple[str | None, str | None]:
+    """Split '2025-2-1 08:34' or '2025-02-01 08:34' into (date, time)."""
+    if not value:
+        return None, None
+    text = str(value).strip()
+    parts = text.split()
+    if len(parts) >= 2:
+        return parts[0], parts[1]
+    if "T" in text:
+        date_part, time_part = text.split("T", 1)
+        return date_part, time_part[:5] if time_part else None
+    return None, text
+
+
+def _duration_minutes(duration: Any) -> int | None:
+    if isinstance(duration, dict):
+        raw = duration.get("raw")
+        return int(raw) if raw is not None else None
+    if isinstance(duration, (int, float)):
+        return int(duration)
+    return None
+
+
+def _normalize_flight_offer(
+    choice: int,
+    flight_offers: list[dict],
+    retun_assign: bool = False,
+) -> list[dict]:
+    """
+    Normalize Google Flights2 searchFlights / getNextFlights offers.
+
+    Offer shape:
+    - flights[]: departure_airport / arrival_airport / airline / flight_number / duration
+    - duration: {raw, text} at offer level
+    - next_token for roundtrip follow-up via getNextFlights
     """
     if not flight_offers:
         return []
-    if not choice:
+    if choice not in (1, 2):
         return [{"error": "Bạn cần chọn loại chuyến bay: 1 -> one way, 2 -> round way"}]
-    if choice not in [1, 2]:
-        return [{"error": "Bạn cần chọn loại chuyến bay: 1 -> one way, 2 -> round way"}]
-    result = []
+
+    result: list[dict] = []
     for offer in flight_offers:
-        segments = offer.get("segments") or []
-        if not segments:
+        legs = offer.get("flights") or offer.get("segments") or []
+        if not legs:
             continue
-        # first_seg = segments[0]
-        # last_seg = segments[-1]
-        # first_airline = first_seg.get("airline") or {}
-        normalized_segments = [
-                {
+
+        normalized_segments = []
+        for seg in legs:
+            dep = seg.get("departure_airport") or {}
+            arr = seg.get("arrival_airport") or {}
+            # Legacy camelCase segments (fallback)
+            if not dep and seg.get("departureAirportCode"):
+                airline = seg.get("airline") or {}
+                normalized_segments.append({
                     "departure_airport_code": seg.get("departureAirportCode"),
                     "departure_airport_name": seg.get("departureAirportName"),
                     "arrival_airport_code": seg.get("arrivalAirportCode"),
@@ -322,64 +395,86 @@ def _normalize_flight_offer(choice: 1|2, flight_offers: list[dict], retun_assign
                     "arrival_date": seg.get("arrivalDate"),
                     "cabin_class": seg.get("cabinClass"),
                     "duration_minutes": seg.get("durationMinutes"),
-                    "flight_number": (seg.get("airline") or {}).get("flightNumber"),
-                    "airline_code": (seg.get("airline") or {}).get("airlineCode"),
-                    "airline_name": (seg.get("airline") or {}).get("airlineName"),
-                    "aircraftName": seg.get("aircraftName"),
+                    "flight_number": airline.get("flightNumber") if isinstance(airline, dict) else None,
+                    "airline_code": airline.get("airlineCode") if isinstance(airline, dict) else None,
+                    "airline_name": airline.get("airlineName") if isinstance(airline, dict) else airline,
+                    "aircraftName": seg.get("aircraftName") or seg.get("aircraft"),
                     "flight_ID": seg.get("flightId"),
-                    "seat_width": seg.get("seatWidth"),
-                }
-                for seg in segments
-            ]
-        flight_info = {}
-        if choice == 1:
-            if retun_assign == False:
-                offer_id = f"FL-{uuid.uuid4().hex[:6].upper()}"
-                flight_info["Offer_ID"] = offer_id
-            flight_info.update({
-                "price": offer.get("price"),
-                "airline_code": offer.get("airlineCode"),
-                "airline_name": offer.get("airlineNames"),
-                "stops": offer.get("stops"),
-                "duration_minutes": offer.get("duration"),
-                "departure_time": offer.get("departureTime"),
-                "departure_date": offer.get("departureDate"),
-                "arrival_time": offer.get("arrivalTime"),
-                "arrival_date": offer.get("arrivalDate"),
-                "departure_airport_code": offer.get("departureAirportCode"),
-                "arrival_airport_code": offer.get("arrivalAirportCode"),
-                "segments": normalized_segments,
-            })
-            # Nếu choice == 1, tạo bản sao (hoặc thêm trực tiếp) khóa detailToken
-            result.append({
-                **flight_info,
-                "detailToken": offer.get("detailToken")
-            })
-        elif choice == 2:
-            flight_info = {
-                "price": offer.get("price"),
-                "airline_code": offer.get("airlineCode"),
-                "airline_name": offer.get("airlineNames"),
-                "stops": offer.get("stops"),
-                "duration_minutes": offer.get("duration"),
-                "departure_time": offer.get("departureTime"),
-                "departure_date": offer.get("departureDate"),
-                "arrival_time": offer.get("arrivalTime"),
-                "arrival_date": offer.get("arrivalDate"),
-                "departure_airport_code": offer.get("departureAirportCode"),
-                "arrival_airport_code": offer.get("arrivalAirportCode"),
-                "segments": normalized_segments,
-            }
+                    "seat_width": seg.get("seatWidth") or seg.get("legroom"),
+                })
+                continue
 
-            result.append({
-                **flight_info,
-                "returningToken": offer.get("returningToken")
+            dep_date, dep_time = _split_airport_time(dep.get("time"))
+            arr_date, arr_time = _split_airport_time(arr.get("time"))
+            flight_number = seg.get("flight_number")
+            airline_name = seg.get("airline")
+            if isinstance(airline_name, dict):
+                flight_number = flight_number or airline_name.get("flightNumber")
+                airline_code = airline_name.get("airlineCode")
+                airline_name = airline_name.get("airlineName") or airline_name.get("airline")
+            else:
+                airline_code = _airline_code_from_flight_number(flight_number)
+
+            normalized_segments.append({
+                "departure_airport_code": dep.get("airport_code"),
+                "departure_airport_name": dep.get("airport_name"),
+                "arrival_airport_code": arr.get("airport_code"),
+                "arrival_airport_name": arr.get("airport_name"),
+                "departure_time": dep_time,
+                "departure_date": dep_date,
+                "arrival_time": arr_time,
+                "arrival_date": arr_date,
+                "cabin_class": seg.get("cabin_class") or seg.get("seat"),
+                "duration_minutes": _duration_minutes(seg.get("duration")) or seg.get("duration"),
+                "flight_number": flight_number,
+                "airline_code": airline_code,
+                "airline_name": airline_name,
+                "aircraftName": seg.get("aircraft"),
+                "flight_ID": seg.get("flight_id") or seg.get("flightId"),
+                "seat_width": seg.get("legroom") or seg.get("seat"),
             })
+
+        first = normalized_segments[0]
+        last = normalized_segments[-1]
+        offer_airline = offer.get("airline") or offer.get("airlineNames")
+        offer_flight_number = first.get("flight_number")
+        airline_code = (
+            offer.get("airlineCode")
+            or _airline_code_from_flight_number(offer_flight_number)
+            or first.get("airline_code")
+        )
+
+        booking_token = offer.get("booking_token")
+        flight_info: dict[str, Any] = {
+            "price": offer.get("price"),
+            "airline_code": airline_code,
+            "airline_name": offer_airline or first.get("airline_name"),
+            "stops": offer.get("stops"),
+            "duration_minutes": _duration_minutes(offer.get("duration")) or offer.get("duration"),
+            "departure_time": offer.get("departure_time") or first.get("departure_time"),
+            "departure_date": offer.get("departure_date") or first.get("departure_date"),
+            "arrival_time": offer.get("arrival_time") or last.get("arrival_time"),
+            "arrival_date": offer.get("arrival_date") or last.get("arrival_date"),
+            "departure_airport_code": (
+                offer.get("departureAirportCode")
+                or first.get("departure_airport_code")
+            ),
+            "arrival_airport_code": (
+                offer.get("arrivalAirportCode")
+                or last.get("arrival_airport_code")
+            ),
+            "segments": normalized_segments,
+            "next_token": offer.get("next_token"),
+            "booking_token": booking_token,
+            "detailToken": booking_token,
+        }
+
+        if choice == 1 and not retun_assign:
+            flight_info["Offer_ID"] = f"FL-{uuid.uuid4().hex[:6].upper()}"
+
+        result.append(flight_info)
+
     return result
-
-
-
-
 
 
 _AIRLINE_NAME_TO_CODE: dict[str, str] = {
@@ -441,43 +536,58 @@ def _resolve_airline_codes(airlines: Optional[str]) -> Optional[str]:
 
 
 def _map_cabin_class(cabin_class: str) -> str:
-    """economy→1, premium_economy→2, business→3, first→4"""
+    """economy->ECONOMY, premium_economy->PREMIUM_ECONOMY, business->BUSINESS, first->FIRST"""
     mapping = {
-        "economy": "1",
-        "premium economy": "2",
-        "premium_economy": "2",
-        "business": "3",
-        "first": "4",
+        "economy": "ECONOMY",
+        "premium economy": "PREMIUM_ECONOMY",
+        "premium_economy": "PREMIUM_ECONOMY",
+        "business": "BUSINESS",
+        "first": "FIRST",
+        "ECONOMY": "ECONOMY",
+        "PREMIUM_ECONOMY": "PREMIUM_ECONOMY",
+        "BUSINESS": "BUSINESS",
+        "FIRST": "FIRST",
     }
-    return mapping.get(cabin_class.lower().strip(), "1")
+    key = cabin_class.strip()
+    return mapping.get(key, mapping.get(key.lower(), "ECONOMY"))
+
+
+def _map_search_type(sort_by: str) -> str:
+    """best/top -> best; cheap/price -> cheap."""
+    key = sort_by.lower().strip()
+    if key in ("price", "cheap"):
+        return "cheap"
+    return "best"
 
 
 def _map_sort_by(sort_by: str) -> str:
-    """top/best→1, price→2, departure_time→3, arrival_time→4, duration→5, emissions→6"""
-    mapping = {
-        "top": "1",
-        "best": "1",
-        "price": "2",
-        "cheap": "2",
-        "departure_time": "3",
-        "departure": "3",
-        "arrival_time": "4",
-        "arrival": "4",
-        "duration": "5",
-        "emissions": "6",
-    }
-    return mapping.get(sort_by.lower().strip(), "1")
-
+    """Back-compat alias -> search_type."""
+    return _map_search_type(sort_by)
 
 
 def _parse_flight_time(value: str) -> datetime | None:
     if not value:
         return None
-    for fmt in ("%d-%m-%Y %I:%M %p", "%Y-%m-%d %H:%M", "%H:%M"):
+    for fmt in (
+        "%d-%m-%Y %I:%M %p",
+        "%Y-%m-%d %H:%M",
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%dT%H:%M:%S",
+        "%H:%M",
+    ):
         try:
             return datetime.strptime(value.strip(), fmt)
         except ValueError:
             continue
+    # Handle loosely formatted dates like "2025-2-1 08:34"
+    try:
+        parts = value.strip().replace("T", " ").split()
+        if len(parts) >= 2:
+            y, m, d = [int(x) for x in parts[0].split("-")]
+            hh, mm = [int(x) for x in parts[1][:5].split(":")]
+            return datetime(y, m, d, hh, mm)
+    except Exception:
+        pass
     return None
 
 
@@ -562,6 +672,125 @@ def _filter_flights_by_time(
 
     return filtered
 
+
+def _validate_flight_constraints(
+    *,
+    stops: str,
+    alliances: Optional[str],
+    carry_on_bag: int,
+    emissions: int,
+    layover_duration: Optional[str],
+    airports: Optional[str],
+    flight_duration: Optional[str],
+    limit: int,
+) -> str | None:
+    if str(stops) not in {"0", "1", "2", "3"}:
+        return 'stops phải là "0", "1", "2" hoặc "3".'
+    if limit < 1:
+        return "limit phải >= 1."
+
+    unsupported: list[str] = []
+    if alliances:
+        unsupported.append("alliances")
+    if carry_on_bag:
+        unsupported.append("carry_on_bag")
+    if emissions:
+        unsupported.append("emissions")
+    if layover_duration:
+        unsupported.append("layover_duration")
+    if airports:
+        unsupported.append("airports")
+    if flight_duration:
+        unsupported.append("flight_duration")
+    if unsupported:
+        return (
+            "Nhà cung cấp flight hiện tại chưa hỗ trợ đáng tin cậy các bộ lọc: "
+            + ", ".join(unsupported)
+            + "."
+        )
+    return None
+
+
+def _offer_stop_count(offer: dict) -> int | None:
+    value = offer.get("stops")
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, (int, float)):
+        return int(value)
+    if isinstance(value, str):
+        digits = "".join(ch for ch in value if ch.isdigit())
+        if digits:
+            return int(digits)
+        if value.strip().lower() in {"nonstop", "non-stop", "direct"}:
+            return 0
+    segments = offer.get("segments")
+    if isinstance(segments, list) and segments:
+        return max(len(segments) - 1, 0)
+    return None
+
+
+def _price_value(offer: dict) -> float | None:
+    value = offer.get("price")
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        try:
+            return float(value.replace(",", "").strip())
+        except ValueError:
+            return None
+    return None
+
+
+def _filter_flight_constraints(
+    flights: list[dict],
+    *,
+    stops: str = "0",
+    airlines: Optional[str] = None,
+    max_price: Optional[int] = None,
+) -> list[dict]:
+    max_stops = {"1": 0, "2": 1, "3": 2}.get(str(stops))
+    airline_codes = {
+        code.strip().upper()
+        for code in (_resolve_airline_codes(airlines) or "").split(",")
+        if code.strip()
+    }
+
+    filtered: list[dict] = []
+    for offer in flights:
+        if max_stops is not None:
+            stop_count = _offer_stop_count(offer)
+            if stop_count is None or stop_count > max_stops:
+                continue
+        if airline_codes:
+            raw_codes = offer.get("airline_code")
+            if isinstance(raw_codes, list):
+                offer_codes = {str(code).upper() for code in raw_codes}
+            else:
+                offer_codes = {
+                    code.strip().upper()
+                    for code in str(raw_codes or "").split(",")
+                    if code.strip()
+                }
+            if not offer_codes.intersection(airline_codes):
+                continue
+        if max_price is not None:
+            price = _price_value(offer)
+            if price is None or price > max_price:
+                continue
+        filtered.append(offer)
+    return filtered
+
+
+def _limit_flight_groups(
+    top: list[dict],
+    other: list[dict],
+    limit: int,
+) -> tuple[list[dict], list[dict]]:
+    limited_top = top[:limit]
+    remaining = max(limit - len(limited_top), 0)
+    return limited_top, other[:remaining]
+
+
 def search_one_way_flights_from_api(
     origin: str,
     destination: str,
@@ -587,18 +816,14 @@ def search_one_way_flights_from_api(
     # --- Lọc theo giờ bay (post-filter) ---
     preferred_departure_time: Optional[str] = None,
     preferred_arrival_time: Optional[str] = None,
-    # preferred_return_departure_time: Optional[str] = None,
-    # preferred_return_arrival_time: Optional[str] = None,
     time_tolerance_minutes: int = 60,
     limit: int = 10,
 ) -> list[dict]:
     """
-    Tìm kiếm chuyến bay một chiều.
-    cabinClass: economy/premium_economy/business/first → 1/2/3/4
-    sort_by: best/price/departure_time/arrival_time/duration/emissions → 1-6
-    stops: "0"=any, "1"=nonstop, "2"=1 stop or fewer, "3"=2 stops or fewer
-    preferred_departure_time: "HH:MM" — lọc trong khoảng ±time_tolerance_minutes (mặc định ±60 phút)
-    preferred_arrival_time: "HH:MM" — lọc trong khoảng ±time_tolerance_minutes
+    Tìm kiếm chuyến bay một chiều via /api/v1/searchFlights.
+    travel_class: economy/premium_economy/business/first → ECONOMY/...
+    search_type: best | cheap (from sort_by)
+    preferred_departure_time / preferred_arrival_time: post-filter ±tolerance
     """
     if not origin:
         return [{"error": "Bạn cần cung cấp điểm đi."}]
@@ -608,6 +833,18 @@ def search_one_way_flights_from_api(
         return [{"error": "Bạn cần cung cấp ngày bay departure_date để tìm chuyến bay."}]
     if adults < 1:
         return [{"error": "Số người lớn adults phải >= 1."}]
+    constraint_error = _validate_flight_constraints(
+        stops=stops,
+        alliances=alliances,
+        carry_on_bag=carry_on_bag,
+        emissions=emissions,
+        layover_duration=layover_duration,
+        airports=airports,
+        flight_duration=flight_duration,
+        limit=limit,
+    )
+    if constraint_error:
+        return [{"error": constraint_error}]
 
     departure_date = to_date(departure_date) if departure_date else None
 
@@ -627,43 +864,47 @@ def search_one_way_flights_from_api(
         arrival_id = destination_info.get("code") or destination_info.get("id")
 
         if not departure_id:
-            return [{"error": "Không tìm được mã sân bay đi (departureId)."}]
+            return [{"error": "Không tìm được mã sân bay đi (departure_id)."}]
         if not arrival_id:
-            return [{"error": "Không tìm được mã sân bay đến (arrivalId)."}]
+            return [{"error": "Không tìm được mã sân bay đến (arrival_id)."}]
 
-        params = {
-            "departureId":    departure_id,
-            "arrivalId":      arrival_id,
-            "departureDate":  departure_date,
-            "adults":         str(adults),
-            "children":       str(children),
-            "infantsOnLap":   str(infant_on_lap),
-            "infantsInSeat":  str(infant_in_seat),
-            "cabinClass":     _map_cabin_class(cabin_class),
-            "sort":           _map_sort_by(sort_by),
-            "stops":          str(stops),
-            "currency":       currency_code,
-            "language":       languagecode,
-            "location":       countrycode,
-            "carryOnBag":     str(carry_on_bag),
-            "maxPrice":       str(max_price) if max_price is not None else None,
-            "emissions":      str(emissions),
-            "alliances":      alliances,
-            "airlines":       _resolve_airline_codes(airlines),
-            "layoverDuration": layover_duration,
-            "airports":       airports,
-            "flightDuration": flight_duration,
-        }
+        params = _build_search_flights_params(
+            departure_id=departure_id,
+            arrival_id=arrival_id,
+            outbound_date=departure_date,
+            adults=adults,
+            children=children,
+            infant_on_lap=infant_on_lap,
+            infant_in_seat=infant_in_seat,
+            cabin_class=cabin_class,
+            sort_by=sort_by,
+            currency_code=currency_code,
+            languagecode=languagecode,
+            countrycode=countrycode,
+        )
 
+        data = _booking_get("google_flight", FLIGHT_SEARCH_ENDPOINT, params)
+        if isinstance(data, dict) and data.get("error"):
+            return [{"error": data["error"]}]
 
-        data = _booking_get("google_flight", "/flights/search-one-way", params)
+        top_raw, other_raw = _extract_top_other(data)
+        top = _normalize_flight_offer(1, top_raw, retun_assign=False)
+        other = _normalize_flight_offer(1, other_raw, retun_assign=False)
 
-        top = _normalize_flight_offer(1, data.get("topFlights") or [], retun_assign=False)
-        other = _normalize_flight_offer(1, data.get("otherFlights") or [], retun_assign=False)
+        top = _filter_flight_constraints(
+            top,
+            stops=stops,
+            airlines=airlines,
+            max_price=max_price,
+        )
+        other = _filter_flight_constraints(
+            other,
+            stops=stops,
+            airlines=airlines,
+            max_price=max_price,
+        )
 
-        # --- Lọc theo giờ bay nếu user chỉ định ---
         dep_after = dep_before = arr_after = arr_before = None
-
         if preferred_departure_time:
             dep_after, dep_before = _time_range_from_center(
                 preferred_departure_time, time_tolerance_minutes
@@ -689,10 +930,11 @@ def search_one_way_flights_from_api(
                 arrival_before=arr_before,
             )
 
+        top, other = _limit_flight_groups(top, other, limit)
         return [{
-            "source": "google-flights4.p.rapidapi",
+            "source": "google_flights2_searchFlights",
             "topFlights": top,
-            "otherFlights": other[:limit],
+            "otherFlights": other,
         }]
 
     except Exception as e:
@@ -707,7 +949,7 @@ def _outbound_only_pair(outbound_offer: dict, warning: str | None = None) -> dic
         "outbound": {
             key: value
             for key, value in outbound_offer.items()
-            if key != "returningToken"
+            if key not in ("returningToken", "next_token")
         },
         "inbound": None,
     }
@@ -732,21 +974,35 @@ def _pair_one_way_legs(outbound_flights: list[dict], inbound_flights: list[dict]
     for outbound in outbound_flights:
         for inbound in inbound_flights:
             offer_id = f"FL-{uuid.uuid4().hex[:6].upper()}"
-            outbound_price = outbound.get("price") or 0
-            inbound_price = inbound.get("price") or 0
+            outbound_price = _price_value(outbound)
+            inbound_price = _price_value(inbound)
+            if outbound_price is None or inbound_price is None:
+                continue
             pairs.append({
                 "Offer_ID": offer_id,
                 "price": outbound_price + inbound_price,
-                "detailToken": inbound.get("detailToken"),
+                "booking_token": (
+                    inbound.get("booking_token")
+                    or inbound.get("detailToken")
+                    or outbound.get("booking_token")
+                    or outbound.get("detailToken")
+                ),
+                "detailToken": (
+                    inbound.get("booking_token")
+                    or inbound.get("detailToken")
+                    or outbound.get("booking_token")
+                    or outbound.get("detailToken")
+                ),
+                "next_token": inbound.get("next_token") or outbound.get("next_token"),
                 "outbound": {
                     key: value
                     for key, value in outbound.items()
-                    if key not in ("detailToken", "returningToken")
+                    if key not in ("detailToken", "returningToken", "next_token", "booking_token")
                 },
                 "inbound": {
                     key: value
                     for key, value in inbound.items()
-                    if key != "detailToken"
+                    if key not in ("detailToken", "next_token", "booking_token")
                 },
             })
     return pairs
@@ -766,6 +1022,11 @@ def _roundtrip_one_way_fallback(
     sort_by: str,
     stops: str,
     limit: int,
+    preferred_departure_time: Optional[str] = None,
+    preferred_arrival_time: Optional[str] = None,
+    preferred_return_departure_time: Optional[str] = None,
+    preferred_return_arrival_time: Optional[str] = None,
+    time_tolerance_minutes: int = 90,
     **search_kwargs: Any,
 ) -> list[dict]:
     shared = {
@@ -782,6 +1043,9 @@ def _roundtrip_one_way_fallback(
         origin=origin,
         destination=destination,
         departure_date=departure_date.isoformat(),
+        preferred_departure_time=preferred_departure_time,
+        preferred_arrival_time=preferred_arrival_time,
+        time_tolerance_minutes=time_tolerance_minutes,
         limit=limit,
         **shared,
     )
@@ -792,20 +1056,38 @@ def _roundtrip_one_way_fallback(
         origin=destination,
         destination=origin,
         departure_date=return_date.isoformat(),
+        preferred_departure_time=preferred_return_departure_time,
+        preferred_arrival_time=preferred_return_arrival_time,
+        time_tolerance_minutes=time_tolerance_minutes,
         limit=limit,
         **shared,
     )
     if inbound_result and inbound_result[0].get("error"):
         return inbound_result
 
-    outbound_flights = _flatten_one_way_result(outbound_result)
-    inbound_flights = _flatten_one_way_result(inbound_result)
+    outbound_flights = _filter_flight_constraints(
+        _flatten_one_way_result(outbound_result),
+        stops=stops,
+        airlines=search_kwargs.get("airlines"),
+    )
+    inbound_flights = _filter_flight_constraints(
+        _flatten_one_way_result(inbound_result),
+        stops=stops,
+        airlines=search_kwargs.get("airlines"),
+    )
     paired = _pair_one_way_legs(outbound_flights[:limit], inbound_flights[:limit])
+    max_price = search_kwargs.get("max_price")
+    if max_price is not None:
+        paired = [
+            pair
+            for pair in paired
+            if (_price_value(pair) is not None and _price_value(pair) <= max_price)
+        ]
     if not paired:
         return [{"error": "Không tìm thấy chuyến bay khứ hồi từ tìm kiếm một chiều."}]
 
     return [{
-        "source": "google-flights4.p.rapidapi",
+        "source": "google_flights2_searchFlights",
         "fallback": "one_way",
         "warnings": [
             "Roundtrip API không trả cặp khứ hồi; đã ghép từ hai lần tìm một chiều.",
@@ -838,15 +1120,13 @@ def search_roundtrip_flights_from_api(
     layover_duration: Optional[str] = None,
     airports: Optional[str] = None,
     flight_duration: Optional[str] = None,
-    # --- Lọc theo giờ bay (post-filter) ---
-    preferred_departure_time: Optional[str] = None,       # Giờ khởi hành chiều đi
-    preferred_arrival_time: Optional[str] = None,         # Giờ hạ cánh chiều đi
-    preferred_return_departure_time: Optional[str] = None, # Giờ khởi hành chiều về
-    preferred_return_arrival_time: Optional[str] = None,   # Giờ hạ cánh chiều về
+    preferred_departure_time: Optional[str] = None,
+    preferred_arrival_time: Optional[str] = None,
+    preferred_return_departure_time: Optional[str] = None,
+    preferred_return_arrival_time: Optional[str] = None,
     time_tolerance_minutes: int = 90,
     limit: int = 2,
 ):
-
     if not origin:
         return [{"error": "Bạn cần cung cấp điểm đi."}]
     if not destination:
@@ -857,6 +1137,18 @@ def search_roundtrip_flights_from_api(
         return [{"error": "Bạn cần cung cấp ngày bay return_date để tìm chuyến bay."}]
     if adults < 1:
         return [{"error": "Số người lớn adults phải >= 1."}]
+    constraint_error = _validate_flight_constraints(
+        stops=stops,
+        alliances=alliances,
+        carry_on_bag=carry_on_bag,
+        emissions=emissions,
+        layover_duration=layover_duration,
+        airports=airports,
+        flight_duration=flight_duration,
+        limit=limit,
+    )
+    if constraint_error:
+        return [{"error": constraint_error}]
 
     departure_date = to_date(departure_date) if departure_date else None
     return_date = to_date(return_date) if return_date else None
@@ -880,46 +1172,35 @@ def search_roundtrip_flights_from_api(
         arrival_id = destination_info.get("code") or destination_info.get("id")
 
         if not departure_id:
-            return [{"error": "Không tìm được mã sân bay đi (departureId)."}]
+            return [{"error": "Không tìm được mã sân bay đi (departure_id)."}]
         if not arrival_id:
-            return [{"error": "Không tìm được mã sân bay đến (arrivalId)."}]
+            return [{"error": "Không tìm được mã sân bay đến (arrival_id)."}]
 
-        params = {
-            "departureId":    departure_id,
-            "arrivalId":      arrival_id,
-            "departureDate":  departure_date,
-            "arrivalDate":    return_date,
-            "adults":         str(adults),
-            "children":       str(children),
-            "infantsOnLap":   str(infant_on_lap),
-            "infantsInSeat":  str(infant_in_seat),
-            "cabinClass":     _map_cabin_class(cabin_class),
-            "sort":           _map_sort_by(sort_by),
-            "stops":          str(stops),
-            "currency":       currency_code,
-            "language":       languagecode,
-            "location":       countrycode,
-            "carryOnBag":     str(carry_on_bag),
-            "maxPrice":       str(max_price) if max_price is not None else None,
-            "emissions":      str(emissions),
-            "alliances":      alliances,
-            "airlines":       _resolve_airline_codes(airlines),
-            "layoverDuration": layover_duration,
-            "airports":       airports,
-            "flightDuration": flight_duration,
-        }
-        # params["returnDate"] = return_date
+        params = _build_search_flights_params(
+            departure_id=departure_id,
+            arrival_id=arrival_id,
+            outbound_date=departure_date,
+            return_date=return_date,
+            adults=adults,
+            children=children,
+            infant_on_lap=infant_on_lap,
+            infant_in_seat=infant_in_seat,
+            cabin_class=cabin_class,
+            sort_by=sort_by,
+            currency_code=currency_code,
+            languagecode=languagecode,
+            countrycode=countrycode,
+        )
 
-        data = _booking_get("google_flight", "/flights/search-roundtrip", params)
+        data = _booking_get("google_flight", FLIGHT_SEARCH_ENDPOINT, params)
 
         if isinstance(data, dict) and data.get("error"):
             return [{"error": data["error"]}]
 
-        outbound_top = _normalize_flight_offer(2, data.get("topFlights") or [], retun_assign=True)
-        outbound_other = _normalize_flight_offer(2, data.get("otherFlights") or [], retun_assign=True)
+        top_raw, other_raw = _extract_top_other(data)
+        outbound_top = _normalize_flight_offer(2, top_raw, retun_assign=True)
+        outbound_other = _normalize_flight_offer(2, other_raw, retun_assign=True)
 
-
-        # --- Lọc giờ chiều đi ---
         dep_after = dep_before = arr_after = arr_before = None
         if preferred_departure_time:
             dep_after, dep_before = _time_range_from_center(
@@ -929,6 +1210,17 @@ def search_roundtrip_flights_from_api(
             arr_after, arr_before = _time_range_from_center(
                 preferred_arrival_time, time_tolerance_minutes
             )
+
+        outbound_top = _filter_flight_constraints(
+            outbound_top,
+            stops=stops,
+            airlines=airlines,
+        )
+        outbound_other = _filter_flight_constraints(
+            outbound_other,
+            stops=stops,
+            airlines=airlines,
+        )
 
         if dep_after or dep_before or arr_after or arr_before:
             outbound_top = _filter_flights_by_time(
@@ -943,30 +1235,9 @@ def search_roundtrip_flights_from_api(
                 departure_after=dep_after,
                 departure_before=dep_before,
                 arrival_after=arr_after,
-                arrival_before=arr_before,) 
-        inbound_params_base = {
-            "arrivalDate":    return_date,
-            "language":       languagecode,
-            "location":       countrycode,
-            "currency":       currency_code,
-            "adults":         str(adults),
-            "children":       str(children),
-            "infantsOnLap":   str(infant_on_lap),
-            "infantsInSeat":  str(infant_in_seat),
-            "cabinClass":     _map_cabin_class(cabin_class),
-            "sort":           _map_sort_by(sort_by),
-            "stops":          str(stops),
-            "alliances":      alliances,
-            "carryOnBag":     str(carry_on_bag),
-            "maxPrice":       str(max_price) if max_price is not None else None,
-            "emissions":      str(emissions),
-            "airlines":       _resolve_airline_codes(airlines),
-            "layoverDuration": layover_duration,
-            "airports":       airports,
-            "flightDuration": flight_duration,
-        }
+                arrival_before=arr_before,
+            )
 
-        #Lọc giờ chiều về
         ret_dep_after = ret_dep_before = ret_arr_after = ret_arr_before = None
         if preferred_return_departure_time:
             ret_dep_after, ret_dep_before = _time_range_from_center(
@@ -977,23 +1248,28 @@ def search_roundtrip_flights_from_api(
                 preferred_return_arrival_time, time_tolerance_minutes
             )
 
-
         def _fetch_inbound(outbound_offer: dict) -> list[dict]:
-            """Gọi roundtrip-returning và ghép chuyến về vào chuyến đi tương ứng."""
-            token = outbound_offer.get("returningToken")
+            """Call getNextFlights with next_token and pair return legs."""
+            token = outbound_offer.get("next_token")
             if not token:
                 return [
                     _outbound_only_pair(
                         outbound_offer,
-                        warning="Không có returningToken; chỉ hiển thị chiều đi.",
+                        warning="Không có next_token; chỉ hiển thị chiều đi.",
                     )
                 ]
             pairs: list[dict] = []
             try:
-                ret_data = _booking_get("google_flight", "/flights/roundtrip-returning", {
-                    "returningToken": token,
-                    **inbound_params_base,
-                })
+                ret_data = _booking_get(
+                    "google_flight",
+                    FLIGHT_NEXT_ENDPOINT,
+                    _build_next_flights_params(
+                        token,
+                        currency_code=currency_code,
+                        languagecode=languagecode,
+                        countrycode=countrycode,
+                    ),
+                )
                 if isinstance(ret_data, dict) and ret_data.get("error"):
                     return [
                         _outbound_only_pair(
@@ -1001,9 +1277,15 @@ def search_roundtrip_flights_from_api(
                             warning=ret_data["error"],
                         )
                     ]
+                ret_top, ret_other = _extract_top_other(ret_data)
                 inbound = (
-                    _normalize_flight_offer(1, ret_data.get("topFlights") or [], retun_assign=True) +
-                    _normalize_flight_offer(1, ret_data.get("otherFlights") or [], retun_assign=True)
+                    _normalize_flight_offer(1, ret_top, retun_assign=True)
+                    + _normalize_flight_offer(1, ret_other, retun_assign=True)
+                )
+                inbound = _filter_flight_constraints(
+                    inbound,
+                    stops=stops,
+                    airlines=airlines,
                 )
                 if ret_dep_after or ret_dep_before or ret_arr_after or ret_arr_before:
                     inbound = _filter_flights_by_time(
@@ -1020,19 +1302,30 @@ def search_roundtrip_flights_from_api(
                             warning="Không tìm thấy chuyến về phù hợp; chỉ hiển thị chiều đi.",
                         )
                     ]
-                for inb in inbound:
+                for inb in inbound[:limit]:
                     offer_id = f"FL-{uuid.uuid4().hex[:6].upper()}"
+                    booking_token = inb.get("booking_token") or inb.get("detailToken")
+                    # getNextFlights returns the complete selected round-trip
+                    # fare. Do not add the outbound search price a second time.
+                    total_price = _price_value(inb)
+                    if (
+                        max_price is not None
+                        and (total_price is None or total_price > max_price)
+                    ):
+                        continue
                     pairs.append({
                         "Offer_ID": offer_id,
-                        "price": inb.get("price"),
-                        "detailToken": inb.get("detailToken"),
+                        "price": total_price,
+                        "booking_token": booking_token,
+                        "detailToken": booking_token,
+                        "next_token": inb.get("next_token"),
                         "inbound": {
                             key: value for key, value in inb.items()
-                            if key not in ("detailToken",)
+                            if key not in ("detailToken", "next_token", "booking_token")
                         },
                         "outbound": {
                             key: value for key, value in outbound_offer.items()
-                            if key not in ("returningToken",)
+                            if key not in ("returningToken", "next_token", "detailToken", "booking_token")
                         },
                     })
             except Exception as exc:
@@ -1044,13 +1337,19 @@ def search_roundtrip_flights_from_api(
                 ]
             return pairs
 
-        # paired_top   = [_fetch_inbound(o) for o in outbound_top]
-        paired_top = []
-        for o in outbound_top:
-            paired_top.extend(_fetch_inbound(o))
-        paired_other = []
-        for o in outbound_other:
-            paired_other.extend(_fetch_inbound(o))
+        # Bound sequential getNextFlights calls and the returned Cartesian
+        # combinations. This protects RapidAPI quota and request latency.
+        outbound_top, outbound_other = _limit_flight_groups(
+            outbound_top,
+            outbound_other,
+            limit,
+        )
+        paired_top: list[dict] = []
+        for outbound_offer in outbound_top:
+            paired_top.extend(_fetch_inbound(outbound_offer))
+        paired_other: list[dict] = []
+        for outbound_offer in outbound_other:
+            paired_other.extend(_fetch_inbound(outbound_offer))
 
         if not paired_top and not paired_other:
             if not outbound_top and not outbound_other:
@@ -1067,6 +1366,11 @@ def search_roundtrip_flights_from_api(
                     sort_by=sort_by,
                     stops=stops,
                     limit=limit,
+                    preferred_departure_time=preferred_departure_time,
+                    preferred_arrival_time=preferred_arrival_time,
+                    preferred_return_departure_time=preferred_return_departure_time,
+                    preferred_return_arrival_time=preferred_return_arrival_time,
+                    time_tolerance_minutes=time_tolerance_minutes,
                     currency_code=currency_code,
                     languagecode=languagecode,
                     countrycode=countrycode,
@@ -1080,8 +1384,21 @@ def search_roundtrip_flights_from_api(
                     flight_duration=flight_duration,
                 )
 
+        paired_top = _filter_flight_constraints(
+            paired_top,
+            max_price=max_price,
+        )
+        paired_other = _filter_flight_constraints(
+            paired_other,
+            max_price=max_price,
+        )
+        paired_top, paired_other = _limit_flight_groups(
+            paired_top,
+            paired_other,
+            limit,
+        )
         return [{
-            "source": "google-flights4.p.rapidapi",
+            "source": "google_flights2_searchFlights",
             "topFlights": paired_top,
             "otherFlights": paired_other,
         }]
@@ -1089,29 +1406,17 @@ def search_roundtrip_flights_from_api(
     except Exception as e:
         return [{"error": f"Lỗi khi gọi searchFlights: {str(e)}"}]
 
-def _normalize_get_booking_result(data: dict) -> dict:
-    if "error" in data:
+def _extract_booking_url(data: Any) -> str | None:
+    """getBookingURL returns data as a URL string (sometimes wrapped in an object)."""
+    if isinstance(data, str) and data.startswith(("http://", "https://")):
         return data
-    options = data.get("bookingOptions") or []
-    result = []
-    for op in options:
-        booking_link = op.get("bookingLink") or []
-        for link in booking_link:
-            booking_price = op.get("listedPrice") or {}
-            result.append({
-                "bookingLink": link.get("link"),
-                "bookingPrice": booking_price.get("price") or op.get("totalPrice"),
-                "bookingCurrency": booking_price.get("currency") or "VND",
-                "airlineName": op.get("airlineName"),
-                "flightNumber": op.get("flightNumber"),
-                "domain": op.get("domain"),
-            })
-    return {
-        "source": "google-flights4.p.rapidapi",
-        "booking_options": result,
-        "status": data.get("status"),
-        "message": data.get("message"),
-    }
+    if isinstance(data, dict):
+        for key in ("url", "booking_url", "bookingLink", "link"):
+            value = data.get(key)
+            if isinstance(value, str) and value.startswith(("http://", "https://")):
+                return value
+    return None
+
 
 def get_booking_link_from_api(
     detailToken: str,
@@ -1129,27 +1434,95 @@ def get_booking_link_from_api(
     maxPrice: Optional[int] = None,
 ) -> dict:
     """
-    Lấy kết quả booking từ API.
+    Resolve partner booking links via getBookingDetails + getBookingURL.
+
+    detailToken is the search/getNextFlights booking_token (kept name for agent compat).
+    Extra kwargs (adults/cabin/...) are accepted but unused by the new API.
     """
+    _ = (
+        adults,
+        children,
+        infantsOnLap,
+        infantsInSeat,
+        cabinClass,
+        alliances,
+        airlines,
+        carryOnBag,
+        maxPrice,
+    )
+
     if not detailToken:
-        return [{"error": "Bạn cần cung cấp detailToken."}]
+        return {"error": "Bạn cần cung cấp detailToken (booking_token)."}
+
     try:
-        params = {
-            "detailToken": detailToken,
-            "language": language,
-            "location": location,
-            "currency": currency,
-            "adults": str(adults),
-            "children": str(children),
-            "infantsOnLap": str(infantsOnLap),
-            "infantsInSeat": str(infantsInSeat),
-            "cabinClass": _map_cabin_class(cabinClass),
-            "alliances": alliances,
-            "airlines": _resolve_airline_codes(airlines),
-            "carryOnBag": str(carryOnBag),
-            "maxPrice": str(maxPrice) if maxPrice is not None else None,
+        details = _booking_get(
+            "google_flight",
+            FLIGHT_BOOKING_DETAILS_ENDPOINT,
+            {
+                "booking_token": detailToken,
+                "currency": currency,
+                "language_code": language,
+                "country_code": location,
+            },
+        )
+        if isinstance(details, dict) and details.get("error"):
+            return {"error": details["error"]}
+
+        partners: list[dict] = []
+        if isinstance(details, list):
+            partners = [p for p in details if isinstance(p, dict)]
+        elif isinstance(details, dict):
+            nested = details.get("data") or details.get("partners") or []
+            if isinstance(nested, list):
+                partners = [p for p in nested if isinstance(p, dict)]
+
+        if not partners:
+            return {
+                "source": "google_flights2_getBookingDetails",
+                "error": "Không tìm thấy đối tác booking cho chuyến bay này.",
+                "booking_options": [],
+            }
+
+        options: list[dict] = []
+        for partner in partners:
+            partner_token = partner.get("token")
+            if not partner_token:
+                continue
+            try:
+                url_data = _booking_get(
+                    "google_flight",
+                    FLIGHT_BOOKING_URL_ENDPOINT,
+                    {"token": partner_token},
+                )
+            except Exception:
+                continue
+            booking_link = _extract_booking_url(url_data)
+            if not booking_link:
+                continue
+            title = partner.get("title") or partner.get("partner") or partner.get("id")
+            website = partner.get("website") or partner.get("domain")
+            options.append({
+                "partner": title,
+                "airlineName": title,
+                "airline_id": partner.get("id"),
+                "domain": website,
+                "website": website,
+                "bookingPrice": partner.get("price"),
+                "bookingCurrency": currency,
+                "is_airline": partner.get("is_airline"),
+                "bookingLink": booking_link,
+            })
+
+        if not options:
+            return {
+                "source": "google_flights2_getBookingDetails",
+                "error": "Không lấy được booking URL từ các đối tác.",
+                "booking_options": [],
+            }
+
+        return {
+            "source": "google_flights2_getBookingDetails",
+            "booking_options": options,
         }
-        data = _booking_get("google_flight", "/flights/get-booking-results", params)
-        return _normalize_get_booking_result(data)
     except Exception as e:
-        return [{"error": f"Lỗi khi gọi get-booking-results: {str(e)}"}] 
+        return {"error": f"Lỗi khi gọi getBookingDetails/getBookingURL: {str(e)}"}

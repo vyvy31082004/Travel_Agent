@@ -184,18 +184,42 @@ class LangMemCandidateExtractor:
         if not langmem_messages:
             return []
 
-        existing_dicts = [
-            {
-                "memory_id": m.memory_id,
-                "memory_text": m.memory_text,
-                "category": str(m.category),
-                "domain": str(m.domain),
-            }
-            for m in existing_active
-        ]
+        existing_payload: list[tuple[str, LangMemTravelMemory]] = []
+        for memory in existing_active:
+            memory_id = str(memory.memory_id or "").strip()
+            if not memory_id:
+                continue
+            try:
+                existing_payload.append(
+                    (
+                        memory_id,
+                        LangMemTravelMemory(
+                            memory_text=memory.memory_text,
+                            category=memory.category,
+                            domain=memory.domain,
+                            condition=memory.condition,
+                            evidence_text=memory.evidence_text,
+                        ),
+                    )
+                )
+            except (TypeError, ValueError, ValidationError):
+                continue
 
         manager = self._manager_instance()
-        raw = await manager.ainvoke({"messages": langmem_messages, "existing": existing_dicts})
+        # LangMem's extractor is a Pregel graph without a checkpointer. When this
+        # runs inside a parent graph turn with durability="sync" (E2E / sync
+        # finalize), the inherited RunnableConfig ContextVar makes LangGraph
+        # await a missing `_put_checkpoint_fut` and crash. Clear parent config
+        # so extract is isolated from the turn's durability mode.
+        from langchain_core.runnables.config import var_child_runnable_config
+
+        token = var_child_runnable_config.set(None)
+        try:
+            raw = await manager.ainvoke(
+                {"messages": langmem_messages, "existing": existing_payload}
+            )
+        finally:
+            var_child_runnable_config.reset(token)
         return normalize_langmem_outputs(
             raw,
             user_id=user_id,

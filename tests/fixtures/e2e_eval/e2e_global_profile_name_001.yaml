@@ -1,0 +1,68 @@
+id: e2e_global_profile_name_001
+scenario: "Seed preferred_name chị Lan; search hotel Đà Nẵng — name APPLY ở final responder, IRRELEVANT với hotel tool"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_name
+      text: "Gọi tôi là chị Lan"
+      domain: general
+      category: profile_fact
+      family: profile_facts
+      status: active
+    - id: m_hotel_other_user
+      text: "Memory user khác — thích resort cao cấp"
+      domain: hotel
+      category: hotel_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_hotel_superseded
+      text: "Preference cũ đã superseded — thích hostel"
+      domain: hotel
+      category: hotel_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Tìm khách sạn ở Đà Nẵng từ 10–12/10 cho 2 người."
+
+expected_trace:
+  expected_route: [hotel]
+  expected_context:
+    hotel:
+      must_include: []
+      must_exclude: [m_hotel_other_user, m_hotel_superseded]
+  expected_tools:
+    - name: search_hotels_tool
+      required_arguments: [destination, check_in, check_out, adults]
+      forbidden_arguments: [guest_name, full_name, preferred_name]
+      forbidden_value_substrings: ["chị Lan", "chi Lan", "Lan"]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - hotel_assistant
+    - memory_recall_hotel
+    - hotel_chat
+    - search_hotels_tool
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "khách sạn Đà Nẵng 10–12/10 cho 2 người"
+    - "final answer có xưng hô chị Lan (nếu global context được dùng)"
+  tradeoff_rule:
+    - "Xưng hô chị Lan ở final responder; search vẫn theo location/date/guests, không đưa tên vào tool"
+  forbidden_claims:
+    - "Giá/đặc điểm không có trong tool result"
+    - "Tên chị Lan trong tool arguments"
+
+expected_finalize:
+  action: NO_STORE
