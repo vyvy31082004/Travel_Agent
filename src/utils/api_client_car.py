@@ -9,11 +9,14 @@ from urllib.parse import quote
 from api.car_api import crawl_mioto_cars, crawl_car_details
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
+import logging
 import os
 import requests
 from dotenv import load_dotenv
 load_dotenv()
 from typing import Optional
+
+logger = logging.getLogger(__name__)
 
 MIOTO_FILTER_BASE_URL = "https://www.mioto.vn/find/filter"
 GEOCODING_RAPIDAPI_HOST = os.getenv("GEOCODING_RAPIDAPI_HOST", "maps-data.p.rapidapi.com")
@@ -35,7 +38,9 @@ def _booking_headers() -> dict:
     }
 
 
-def _booking_get(path: str, params: dict) -> dict | list:
+def _booking_get(path: str, params: dict, retries: int = 2) -> dict | list:
+    from utils.rapidapi_limiter import call_with_rate_limit_retry
+
     url = f"{GEO_BASE_URL}{path}"
 
     clean_params = {
@@ -44,31 +49,44 @@ def _booking_get(path: str, params: dict) -> dict | list:
         if value is not None and value != ""
     }
 
-    print("CALL API:", url)
-    print("PARAMS:", clean_params)
+    # Token-safe: log only the endpoint path, never full URL/params.
+    logger.debug("geocoding request path=%s", path)
 
-    response = requests.get(
-        url,
-        headers=_booking_headers(),
-        params=clean_params,
-        timeout=20,
+    def _do_request() -> dict | list:
+        response = requests.get(
+            url,
+            headers=_booking_headers(),
+            params=clean_params,
+            timeout=20,
+        )
+
+        if response.status_code == 429:
+            raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
+
+        response.raise_for_status()
+        payload = response.json()
+
+        if isinstance(payload, dict) and payload.get("status") is False:
+            raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
+
+        if isinstance(payload, dict):
+            return payload.get("data", payload)
+
+        return payload
+
+    def _on_retry(attempt: int, delay: float, exc: BaseException) -> None:
+        logger.warning(
+            "geocoding 429 on attempt %s/%s; retrying after %.0fs",
+            attempt,
+            retries + 1,
+            delay,
+        )
+
+    return call_with_rate_limit_retry(
+        _do_request,
+        retries=retries,
+        on_retry=_on_retry,
     )
-
-    print("FINAL URL:", response.url)
-
-    if response.status_code == 429:
-        raise RuntimeError("RapidAPI bị giới hạn request. Hãy thử lại sau.")
-
-    response.raise_for_status()
-    payload = response.json()
-
-    if isinstance(payload, dict) and payload.get("status") is False:
-        raise RuntimeError(payload.get("message", "Booking API trả về lỗi."))
-
-    if isinstance(payload, dict):
-        return payload.get("data", payload)
-
-    return payload
 
 
 def _parse_date(value: Optional[str]) -> Optional[str]:
@@ -480,14 +498,6 @@ def search_address(address: str) -> dict:
         raise ValueError(f"Không tìm được tọa độ cho địa chỉ '{address}'.")
     return coordinates
 
-def _normalize_car_details(raw_car: dict) -> dict:
-    return {
-        "car_id": raw_car.get("car_id", ""),
-        "Tên xe": raw_car.get("Tên xe", ""),
-        "Giá gốc": raw_car.get("Giá gốc", ""),
-        "Hộp số": raw_car.get("Hộp số", ""),
-        "Số chỗ": raw_car.get("Số chỗ", ""),
-    }
 def parse_mioto_price(price_text: str | None) -> int | None:
     if not price_text or price_text.strip() in {"", "Không có", "N/A"}:
         return None
@@ -576,7 +586,7 @@ def search_cars_from_api(
         category_id=category_id,
         address_is_encoded=address_is_encoded,
     )
-    print("URL:", url)
+    logger.debug("mioto filter url built")
     cars = crawl_mioto_cars(url, limit=limit, max_scroll=max_scroll)
     cars = [_normalize_mioto_car(car) for car in cars]
     cars = filter_cars_by_price(cars, price_min=min_price, price_max=max_price)

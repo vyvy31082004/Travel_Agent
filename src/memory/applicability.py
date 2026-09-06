@@ -217,8 +217,13 @@ class RuleBasedApplicabilityJudge:
         for memory in candidates:
             memory_id = str(memory.memory_id or "")
             text = memory.memory_text.lower()
-            label = ApplicabilityLabel.APPLY
-            reason = "default apply"
+            # Conservative default per the tool-field rubric: a preference that
+            # no specific rule matched must NOT be promoted to a hard `apply`
+            # constraint (which would override a careful LLM `uncertain`). Leave
+            # it `uncertain` (soft context) so it never injects tool args on its
+            # own or wins reconciliation against the LLM.
+            label = ApplicabilityLabel.UNCERTAIN
+            reason = "default uncertain (no specific tool-field rule matched)"
             if domain == "flight" and "sáng" in text and any(
                 token in query for token in ("tối", "chiều", "evening", "night")
             ):
@@ -523,9 +528,9 @@ async def reconcile_judgments(
             memory_id,
             ApplicabilityJudgment(
                 memory_id=memory_id,
-                label=ApplicabilityLabel.APPLY,
-                confidence=0.9,
-                reason="default apply",
+                label=ApplicabilityLabel.UNCERTAIN,
+                confidence=0.5,
+                reason="default uncertain (no specific tool-field rule matched)",
             ),
         )
         if llm.label in {ApplicabilityLabel.OVERRIDDEN, ApplicabilityLabel.IRRELEVANT}:

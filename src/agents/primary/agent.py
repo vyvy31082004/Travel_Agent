@@ -17,7 +17,7 @@ from agents.excursion.agent import build_excursion_graph
 from agents.flight.agent import build_flight_graph
 from agents.hotel.agent import build_hotel_graph
 from agents.primary.domain_result import build_domain_branch_result
-from agents.primary.state import State
+from agents.primary.state import RESET_BRANCH_RESULTS, State
 from agents.primary.trip_delegation import normalize_branch_args, resolve_delegated_request
 from memory.agent_helpers import merge_structured_state
 from memory.long_term import MemoryDomain
@@ -522,9 +522,19 @@ async def build_primary_graph(
 
     builder = StateGraph(State)
 
-    builder.add_node(
-        "memory_recall_global", make_global_recall_node(memory_service)
-    )
+    _global_recall = make_global_recall_node(memory_service)
+
+    async def memory_recall_global_with_reset(
+        state: State, config: RunnableConfig
+    ) -> dict:
+        # This node runs once at the start of every turn. Clear any
+        # domain_branch_results accumulated in a previous turn so synthesis
+        # cannot leak stale results from an earlier trip/request.
+        result = dict(await _global_recall(state, config))
+        result["domain_branch_results"] = RESET_BRANCH_RESULTS
+        return result
+
+    builder.add_node("memory_recall_global", memory_recall_global_with_reset)
     builder.add_node("primary_assistant", primary_chat)
     builder.add_edge(START, "memory_recall_global")
     builder.add_edge("memory_recall_global", "primary_assistant")

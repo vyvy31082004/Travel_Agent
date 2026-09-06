@@ -878,6 +878,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
     <script>
       const messagesEl = document.getElementById('messages');
       const formEl = document.getElementById('chat-form');
@@ -889,16 +890,29 @@
       const mobileBackdropEl = document.getElementById('mobile-backdrop');
 
       let threadId = null;
-      const authenticatedUserId = {{ (current_user.user_id if current_user else '') | tojson }};
-      let anonymousUserId = authenticatedUserId ? null : (localStorage.getItem('viettrip_user_id') || null);
+      // Identity is resolved server-side (session cookie or a server-issued
+      // anonymous cookie). The client no longer sends or stores a user_id.
 
-      function renderMarkdown(text) {
-        if (window.marked && typeof window.marked.parse === 'function') {
-          return window.marked.parse(text || '');
-        }
+      function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text || '';
         return div.innerHTML;
+      }
+
+      function renderMarkdown(text) {
+        // Never insert model/tool/user-derived HTML without sanitizing first.
+        // If the sanitizer is unavailable, fail closed to escaped plain text
+        // rather than raw innerHTML.
+        if (!window.DOMPurify || typeof window.DOMPurify.sanitize !== 'function') {
+          return escapeHtml(text);
+        }
+        let rawHtml;
+        if (window.marked && typeof window.marked.parse === 'function') {
+          rawHtml = window.marked.parse(text || '');
+        } else {
+          rawHtml = escapeHtml(text);
+        }
+        return window.DOMPurify.sanitize(rawHtml, { USE_PROFILES: { html: true } });
       }
 
       function appendMessage(text, sender, options = {}) {
@@ -950,7 +964,20 @@
           const button = document.createElement('button');
           button.className = 'history-item';
           button.type = 'button';
-          button.innerHTML = '<span class="nav-icon" aria-hidden="true">↺</span><span><strong>' + prompt.slice(0, 28) + (prompt.length > 28 ? '…' : '') + '</strong><span>Tiếp tục cuộc trò chuyện</span></span>';
+          const icon = document.createElement('span');
+          icon.className = 'nav-icon';
+          icon.setAttribute('aria-hidden', 'true');
+          icon.textContent = '↺';
+          const wrap = document.createElement('span');
+          const title = document.createElement('strong');
+          // User-derived prompt text — assign via textContent, never innerHTML.
+          title.textContent = prompt.slice(0, 28) + (prompt.length > 28 ? '…' : '');
+          const subtitle = document.createElement('span');
+          subtitle.textContent = 'Tiếp tục cuộc trò chuyện';
+          wrap.appendChild(title);
+          wrap.appendChild(subtitle);
+          button.appendChild(icon);
+          button.appendChild(wrap);
           button.addEventListener('click', () => setPrompt(prompt));
           historyListEl.appendChild(button);
         });
@@ -998,7 +1025,8 @@
           const res = await fetch('/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ msg: text, thread_id: threadId, user_id: anonymousUserId }),
+            credentials: 'same-origin',
+            body: JSON.stringify({ msg: text, thread_id: threadId }),
           });
 
           if (!res.ok) {
@@ -1007,10 +1035,6 @@
 
           const data = await res.json();
           threadId = data.thread_id;
-          if (!authenticatedUserId) {
-            anonymousUserId = data.user_id;
-            if (anonymousUserId) localStorage.setItem('viettrip_user_id', anonymousUserId);
-          }
           loadingRow.remove();
           appendMessage(data.response, 'ai');
         } catch (err) {

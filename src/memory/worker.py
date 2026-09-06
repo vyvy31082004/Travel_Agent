@@ -141,6 +141,8 @@ class MemoryWorker:
 
             remaining = list(candidates)
             approved_siblings: list[TravelMemory] = []
+            retry_reasons: list[str] = []
+            had_retry = False
             while remaining:
                 candidate = remaining.pop(0)
                 transition = await self._decide_transition(candidate, existing)
@@ -165,9 +167,33 @@ class MemoryWorker:
                         "affected_memory_ids": result.affected_memory_ids,
                     },
                 )
+                if result.decision == "retry":
+                    # A non-terminal verifier outcome (e.g. TrustMem failed, timed
+                    # out, or returned malformed output) must not drop the
+                    # candidate. Keep the job retryable instead of completing it.
+                    had_retry = True
+                    retry_reasons.extend(result.reasons or [])
+                    continue
                 if result.decision in {"approve", "noop"} and result.affected_memory_ids:
                     approved_siblings.append(candidate)
                     existing = await self._load_existing(user_id)
+            if had_retry:
+                summary = "verifier requested retry: " + "; ".join(
+                    dict.fromkeys(retry_reasons)
+                    or ["verifier requested retry"]
+                )
+                await self._mark_job_failed(job_id, summary)
+                logger.warning(
+                    "memory job left retryable due to verifier retry",
+                    extra={"job_id": job_id},
+                )
+                return WorkerResult(
+                    processed=True,
+                    job_id=job_id,
+                    status="failed",
+                    candidates=len(candidates),
+                    error=summary,
+                )
             await self._mark_job(job_id, "completed")
             return WorkerResult(
                 processed=True,

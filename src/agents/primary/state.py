@@ -23,11 +23,19 @@ def keep_latest(left: Any, right: Any) -> Any:
     return right if right is not None else left
 
 
+# Explicit, checkpoint-serializable reset marker for per-turn branch results.
+# Returning this from a node clears accumulated domain_branch_results so a later
+# synthesis turn cannot inject results produced in a previous turn.
+RESET_BRANCH_RESULTS: dict = {"__reset__": True}
+
+
 def merge_branch_results(
     left: list[dict], right: list[dict] | dict | None
 ) -> list[dict]:
     if right is None:
         return left or []
+    if isinstance(right, dict) and right.get("__reset__"):
+        return []
     items = right if isinstance(right, list) else [right]
     return (left or []) + items
 
@@ -42,7 +50,6 @@ class State(TypedDict, total=False):
     messages: Annotated[list[AnyMessage], add_messages]
     summary: Annotated[Optional[str], keep_latest]
 
-    user_info: str
     user_id: Annotated[Optional[str], keep_latest]
     thread_id: Annotated[Optional[str], keep_latest]
     memory_context: Annotated[Optional[str], keep_latest]
@@ -54,7 +61,6 @@ class State(TypedDict, total=False):
         list[
             Literal[
                 "primary_assistant",
-                "multi_dispatch",
                 "flight_assistant",
                 "hotel_assistant",
                 "excursion_assistant",
@@ -68,7 +74,6 @@ class State(TypedDict, total=False):
     flight_token_map: Annotated[Dict[str, Any], merge_dicts]
 
     # Structured short-term memory (refs only; payloads live in Result Store)
-    trips: Annotated[dict[str, dict], merge_dicts]
     requests: Annotated[dict[str, dict], merge_dicts]
     request_results: Annotated[dict[str, dict], merge_dicts]
     visible_results: Annotated[dict[str, dict], merge_dicts]
@@ -76,7 +81,6 @@ class State(TypedDict, total=False):
     active_request_id: Annotated[Optional[str], keep_latest]
     latest_request_by_domain: Annotated[dict[str, str], merge_dicts]
     pending_action: Annotated[Optional[dict], keep_latest]
-    pending_clarification: Annotated[Optional[dict], keep_latest]
 
     delegated_request: Annotated[Optional[str], keep_latest]
     turn_constraints: Annotated[Optional[list[str]], keep_latest]

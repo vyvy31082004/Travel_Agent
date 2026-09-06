@@ -6,7 +6,7 @@ from typing import AsyncIterator
 from urllib.parse import parse_qs
 
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
@@ -38,7 +38,38 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 class ChatRequest(BaseModel):
     msg: str = Field(min_length=1)
     thread_id: str | None = None
-    user_id: str | None = None
+    # NOTE: `user_id` is intentionally NOT a field here. The server no longer
+    # trusts a client-supplied user id; identity is resolved server-side from
+    # the session cookie or a server-issued anonymous id. Any `user_id` in the
+    # request body is ignored (pydantic drops unknown fields by default).
+
+
+# Cookie carrying a server-issued anonymous identity for unauthenticated chat.
+ANON_COOKIE_NAME = "viettrip_anon_id"
+
+
+def _is_valid_anon_id(value: str | None) -> bool:
+    if not value:
+        return False
+    try:
+        parsed = uuid.UUID(str(value))
+    except (ValueError, AttributeError, TypeError):
+        return False
+    return parsed.version == 4
+
+
+def _resolve_anonymous_identity(request: Request) -> tuple[str, str, bool]:
+    """Return (cookie_value, user_id, is_new).
+
+    Reuses a valid server-issued anonymous id from the cookie, otherwise mints
+    a fresh one. Never falls back to a shared global identifier.
+    """
+    existing = request.cookies.get(ANON_COOKIE_NAME)
+    if _is_valid_anon_id(existing):
+        cookie_value = str(existing)
+        return cookie_value, f"anon-{cookie_value}", False
+    cookie_value = str(uuid.uuid4())
+    return cookie_value, f"anon-{cookie_value}", True
 
 
 @asynccontextmanager
@@ -181,11 +212,26 @@ async def logout(request: Request, auth_repo: AuthRepository = Depends(get_auth_
     return response
 
 
-@app.get("/debug/memory/jobs")
-async def debug_memory_jobs(request: Request) -> list[dict]:
+def _require_debug_access(
+    request: Request, current_user: AuthUser | None
+) -> None:
+    """Gate debug endpoints behind the flag AND authentication.
+
+    Returns 404 (not 401/403) when the flag is off or the caller is
+    unauthenticated, so the endpoints do not reveal their existence or leak
+    cross-user identifiers to anonymous callers.
+    """
     settings = request.app.state.settings
-    if not settings.long_term_memory_debug_enabled:
+    if not settings.long_term_memory_debug_enabled or current_user is None:
         raise HTTPException(status_code=404, detail="Not found")
+
+
+@app.get("/debug/memory/jobs")
+async def debug_memory_jobs(
+    request: Request,
+    current_user: AuthUser | None = Depends(get_current_user),
+) -> list[dict]:
+    _require_debug_access(request, current_user)
     async with request.app.state.database_pool.connection() as conn:
         rows = await (
             await conn.execute(
@@ -202,10 +248,11 @@ async def debug_memory_jobs(request: Request) -> list[dict]:
 
 
 @app.get("/debug/memory/audit")
-async def debug_memory_audit(request: Request) -> list[dict]:
-    settings = request.app.state.settings
-    if not settings.long_term_memory_debug_enabled:
-        raise HTTPException(status_code=404, detail="Not found")
+async def debug_memory_audit(
+    request: Request,
+    current_user: AuthUser | None = Depends(get_current_user),
+) -> list[dict]:
+    _require_debug_access(request, current_user)
     async with request.app.state.database_pool.connection() as conn:
         rows = await (
             await conn.execute(
@@ -242,11 +289,26 @@ def _message_content_text(content: object) -> str:
 @app.post("/chat")
 async def chat(
     payload: ChatRequest,
+    request: Request,
+    response: Response,
     primary_graph=Depends(get_primary_graph),
     current_user: AuthUser | None = Depends(get_current_user),
 ) -> dict[str, str]:
+    settings = request.app.state.settings
     thread_id = payload.thread_id or str(uuid.uuid4())
-    user_id = current_user.user_id if current_user else (payload.user_id or "dev-user")
+    if current_user:
+        user_id = current_user.user_id
+    else:
+        anon_cookie, user_id, is_new = _resolve_anonymous_identity(request)
+        if is_new:
+            response.set_cookie(
+                ANON_COOKIE_NAME,
+                anon_cookie,
+                max_age=60 * 60 * 24 * 30,
+                httponly=True,
+                secure=settings.cookie_secure,
+                samesite="lax",
+            )
     config = with_trace_config(
         {
             "configurable": {

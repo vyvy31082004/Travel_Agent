@@ -560,11 +560,6 @@ def _map_search_type(sort_by: str) -> str:
     return "best"
 
 
-def _map_sort_by(sort_by: str) -> str:
-    """Back-compat alias -> search_type."""
-    return _map_search_type(sort_by)
-
-
 def _parse_flight_time(value: str) -> datetime | None:
     if not value:
         return None
