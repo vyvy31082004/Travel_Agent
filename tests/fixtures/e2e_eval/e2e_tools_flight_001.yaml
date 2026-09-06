@@ -1,0 +1,73 @@
+id: e2e_tools_flight_001
+scenario: "3 turns phủ flight one-way rồi round-trip rồi book; NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_flight_economy
+      text: "Thường bay hạng phổ thông (economy) khi đi du lịch"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_flight_nonstop
+      text: "Ưu tiên bay thẳng, tránh nối chuyến"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_flight_other_user
+      text: "Memory user khác — thích business class"
+      domain: flight
+      category: flight_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_flight_superseded
+      text: "Preference cũ — chỉ bay Vietnam Airlines"
+      domain: flight
+      category: flight_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  force_summarize_penultimate: false
+  messages:
+    - "Tìm vé một chiều từ TP.HCM ra Đà Nẵng ngày 10/10."
+    - "Tìm thêm vé khứ hồi TP.HCM–Đà Nẵng đi 10/10 về 12/10."
+    - "Book giúp chuyến one-way đầu tiên trong kết quả tìm một chiều."
+
+expected_trace:
+  expected_route: [flight]
+  expected_context:
+    flight:
+      must_include: [m_flight_economy, m_flight_nonstop]
+      must_exclude: [m_flight_other_user, m_flight_superseded]
+  expected_tools:
+    - name: search_one_way_flights_tool
+      required_arguments: [origin, destination, departure_date]
+    - name: search_round_trip_flights_tool
+      required_arguments: [origin, destination, departure_date]
+    - name: book_flight_by_id
+      required_arguments: [flight_id]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - flight_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "trace chứa đủ 3 flight tools: one-way + round-trip + book"
+    - "ngày giữ 10/10 (one-way) và 10/10–12/10 (round-trip) khi tool có date args"
+    - "final answer phản ánh kết quả tool, không bịa giá/hãng"
+  tradeoff_rule:
+    - "Nếu thiếu flight_id để book, nêu rõ cần search trước"
+  forbidden_claims:
+    - "Giá/hãng/chuyến không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

@@ -48,6 +48,31 @@ DOMAIN_ACTION_SEARCH_TOOLS = {
     "search_cars": "search_cars_tool",
 }
 
+
+def _iter_domain_branches(raw: Any) -> list[dict[str, Any]]:
+    """Normalize domain_branch_results updates to a list of branch dicts.
+
+    Stream updates may emit:
+    - a list of branch dicts
+    - a single branch dict
+    - RESET_BRANCH_RESULTS ``{"__reset__": True}`` (clear marker; not a branch)
+    Iterating a reset dict would yield the key ``\"__reset__\"`` as a string and
+    crash callers that expect ``branch.get(...)``.
+    """
+    if raw is None:
+        return []
+    if isinstance(raw, dict):
+        if raw.get("__reset__"):
+            return []
+        return [raw]
+    if not isinstance(raw, list):
+        return []
+    return [
+        item
+        for item in raw
+        if isinstance(item, dict) and not item.get("__reset__")
+    ]
+
 DOMAIN_CHAT_NODE = {
     "hotel": "hotel_chat",
     "flight": "flight_chat",
@@ -437,7 +462,7 @@ class TraceCollector:
             self.trace["global_recall"]["recalled_fixture_ids"] = self._map_fixture_ids(recalled)
 
         if node_name == "join_results":
-            branches = update.get("domain_branch_results") or []
+            branches = _iter_domain_branches(update.get("domain_branch_results"))
             if branches:
                 self.trace["join"]["branch_count"] = len(branches)
                 self.trace["join"]["merged_domains"] = [
@@ -455,7 +480,7 @@ class TraceCollector:
             memory=memory,
         )
 
-        for branch in update.get("domain_branch_results") or []:
+        for branch in _iter_domain_branches(update.get("domain_branch_results")):
             domain = branch.get("domain")
             if domain:
                 self._record_sub_agent(branch)
@@ -671,6 +696,51 @@ class TraceCollector:
                 existing_search_ids.add(str(search_id))
             self.trace["tools"].append(entry)
 
+    def _merge_tools_from_execution_path(self) -> None:
+        """Copy domain tool calls from execution_path into trace["tools"].
+
+        Search tools are usually captured via ToolMessage / Result Store inference.
+        Detail/book tools (get_hotel_*, get_car_details, fetch_attraction_*, book_flight)
+        often only appear on the execution_path, so the scorer would otherwise miss them.
+        """
+        existing = {
+            (
+                str(entry.get("name") or ""),
+                json.dumps(entry.get("arguments") or {}, sort_keys=True, default=str),
+            )
+            for entry in self.trace["tools"]
+        }
+        for step in self._execution_path:
+            domain = str(step.get("domain") or "")
+            for tool in step.get("tools") or []:
+                if not isinstance(tool, dict):
+                    continue
+                name = str(tool.get("name") or "")
+                if not name or name in DELEGATION_TOOL_NAMES:
+                    continue
+                arguments = dict(tool.get("arguments") or {})
+                key = (
+                    name,
+                    json.dumps(arguments, sort_keys=True, default=str),
+                )
+                if key in existing:
+                    continue
+                existing.add(key)
+                entry: dict[str, Any] = {
+                    "domain": TOOL_DOMAIN.get(name, domain),
+                    "name": name,
+                    "arguments": arguments,
+                    "timestamp": _utc_now(),
+                    "raw_result": None,
+                    "normalized_result": None,
+                    "error": None,
+                    "inferred": True,
+                    "inferred_from": "execution_path",
+                }
+                if step.get("seq") is not None:
+                    entry["execution_seq"] = step.get("seq")
+                self.trace["tools"].append(entry)
+
     async def enrich_tool_snapshots(
         self,
         repo: ResultStoreRepository | None,
@@ -758,12 +828,13 @@ class TraceCollector:
         self.record_delegation_from_messages(scored_messages)
         self.record_tool_messages(scored_messages)
 
-        branches = final_state.get("domain_branch_results") or []
+        branches = _iter_domain_branches(final_state.get("domain_branch_results"))
         inferred = self._infer_mcp_tools_from_visible_results(final_state)
         inferred.extend(self._infer_mcp_tools_from_branches(branches))
         inferred.extend(self._infer_mcp_tools_from_messages(messages))
         inferred.extend(self._infer_mcp_tools_from_domain_action(branches))
         self._merge_inferred_tools(inferred)
+        self._merge_tools_from_execution_path()
 
         for branch in branches:
             self._record_sub_agent(branch)

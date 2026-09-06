@@ -11,6 +11,7 @@ from langchain_core.runnables import RunnableConfig
 from memory.embeddings import MemoryEmbeddingService
 from memory.applicability import (
     ApplicabilityJudge,
+    LlmApplicabilityJudge,
     build_applicability_judge,
     format_applied_context,
     partition_judgments,
@@ -203,7 +204,9 @@ class MemoryService:
                 domain_state=state,
                 candidates=candidates,
             )
-            if llm is not None:
+            # Reconcile whenever the active judge is LLM-backed, even if the
+            # caller did not pass llm= (eval injects LlmApplicabilityJudge).
+            if llm is not None or isinstance(judge, LlmApplicabilityJudge):
                 judgments = await reconcile_judgments(
                     candidates,
                     judgments,

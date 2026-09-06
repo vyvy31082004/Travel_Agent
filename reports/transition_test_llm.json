@@ -9,9 +9,9 @@
     "suite": "transition",
     "metrics": {
       "transition_accuracy": {
-        "numerator": 84,
+        "numerator": 83,
         "denominator": 85,
-        "value": 0.9882352941176471
+        "value": 0.9764705882352941
       },
       "supersession_correctness": {
         "numerator": 24,
@@ -93,8 +93,8 @@
       {
         "case_id": "dup_023",
         "gold_action": "noop",
-        "predicted_action": "noop",
-        "correct": true,
+        "predicted_action": "supersede",
+        "correct": false,
         "transition_path": "llm"
       },
       {

@@ -426,16 +426,52 @@ def _execution_node_names(trace: dict[str, Any]) -> list[str]:
     return list((trace.get("primary_route") or {}).get("node_updates") or [])
 
 
+# Fan-out domain branches may complete in any Send order; require presence only.
+_PARALLEL_ASSISTANT_NODES = frozenset(
+    {
+        "hotel_assistant",
+        "excursion_assistant",
+        "flight_assistant",
+        "car_assistant",
+    }
+)
+
+
 def _ordered_subsequence(path: list[str], required: list[str]) -> bool:
+    """Match required nodes as an ordered subsequence.
+
+    Consecutive domain-assistant nodes form an unordered bag: all must appear
+    (any relative order) before the next ordered backbone node is matched.
+    """
     if not required:
         return True
-    index = 0
-    for node in path:
-        if node == required[index]:
-            index += 1
-            if index == len(required):
-                return True
-    return False
+    path_index = 0
+    req_index = 0
+    while req_index < len(required):
+        if required[req_index] in _PARALLEL_ASSISTANT_NODES:
+            bag: set[str] = set()
+            while (
+                req_index < len(required)
+                and required[req_index] in _PARALLEL_ASSISTANT_NODES
+            ):
+                bag.add(required[req_index])
+                req_index += 1
+            while path_index < len(path) and bag:
+                if path[path_index] in bag:
+                    bag.remove(path[path_index])
+                path_index += 1
+            if bag:
+                return False
+            continue
+
+        target = required[req_index]
+        req_index += 1
+        while path_index < len(path) and path[path_index] != target:
+            path_index += 1
+        if path_index >= len(path):
+            return False
+        path_index += 1
+    return True
 
 
 def score_execution_path(case: E2ECase, trace: dict[str, Any]) -> MetricScore:

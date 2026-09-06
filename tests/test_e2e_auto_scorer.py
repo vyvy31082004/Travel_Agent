@@ -320,6 +320,129 @@ def test_auto_scorer_fails_execution_path_order(override_hotel_case) -> None:
     assert scores.execution_path.status == ScoreStatus.FAIL
 
 
+def test_auto_scorer_allows_unordered_parallel_assistants() -> None:
+    """Multi-domain fan-out may Send hotel before excursion (or vice versa)."""
+    case = load_case(DEFAULT_FIXTURE_DIR / "e2e_multi_excursion_hotel_001.yaml")
+    # Fixture expects excursion then hotel; runtime sent hotel then excursion.
+    trace = {
+        "global_recall": {"recalled_fixture_ids": []},
+        "primary_route": {
+            "delegated_domains": ["excursion", "hotel"],
+            "node_updates": [],
+        },
+        "execution_path": [
+            {"seq": 1, "node": "memory_recall_global", "tools": []},
+            {"seq": 2, "node": "primary_assistant", "tools": []},
+            {"seq": 3, "node": "hotel_assistant", "tools": []},
+            {"seq": 4, "node": "excursion_assistant", "tools": []},
+            {"seq": 5, "node": "memory_recall_excursion", "tools": []},
+            {"seq": 6, "node": "excursion_chat", "tools": []},
+            {
+                "seq": 7,
+                "node": "search_attractions_tool",
+                "tools": [{"name": "search_attractions_tool", "arguments": {}}],
+            },
+            {"seq": 8, "node": "memory_recall_hotel", "tools": []},
+            {"seq": 9, "node": "hotel_chat", "tools": []},
+            {
+                "seq": 10,
+                "node": "search_hotels_tool",
+                "tools": [{"name": "search_hotels_tool", "arguments": {}}],
+            },
+            {"seq": 11, "node": "join_results", "tools": []},
+            {"seq": 12, "node": "primary_assistant", "tools": []},
+            {"seq": 13, "node": "memory_finalize", "tools": []},
+        ],
+        "domain_recall": {
+            "excursion": {
+                "candidate_pool_ids": [
+                    "m_excursion_private_small",
+                    "m_excursion_no_crowd",
+                ],
+                "final_context_ids": [
+                    "m_excursion_private_small",
+                    "m_excursion_no_crowd",
+                ],
+            },
+            "hotel": {
+                "candidate_pool_ids": ["m_hotel_budget", "m_hotel_old_town"],
+                "final_context_ids": ["m_hotel_budget", "m_hotel_old_town"],
+            },
+        },
+        "tools": [
+            {
+                "name": "search_attractions_tool",
+                "arguments": {"location": "Hoi An"},
+            },
+            {
+                "name": "search_hotels_tool",
+                "arguments": {"destination": "Hoi An"},
+            },
+        ],
+        "join": {
+            "branch_count": 2,
+            "merged_domains": ["hotel", "excursion"],
+        },
+        "finalize": {"db_mutations": []},
+    }
+    scores = score_trace(case, trace)
+    assert scores.execution_path.status == ScoreStatus.PASS
+    assert scores.trace_integrity.status == ScoreStatus.PASS
+
+
+def test_auto_scorer_still_requires_backbone_order_around_assistants() -> None:
+    case = load_case(DEFAULT_FIXTURE_DIR / "e2e_multi_excursion_hotel_001.yaml")
+    # join_results before both assistants — backbone order must still fail.
+    trace = {
+        "global_recall": {"recalled_fixture_ids": []},
+        "primary_route": {
+            "delegated_domains": ["excursion", "hotel"],
+            "node_updates": [],
+        },
+        "execution_path": [
+            {"seq": 1, "node": "memory_recall_global", "tools": []},
+            {"seq": 2, "node": "primary_assistant", "tools": []},
+            {"seq": 3, "node": "join_results", "tools": []},
+            {"seq": 4, "node": "hotel_assistant", "tools": []},
+            {"seq": 5, "node": "excursion_assistant", "tools": []},
+            {"seq": 6, "node": "memory_finalize", "tools": []},
+        ],
+        "domain_recall": {
+            "excursion": {
+                "candidate_pool_ids": [
+                    "m_excursion_private_small",
+                    "m_excursion_no_crowd",
+                ],
+                "final_context_ids": [
+                    "m_excursion_private_small",
+                    "m_excursion_no_crowd",
+                ],
+            },
+            "hotel": {
+                "candidate_pool_ids": ["m_hotel_budget", "m_hotel_old_town"],
+                "final_context_ids": ["m_hotel_budget", "m_hotel_old_town"],
+            },
+        },
+        "tools": [
+            {
+                "name": "search_attractions_tool",
+                "arguments": {"location": "Hoi An"},
+            },
+            {
+                "name": "search_hotels_tool",
+                "arguments": {"destination": "Hoi An"},
+            },
+        ],
+        "join": {
+            "branch_count": 2,
+            "merged_domains": ["hotel", "excursion"],
+        },
+        "finalize": {"db_mutations": []},
+    }
+    scores = score_trace(case, trace)
+    assert scores.execution_path.status == ScoreStatus.FAIL
+
+
 def test_auto_scorer_summary_hotel_path_and_context() -> None:
     case = load_case(DEFAULT_FIXTURE_DIR / "e2e_summary_hotel_001.yaml")
     trace = {
@@ -786,29 +909,23 @@ def test_auto_scorer_global_profile_name_fails_hotel_noise_leakage() -> None:
     assert scores.context_recall_precision.status == ScoreStatus.FAIL
 
 
-def _tools_all_trace() -> dict:
+def _tools_hotel_trace() -> dict:
     return {
         "global_recall": {"recalled_fixture_ids": []},
         "primary_route": {
-            "delegated_domains": ["flight"],
+            "delegated_domains": ["hotel"],
             "node_updates": [
                 "memory_recall_global",
                 "primary_assistant",
                 "hotel_assistant",
-                "car_assistant",
-                "excursion_assistant",
-                "flight_assistant",
                 "memory_finalize",
             ],
         },
         "domain_recall": {
-            "flight": {
-                "candidate_pool_ids": ["m_flight_economy", "m_flight_nonstop"],
-                "applicability": {
-                    "m_flight_economy": "apply",
-                    "m_flight_nonstop": "apply",
-                },
-                "final_context_ids": ["m_flight_economy", "m_flight_nonstop"],
+            "hotel": {
+                "candidate_pool_ids": ["m_hotel_quiet"],
+                "applicability": {"m_hotel_quiet": "apply"},
+                "final_context_ids": ["m_hotel_quiet"],
             }
         },
         "tools": [
@@ -836,6 +953,37 @@ def _tools_all_trace() -> dict:
                 "name": "get_hotel_policy_tool",
                 "arguments": {"hotel_id": "16256042"},
             },
+        ],
+        "execution_path": [
+            {"node": "memory_recall_global", "tools": []},
+            {"node": "primary_assistant", "tools": []},
+            {"node": "hotel_assistant", "tools": []},
+            {"node": "memory_finalize", "tools": []},
+        ],
+        "finalize": {"db_mutations": []},
+    }
+
+
+def _tools_car_trace() -> dict:
+    return {
+        "global_recall": {"recalled_fixture_ids": []},
+        "primary_route": {
+            "delegated_domains": ["car"],
+            "node_updates": [
+                "memory_recall_global",
+                "primary_assistant",
+                "car_assistant",
+                "memory_finalize",
+            ],
+        },
+        "domain_recall": {
+            "car": {
+                "candidate_pool_ids": ["m_car_automatic"],
+                "applicability": {"m_car_automatic": "apply"},
+                "final_context_ids": ["m_car_automatic"],
+            }
+        },
+        "tools": [
             {
                 "name": "search_cars_tool",
                 "arguments": {
@@ -848,64 +996,36 @@ def _tools_all_trace() -> dict:
                 "name": "get_car_details_tool",
                 "arguments": {"car_id": "c1", "car_name": "Xpander"},
             },
-            {
-                "name": "search_attractions_tool",
-                "arguments": {"location": "Da Nang"},
-            },
-            {
-                "name": "fetch_attraction_details_tool",
-                "arguments": {"slug": "ba-na-hills"},
-            },
-            {
-                "name": "fetch_attraction_reviews_tool",
-                "arguments": {"id": "attr-1"},
-            },
-            {
-                "name": "search_one_way_flights_tool",
-                "arguments": {
-                    "origin": "SGN",
-                    "destination": "DAD",
-                    "departure_date": "2026-10-10",
-                },
-            },
-            {
-                "name": "search_round_trip_flights_tool",
-                "arguments": {
-                    "origin": "SGN",
-                    "destination": "DAD",
-                    "departure_date": "2026-10-10",
-                },
-            },
-            {
-                "name": "book_flight_by_id",
-                "arguments": {"flight_id": "FL-A8B2C"},
-            },
         ],
         "execution_path": [
             {"node": "memory_recall_global", "tools": []},
             {"node": "primary_assistant", "tools": []},
-            {"node": "hotel_assistant", "tools": []},
             {"node": "car_assistant", "tools": []},
-            {"node": "excursion_assistant", "tools": []},
-            {"node": "flight_assistant", "tools": []},
             {"node": "memory_finalize", "tools": []},
         ],
         "finalize": {"db_mutations": []},
     }
 
 
-def test_auto_scorer_tools_all_passes_with_accumulated_tools() -> None:
-    case = load_case(DEFAULT_FIXTURE_DIR / "e2e_tools_all_001.yaml")
-    scores = score_trace(case, _tools_all_trace())
+def test_auto_scorer_tools_hotel_passes() -> None:
+    case = load_case(DEFAULT_FIXTURE_DIR / "e2e_tools_hotel_001.yaml")
+    scores = score_trace(case, _tools_hotel_trace())
     assert scores.tool_call_correctness.status == ScoreStatus.PASS
     assert scores.routing_accuracy.status == ScoreStatus.PASS
     assert scores.execution_path.status == ScoreStatus.PASS
     assert scores.trace_integrity.status == ScoreStatus.PASS
 
 
-def test_auto_scorer_tools_all_fails_when_early_tool_missing() -> None:
-    case = load_case(DEFAULT_FIXTURE_DIR / "e2e_tools_all_001.yaml")
-    trace = _tools_all_trace()
+def test_auto_scorer_tools_car_passes() -> None:
+    case = load_case(DEFAULT_FIXTURE_DIR / "e2e_tools_car_001.yaml")
+    scores = score_trace(case, _tools_car_trace())
+    assert scores.tool_call_correctness.status == ScoreStatus.PASS
+    assert scores.routing_accuracy.status == ScoreStatus.PASS
+
+
+def test_auto_scorer_tools_hotel_fails_when_search_missing() -> None:
+    case = load_case(DEFAULT_FIXTURE_DIR / "e2e_tools_hotel_001.yaml")
+    trace = _tools_hotel_trace()
     trace["tools"] = [
         entry
         for entry in trace["tools"]

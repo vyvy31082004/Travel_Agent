@@ -1,0 +1,710 @@
+{
+  "metadata": {
+    "case_id": "e2e_excursion_001",
+    "run_id": "8f3e242b3aef",
+    "started_at": "2026-09-06T08:56:46.630162+00:00",
+    "finished_at": "2026-09-06T08:57:57.135178+00:00",
+    "user_id": "e2e-e2e_excursion_001:user_a",
+    "thread_id": "e2e-e2e_excursion_001-8f3e242b3aef",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v2",
+    "git_commit": "e23fbaeebfc968930575b72dea73f6511f5519b0",
+    "fixture_to_uuid": {
+      "m_nature": "a020a566-752a-517b-a377-3ca4a47026ce",
+      "m_crowded": "c1048861-2d0d-5439-a22b-ae342305a06f",
+      "m_lang": "47e52e47-94fe-552e-b895-474898fad6d8",
+      "m_other_user": "f99a91bf-8a55-5e52-8562-82d7380b6745",
+      "m_superseded": "6ff9923c-602c-5be8-aac3-650beb89cb47"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Mai ở Đà Nẵng nên đi đâu?"
+    ],
+    "resolved_dates": {
+      "today": "2026-09-06",
+      "tomorrow": "2026-09-07"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Mai ở Đà Nẵng nên đi đâu?",
+      "answer": "Dưới đây là các gợi ý tour và hoạt động tham quan tại Đà Nẵng cũng như khu vực lân cận cho ngày mai (**07/09/2026**):\n\n---\n\n1. **Vé Sun World Ba Na Hills**\n   * **Mã tour (`external_attraction_id`):** `PR9oF7hAhjy9`\n   * **Mô tả:** Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills.\n   * **Giá:** 1,018,340 VND\n   * **Hình ảnh:** ![Vé Sun World Ba Na Hills](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=)\n\n2. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times**\n   * **Mã tour (`external_attraction_id`):** `PRbeRPTXGXPd`\n   * **Mô tả:** Có dịch vụ đưa đón miễn phí cho khách lưu trú tại trung tâm thành phố Đà Nẵng. Tour tham quan Bà Nà Hills và Cầu Vàng trọn ngày.\n   * **Giá:** 1,284,755 VND\n   * **Hình ảnh:** ![Ba Na Hills - Golden Bridge Full-Day Tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\n\n3. **Du thuyền đêm trên sông Hàn**\n   * **Mã tour (`external_attraction_id`):** `PRa7fah7ikJw`\n   * **Mô tả:** Du thuyền ngắm cảnh thành phố và sông nước về đêm.\n   * **Giá:** 104,860 VND\n   * **Hình ảnh:** ![Du thuyền đêm trên sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\n\n4. **Hoi An Basket Boat Ride in Water Coconut Forest**\n   * **Mã tour (`external_attraction_id`):** `PRNgBhNmHUwd`\n   * **Mô tả:** Trải nghiệm chèo thuyền thúng khám phá rừng dừa nước Cẩm Thanh.\n   * **Giá:** 315,600 VND\n   * **Hình ảnh:** ![Hoi An Basket Boat Ride in Water Coconut Forest](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\n\n5. **Hoi An Cooking Class (Local Market, Basket Boat, Fishing & Cooking)**\n   * **Mã tour (`external_attraction_id`):** `PRVwSAVvgpO5`\n   * **Mô tả:** Hoạt động trải nghiệm đi chợ địa phương, chèo thuyền thúng, câu cá và học nấu ăn ngoài trời.\n   * **Giá:** 762,700 VND\n   * **Hình ảnh:** ![Hoi An Cooking Class](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=)\n\n6. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\n   * **Mã tour (`external_attraction_id`):** `PRFhLYK7act7`\n   * **Mô tả:** Khám phá Ngũ Hành Sơn, Động Âm Phủ và ngắm hoàng hôn tại Bán đảo Sơn Trà (Monkey Mountain).\n   * **Giá:** 578,600 VND\n   * **Hình ảnh:** ![Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\n\n7. **Tour Bà Nà Hills trọn ngày với bữa trưa buffet**\n   * **Mã tour (`external_attraction_id`):** `PRdCygydpY9o`\n   * **Mô tả:** Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park cùng bữa trưa buffet.\n   * **Giá:** 1,709,500 VND\n   * **Hình ảnh:** ![Tour Bà Nà Hills trọn ngày với bữa trưa buffet](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=)\n\n8. **Hoi An Memories Show & Hoi An Impression Theme Park Ticket**\n   * **Mã tour (`external_attraction_id`):** `PRWX9rush6bp`\n   * **Mô tả:** Vé xem Show Ký Ức Hội An và tham quan công viên chủ đề ngoài trời.\n   * **Giá:** 631,200 VND\n   * **Hình ảnh:** ![Hoi An Memories Show & Hoi An Impression Theme Park Ticket](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=)\n\n9. **Hoai River Boat Trip by Night with Release Lantern**\n   * **Mã tour (`external_attraction_id`):** `PRfykNA7eqX0`\n   * **Mô tả:** Đi thuyền ngoài trời trên sông Hoài về đêm và thả hoa đăng.\n   * **Giá:** 236,700 VND\n   * **Hình ảnh:** ![Hoai River Boat Trip by Night with Release Lantern](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\n\n---\n\nBạn hãy lựa chọn hoạt động phù hợp và cung cấp mã tour (`external_attraction_id`) nếu muốn xem chi tiết hoặc tiến hành đặt vé nhé!",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "excursion_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 4
+    }
+  ],
+  "global_recall": {
+    "memory_context": "[47e52e47-94fe-552e-b895-474898fad6d8] Trả lời bằng tiếng Việt",
+    "recalled_memory_ids": [
+      "47e52e47-94fe-552e-b895-474898fad6d8"
+    ],
+    "recalled_fixture_ids": [
+      "m_lang"
+    ]
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "excursion"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToExcursionAssistant",
+        "args": {
+          "request": "Gợi ý các địa điểm tham quan, tour hoặc hoạt động tại Đà Nẵng cho ngày mai (07/09/2026)."
+        },
+        "timestamp": "2026-09-06T08:57:57.134211+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "excursion_assistant",
+      "memory_recall_excursion",
+      "excursion_chat",
+      "search_attractions_tool",
+      "excursion_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "excursion": {
+      "candidate_pool_ids": [
+        "m_crowded",
+        "m_nature"
+      ],
+      "applicability": {
+        "m_crowded": "uncertain",
+        "m_nature": "uncertain"
+      },
+      "applicability_reasons": {
+        "m_crowded": "reconciled: Avoiding crowds is a preference that helps rank or select attractions, but it does not map to a strict search tool argument. (llm: Avoiding crowds is a preference that helps rank or select attractions, but it does not map to a strict search tool argument.; rule: default uncertain (no specific tool-field rule matched))",
+        "m_nature": "reconciled: Nature attraction preference is useful for filtering/ranking excursion ideas in Da Nang, but is too general to map directly to a single tool parameter. (llm: Nature attraction preference is useful for filtering/ranking excursion ideas in Da Nang, but is too general to map directly to a single tool parameter.; rule: default uncertain (no specific tool-field rule matched))"
+      },
+      "final_context_ids": [
+        "m_crowded",
+        "m_nature"
+      ],
+      "applied_constraints": [
+        "(soft) [c1048861-2d0d-5439-a22b-ae342305a06f] Tránh điểm quá đông đúc",
+        "(soft) [a020a566-752a-517b-a377-3ca4a47026ce] Thích điểm tham quan thiên nhiên"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "tour",
+      "name": "search_attractions_tool",
+      "arguments": {
+        "end_date": "2026-09-07",
+        "location": "Đà Nẵng",
+        "start_date": "2026-09-07",
+        "destination": "Đà Nẵng"
+      },
+      "timestamp": "2026-09-06T08:57:57.134211+00:00",
+      "raw_result": {
+        "search_id": "fc7759e2-b4ee-4904-ac82-ae1d1a3d01e7",
+        "domain": "excursion",
+        "displayed_item_ids": [
+          "PR9oF7hAhjy9",
+          "PRbeRPTXGXPd",
+          "PRa7fah7ikJw",
+          "PRNgBhNmHUwd",
+          "PRVwSAVvgpO5",
+          "PRFhLYK7act7",
+          "PRdCygydpY9o",
+          "PRWX9rush6bp",
+          "PRfykNA7eqX0"
+        ],
+        "labels": [],
+        "total_results": 9
+      },
+      "normalized_result": {
+        "search_id": "fc7759e2-b4ee-4904-ac82-ae1d1a3d01e7",
+        "request_id": "req_tour_139cdce5",
+        "domain": "excursion",
+        "total_results": 9,
+        "items": [
+          {
+            "name": "Vé Sun World Ba Na Hills",
+            "slug": "pr9of7hahjy9-sun-world-ba-na-hills-ticket",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=",
+            "price": 1018340,
+            "rating": null,
+            "item_id": "PR9oF7hAhjy9",
+            "currency": "VND",
+            "description": "Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills",
+            "review_count": null,
+            "external_attraction_id": "PR9oF7hAhjy9",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 104860,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)",
+            "slug": "prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=",
+            "price": 762700,
+            "rating": null,
+            "item_id": "PRVwSAVvgpO5",
+            "currency": "VND",
+            "description": "Morning tour: 8:30am to 1:00pm Afternoon tour: 2:00pm to 6:30pm You will be pick up by car by loc...",
+            "review_count": null,
+            "external_attraction_id": "PRVwSAVvgpO5",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Tour Bà Nà Hills trọn ngày với bữa trưa buffet",
+            "slug": "prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=",
+            "price": 1709500,
+            "rating": null,
+            "item_id": "PRdCygydpY9o",
+            "currency": "VND",
+            "description": "Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa",
+            "review_count": null,
+            "external_attraction_id": "PRdCygydpY9o",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Memories Show & Hoi An Impression Theme Park Ticket",
+            "slug": "prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=",
+            "price": 631200,
+            "rating": null,
+            "item_id": "PRWX9rush6bp",
+            "currency": "VND",
+            "description": "Located on the Hoi An Memories Land, the Hoi An Memories show is one of the outdoor performances ...",
+            "review_count": null,
+            "external_attraction_id": "PRWX9rush6bp",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Lớp hướng dẫn làm lồng đèn",
+            "slug": "prpc0nrrr1qm-lantern-making-class",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=",
+            "price": 257656,
+            "rating": null,
+            "item_id": "PRPC0NRRR1QM",
+            "currency": "VND",
+            "description": "Workshop làm đèn lồng Việt Nam từ nhiều chất liệu",
+            "review_count": null,
+            "external_attraction_id": "PRPC0NRRR1QM",
+            "position": null,
+            "api_position": 9,
+            "eligible": false
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": 9,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "PR9oF7hAhjy9",
+          "PRbeRPTXGXPd",
+          "PRa7fah7ikJw",
+          "PRNgBhNmHUwd",
+          "PRVwSAVvgpO5",
+          "PRFhLYK7act7",
+          "PRdCygydpY9o",
+          "PRWX9rush6bp",
+          "PRfykNA7eqX0"
+        ],
+        "items": [
+          {
+            "name": "Vé Sun World Ba Na Hills",
+            "slug": "pr9of7hahjy9-sun-world-ba-na-hills-ticket",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=",
+            "price": 1018340,
+            "rating": null,
+            "item_id": "PR9oF7hAhjy9",
+            "currency": "VND",
+            "description": "Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills",
+            "review_count": null,
+            "external_attraction_id": "PR9oF7hAhjy9",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 104860,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)",
+            "slug": "prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=",
+            "price": 762700,
+            "rating": null,
+            "item_id": "PRVwSAVvgpO5",
+            "currency": "VND",
+            "description": "Morning tour: 8:30am to 1:00pm Afternoon tour: 2:00pm to 6:30pm You will be pick up by car by loc...",
+            "review_count": null,
+            "external_attraction_id": "PRVwSAVvgpO5",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Tour Bà Nà Hills trọn ngày với bữa trưa buffet",
+            "slug": "prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=",
+            "price": 1709500,
+            "rating": null,
+            "item_id": "PRdCygydpY9o",
+            "currency": "VND",
+            "description": "Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa",
+            "review_count": null,
+            "external_attraction_id": "PRdCygydpY9o",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Memories Show & Hoi An Impression Theme Park Ticket",
+            "slug": "prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=",
+            "price": 631200,
+            "rating": null,
+            "item_id": "PRWX9rush6bp",
+            "currency": "VND",
+            "description": "Located on the Hoi An Memories Land, the Hoi An Memories show is one of the outdoor performances ...",
+            "review_count": null,
+            "external_attraction_id": "PRWX9rush6bp",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": 9,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "excursion",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là các gợi ý tour và hoạt động tham quan tại Đà Nẵng / khu vực lân cận cho ngày **07/09/2026**, ưu tiên các địa điểm ngoài trời và gắn liền với thiên nhiên theo sở thích của bạn:\\n\\n*Lưu ý về mức độ đông đúc:* Dữ liệu hiện tại chưa có thông tin về số lượng đánh giá/mức độ đông đúc cụ thể. Các địa điểm du lịch nổi tiếng (như Bà Nà Hills hay các khu vực tham quan buổi tối) có thể thu hút lượng lớn du khách vào giờ cao điểm.\\n\\n---\\n\\n* **Mã tour (external_attraction_id):** `PR9oF7hAhjy9`\\n  * **Tên:** Vé Sun World Ba Na Hills\\n  * **Mô tả:** Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills\\n  * **Giá:** 1,018,340 VND\\n  * **Đánh giá:** N/A (Số lượt đánh giá: N/A)\\n  * **Hình ảnh:** ![Vé Sun World Ba Na Hills](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=)\\n  * **Slug:** `pr9of7hahjy9-sun-world-ba-na-hills-ticket`\\n\\n* **Mã tour (external_attraction_id):** `PRbeRPTXGXPd`\\n  * **Tên:** Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times\\n  * **Mô tả:** Complimentay pick-up and drop-off service for guests staying in Da Nang city centre. Tour tham quan Bà Nà Hills và Cầu Vàng trọn ngày.\\n  * **Giá:** 1,284,755 VND\\n  * **Đánh giá:** N/A (Số lượt đánh giá: N/A)\\n  * **Hình ảnh:** ![Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\\n  * **Slug:** `prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group`\\n\\n* **Mã tour (external_attraction_id):** `PRdCygydpY9o`\\n  * **Tên:** Tour Bà Nà Hills trọn ngày với bữa trưa buffet\\n  * **Mô tả:** Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa\\n  * **Giá:** 1,709,500 VND\\n  * **Đánh giá:** N/A (Số lượt đánh giá: N/A)\\n  * **Hình ảnh:** ![Tour Bà Nà Hills trọn ngày với bữa trưa buffet](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=)\\n  * **Slug:** `prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch`\\n\\n* **Mã tour (external_attraction_id):** `PRFhLYK7act7`\\n  * **Tên:** Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour\\n  * **Mô tả:** Khám phá Ngũ Hành Sơn, Động Âm Phủ và ngắm hoàng hôn tại Bán đảo Sơn Trà (Monkey Mountain)\\n  * **Giá:** 578,600 VND\\n  * **Đánh giá:** N/A (Số lượt đánh giá: N/A)\\n  * **Hình ảnh:** ![Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\\n  * **Slug:** `prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour`\\n\\n* **Mã tour (external_attraction_id):** `PRa7fah7ikJw`\\n  * **Tên:** Du thuyền đêm trên sông Hàn\\n  * **Mô tả:** Du thuyền ngắm cảnh thành phố và sông nước về đêm\\n  * **Giá:** 104,860 VND\\n  * **Đánh giá:** N/A (Số lượt đánh giá: N/A)\\n  * **Hình ảnh:** ![Du thuyền đêm trên sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\\n  * **Slug:** `pra7fah7ikjw-han-river-night-cruise`\\n\\n* **Mã tour (external_attraction_id):** `PRNgBhNmHUwd`\\n  * **Tên:** Hoi An Basket Boat Ride in Water Coconut Forest\\n  * **Mô tả:** Trải nghiệm chèo thuyền thúng khám phá rừng dừa nước Cẩm Thanh\\n  * **Giá:** 315,600 VND\\n  * **Đánh giá:** N/A (Số lượt đánh giá: N/A)\\n  * **Hình ảnh:** ![Hoi An Basket Boat Ride in Water Coconut Forest](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\\n  * **Slug:** `prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest`\\n\\n* **Mã tour (external_attraction_id):** `PRVwSAVvgpO5`\\n  * **Tên:** Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)\\n  * **Mô tả:** Hoạt động trải nghiệm đi chợ địa phương, chèo thuyền thúng, câu cá và học nấu ăn ngoài trời\\n  * **Giá:** 762,700 VND\\n  * **Đánh giá:** N/A (Số lượt đánh giá: N/A)\\n  * **Hình ảnh:** ![Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=)\\n  * **Slug:** `prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c`\\n\\n* **Mã tour (external_attraction_id):** `PRfykNA7eqX0`\\n  * **Tên:** Hoai River Boat Trip by Night with Release Lantern\\n  * **Mô tả:** Đi thuyền ngoài trời trên sông Hoài về đêm và thả hoa đăng\\n  * **Giá:** 236,700 VND\\n  * **Đánh giá:** N/A (Số lượt đánh giá: N/A)\\n  * **Hình ảnh:** ![Hoai River Boat Trip by Night with Release Lantern](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\\n  * **Slug:** `prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern`\\n\\n* **Mã tour (external_attraction_id):** `PRWX9rush6bp`\\n  * **Tên:** Hoi An Memories Show & Hoi An Impression Theme Park Ticket\\n  * **Mô tả:** Vé xem Show Ký Ức Hội An và tham quan công viên chủ đề ngoài trời\\n  * **Giá:** 631,200 VND\\n  * **Đánh giá:** N/A (Số lượt đánh giá: N/A)\\n  * **Hình ảnh:** ![Hoi An Memories Show & Hoi An Impression Theme Park Ticket](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=)\\n  * **Slug:** `prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket`\\n\\n---\\nVui lòng chọn tour bạn yêu thích và cung cấp Mã tour (`external_attraction_id`) nếu muốn tiến hành đặt vé hoặc xem thêm thông tin chi tiết!', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "(soft) [c1048861-2d0d-5439-a22b-ae342305a06f] Tránh điểm quá đông đúc",
+        "(soft) [a020a566-752a-517b-a377-3ca4a47026ce] Thích điểm tham quan thiên nhiên"
+      ],
+      "domain_action": "general"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "excursion"
+    ]
+  },
+  "final_answer": "Dưới đây là các gợi ý tour và hoạt động tham quan tại Đà Nẵng cũng như khu vực lân cận cho ngày mai (**07/09/2026**):\n\n---\n\n1. **Vé Sun World Ba Na Hills**\n   * **Mã tour (`external_attraction_id`):** `PR9oF7hAhjy9`\n   * **Mô tả:** Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills.\n   * **Giá:** 1,018,340 VND\n   * **Hình ảnh:** ![Vé Sun World Ba Na Hills](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=)\n\n2. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times**\n   * **Mã tour (`external_attraction_id`):** `PRbeRPTXGXPd`\n   * **Mô tả:** Có dịch vụ đưa đón miễn phí cho khách lưu trú tại trung tâm thành phố Đà Nẵng. Tour tham quan Bà Nà Hills và Cầu Vàng trọn ngày.\n   * **Giá:** 1,284,755 VND\n   * **Hình ảnh:** ![Ba Na Hills - Golden Bridge Full-Day Tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\n\n3. **Du thuyền đêm trên sông Hàn**\n   * **Mã tour (`external_attraction_id`):** `PRa7fah7ikJw`\n   * **Mô tả:** Du thuyền ngắm cảnh thành phố và sông nước về đêm.\n   * **Giá:** 104,860 VND\n   * **Hình ảnh:** ![Du thuyền đêm trên sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\n\n4. **Hoi An Basket Boat Ride in Water Coconut Forest**\n   * **Mã tour (`external_attraction_id`):** `PRNgBhNmHUwd`\n   * **Mô tả:** Trải nghiệm chèo thuyền thúng khám phá rừng dừa nước Cẩm Thanh.\n   * **Giá:** 315,600 VND\n   * **Hình ảnh:** ![Hoi An Basket Boat Ride in Water Coconut Forest](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\n\n5. **Hoi An Cooking Class (Local Market, Basket Boat, Fishing & Cooking)**\n   * **Mã tour (`external_attraction_id`):** `PRVwSAVvgpO5`\n   * **Mô tả:** Hoạt động trải nghiệm đi chợ địa phương, chèo thuyền thúng, câu cá và học nấu ăn ngoài trời.\n   * **Giá:** 762,700 VND\n   * **Hình ảnh:** ![Hoi An Cooking Class](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=)\n\n6. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\n   * **Mã tour (`external_attraction_id`):** `PRFhLYK7act7`\n   * **Mô tả:** Khám phá Ngũ Hành Sơn, Động Âm Phủ và ngắm hoàng hôn tại Bán đảo Sơn Trà (Monkey Mountain).\n   * **Giá:** 578,600 VND\n   * **Hình ảnh:** ![Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\n\n7. **Tour Bà Nà Hills trọn ngày với bữa trưa buffet**\n   * **Mã tour (`external_attraction_id`):** `PRdCygydpY9o`\n   * **Mô tả:** Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park cùng bữa trưa buffet.\n   * **Giá:** 1,709,500 VND\n   * **Hình ảnh:** ![Tour Bà Nà Hills trọn ngày với bữa trưa buffet](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=)\n\n8. **Hoi An Memories Show & Hoi An Impression Theme Park Ticket**\n   * **Mã tour (`external_attraction_id`):** `PRWX9rush6bp`\n   * **Mô tả:** Vé xem Show Ký Ức Hội An và tham quan công viên chủ đề ngoài trời.\n   * **Giá:** 631,200 VND\n   * **Hình ảnh:** ![Hoi An Memories Show & Hoi An Impression Theme Park Ticket](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=)\n\n9. **Hoai River Boat Trip by Night with Release Lantern**\n   * **Mã tour (`external_attraction_id`):** `PRfykNA7eqX0`\n   * **Mô tả:** Đi thuyền ngoài trời trên sông Hoài về đêm và thả hoa đăng.\n   * **Giá:** 236,700 VND\n   * **Hình ảnh:** ![Hoai River Boat Trip by Night with Release Lantern](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\n\n---\n\nBạn hãy lựa chọn hoạt động phù hợp và cung cấp mã tour (`external_attraction_id`) nếu muốn xem chi tiết hoặc tiến hành đặt vé nhé!",
+  "stm": {
+    "summary": null,
+    "message_count": 4,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "fb3c7a04-9ddd-4dcc-986f-9520dd579801",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "audits": [],
+    "seeded_status": {
+      "m_nature": {
+        "status": "active",
+        "memory_id": "a020a566-752a-517b-a377-3ca4a47026ce",
+        "memory_text": "Thích điểm tham quan thiên nhiên",
+        "supersedes_memory_id": null
+      },
+      "m_crowded": {
+        "status": "active",
+        "memory_id": "c1048861-2d0d-5439-a22b-ae342305a06f",
+        "memory_text": "Tránh điểm quá đông đúc",
+        "supersedes_memory_id": null
+      },
+      "m_lang": {
+        "status": "active",
+        "memory_id": "47e52e47-94fe-552e-b895-474898fad6d8",
+        "memory_text": "Trả lời bằng tiếng Việt",
+        "supersedes_memory_id": null
+      },
+      "m_other_user": {
+        "status": "active",
+        "memory_id": "f99a91bf-8a55-5e52-8562-82d7380b6745",
+        "memory_text": "Memory user khác — thích tour văn hóa",
+        "supersedes_memory_id": null
+      },
+      "m_superseded": {
+        "status": "superseded",
+        "memory_id": "6ff9923c-602c-5be8-aac3-650beb89cb47",
+        "memory_text": "Preference cũ — chỉ đi biển",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "fb3c7a04-9ddd-4dcc-986f-9520dd579801",
+      "status": "skipped",
+      "error_summary": null,
+      "created_at": "2026-09-06T15:57:51.932425+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "excursion"
+        ],
+        "actual": [
+          "excursion"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "SKIP",
+      "detail": "no expected_applicability",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "excursion_assistant",
+          "memory_recall_excursion",
+          "excursion_chat",
+          "search_attractions_tool",
+          "search_attractions_tool",
+          "searchLocation",
+          "searchAttractions",
+          "excursion_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "excursion_assistant",
+          "join_results",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [
+          "m_lang"
+        ],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "excursion_assistant",
+      "graph": "primary",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "memory_recall_excursion",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_crowded",
+          "m_nature"
+        ],
+        "applicability": {
+          "m_crowded": "uncertain",
+          "m_nature": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_crowded": "reconciled: Avoiding crowds is a preference that helps rank or select attractions, but it does not map to a strict search tool argument. (llm: Avoiding crowds is a preference that helps rank or select attractions, but it does not map to a strict search tool argument.; rule: default uncertain (no specific tool-field rule matched))",
+          "m_nature": "reconciled: Nature attraction preference is useful for filtering/ranking excursion ideas in Da Nang, but is too general to map directly to a single tool parameter. (llm: Nature attraction preference is useful for filtering/ranking excursion ideas in Da Nang, but is too general to map directly to a single tool parameter.; rule: default uncertain (no specific tool-field rule matched))"
+        },
+        "applied_to_context": [
+          "m_crowded",
+          "m_nature"
+        ]
+      }
+    },
+    {
+      "seq": 5,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "search_attractions_tool",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [
+        {
+          "name": "search_attractions_tool",
+          "arguments": {
+            "start_date": "2026-09-07",
+            "end_date": "2026-09-07",
+            "location": "Đà Nẵng"
+          },
+          "sub_steps": [
+            "searchLocation",
+            "searchAttractions"
+          ]
+        }
+      ],
+      "parent_chat_node": "excursion_chat"
+    },
+    {
+      "seq": 7,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 8,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 9,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

@@ -1,0 +1,2445 @@
+{
+  "metadata": {
+    "case_id": "e2e_tools_flight_001",
+    "run_id": "73abc67cd559",
+    "started_at": "2026-09-06T17:29:32.043623+00:00",
+    "finished_at": "2026-09-06T17:32:29.365473+00:00",
+    "user_id": "e2e-e2e_tools_flight_001:user_a",
+    "thread_id": "e2e-e2e_tools_flight_001-73abc67cd559",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v2",
+    "git_commit": "e23fbaeebfc968930575b72dea73f6511f5519b0",
+    "fixture_to_uuid": {
+      "m_flight_economy": "4e11a103-a6c9-53fc-8f9d-9ad6ad93acc2",
+      "m_flight_nonstop": "d1d8e48c-f235-5c34-a52a-1c0c86bd3125",
+      "m_flight_other_user": "8896b39a-1123-5177-bfc4-b1a4715c6d9a",
+      "m_flight_superseded": "888a4af1-a256-5e26-a192-088ba5db8822"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Tìm vé một chiều từ TP.HCM ra Đà Nẵng ngày 10/10.",
+      "Tìm thêm vé khứ hồi TP.HCM–Đà Nẵng đi 10/10 về 12/10.",
+      "Book giúp chuyến one-way đầu tiên trong kết quả tìm một chiều."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-07"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Tìm vé một chiều từ TP.HCM ra Đà Nẵng ngày 10/10.",
+      "answer": "Dưới đây là danh sách các chuyến bay một chiều bay thẳng từ TP.HCM (SGN) đến Đà Nẵng (DAD) ngày 10/10/2026:\n\n1. **Mã ưu đãi (Offer_ID): FL-61F249**\n   * **Hãng hàng không:** Vietjet (VJ) - Số hiệu: VJ 640 (Airbus A320)\n   * **Khởi hành:** 15:10 (SGN) – **Đến nơi:** 16:30 (DAD)\n   * **Thời gian bay:** 1 giờ 20 phút (Bay thẳng)\n   * **Giá vé:** 894.781 VND\n\n2. **Mã ưu đãi (Offer_ID): FL-55AB54**\n   * **Hãng hàng không:** Vietjet (VJ) - Số hiệu: VJ 642 (Airbus A321)\n   * **Khởi hành:** 18:30 (SGN) – **Đến nơi:** 19:50 (DAD)\n   * **Thời gian bay:** 1 giờ 20 phút (Bay thẳng)\n   * **Giá vé:** 894.781 VND\n\n3. **Mã ưu đãi (Offer_ID): FL-CCC4C7**\n   * **Hãng hàng không:** Vietnam Airlines (VN) - Số hiệu: VN 6036 (Airbus A321)\n   * **Khởi hành:** 11:45 (SGN) – **Đến nơi:** 13:15 (DAD)\n   * **Thời gian bay:** 1 giờ 30 phút (Bay thẳng)\n   * **Giá vé:** 1.384.181 VND\n\n4. **Mã ưu đãi (Offer_ID): FL-731BAA**\n   * **Hãng hàng không:** Bamboo Airways (QH) - Số hiệu: QH 154 (Airbus A321)\n   * **Khởi hành:** 10:05 (SGN) – **Đến nơi:** 11:30 (DAD)\n   * **Thời gian bay:** 1 giờ 25 phút (Bay thẳng)\n   * **Giá vé:** Không khả dụng\n\n5. **Mã ưu đãi (Offer_ID): FL-9A5899**\n   * **Hãng hàng không:** Vietjet (VJ) - Số hiệu: VJ 628 (Airbus A321)\n   * **Khởi hành:** 07:05 (SGN) – **Đến nơi:** 08:25 (DAD)\n   * **Thời gian bay:** 1 giờ 20 phút (Bay thẳng)\n   * **Giá vé:** 894.781 VND\n\n6. **Mã ưu đãi (Offer_ID): FL-50A6FF**\n   * **Hãng hàng không:** Vietjet (VJ) - Số hiệu: VJ 632 (Airbus A320)\n   * **Khởi hành:** 07:30 (SGN) – **Đến nơi:** 08:50 (DAD)\n   * **Thời gian bay:** 1 giờ 20 phút (Bay thẳng)\n   * **Giá vé:** 894.781 VND\n\n7. **Mã ưu đãi (Offer_ID): FL-C9A1D1**\n   * **Hãng hàng không:** Vietjet (VJ) - Số hiệu: VJ 630 (Airbus A321)\n   * **Khởi hành:** 09:00 (SGN) – **Đến nơi:** 10:20 (DAD)\n   * **Thời gian bay:** 1 giờ 20 phút (Bay thẳng)\n   * **Giá vé:** 894.781 VND\n\n8. **Mã ưu đãi (Offer_ID): FL-CC290A**\n   * **Hãng hàng không:** Vietjet (VJ) - Số hiệu: VJ 644 (Airbus A320)\n   * **Khởi hành:** 19:20 (SGN) – **Đến nơi:** 20:40 (DAD)\n   * **Thời gian bay:** 1 giờ 20 phút (Bay thẳng)\n   * **Giá vé:** 894.781 VND\n\n9. **Mã ưu đãi (Offer_ID): FL-EF23D3**\n   * **Hãng hàng không:** Vietjet (VJ) - Số hiệu: VJ 648 (Airbus A321)\n   * **Khởi hành:** 20:00 (SGN) – **Đến nơi:** 21:20 (DAD)\n   * **Thời gian bay:** 1 giờ 20 phút (Bay thẳng)\n   * **Giá vé:** 894.781 VND\n\n10. **Mã ưu đãi (Offer_ID): FL-DEB073**\n    * **Hãng hàng không:** Vietjet (VJ) - Số hiệu: VJ 646 (Airbus A321)\n    * **Khởi hành:** 20:40 (SGN) – **Đến nơi:** 22:00 (DAD)\n    * **Thời gian bay:** 1 giờ 20 phút (Bay thẳng)\n    * **Giá vé:** 894.781 VND\n\nQuý khách vui lòng cho biết mã ưu đãi cần đặt hoặc nếu cần hỗ trợ tìm kiếm khác!",
+      "summarize_forced": false,
+      "scored": false,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "flight_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 4
+    },
+    {
+      "turn": 2,
+      "user_message": "Tìm thêm vé khứ hồi TP.HCM–Đà Nẵng đi 10/10 về 12/10.",
+      "answer": "Dưới đây là thông tin vé máy bay khứ hồi từ TP.HCM (SGN) đi Đà Nẵng (DAD) (đi ngày 10/10/2026, về ngày 12/10/2026) cùng danh sách các lựa chọn đã tra cứu:\n\n### Vé máy bay khứ hồi (10/10/2026 – 12/10/2026)\n\n1. **Mã ưu đãi (Offer_ID): FL-3B4265**\n   * **Tổng giá khứ hồi:** 1.536.842 VND\n   * **Chiều đi (10/10/2026):** Vietjet (VJ 628) | Khởi hành: 07:05 (SGN) – Đến: 08:25 (DAD) | Bay thẳng (1h 20m)\n   * **Chiều về (12/10/2026):** Vietjet (VJ 625) | Khởi hành: 07:10 (DAD) – Đến: 08:30 (SGN) | Bay thẳng (1h 20m)\n\n2. **Mã ưu đãi (Offer_ID): FL-270EF7**\n   * **Tổng giá khứ hồi:** 1.789.562 VND\n   * **Chiều đi (10/10/2026):** Vietjet (VJ 628) | Khởi hành: 07:05 (SGN) – Đến: 08:25 (DAD) | Bay thẳng (1h 20m)\n   * **Chiều về (12/10/2026):** Vietjet (VJ 643) | Khởi hành: 20:35 (DAD) – Đến: 22:00 (SGN) | Bay thẳng (1h 25m)\n\n---\n\n### Danh sách các chuyến bay một chiều (10/10/2026) đã tìm kiếm trước đó\n\n1. **Mã ưu đãi (Offer_ID): FL-61F249**\n   * Hãng: Vietjet (VJ 640) | 15:10 (SGN) – 16:30 (DAD) | Bay thẳng | Giá vé: 894.781 VND\n2. **Mã ưu đãi (Offer_ID): FL-55AB54**\n   * Hãng: Vietjet (VJ 642) | 18:30 (SGN) – 19:50 (DAD) | Bay thẳng | Giá vé: 894.781 VND\n3. **Mã ưu đãi (Offer_ID): FL-CCC4C7**\n   * Hãng: Vietnam Airlines (VN 6036) | 11:45 (SGN) – 13:15 (DAD) | Bay thẳng | Giá vé: 1.384.181 VND\n4. **Mã ưu đãi (Offer_ID): FL-731BAA**\n   * Hãng: Bamboo Airways (QH 154) | 10:05 (SGN) – 11:30 (DAD) | Bay thẳng | Giá vé: Không khả dụng\n5. **Mã ưu đãi (Offer_ID): FL-9A5899**\n   * Hãng: Vietjet (VJ 628) | 07:05 (SGN) – 08:25 (DAD) | Bay thẳng | Giá vé: 894.781 VND\n6. **Mã ưu đãi (Offer_ID): FL-50A6FF**\n   * Hãng: Vietjet (VJ 632) | 07:30 (SGN) – 08:50 (DAD) | Bay thẳng | Giá vé: 894.781 VND\n7. **Mã ưu đãi (Offer_ID): FL-C9A1D1**\n   * Hãng: Vietjet (VJ 630) | 09:00 (SGN) – 10:20 (DAD) | Bay thẳng | Giá vé: 894.781 VND\n8. **Mã ưu đãi (Offer_ID): FL-CC290A**\n   * Hãng: Vietjet (VJ 644) | 19:20 (SGN) – 20:40 (DAD) | Bay thẳng | Giá vé: 894.781 VND\n9. **Mã ưu đãi (Offer_ID): FL-EF23D3**\n   * Hãng: Vietjet (VJ 648) | 20:00 (SGN) – 21:20 (DAD) | Bay thẳng | Giá vé: 894.781 VND\n10. **Mã ưu đãi (Offer_ID): FL-DEB073**\n    * Hãng: Vietjet (VJ 646) | 20:40 (SGN) – 22:00 (DAD) | Bay thẳng | Giá vé: 894.781 VND\n\nNếu bạn muốn đặt vé, vui lòng cung cấp mã **Offer_ID** tương ứng để tiếp tục.",
+      "summarize_forced": false,
+      "scored": false,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "flight_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 8
+    },
+    {
+      "turn": 3,
+      "user_message": "Book giúp chuyến one-way đầu tiên trong kết quả tìm một chiều.",
+      "answer": "Dưới đây là các đường dẫn đặt vé trực tiếp cho chuyến bay một chiều **FL-61F249** (Vietjet VJ 640, khởi hành 15:10 ngày 10/10/2026 từ TP.HCM đi Đà Nẵng):\n\n* **Vietjet**: 894.781 VND — [Đặt vé ngay tại www.vietjetair.com](https://www.vietjetair.com/?currency=VND&languageCode=vi&departAirport=SGN&arrivalAirport=DAD&departDate=2026-10-10&tripType=oneway&adultCount=1&childCount=0&infantCount=0&gclid=ADowPOLZsP-mziaHbPW7djwst6K3YkMmsHIv4AUA5fNx31gJNuSHVJaE22aONKK8QxlMcdGKSNsV02g6TdQQSk7C4WPjxbU6pS7HxPTZrw1hIiio197C&gclsrc=gf)\n* **hutchgo.com**: 895.059 VND — [Đặt vé ngay tại www.hutchgo.com](https://www.hutchgo.com/affiliate/r.aspx?region=VN&lang_id=vi&fromAffiliate=Y&product=RA&autosearch=Y&typeofsearch=T&channel=Deeplink&banner_id=860010&citycode=DAD&roundtrip=N&departdate=10/10/2026&adt=1&chd=0&inf=0&origCity=SGN&fclass=Y&htraceid=b35139f63af4202609061659278330&affiliate_id=20248&outBoundCarrier1=VJ&outBoundFlightNum1=640&gclid=ADowPOL81yYuqOrxnGzUmW6OoPcYFSvyvJZ9TQSR5-vkY0jh_bzwDs3oQI5NhcVcOArnY7lqK1wg8JIr2MW0Cv92JEaOd7qKpRwDuzYDcCvi1GkVjx5i&gclsrc=gf)\n* **Agoda**: 906.595 VND — [Đặt vé ngay tại www.agoda.com](https://www.agoda.com/vi-vn/bookings/details?itineraryId=A%3ASGN_20261010_A%3ADAD__1-0-0_ECO___1508170471&token=AAAA.AAAADNugVGjqltRrsN%2FkHEbltW%2BKdT0bRaeDeNjK2WCb80wIiQsvn%2F106Sn0RkS7ZORsG8RhxsOlyX7TeZJLzr0pV9NDW2TSPxQGZSolcijDpQxY4NNHJ4rUd%2FTx9hmZhqJy1VOeZfu%2B59Dh2m6D9nw0crFWs1mvBd3A96qpSj7jFy6hetjkZO7P6a6RVCw7i3IZXoIXhp%2FJ33UrfmbXDzoBt6%2F6IPdaFYanpWVFuF9V5Y5s0o7QtQI3sBUZxSG1a3J6XuGlQetX2tL6NNO7PI0waEvvo6QXAW%2Bbc7Ur4jt%2F3v%2FcWyXqXhpAaN3mKugHJEeWvK51PzSlM5TORlY6mhxLIx3eB9vbnsQQkraGrjfEtENGTqdKxvuRSFHYxS3Wf%2BOO&Adult=1&Child=0&Infant=0&TripType=OneWay&DisplayedPrice=906595.0&currency=VND&Slice1=1&Cabin1=ECO&DepartureDate1=2026-10-10T15:10:00&Origin1=SGN&Destination1=DAD&CID=1907323&affsid=48858a42-2825-4b70-b86b-e5e75c92287e&gclid=ADowPOLJopvkPgX0DKTZMzxOH55lRCNpdNJdDn1oD0keZoodh3UD-xBFQ40holatqBSmZO-mCAdPk6Q8ZiRgE-PySQA1qHLEzWD6kO8jG-5Frr6OIrUx&gclsrc=gf)\n* **Trip.com**: 920.000 VND — [Đặt vé ngay tại vn.trip.com](https://vn.trip.com/flights/w/Transfer?flighttype=S&dcity=SGN&acity=DAD&ddate=2026-10-10&rdate=&quantity=1&childqty=0&babyqty=0&curr=VND&class=Y&channel=VNSite&allianceid=705420&uuid=2817193830279771301&sid=1398215&country=VN&TrackerType=180808_enf_sctj&TrackerTag=NA&criteriatoken=tripType:OW|cabinClass:Economy|adult:1|child:0|infant:0|subChannel:316|channel:EnglishSite|currency:VND|extensionFlag:16|list:true|idc:SHARB|detailSearch:false|issuer:TRIP|date_1:2026-10-10|aCity_1:DAD|dCity_1:SGN|siteType:1|listTime:202609070059|aid:705420|sid:1398215&flightclass=I&wkp=1&locale=vi-VN&ShoppingID=8000000000H1Jodg02W2bX14E7J4403zL8007wgL1vGW0000000000G0MG0e8200001O03Unq000W600000000Y7001Jc2bZ6Lm80000000000|||IVRW6===||||CgozV25icTNmS1JP|GAIgBCiHt5U-SAE=&amt=920000.0&ouid=CtripGoogle&utm_source=Google&utm_medium=referral&utm_campaign=VN&gclid=ADowPOJFqoENVQUwAPjRFUKmFw2zucEH7d_7hq8pn3o2u7Njc9iPYaZj_WdkwudPRGa-umd-q7UTVjR-z5-xgXJdJvWBkxgTUo70lDALmgKhK4towfLP&gclsrc=gf)\n* **Jettzy**: 942.028 VND — [Đặt vé ngay tại www.jettzy.com.vn](https://www.jettzy.com.vn/booking/travel-details?rk=5000:39426542059534:24735584288715&s=W3sidHlwZSI6NTAwMSwibGVnIjpbeyJkZXBhcnQiOiJTR04iLCJkZXBhcnRfdHlwZSI6IkFpcnBvcnQiLCJkZXN0aW5hdGlvbiI6IkRBRCIsImRlc3RpbmF0aW9uX3R5cGUiOiJBaXJwb3J0IiwiZGVwYXJ0X2RhdGUiOiIyMDI2LTEwLTEwIn1dLCJjYWJpbiI6IkVjb25vbXkiLCJwYXNzZW5nZXIiOnsiQURUIjoxLCJDTk4iOjAsIklORiI6MH0sInNlYXJjaF9yb2xlIjoiIn1d&type=route&branch=GOOGAPI_VN_VI&partner=GOOGAPI_VN_VI&hasParentID=1&partner_total_price=VND942028&resource=MTcyLjMxLjUwLjgw&locator=4688-124-200-320&plating_carrier=VJ&DisplayedPrice=942028&DisplayedPriceCurrency=VND&cache_all_store=eyI1MDAwOjM5NDI2NTQyMDU5NTM0OjI0NzM1NTg0Mjg4NzE1IjoiZXlKallXTm9aVjloYkd4ZmMzUnZjbVVpT2pFd01EQXNJbU5oWTJobFgyOXlaMTlyWlhraU9pSTFNREF3T2pNNU5ESTJOVFF5TURVNU5UTTBJaXdpWTJGamFHVmZjbVZ1WkdWeVgydGxlU0k2SWpJM09UTTNNRFE1T1Rnek9UTTFJbjA9In0=&itineraryData=eyJqb3VybmV5IjpbW3siS2V5IjoiMV8wIiwiY2FycmllciI6IlZKIiwiZGVwYXJ0X2FpcnBvcnQiOiJTR04iLCJhcnJpdmVkX2FpcnBvcnQiOiJEQUQiLCJkZXBhcnRfdGltZSI6IjIwMjYtMTAtMTAiLCJhcnJpdmVkX3RpbWUiOiIyMDI2LTEwLTEwIiwiZmxpZ2h0X251bWJlciI6IjY0MCIsImNhYmluIjoiQSIsImNhYmluX2NsYXNzIjoiRWNvbm9teSJ9XV0sInBhc3NlbmdlciI6eyJBRFQiOjF9LCJncm91cF9wcmljZSI6WyI5NDIwMjguMDAiXSwiZ3JvdXBfc291cmNlIjpbIlRPVVJNSU5EVVNEIl0sImdyb3VwX2FkZGl0aW9uYWwiOlt7InNob3BwaW5nX3JlcXVlc3QiOnsiYWlybGluZV9wcmVmZXJlbmNlcyI6IiIsImFpcmxpbmVfbWFuZGF0b3J5IjoiIiwiYWlybGluZV9leGNsdWRlIjoiIiwicGVyc29uX3R5cGUiOiIiLCJzaG9wcGluZ19jb250ZW50X3NvdXJjZSI6IiJ9LCJyZXF1ZXN0X3R5cGUiOiIzMDA4IiwidmlydHVhbF9wY2MiOiJHT09HQVBJX1ZOX1ZJIn1dfQ==&generate_from=search_engine&UserLanguage=vi&gclid=ADowPOKOuSC0aK5CvDydRzlfSzwuuCMLBFq9Q2jrMchqcUHNbBia-oiD8gZV1YENFlWjvxlkB8FMJTq6GLmEShURCkhYHdjJKFfPxhZkQ1NV7JRx5fGY&gclsrc=gf)\n* **Wego**: 952.708 VND — [Đặt vé ngay tại www.wego.com](https://www.wego.vn/ve-may-bay/searches/SGN-DAD-2026-10-10/economy/1a:0c:0i/ecb4264b4d9d3c6msr:VJ640~10~1510~1630/ecb4264b4d9d3c6msr:l_wego_com:e9d5ea9262415e57:ss?ulang=vi&placement_type=integrated_booking&currency_code=VND&ts_code=ab0e7&gclid=ADowPOIfWFmikgSM5wlxH0fPWKBY-CzXUsXrfYzZDUDeBuxvQaSBY7Z01r7hhQxkD73Nj6tGTbGCLK6G3s5Cs1d0TQXteH8OAuGBtVWe-7WHuQJRe8zb&gclsrc=gf)\n* **Gotogate**: 1.603.559 VND — [Đặt vé ngay tại www.gotogate.vn](https://vn.gotogate.com/from/gfsapi/air/SGNDAD10OCT/1/-/-/c:Y?customerCurrency=VND&ibe.asc=8&ibe.asr=6.7W0C9DJR&ibe.cot=4.9L7C0RKNWG&ibe.cr=GU1K87_1&ibe.d=MDswOzA7MTs1Njs5TDdDMFJLRkpTOzFBQTQ7OTBHRDY%3D&ibe.e=h_4oFGRz6somSEDHk_Zbx50DfWJu4O8e6rF3_JK_fnhDebgvK8oefG2O9dZSuZpfs31v_P8ucfdHVk0TiKCQKQyvZPc%3D&ibe.e.h=vzSu&ibe.ecc=1..1819&ibe.oas=3&ibe.oct=10&ibe.odt=TKYCIZ&ibe.ot=160355854&ibe.s=2-IYI-FAW-TMP64O-TMP9U0-0-HS-DU-PK-Y-A-1-1&ibe.si=1752946939759&selectionKey=VJ640-10Oct26-A,am6pez,::g_0:h_0:a_PA:b_7V:c_7V:d_568e8608:e_905d684:f_6Q:i_1.0.0:j_K7:z_xiriw2&t=1788715901&sig=AUriFc0LeeBSXTltudQqjTZSpfuJemPim6T2k2_YOk4KIPs6MVY-06RM9-tW7eRflIE204co5FqitUa-z65AUX8wWsN8FyMc7GQtxlIBCUXdG8OgaRZ2nxi7mwtGtwtQvaVefKSI8MvU7tgql1DibbcmYIBqHmPf3L7p8PUwYyyZFIhwiN06EDMgCwOeVuSd886NmA_-YvdQriWggNDkMP_9Ai0RJp_yEUsSxEd262Rx_hlH566pDl_jkcW68pnNB1jqTLa8vLpYYRXzglwomuCAjQIsc7GgRKBrj7tyvH6R0S-6bYW9PVAXdNl7uANgtte7yuBgta5iNA7b-c5STbNA3o32bvzmCJ_B2MyvoUv7YM4MZzDiaBBthVgk_Nux7A0_vrfOAOedgfkm_P-kF11kZjP5HBg3-Y3aGr1udq1Hn1Y10JhHmXtqdqpe-c47KqWw77wQMQQRifA4Rg-zE_A0tL0jATxk3T9qmllhUcgV-czE-YJZI6iZMhjTVB-ZkEUneCw%3D&ReferralId=GFS&domain=gfs&utm_source=gfs&utm_medium=organic&gclid=ADowPOIv9pR4fSKINC7id9kNJxujhCjwAKMdz0Arn4cuJFTGRUD4KLaz58fDbUQ2TEGCbjSPO-wrt9WGeDW70uscHUB5KkfB_eoN1I3dEI0vI_I6hNuS&gclsrc=gf)\n* **Mytrip**: 1.603.559 VND — [Đặt vé ngay tại vn.mytrip.com](https://vn.mytrip.com/from/gfsapi/air/SGNDAD10OCT/1/-/-/c:Y?customerCurrency=VND&ibe.asc=8&ibe.asr=6.7W0GA7KW&ibe.cot=4.9L7JJN1F94&ibe.cr=GY4OWB_1&ibe.d=MDswOzA7MTs1Njs5TDdKSk4wVVo2OzFBQTQ7OTBHRDY%3D&ibe.e=Np9CX6fPx8R9ihu_s6EwiPUON5jXKhk53VPmXaDJWcRlV5Rp0gZwhsibtcviynBCtvAW59tCwsXcA_VfHWhH&ibe.e.h=YErT&ibe.ecc=1..1819&ibe.oas=3&ibe.oct=10&ibe.odt=TKYCIZ&ibe.ot=160355854&ibe.s=2-IYI-FAW-TMP64O-TMP9U0-0-HS-DU-PK-Y-A-1-1&ibe.si=1752943432279&selectionKey=VJ640-10Oct26-A,am6pez,::g_0:h_0:a_PA:b_7V:c_7V:d_568e8608:e_905d684:f_6Q:i_1.0.0:j_K7:z_xiriw2&t=1788715902&sig=AUriFc1Zus8Tw3Tj4sdA99oN73txjCnFrfcw4G-Hzxhv9QkRinrT3SrLhUoR9doDcLTnHku_tFFardqe7PwXAovr8m0MOQEQlz0H4WElegXg-a3ZygyBY5v5ulRfoxe1gy_d_l_NOB2OUtGFbG9JJdPUn7bkyRcOcsLTfI3WoJSyxhH2N9n3o145QX-Z1-hVu03pKdPjS81UzHbvhhvn-MacC5Fd5_UdKgiy3uvjVw6jAJdxfZ6qOJrbMNGyO7GOiHvy_FpFdRhMA8NLUDWACuhX16idqtwuRAg58cWXIOFmG2TeXzOVi4fulQ97V-Ek9eDqVw8EjxMcYkzDI5o5slSeC02lSgJH8NyK1lpXxXMdjSXqWaJbElbRLAiQ_sjaeRZZdht1iAZhwip-cf4QKlCgn2Q5F1DDZVGYU9ShDLWg-JeV5448IKulDhMWgCkuNijvUATjoLwvKxPduHUVFI6kUwQgyHfFJ1RHuDJie8X6ND-QQFoY_RZ_U2ynDmzfvmfp77o%3D&ReferralId=GFS&domain=gfs&utm_source=gfs&utm_medium=organic&gclid=ADowPOLPXYhdaBGRrOasyFmSi-VuviTa88fS8W3AWWkJxgQZRUxp7sGn6nIvph4E0KHP-_1hQwHbiZ-SqxHWGateikMCxToqXC-5XkoYTGOs-kv0Gg0S&gclsrc=gf)\n\nQuý khách có thể nhấp vào liên kết của nhà cung cấp mong muốn để hoàn tất quá trình thanh toán và giữ chỗ. Nếu cần hỗ trợ thêm thông tin gì khác, xin vui lòng cho tôi biết!",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "flight_assistant",
+        "join_results",
+        "primary_assistant",
+        "summarize_conversation",
+        "memory_finalize"
+      ],
+      "message_count": 8
+    }
+  ],
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "flight"
+    ],
+    "delegation_tool_calls": [],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "flight_assistant",
+      "memory_recall_flight",
+      "flight_chat",
+      "search_one_way_flights_tool",
+      "flight_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize",
+      "memory_recall_global",
+      "primary_assistant",
+      "memory_recall_flight",
+      "flight_chat",
+      "search_round_trip_flights_tool",
+      "flight_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize",
+      "memory_recall_global",
+      "primary_assistant",
+      "flight_assistant",
+      "memory_recall_flight",
+      "flight_chat",
+      "book_flight_by_id",
+      "flight_chat",
+      "join_results",
+      "primary_assistant",
+      "summarize_conversation",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "flight": {
+      "candidate_pool_ids": [
+        "m_flight_nonstop",
+        "m_flight_economy"
+      ],
+      "applicability": {
+        "m_flight_nonstop": "apply",
+        "m_flight_economy": "apply"
+      },
+      "applicability_reasons": {
+        "m_flight_nonstop": "reconciled: direct-flight preference applies to search (llm: The user is requesting to book a specific flight from existing search results; direct flight preference is not applicable as a tool parameter for booking.; rule: direct-flight preference applies to search)",
+        "m_flight_economy": "reconciled: cabin class preference applies to flight search (llm: The user is requesting to book a specific flight from existing search results; cabin class preference is not applicable as a tool parameter for booking.; rule: cabin class preference applies to flight search)"
+      },
+      "final_context_ids": [
+        "m_flight_nonstop",
+        "m_flight_economy"
+      ],
+      "applied_constraints": [
+        "[d1d8e48c-f235-5c34-a52a-1c0c86bd3125] Ưu tiên bay thẳng, tránh nối chuyến",
+        "[4e11a103-a6c9-53fc-8f9d-9ad6ad93acc2] Thường bay hạng phổ thông (economy) khi đi du lịch"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "stops": "1",
+        "origin": "SGN",
+        "cabin_class": "economy",
+        "destination": "DAD",
+        "departure_date": "2026-10-10"
+      },
+      "timestamp": "2026-09-06T17:32:29.364514+00:00",
+      "raw_result": {
+        "search_id": "0fd5ac76-dc4f-4fea-80ad-527b9efc7546",
+        "domain": "flight",
+        "displayed_item_ids": [
+          "FL-61F249",
+          "FL-55AB54",
+          "FL-CCC4C7",
+          "FL-731BAA",
+          "FL-9A5899",
+          "FL-50A6FF",
+          "FL-C9A1D1",
+          "FL-CC290A",
+          "FL-EF23D3",
+          "FL-DEB073"
+        ],
+        "labels": [],
+        "total_results": 10
+      },
+      "normalized_result": {
+        "search_id": "0fd5ac76-dc4f-4fea-80ad-527b9efc7546",
+        "request_id": "req_flight_0798681b",
+        "domain": "flight",
+        "total_results": 10,
+        "items": [
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-61F249",
+            "warning": null,
+            "Offer_ID": "FL-61F249",
+            "currency": "VND",
+            "offer_id": "FL-61F249",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A320",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "16:30",
+                "flight_number": "VJ 640",
+                "departure_date": "2026-10-10",
+                "departure_time": "15:10",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 04:30 PM",
+            "detail_token": "W1syLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJWlhsNlJXOU1ObWQwWlVWQlVreGlRa0ZDUnkwdExTMHRMUzB0TFhscFltUmtPRUZCUVVGQlIzRmtiM2RyVEZGdWVpMUJFZ1ZXU2pZME1Cb0xDTDNPTmhBQUdnTldUa1E0SEhEcUdnPT0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2NDAiXV1dXQ==",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 03:10 PM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-55AB54",
+            "warning": null,
+            "Offer_ID": "FL-55AB54",
+            "currency": "VND",
+            "offer_id": "FL-55AB54",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "19:50",
+                "flight_number": "VJ 642",
+                "departure_date": "2026-10-10",
+                "departure_time": "18:30",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 07:50 PM",
+            "detail_token": "W1syLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJWlhsNlJXOU1ObWQwWlVWQlVreGlRa0ZDUnkwdExTMHRMUzB0TFhscFltUmtPRUZCUVVGQlIzRmtiM2RyVEZGdWVpMUJFZ1ZXU2pZME1ob0xDTDNPTmhBQUdnTldUa1E0SEhEcUdnPT0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2NDIiXV1dXQ==",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 06:30 PM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "price": 1384181,
+            "stops": 0,
+            "airline": "Vietnam Airlines",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-CCC4C7",
+            "warning": null,
+            "Offer_ID": "FL-CCC4C7",
+            "currency": "VND",
+            "offer_id": "FL-CCC4C7",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "79 cm",
+                "cabin_class": "Average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VN",
+                "airline_name": "Vietnam Airlines",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "13:15",
+                "flight_number": "VN 6036",
+                "departure_date": "2026-10-10",
+                "departure_time": "11:45",
+                "duration_minutes": 90,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1384181,
+            "airline_code": "VN",
+            "airline_name": "Vietnam Airlines",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 01:15 PM",
+            "detail_token": "W1syLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJWlhsNlJXOU1ObWQwWlVWQlVreGlRa0ZDUnkwdExTMHRMUzB0TFhscFltUmtPRUZCUVVGQlIzRmtiM2RyVEZGdWVpMUJFZ1pXVGpZd016WWFDd2oxdlZRUUFCb0RWazVFT0J4d3dDaz0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVk4iLCI2MDM2Il1dXV0=",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 11:45 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 90,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "price": "unavailable",
+            "stops": 0,
+            "airline": "Bamboo Airways",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-731BAA",
+            "warning": null,
+            "Offer_ID": "FL-731BAA",
+            "currency": "VND",
+            "offer_id": "FL-731BAA",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "N/A",
+                "cabin_class": null,
+                "aircraftName": "Airbus A321",
+                "airline_code": "QH",
+                "airline_name": "Bamboo Airways",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "11:30",
+                "flight_number": "QH 154",
+                "departure_date": "2026-10-10",
+                "departure_time": "10:05",
+                "duration_minutes": 85,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": "unavailable",
+            "airline_code": "QH",
+            "airline_name": "Bamboo Airways",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 11:30 AM",
+            "detail_token": "W1syLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJWlhsNlJXOU1ObWQwWlVWQlVreGlRa0ZDUnkwdExTMHRMUzB0TFhscFltUmtPRUZCUVVGQlIzRmtiM2RyVEZGdWVpMUJFZ1ZSU0RFMU5EZ2MiXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiUUgiLCIxNTQiXV1dXQ==",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 10:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 85,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-9A5899",
+            "warning": null,
+            "Offer_ID": "FL-9A5899",
+            "currency": "VND",
+            "offer_id": "FL-9A5899",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:25",
+                "flight_number": "VJ 628",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:05",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:25 AM",
+            "detail_token": "W1syLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJWlhsNlJXOU1ObWQwWlVWQlVreGlRa0ZDUnkwdExTMHRMUzB0TFhscFltUmtPRUZCUVVGQlIzRmtiM2RyVEZGdWVpMUJFZ1ZXU2pZeU9Cb0xDTDNPTmhBQUdnTldUa1E0SEhEcUdnPT0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2MjgiXV1dXQ==",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-50A6FF",
+            "warning": null,
+            "Offer_ID": "FL-50A6FF",
+            "currency": "VND",
+            "offer_id": "FL-50A6FF",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A320",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:50",
+                "flight_number": "VJ 632",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:30",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:50 AM",
+            "detail_token": "W1syLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJWlhsNlJXOU1ObWQwWlVWQlVreGlRa0ZDUnkwdExTMHRMUzB0TFhscFltUmtPRUZCUVVGQlIzRmtiM2RyVEZGdWVpMUJFZ1ZXU2pZek1ob0xDTDNPTmhBQUdnTldUa1E0SEhEcUdnPT0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2MzIiXV1dXQ==",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:30 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-C9A1D1",
+            "warning": null,
+            "Offer_ID": "FL-C9A1D1",
+            "currency": "VND",
+            "offer_id": "FL-C9A1D1",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "10:20",
+                "flight_number": "VJ 630",
+                "departure_date": "2026-10-10",
+                "departure_time": "09:00",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 10:20 AM",
+            "detail_token": "W1syLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJWlhsNlJXOU1ObWQwWlVWQlVreGlRa0ZDUnkwdExTMHRMUzB0TFhscFltUmtPRUZCUVVGQlIzRmtiM2RyVEZGdWVpMUJFZ1ZXU2pZek1Cb0xDTDNPTmhBQUdnTldUa1E0SEhEcUdnPT0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2MzAiXV1dXQ==",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 09:00 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-CC290A",
+            "warning": null,
+            "Offer_ID": "FL-CC290A",
+            "currency": "VND",
+            "offer_id": "FL-CC290A",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A320",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "20:40",
+                "flight_number": "VJ 644",
+                "departure_date": "2026-10-10",
+                "departure_time": "19:20",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:40 PM",
+            "detail_token": "W1syLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJWlhsNlJXOU1ObWQwWlVWQlVreGlRa0ZDUnkwdExTMHRMUzB0TFhscFltUmtPRUZCUVVGQlIzRmtiM2RyVEZGdWVpMUJFZ1ZXU2pZME5Cb0xDTDNPTmhBQUdnTldUa1E0SEhEcUdnPT0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2NDQiXV1dXQ==",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:20 PM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-EF23D3",
+            "warning": null,
+            "Offer_ID": "FL-EF23D3",
+            "currency": "VND",
+            "offer_id": "FL-EF23D3",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "21:20",
+                "flight_number": "VJ 648",
+                "departure_date": "2026-10-10",
+                "departure_time": "20:00",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 09:20 PM",
+            "detail_token": "W1syLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJWlhsNlJXOU1ObWQwWlVWQlVreGlRa0ZDUnkwdExTMHRMUzB0TFhscFltUmtPRUZCUVVGQlIzRmtiM2RyVEZGdWVpMUJFZ1ZXU2pZME9Cb0xDTDNPTmhBQUdnTldUa1E0SEhEcUdnPT0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2NDgiXV1dXQ==",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 08:00 PM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-DEB073",
+            "warning": null,
+            "Offer_ID": "FL-DEB073",
+            "currency": "VND",
+            "offer_id": "FL-DEB073",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "22:00",
+                "flight_number": "VJ 646",
+                "departure_date": "2026-10-10",
+                "departure_time": "20:40",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 10:00 PM",
+            "detail_token": "W1syLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJWlhsNlJXOU1ObWQwWlVWQlVreGlRa0ZDUnkwdExTMHRMUzB0TFhscFltUmtPRUZCUVVGQlIzRmtiM2RyVEZGdWVpMUJFZ1ZXU2pZME5ob0xDTDNPTmhBQUdnTldUa1E0SEhEcUdnPT0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2NDYiXV1dXQ==",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 08:40 PM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "FL-61F249",
+          "FL-55AB54",
+          "FL-CCC4C7",
+          "FL-731BAA",
+          "FL-9A5899",
+          "FL-50A6FF",
+          "FL-C9A1D1",
+          "FL-CC290A",
+          "FL-EF23D3",
+          "FL-DEB073"
+        ],
+        "items": [
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-61F249",
+            "warning": null,
+            "Offer_ID": "FL-61F249",
+            "currency": "VND",
+            "offer_id": "FL-61F249",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A320",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "16:30",
+                "flight_number": "VJ 640",
+                "departure_date": "2026-10-10",
+                "departure_time": "15:10",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 04:30 PM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 03:10 PM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-55AB54",
+            "warning": null,
+            "Offer_ID": "FL-55AB54",
+            "currency": "VND",
+            "offer_id": "FL-55AB54",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "19:50",
+                "flight_number": "VJ 642",
+                "departure_date": "2026-10-10",
+                "departure_time": "18:30",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 07:50 PM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 06:30 PM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "price": 1384181,
+            "stops": 0,
+            "airline": "Vietnam Airlines",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-CCC4C7",
+            "warning": null,
+            "Offer_ID": "FL-CCC4C7",
+            "currency": "VND",
+            "offer_id": "FL-CCC4C7",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "79 cm",
+                "cabin_class": "Average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VN",
+                "airline_name": "Vietnam Airlines",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "13:15",
+                "flight_number": "VN 6036",
+                "departure_date": "2026-10-10",
+                "departure_time": "11:45",
+                "duration_minutes": 90,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1384181,
+            "airline_code": "VN",
+            "airline_name": "Vietnam Airlines",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 01:15 PM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 11:45 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 90,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "price": "unavailable",
+            "stops": 0,
+            "airline": "Bamboo Airways",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-731BAA",
+            "warning": null,
+            "Offer_ID": "FL-731BAA",
+            "currency": "VND",
+            "offer_id": "FL-731BAA",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "N/A",
+                "cabin_class": null,
+                "aircraftName": "Airbus A321",
+                "airline_code": "QH",
+                "airline_name": "Bamboo Airways",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "11:30",
+                "flight_number": "QH 154",
+                "departure_date": "2026-10-10",
+                "departure_time": "10:05",
+                "duration_minutes": 85,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": "unavailable",
+            "airline_code": "QH",
+            "airline_name": "Bamboo Airways",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 11:30 AM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 10:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 85,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-9A5899",
+            "warning": null,
+            "Offer_ID": "FL-9A5899",
+            "currency": "VND",
+            "offer_id": "FL-9A5899",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:25",
+                "flight_number": "VJ 628",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:05",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:25 AM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-50A6FF",
+            "warning": null,
+            "Offer_ID": "FL-50A6FF",
+            "currency": "VND",
+            "offer_id": "FL-50A6FF",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A320",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:50",
+                "flight_number": "VJ 632",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:30",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:50 AM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:30 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-C9A1D1",
+            "warning": null,
+            "Offer_ID": "FL-C9A1D1",
+            "currency": "VND",
+            "offer_id": "FL-C9A1D1",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "10:20",
+                "flight_number": "VJ 630",
+                "departure_date": "2026-10-10",
+                "departure_time": "09:00",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 10:20 AM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 09:00 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-CC290A",
+            "warning": null,
+            "Offer_ID": "FL-CC290A",
+            "currency": "VND",
+            "offer_id": "FL-CC290A",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A320",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "20:40",
+                "flight_number": "VJ 644",
+                "departure_date": "2026-10-10",
+                "departure_time": "19:20",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:40 PM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:20 PM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-EF23D3",
+            "warning": null,
+            "Offer_ID": "FL-EF23D3",
+            "currency": "VND",
+            "offer_id": "FL-EF23D3",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "21:20",
+                "flight_number": "VJ 648",
+                "departure_date": "2026-10-10",
+                "departure_time": "20:00",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 09:20 PM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 08:00 PM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "price": 894781,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": null,
+            "item_id": "FL-DEB073",
+            "warning": null,
+            "Offer_ID": "FL-DEB073",
+            "currency": "VND",
+            "offer_id": "FL-DEB073",
+            "outbound": null,
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "22:00",
+                "flight_number": "VJ 646",
+                "departure_date": "2026-10-10",
+                "departure_time": "20:40",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 894781,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 10:00 PM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 08:40 PM",
+            "arrival_airport": "DAD",
+            "inbound_options": null,
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": false,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "stops": "1",
+        "origin": "SGN",
+        "cabin_class": "economy",
+        "destination": "DAD",
+        "return_date": "2026-10-12",
+        "departure_date": "2026-10-10"
+      },
+      "timestamp": "2026-09-06T17:32:29.364514+00:00",
+      "raw_result": {
+        "search_id": "819fe3e1-60b1-4fa2-8ac7-776b855e87fa",
+        "domain": "flight",
+        "displayed_item_ids": [
+          "FL-3B4265",
+          "FL-270EF7"
+        ],
+        "labels": [],
+        "total_results": 2
+      },
+      "normalized_result": {
+        "search_id": "819fe3e1-60b1-4fa2-8ac7-776b855e87fa",
+        "request_id": "req_flight_3ab265ca",
+        "domain": "flight",
+        "total_results": 2,
+        "items": [
+          {
+            "price": 1536842.0,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": {
+              "price": 1536842,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "08:30",
+                  "flight_number": "VJ 625",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "07:10",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 08:30 AM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 07:10 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "item_id": "FL-3B4265",
+            "warning": null,
+            "Offer_ID": "FL-3B4265",
+            "currency": "VND",
+            "offer_id": "FL-3B4265",
+            "outbound": {
+              "price": 1536842,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-10",
+                  "arrival_time": "08:25",
+                  "flight_number": "VJ 628",
+                  "departure_date": "2026-10-10",
+                  "departure_time": "07:05",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "DAD",
+                  "arrival_airport_name": "Danang International Airport",
+                  "departure_airport_code": "SGN",
+                  "departure_airport_name": "Tan Son Nhat International Airport"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-10",
+              "arrival_time": "10-10-2026 08:25 AM",
+              "departure_date": "2026-10-10",
+              "departure_time": "10-10-2026 07:05 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "DAD",
+              "departure_airport_code": "SGN"
+            },
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:25",
+                "flight_number": "VJ 628",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:05",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1536842.0,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:25 AM",
+            "detail_token": "W1sxLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJVFVsWGRucEhkV1ZpWkRCQlQyOW1OMEZDUnkwdExTMHRMUzB0YzIxaVpXVXlNMEZCUVVGQlIzRmtiekJCUm5sU1FsbEJFZ1ZXU2pZeU5Sb0xDTXJtWFJBQUdnTldUa1E0SEhDSkxnPT0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2MjgiXV1dLFsiMjAyNi0xMC0xMiIsIkRBRCIsIlNHTiIsW1siREFEIiwiMjAyNi0xMC0xMiIsIlNHTiIsIlZKIiwiNjI1Il1dXV0=",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": {
+              "price": 1536842,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "08:30",
+                  "flight_number": "VJ 625",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "07:10",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 08:30 AM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 07:10 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": true,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "price": 1789562.0,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": {
+              "price": 1789562,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "22:00",
+                  "flight_number": "VJ 643",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "20:35",
+                  "duration_minutes": 85,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 10:00 PM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 08:35 PM",
+              "duration_minutes": 85,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "item_id": "FL-270EF7",
+            "warning": null,
+            "Offer_ID": "FL-270EF7",
+            "currency": "VND",
+            "offer_id": "FL-270EF7",
+            "outbound": {
+              "price": 1536842,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-10",
+                  "arrival_time": "08:25",
+                  "flight_number": "VJ 628",
+                  "departure_date": "2026-10-10",
+                  "departure_time": "07:05",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "DAD",
+                  "arrival_airport_name": "Danang International Airport",
+                  "departure_airport_code": "SGN",
+                  "departure_airport_name": "Tan Son Nhat International Airport"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-10",
+              "arrival_time": "10-10-2026 08:25 AM",
+              "departure_date": "2026-10-10",
+              "departure_time": "10-10-2026 07:05 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "DAD",
+              "departure_airport_code": "SGN"
+            },
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:25",
+                "flight_number": "VJ 628",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:05",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1789562.0,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:25 AM",
+            "detail_token": "W1sxLDEsWyIxIiwiMCIsIjAiLCIwIl0sWyJDalJJVFVsWGRucEhkV1ZpWkRCQlQyOW1OMEZDUnkwdExTMHRMUzB0YzIxaVpXVXlNMEZCUVVGQlIzRmtiekJCUm5sU1FsbEJFZ1ZXU2pZME14b0xDUHFjYlJBQUdnTldUa1E0SEhEVE5RPT0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2MjgiXV1dLFsiMjAyNi0xMC0xMiIsIkRBRCIsIlNHTiIsW1siREFEIiwiMjAyNi0xMC0xMiIsIlNHTiIsIlZKIiwiNjQzIl1dXV0=",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": {
+              "price": 1789562,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "22:00",
+                  "flight_number": "VJ 643",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "20:35",
+                  "duration_minutes": 85,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 10:00 PM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 08:35 PM",
+              "duration_minutes": 85,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": true,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "FL-3B4265",
+          "FL-270EF7"
+        ],
+        "items": [
+          {
+            "price": 1536842.0,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": {
+              "price": 1536842,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "08:30",
+                  "flight_number": "VJ 625",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "07:10",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 08:30 AM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 07:10 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "item_id": "FL-3B4265",
+            "warning": null,
+            "Offer_ID": "FL-3B4265",
+            "currency": "VND",
+            "offer_id": "FL-3B4265",
+            "outbound": {
+              "price": 1536842,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-10",
+                  "arrival_time": "08:25",
+                  "flight_number": "VJ 628",
+                  "departure_date": "2026-10-10",
+                  "departure_time": "07:05",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "DAD",
+                  "arrival_airport_name": "Danang International Airport",
+                  "departure_airport_code": "SGN",
+                  "departure_airport_name": "Tan Son Nhat International Airport"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-10",
+              "arrival_time": "10-10-2026 08:25 AM",
+              "departure_date": "2026-10-10",
+              "departure_time": "10-10-2026 07:05 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "DAD",
+              "departure_airport_code": "SGN"
+            },
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:25",
+                "flight_number": "VJ 628",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:05",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1536842.0,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:25 AM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": {
+              "price": 1536842,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "08:30",
+                  "flight_number": "VJ 625",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "07:10",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 08:30 AM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 07:10 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": true,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "price": 1789562.0,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": {
+              "price": 1789562,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "22:00",
+                  "flight_number": "VJ 643",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "20:35",
+                  "duration_minutes": 85,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 10:00 PM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 08:35 PM",
+              "duration_minutes": 85,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "item_id": "FL-270EF7",
+            "warning": null,
+            "Offer_ID": "FL-270EF7",
+            "currency": "VND",
+            "offer_id": "FL-270EF7",
+            "outbound": {
+              "price": 1536842,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-10",
+                  "arrival_time": "08:25",
+                  "flight_number": "VJ 628",
+                  "departure_date": "2026-10-10",
+                  "departure_time": "07:05",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "DAD",
+                  "arrival_airport_name": "Danang International Airport",
+                  "departure_airport_code": "SGN",
+                  "departure_airport_name": "Tan Son Nhat International Airport"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-10",
+              "arrival_time": "10-10-2026 08:25 AM",
+              "departure_date": "2026-10-10",
+              "departure_time": "10-10-2026 07:05 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "DAD",
+              "departure_airport_code": "SGN"
+            },
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:25",
+                "flight_number": "VJ 628",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:05",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1789562.0,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:25 AM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": {
+              "price": 1789562,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "22:00",
+                  "flight_number": "VJ 643",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "20:35",
+                  "duration_minutes": 85,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 10:00 PM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 08:35 PM",
+              "duration_minutes": 85,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": true,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "departure_date": "2026-10-10",
+        "origin": "SGN",
+        "destination": "DAD",
+        "cabin_class": "economy",
+        "stops": "1"
+      },
+      "timestamp": "2026-09-06T17:32:29.365473+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 6
+    },
+    {
+      "domain": "flight",
+      "name": "search_round_trip_flights_tool",
+      "arguments": {
+        "destination": "DAD",
+        "return_date": "2026-10-12",
+        "departure_date": "2026-10-10",
+        "stops": "1",
+        "origin": "SGN",
+        "cabin_class": "economy"
+      },
+      "timestamp": "2026-09-06T17:32:29.365473+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 15
+    },
+    {
+      "domain": "flight",
+      "name": "book_flight_by_id",
+      "arguments": {
+        "flight_id": "FL-61F249"
+      },
+      "timestamp": "2026-09-06T17:32:29.365473+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 25
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "flight",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là các lựa chọn đặt vé cho chuyến bay có mã **FL-61F249**:\\n\\n* **Vietjet**: 894.781 VND — [Đặt vé ngay tại www.vietjetair.com](https://www.vietjetair.com/?currency=VND&languageCode=vi&departAirport=SGN&arrivalAirport=DAD&departDate=2026-10-10&tripType=oneway&adultCount=1&childCount=0&infantCount=0&gclid=ADowPOLZsP-mziaHbPW7djwst6K3YkMmsHIv4AUA5fNx31gJNuSHVJaE22aONKK8QxlMcdGKSNsV02g6TdQQSk7C4WPjxbU6pS7HxPTZrw1hIiio197C&gclsrc=gf)\\n* **hutchgo.com**: 895.059 VND — [Đặt vé ngay tại www.hutchgo.com](https://www.hutchgo.com/affiliate/r.aspx?region=VN&lang_id=vi&fromAffiliate=Y&product=RA&autosearch=Y&typeofsearch=T&channel=Deeplink&banner_id=860010&citycode=DAD&roundtrip=N&departdate=10/10/2026&adt=1&chd=0&inf=0&origCity=SGN&fclass=Y&htraceid=b35139f63af4202609061659278330&affiliate_id=20248&outBoundCarrier1=VJ&outBoundFlightNum1=640&gclid=ADowPOL81yYuqOrxnGzUmW6OoPcYFSvyvJZ9TQSR5-vkY0jh_bzwDs3oQI5NhcVcOArnY7lqK1wg8JIr2MW0Cv92JEaOd7qKpRwDuzYDcCvi1GkVjx5i&gclsrc=gf)\\n* **Agoda**: 906.595 VND — [Đặt vé ngay tại www.agoda.com](https://www.agoda.com/vi-vn/bookings/details?itineraryId=A%3ASGN_20261010_A%3ADAD__1-0-0_ECO___1508170471&token=AAAA.AAAADNugVGjqltRrsN%2FkHEbltW%2BKdT0bRaeDeNjK2WCb80wIiQsvn%2F106Sn0RkS7ZORsG8RhxsOlyX7TeZJLzr0pV9NDW2TSPxQGZSolcijDpQxY4NNHJ4rUd%2FTx9hmZhqJy1VOeZfu%2B59Dh2m6D9nw0crFWs1mvBd3A96qpSj7jFy6hetjkZO7P6a6RVCw7i3IZXoIXhp%2FJ33UrfmbXDzoBt6%2F6IPdaFYanpWVFuF9V5Y5s0o7QtQI3sBUZxSG1a3J6XuGlQetX2tL6NNO7PI0waEvvo6QXAW%2Bbc7Ur4jt%2F3v%2FcWyXqXhpAaN3mKugHJEeWvK51PzSlM5TORlY6mhxLIx3eB9vbnsQQkraGrjfEtENGTqdKxvuRSFHYxS3Wf%2BOO&Adult=1&Child=0&Infant=0&TripType=OneWay&DisplayedPrice=906595.0&currency=VND&Slice1=1&Cabin1=ECO&DepartureDate1=2026-10-10T15:10:00&Origin1=SGN&Destination1=DAD&CID=1907323&affsid=48858a42-2825-4b70-b86b-e5e75c92287e&gclid=ADowPOLJopvkPgX0DKTZMzxOH55lRCNpdNJdDn1oD0keZoodh3UD-xBFQ40holatqBSmZO-mCAdPk6Q8ZiRgE-PySQA1qHLEzWD6kO8jG-5Frr6OIrUx&gclsrc=gf)\\n* **Trip.com**: 920.000 VND — [Đặt vé ngay tại vn.trip.com](https://vn.trip.com/flights/w/Transfer?flighttype=S&dcity=SGN&acity=DAD&ddate=2026-10-10&rdate=&quantity=1&childqty=0&babyqty=0&curr=VND&class=Y&channel=VNSite&allianceid=705420&uuid=2817193830279771301&sid=1398215&country=VN&TrackerType=180808_enf_sctj&TrackerTag=NA&criteriatoken=tripType:OW|cabinClass:Economy|adult:1|child:0|infant:0|subChannel:316|channel:EnglishSite|currency:VND|extensionFlag:16|list:true|idc:SHARB|detailSearch:false|issuer:TRIP|date_1:2026-10-10|aCity_1:DAD|dCity_1:SGN|siteType:1|listTime:202609070059|aid:705420|sid:1398215&flightclass=I&wkp=1&locale=vi-VN&ShoppingID=8000000000H1Jodg02W2bX14E7J4403zL8007wgL1vGW0000000000G0MG0e8200001O03Unq000W600000000Y7001Jc2bZ6Lm80000000000|||IVRW6===||||CgozV25icTNmS1JP|GAIgBCiHt5U-SAE=&amt=920000.0&ouid=CtripGoogle&utm_source=Google&utm_medium=referral&utm_campaign=VN&gclid=ADowPOJFqoENVQUwAPjRFUKmFw2zucEH7d_7hq8pn3o2u7Njc9iPYaZj_WdkwudPRGa-umd-q7UTVjR-z5-xgXJdJvWBkxgTUo70lDALmgKhK4towfLP&gclsrc=gf)\\n* **Jettzy**: 942.028 VND — [Đặt vé ngay tại www.jettzy.com.vn](https://www.jettzy.com.vn/booking/travel-details?rk=5000:39426542059534:24735584288715&s=W3sidHlwZSI6NTAwMSwibGVnIjpbeyJkZXBhcnQiOiJTR04iLCJkZXBhcnRfdHlwZSI6IkFpcnBvcnQiLCJkZXN0aW5hdGlvbiI6IkRBRCIsImRlc3RpbmF0aW9uX3R5cGUiOiJBaXJwb3J0IiwiZGVwYXJ0X2RhdGUiOiIyMDI2LTEwLTEwIn1dLCJjYWJpbiI6IkVjb25vbXkiLCJwYXNzZW5nZXIiOnsiQURUIjoxLCJDTk4iOjAsIklORiI6MH0sInNlYXJjaF9yb2xlIjoiIn1d&type=route&branch=GOOGAPI_VN_VI&partner=GOOGAPI_VN_VI&hasParentID=1&partner_total_price=VND942028&resource=MTcyLjMxLjUwLjgw&locator=4688-124-200-320&plating_carrier=VJ&DisplayedPrice=942028&DisplayedPriceCurrency=VND&cache_all_store=eyI1MDAwOjM5NDI2NTQyMDU5NTM0OjI0NzM1NTg0Mjg4NzE1IjoiZXlKallXTm9aVjloYkd4ZmMzUnZjbVVpT2pFd01EQXNJbU5oWTJobFgyOXlaMTlyWlhraU9pSTFNREF3T2pNNU5ESTJOVFF5TURVNU5UTTBJaXdpWTJGamFHVmZjbVZ1WkdWeVgydGxlU0k2SWpJM09UTTNNRFE1T1Rnek9UTTFJbjA9In0=&itineraryData=eyJqb3VybmV5IjpbW3siS2V5IjoiMV8wIiwiY2FycmllciI6IlZKIiwiZGVwYXJ0X2FpcnBvcnQiOiJTR04iLCJhcnJpdmVkX2FpcnBvcnQiOiJEQUQiLCJkZXBhcnRfdGltZSI6IjIwMjYtMTAtMTAiLCJhcnJpdmVkX3RpbWUiOiIyMDI2LTEwLTEwIiwiZmxpZ2h0X251bWJlciI6IjY0MCIsImNhYmluIjoiQSIsImNhYmluX2NsYXNzIjoiRWNvbm9teSJ9XV0sInBhc3NlbmdlciI6eyJBRFQiOjF9LCJncm91cF9wcmljZSI6WyI5NDIwMjguMDAiXSwiZ3JvdXBfc291cmNlIjpbIlRPVVJNSU5EVVNEIl0sImdyb3VwX2FkZGl0aW9uYWwiOlt7InNob3BwaW5nX3JlcXVlc3QiOnsiYWlybGluZV9wcmVmZXJlbmNlcyI6IiIsImFpcmxpbmVfbWFuZGF0b3J5IjoiIiwiYWlybGluZV9leGNsdWRlIjoiIiwicGVyc29uX3R5cGUiOiIiLCJzaG9wcGluZ19jb250ZW50X3NvdXJjZSI6IiJ9LCJyZXF1ZXN0X3R5cGUiOiIzMDA4IiwidmlydHVhbF9wY2MiOiJHT09HQVBJX1ZOX1ZJIn1dfQ==&generate_from=search_engine&UserLanguage=vi&gclid=ADowPOKOuSC0aK5CvDydRzlfSzwuuCMLBFq9Q2jrMchqcUHNbBia-oiD8gZV1YENFlWjvxlkB8FMJTq6GLmEShURCkhYHdjJKFfPxhZkQ1NV7JRx5fGY&gclsrc=gf)\\n* **Wego**: 952.708 VND — [Đặt vé ngay tại www.wego.com](https://www.wego.vn/ve-may-bay/searches/SGN-DAD-2026-10-10/economy/1a:0c:0i/ecb4264b4d9d3c6msr:VJ640~10~1510~1630/ecb4264b4d9d3c6msr:l_wego_com:e9d5ea9262415e57:ss?ulang=vi&placement_type=integrated_booking&currency_code=VND&ts_code=ab0e7&gclid=ADowPOIfWFmikgSM5wlxH0fPWKBY-CzXUsXrfYzZDUDeBuxvQaSBY7Z01r7hhQxkD73Nj6tGTbGCLK6G3s5Cs1d0TQXteH8OAuGBtVWe-7WHuQJRe8zb&gclsrc=gf)\\n* **Gotogate**: 1.603.559 VND — [Đặt vé ngay tại www.gotogate.vn](https://vn.gotogate.com/from/gfsapi/air/SGNDAD10OCT/1/-/-/c:Y?customerCurrency=VND&ibe.asc=8&ibe.asr=6.7W0C9DJR&ibe.cot=4.9L7C0RKNWG&ibe.cr=GU1K87_1&ibe.d=MDswOzA7MTs1Njs5TDdDMFJLRkpTOzFBQTQ7OTBHRDY%3D&ibe.e=h_4oFGRz6somSEDHk_Zbx50DfWJu4O8e6rF3_JK_fnhDebgvK8oefG2O9dZSuZpfs31v_P8ucfdHVk0TiKCQKQyvZPc%3D&ibe.e.h=vzSu&ibe.ecc=1..1819&ibe.oas=3&ibe.oct=10&ibe.odt=TKYCIZ&ibe.ot=160355854&ibe.s=2-IYI-FAW-TMP64O-TMP9U0-0-HS-DU-PK-Y-A-1-1&ibe.si=1752946939759&selectionKey=VJ640-10Oct26-A,am6pez,::g_0:h_0:a_PA:b_7V:c_7V:d_568e8608:e_905d684:f_6Q:i_1.0.0:j_K7:z_xiriw2&t=1788715901&sig=AUriFc0LeeBSXTltudQqjTZSpfuJemPim6T2k2_YOk4KIPs6MVY-06RM9-tW7eRflIE204co5FqitUa-z65AUX8wWsN8FyMc7GQtxlIBCUXdG8OgaRZ2nxi7mwtGtwtQvaVefKSI8MvU7tgql1DibbcmYIBqHmPf3L7p8PUwYyyZFIhwiN06EDMgCwOeVuSd886NmA_-YvdQriWggNDkMP_9Ai0RJp_yEUsSxEd262Rx_hlH566pDl_jkcW68pnNB1jqTLa8vLpYYRXzglwomuCAjQIsc7GgRKBrj7tyvH6R0S-6bYW9PVAXdNl7uANgtte7yuBgta5iNA7b-c5STbNA3o32bvzmCJ_B2MyvoUv7YM4MZzDiaBBthVgk_Nux7A0_vrfOAOedgfkm_P-kF11kZjP5HBg3-Y3aGr1udq1Hn1Y10JhHmXtqdqpe-c47KqWw77wQMQQRifA4Rg-zE_A0tL0jATxk3T9qmllhUcgV-czE-YJZI6iZMhjTVB-ZkEUneCw%3D&ReferralId=GFS&domain=gfs&utm_source=gfs&utm_medium=organic&gclid=ADowPOIv9pR4fSKINC7id9kNJxujhCjwAKMdz0Arn4cuJFTGRUD4KLaz58fDbUQ2TEGCbjSPO-wrt9WGeDW70uscHUB5KkfB_eoN1I3dEI0vI_I6hNuS&gclsrc=gf)\\n* **Mytrip**: 1.603.559 VND — [Đặt vé ngay tại vn.mytrip.com](https://vn.mytrip.com/from/gfsapi/air/SGNDAD10OCT/1/-/-/c:Y?customerCurrency=VND&ibe.asc=8&ibe.asr=6.7W0GA7KW&ibe.cot=4.9L7JJN1F94&ibe.cr=GY4OWB_1&ibe.d=MDswOzA7MTs1Njs5TDdKSk4wVVo2OzFBQTQ7OTBHRDY%3D&ibe.e=Np9CX6fPx8R9ihu_s6EwiPUON5jXKhk53VPmXaDJWcRlV5Rp0gZwhsibtcviynBCtvAW59tCwsXcA_VfHWhH&ibe.e.h=YErT&ibe.ecc=1..1819&ibe.oas=3&ibe.oct=10&ibe.odt=TKYCIZ&ibe.ot=160355854&ibe.s=2-IYI-FAW-TMP64O-TMP9U0-0-HS-DU-PK-Y-A-1-1&ibe.si=1752943432279&selectionKey=VJ640-10Oct26-A,am6pez,::g_0:h_0:a_PA:b_7V:c_7V:d_568e8608:e_905d684:f_6Q:i_1.0.0:j_K7:z_xiriw2&t=1788715902&sig=AUriFc1Zus8Tw3Tj4sdA99oN73txjCnFrfcw4G-Hzxhv9QkRinrT3SrLhUoR9doDcLTnHku_tFFardqe7PwXAovr8m0MOQEQlz0H4WElegXg-a3ZygyBY5v5ulRfoxe1gy_d_l_NOB2OUtGFbG9JJdPUn7bkyRcOcsLTfI3WoJSyxhH2N9n3o145QX-Z1-hVu03pKdPjS81UzHbvhhvn-MacC5Fd5_UdKgiy3uvjVw6jAJdxfZ6qOJrbMNGyO7GOiHvy_FpFdRhMA8NLUDWACuhX16idqtwuRAg58cWXIOFmG2TeXzOVi4fulQ97V-Ek9eDqVw8EjxMcYkzDI5o5slSeC02lSgJH8NyK1lpXxXMdjSXqWaJbElbRLAiQ_sjaeRZZdht1iAZhwip-cf4QKlCgn2Q5F1DDZVGYU9ShDLWg-JeV5448IKulDhMWgCkuNijvUATjoLwvKxPduHUVFI6kUwQgyHfFJ1RHuDJie8X6ND-QQFoY_RZ_U2ynDmzfvmfp77o%3D&ReferralId=GFS&domain=gfs&utm_source=gfs&utm_medium=organic&gclid=ADowPOLPXYhdaBGRrOasyFmSi-VuviTa88fS8W3AWWkJxgQZRUxp7sGn6nIvph4E0KHP-_1hQwHbiZ-SqxHWGateikMCxToqXC-5XkoYTGOs-kv0Gg0S&gclsrc=gf)', 'extras': {'signature': 'EtwKCtkKARFNMg89UVS6a8ntVwoFuj2kc5QWtlmKPfavO5KRRUvuqeCyu6SICJ+i2iMFQLAZqicyfA24hB1k8ubyfDlmjDTMGRYrS+85o+mofLnrV8Fy8j+qcgIebD1twg8iJLq2tXxrSE7TvzqW04ieS6C4QaxQ/148lwuY6wrCdzZYZsTVZbv9VvdFvWAhlgnwpmhrz824opY4uW+TfzFCbFHIM6e+0MsUXzga5UGHku/tEK+8s68F6SC0TlWQTJRnyrF3cGnK1qqj6Oh+GQ5VEb+DXp/co8npgCCyFO76aba6ju5GjTHxrd5+xeY+PQ/EAH69nvGQ7uFGrnJYZpLaBQHBkV9wBlKNUeQVLl7rXwww/BxdbvauLt5x+hTwsr5nWG/etbeiQIZNYvGaCF3kx9EhldnHTpm5E1Vl/aQHHqIks+sXGPNMgh7v6dn+kpdgTZ3Mpbf8P4L1zQw9TOgXZ/hFsHON1K3rzkhHtmrWFHv6Elw4rk5Xgc2dlAIomlOe/sbsc1fgSFgU9LTNKphxvr2Lxa4cZ/MGglsihiQBLhi2tOlPmoXTQ7euRPJb1/F3qYyZdcSAqDcTdP0fSC6eKToKnaxw1E4265NyCvnSNQWhy6nn57oAdW3mZnAFIZgU4b5bi5GbFZeZ49biFMHcxksr4ZF354wmXqYV+17KIDiTMVletsgzAC15sYn21yAEd6lR294PVLBHp/WIIB2sGc21rimok0hpbNPBmxckl+2RatKmcdhkV8DECiqutnd4w4JLiJ5QFiTIO233hvXreUMa5qOsKOZZxHGy3xjDf7tzSYW+zxSRz1hx1Ayg3X77ujudKdYul+q5cbaC9gfQouefXwPPwLgjedwZuFhHvUyPBDBFnrQsxzLj09EJqk1uw5yjGI7gjC3q8t4C7sm3oR5XHpZygXvCS0+RApTPXiXPa+P02AAuDtCdvT3ab9UIGLNIF7JctvZdOlCo/nTwE1YeD9FW8+3efNFZEoJ08yVD2r/JNkd/DFpntxB4gPkRdDeCMCm8kHKrHH6ITxy6jhJwo9wMTAlV/oZmA3MCo1TbXPhMM3i4stPwBC293WDI+j0iZ+omm4BCAFYVUIHlUexVY7po7EMPyewya6rS6R9t0FIPAwylpDyWJxklMjL1FzTs31y6bt9iWfVaKynlljFj7gfQXzfv3AyG2DRb8lLfiDrJ7Y0RmYW/PgqK/VIstBkJm3/Q7u8PGkKFtAurikbuj/IxeRg6a0zaRL+iOcaR/o4pxQibuQ5c0xsNjFRqCEZahzIH2HL12LUFtSnMaXtf9FlmxJQ5n+kfGEimapmOGZPs9ENfe4vmfjRKQNkgY6NoYr5uxbDl+IqAK1OQFTXZiTnuUQD4f0hbNZf4CYNW/NE4sjmhf2s3oqO0IWEQ0rHXGJIEuQ0ecJ7GzanCgeNcR1hKZQj68bt0ABLrQTVn3QzPDaEdmzUu+chZv22z5q5Ml4MrVKx3e2R4dRgTK19TljqeZPIwnnzv7ng1+5t4/hnUnH5o/Ot34Ke3+9qEsVGAnno19pMR8qhOgevp3LS+7qez/ejfdSGdzCpmQpwiHAtPBsvwvM+k/gGHGOXNv8lC0V/gziEOaHlukc7EVy8hjFez6yHVJJiYoR5bnkeCi2JZmFqUev6qIHSyYPaiuNWK3nXqA3wJYfD9JKqbaxE0+jharJJuTltNvap3D6QI9SsyQ/BNXwshHmzo86rs+HFFgfsw6FLowuNOCpjhsFIdtuB20LCvmhU9Zl4deyWj0C33ZmQkCq8EAXdMmqs51V6yOF7hcDqiCM/HGK7cmV7aKxS5TXYTJgxT/Q=='}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "[d1d8e48c-f235-5c34-a52a-1c0c86bd3125] Ưu tiên bay thẳng, tránh nối chuyến",
+        "[4e11a103-a6c9-53fc-8f9d-9ad6ad93acc2] Thường bay hạng phổ thông (economy) khi đi du lịch"
+      ],
+      "domain_action": "search_one_way"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "flight"
+    ]
+  },
+  "final_answer": "Dưới đây là các đường dẫn đặt vé trực tiếp cho chuyến bay một chiều **FL-61F249** (Vietjet VJ 640, khởi hành 15:10 ngày 10/10/2026 từ TP.HCM đi Đà Nẵng):\n\n* **Vietjet**: 894.781 VND — [Đặt vé ngay tại www.vietjetair.com](https://www.vietjetair.com/?currency=VND&languageCode=vi&departAirport=SGN&arrivalAirport=DAD&departDate=2026-10-10&tripType=oneway&adultCount=1&childCount=0&infantCount=0&gclid=ADowPOLZsP-mziaHbPW7djwst6K3YkMmsHIv4AUA5fNx31gJNuSHVJaE22aONKK8QxlMcdGKSNsV02g6TdQQSk7C4WPjxbU6pS7HxPTZrw1hIiio197C&gclsrc=gf)\n* **hutchgo.com**: 895.059 VND — [Đặt vé ngay tại www.hutchgo.com](https://www.hutchgo.com/affiliate/r.aspx?region=VN&lang_id=vi&fromAffiliate=Y&product=RA&autosearch=Y&typeofsearch=T&channel=Deeplink&banner_id=860010&citycode=DAD&roundtrip=N&departdate=10/10/2026&adt=1&chd=0&inf=0&origCity=SGN&fclass=Y&htraceid=b35139f63af4202609061659278330&affiliate_id=20248&outBoundCarrier1=VJ&outBoundFlightNum1=640&gclid=ADowPOL81yYuqOrxnGzUmW6OoPcYFSvyvJZ9TQSR5-vkY0jh_bzwDs3oQI5NhcVcOArnY7lqK1wg8JIr2MW0Cv92JEaOd7qKpRwDuzYDcCvi1GkVjx5i&gclsrc=gf)\n* **Agoda**: 906.595 VND — [Đặt vé ngay tại www.agoda.com](https://www.agoda.com/vi-vn/bookings/details?itineraryId=A%3ASGN_20261010_A%3ADAD__1-0-0_ECO___1508170471&token=AAAA.AAAADNugVGjqltRrsN%2FkHEbltW%2BKdT0bRaeDeNjK2WCb80wIiQsvn%2F106Sn0RkS7ZORsG8RhxsOlyX7TeZJLzr0pV9NDW2TSPxQGZSolcijDpQxY4NNHJ4rUd%2FTx9hmZhqJy1VOeZfu%2B59Dh2m6D9nw0crFWs1mvBd3A96qpSj7jFy6hetjkZO7P6a6RVCw7i3IZXoIXhp%2FJ33UrfmbXDzoBt6%2F6IPdaFYanpWVFuF9V5Y5s0o7QtQI3sBUZxSG1a3J6XuGlQetX2tL6NNO7PI0waEvvo6QXAW%2Bbc7Ur4jt%2F3v%2FcWyXqXhpAaN3mKugHJEeWvK51PzSlM5TORlY6mhxLIx3eB9vbnsQQkraGrjfEtENGTqdKxvuRSFHYxS3Wf%2BOO&Adult=1&Child=0&Infant=0&TripType=OneWay&DisplayedPrice=906595.0&currency=VND&Slice1=1&Cabin1=ECO&DepartureDate1=2026-10-10T15:10:00&Origin1=SGN&Destination1=DAD&CID=1907323&affsid=48858a42-2825-4b70-b86b-e5e75c92287e&gclid=ADowPOLJopvkPgX0DKTZMzxOH55lRCNpdNJdDn1oD0keZoodh3UD-xBFQ40holatqBSmZO-mCAdPk6Q8ZiRgE-PySQA1qHLEzWD6kO8jG-5Frr6OIrUx&gclsrc=gf)\n* **Trip.com**: 920.000 VND — [Đặt vé ngay tại vn.trip.com](https://vn.trip.com/flights/w/Transfer?flighttype=S&dcity=SGN&acity=DAD&ddate=2026-10-10&rdate=&quantity=1&childqty=0&babyqty=0&curr=VND&class=Y&channel=VNSite&allianceid=705420&uuid=2817193830279771301&sid=1398215&country=VN&TrackerType=180808_enf_sctj&TrackerTag=NA&criteriatoken=tripType:OW|cabinClass:Economy|adult:1|child:0|infant:0|subChannel:316|channel:EnglishSite|currency:VND|extensionFlag:16|list:true|idc:SHARB|detailSearch:false|issuer:TRIP|date_1:2026-10-10|aCity_1:DAD|dCity_1:SGN|siteType:1|listTime:202609070059|aid:705420|sid:1398215&flightclass=I&wkp=1&locale=vi-VN&ShoppingID=8000000000H1Jodg02W2bX14E7J4403zL8007wgL1vGW0000000000G0MG0e8200001O03Unq000W600000000Y7001Jc2bZ6Lm80000000000|||IVRW6===||||CgozV25icTNmS1JP|GAIgBCiHt5U-SAE=&amt=920000.0&ouid=CtripGoogle&utm_source=Google&utm_medium=referral&utm_campaign=VN&gclid=ADowPOJFqoENVQUwAPjRFUKmFw2zucEH7d_7hq8pn3o2u7Njc9iPYaZj_WdkwudPRGa-umd-q7UTVjR-z5-xgXJdJvWBkxgTUo70lDALmgKhK4towfLP&gclsrc=gf)\n* **Jettzy**: 942.028 VND — [Đặt vé ngay tại www.jettzy.com.vn](https://www.jettzy.com.vn/booking/travel-details?rk=5000:39426542059534:24735584288715&s=W3sidHlwZSI6NTAwMSwibGVnIjpbeyJkZXBhcnQiOiJTR04iLCJkZXBhcnRfdHlwZSI6IkFpcnBvcnQiLCJkZXN0aW5hdGlvbiI6IkRBRCIsImRlc3RpbmF0aW9uX3R5cGUiOiJBaXJwb3J0IiwiZGVwYXJ0X2RhdGUiOiIyMDI2LTEwLTEwIn1dLCJjYWJpbiI6IkVjb25vbXkiLCJwYXNzZW5nZXIiOnsiQURUIjoxLCJDTk4iOjAsIklORiI6MH0sInNlYXJjaF9yb2xlIjoiIn1d&type=route&branch=GOOGAPI_VN_VI&partner=GOOGAPI_VN_VI&hasParentID=1&partner_total_price=VND942028&resource=MTcyLjMxLjUwLjgw&locator=4688-124-200-320&plating_carrier=VJ&DisplayedPrice=942028&DisplayedPriceCurrency=VND&cache_all_store=eyI1MDAwOjM5NDI2NTQyMDU5NTM0OjI0NzM1NTg0Mjg4NzE1IjoiZXlKallXTm9aVjloYkd4ZmMzUnZjbVVpT2pFd01EQXNJbU5oWTJobFgyOXlaMTlyWlhraU9pSTFNREF3T2pNNU5ESTJOVFF5TURVNU5UTTBJaXdpWTJGamFHVmZjbVZ1WkdWeVgydGxlU0k2SWpJM09UTTNNRFE1T1Rnek9UTTFJbjA9In0=&itineraryData=eyJqb3VybmV5IjpbW3siS2V5IjoiMV8wIiwiY2FycmllciI6IlZKIiwiZGVwYXJ0X2FpcnBvcnQiOiJTR04iLCJhcnJpdmVkX2FpcnBvcnQiOiJEQUQiLCJkZXBhcnRfdGltZSI6IjIwMjYtMTAtMTAiLCJhcnJpdmVkX3RpbWUiOiIyMDI2LTEwLTEwIiwiZmxpZ2h0X251bWJlciI6IjY0MCIsImNhYmluIjoiQSIsImNhYmluX2NsYXNzIjoiRWNvbm9teSJ9XV0sInBhc3NlbmdlciI6eyJBRFQiOjF9LCJncm91cF9wcmljZSI6WyI5NDIwMjguMDAiXSwiZ3JvdXBfc291cmNlIjpbIlRPVVJNSU5EVVNEIl0sImdyb3VwX2FkZGl0aW9uYWwiOlt7InNob3BwaW5nX3JlcXVlc3QiOnsiYWlybGluZV9wcmVmZXJlbmNlcyI6IiIsImFpcmxpbmVfbWFuZGF0b3J5IjoiIiwiYWlybGluZV9leGNsdWRlIjoiIiwicGVyc29uX3R5cGUiOiIiLCJzaG9wcGluZ19jb250ZW50X3NvdXJjZSI6IiJ9LCJyZXF1ZXN0X3R5cGUiOiIzMDA4IiwidmlydHVhbF9wY2MiOiJHT09HQVBJX1ZOX1ZJIn1dfQ==&generate_from=search_engine&UserLanguage=vi&gclid=ADowPOKOuSC0aK5CvDydRzlfSzwuuCMLBFq9Q2jrMchqcUHNbBia-oiD8gZV1YENFlWjvxlkB8FMJTq6GLmEShURCkhYHdjJKFfPxhZkQ1NV7JRx5fGY&gclsrc=gf)\n* **Wego**: 952.708 VND — [Đặt vé ngay tại www.wego.com](https://www.wego.vn/ve-may-bay/searches/SGN-DAD-2026-10-10/economy/1a:0c:0i/ecb4264b4d9d3c6msr:VJ640~10~1510~1630/ecb4264b4d9d3c6msr:l_wego_com:e9d5ea9262415e57:ss?ulang=vi&placement_type=integrated_booking&currency_code=VND&ts_code=ab0e7&gclid=ADowPOIfWFmikgSM5wlxH0fPWKBY-CzXUsXrfYzZDUDeBuxvQaSBY7Z01r7hhQxkD73Nj6tGTbGCLK6G3s5Cs1d0TQXteH8OAuGBtVWe-7WHuQJRe8zb&gclsrc=gf)\n* **Gotogate**: 1.603.559 VND — [Đặt vé ngay tại www.gotogate.vn](https://vn.gotogate.com/from/gfsapi/air/SGNDAD10OCT/1/-/-/c:Y?customerCurrency=VND&ibe.asc=8&ibe.asr=6.7W0C9DJR&ibe.cot=4.9L7C0RKNWG&ibe.cr=GU1K87_1&ibe.d=MDswOzA7MTs1Njs5TDdDMFJLRkpTOzFBQTQ7OTBHRDY%3D&ibe.e=h_4oFGRz6somSEDHk_Zbx50DfWJu4O8e6rF3_JK_fnhDebgvK8oefG2O9dZSuZpfs31v_P8ucfdHVk0TiKCQKQyvZPc%3D&ibe.e.h=vzSu&ibe.ecc=1..1819&ibe.oas=3&ibe.oct=10&ibe.odt=TKYCIZ&ibe.ot=160355854&ibe.s=2-IYI-FAW-TMP64O-TMP9U0-0-HS-DU-PK-Y-A-1-1&ibe.si=1752946939759&selectionKey=VJ640-10Oct26-A,am6pez,::g_0:h_0:a_PA:b_7V:c_7V:d_568e8608:e_905d684:f_6Q:i_1.0.0:j_K7:z_xiriw2&t=1788715901&sig=AUriFc0LeeBSXTltudQqjTZSpfuJemPim6T2k2_YOk4KIPs6MVY-06RM9-tW7eRflIE204co5FqitUa-z65AUX8wWsN8FyMc7GQtxlIBCUXdG8OgaRZ2nxi7mwtGtwtQvaVefKSI8MvU7tgql1DibbcmYIBqHmPf3L7p8PUwYyyZFIhwiN06EDMgCwOeVuSd886NmA_-YvdQriWggNDkMP_9Ai0RJp_yEUsSxEd262Rx_hlH566pDl_jkcW68pnNB1jqTLa8vLpYYRXzglwomuCAjQIsc7GgRKBrj7tyvH6R0S-6bYW9PVAXdNl7uANgtte7yuBgta5iNA7b-c5STbNA3o32bvzmCJ_B2MyvoUv7YM4MZzDiaBBthVgk_Nux7A0_vrfOAOedgfkm_P-kF11kZjP5HBg3-Y3aGr1udq1Hn1Y10JhHmXtqdqpe-c47KqWw77wQMQQRifA4Rg-zE_A0tL0jATxk3T9qmllhUcgV-czE-YJZI6iZMhjTVB-ZkEUneCw%3D&ReferralId=GFS&domain=gfs&utm_source=gfs&utm_medium=organic&gclid=ADowPOIv9pR4fSKINC7id9kNJxujhCjwAKMdz0Arn4cuJFTGRUD4KLaz58fDbUQ2TEGCbjSPO-wrt9WGeDW70uscHUB5KkfB_eoN1I3dEI0vI_I6hNuS&gclsrc=gf)\n* **Mytrip**: 1.603.559 VND — [Đặt vé ngay tại vn.mytrip.com](https://vn.mytrip.com/from/gfsapi/air/SGNDAD10OCT/1/-/-/c:Y?customerCurrency=VND&ibe.asc=8&ibe.asr=6.7W0GA7KW&ibe.cot=4.9L7JJN1F94&ibe.cr=GY4OWB_1&ibe.d=MDswOzA7MTs1Njs5TDdKSk4wVVo2OzFBQTQ7OTBHRDY%3D&ibe.e=Np9CX6fPx8R9ihu_s6EwiPUON5jXKhk53VPmXaDJWcRlV5Rp0gZwhsibtcviynBCtvAW59tCwsXcA_VfHWhH&ibe.e.h=YErT&ibe.ecc=1..1819&ibe.oas=3&ibe.oct=10&ibe.odt=TKYCIZ&ibe.ot=160355854&ibe.s=2-IYI-FAW-TMP64O-TMP9U0-0-HS-DU-PK-Y-A-1-1&ibe.si=1752943432279&selectionKey=VJ640-10Oct26-A,am6pez,::g_0:h_0:a_PA:b_7V:c_7V:d_568e8608:e_905d684:f_6Q:i_1.0.0:j_K7:z_xiriw2&t=1788715902&sig=AUriFc1Zus8Tw3Tj4sdA99oN73txjCnFrfcw4G-Hzxhv9QkRinrT3SrLhUoR9doDcLTnHku_tFFardqe7PwXAovr8m0MOQEQlz0H4WElegXg-a3ZygyBY5v5ulRfoxe1gy_d_l_NOB2OUtGFbG9JJdPUn7bkyRcOcsLTfI3WoJSyxhH2N9n3o145QX-Z1-hVu03pKdPjS81UzHbvhhvn-MacC5Fd5_UdKgiy3uvjVw6jAJdxfZ6qOJrbMNGyO7GOiHvy_FpFdRhMA8NLUDWACuhX16idqtwuRAg58cWXIOFmG2TeXzOVi4fulQ97V-Ek9eDqVw8EjxMcYkzDI5o5slSeC02lSgJH8NyK1lpXxXMdjSXqWaJbElbRLAiQ_sjaeRZZdht1iAZhwip-cf4QKlCgn2Q5F1DDZVGYU9ShDLWg-JeV5448IKulDhMWgCkuNijvUATjoLwvKxPduHUVFI6kUwQgyHfFJ1RHuDJie8X6ND-QQFoY_RZ_U2ynDmzfvmfp77o%3D&ReferralId=GFS&domain=gfs&utm_source=gfs&utm_medium=organic&gclid=ADowPOLPXYhdaBGRrOasyFmSi-VuviTa88fS8W3AWWkJxgQZRUxp7sGn6nIvph4E0KHP-_1hQwHbiZ-SqxHWGateikMCxToqXC-5XkoYTGOs-kv0Gg0S&gclsrc=gf)\n\nQuý khách có thể nhấp vào liên kết của nhà cung cấp mong muốn để hoàn tất quá trình thanh toán và giữ chỗ. Nếu cần hỗ trợ thêm thông tin gì khác, xin vui lòng cho tôi biết!",
+  "stm": {
+    "summary": "**Bản tóm tắt cập nhật:**\n\n* **Yêu cầu của người dùng:** Tìm vé máy bay một chiều từ TP.HCM (SGN) đi Đà Nẵng (DAD) ngày 10/10/2026 (áp dụng ưu tiên bay thẳng, hạng phổ thông).\n* **Trạng thái hiện tại:** Trợ lý đã tìm thấy và cung cấp danh sách 10 lựa chọn chuyến bay thẳng (gồm các hãng Vietjet, Vietnam Airlines, Bamboo Airways với giá từ 894.781 VND) và đang chờ người dùng chọn chuyến bay để tiếp tục.",
+    "message_count": 8,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "8ab2ba47-14b3-4b93-b480-03cf765a90ff",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "audits": [],
+    "seeded_status": {
+      "m_flight_economy": {
+        "status": "active",
+        "memory_id": "4e11a103-a6c9-53fc-8f9d-9ad6ad93acc2",
+        "memory_text": "Thường bay hạng phổ thông (economy) khi đi du lịch",
+        "supersedes_memory_id": null
+      },
+      "m_flight_nonstop": {
+        "status": "active",
+        "memory_id": "d1d8e48c-f235-5c34-a52a-1c0c86bd3125",
+        "memory_text": "Ưu tiên bay thẳng, tránh nối chuyến",
+        "supersedes_memory_id": null
+      },
+      "m_flight_other_user": {
+        "status": "active",
+        "memory_id": "8896b39a-1123-5177-bfc4-b1a4715c6d9a",
+        "memory_text": "Memory user khác — thích business class",
+        "supersedes_memory_id": null
+      },
+      "m_flight_superseded": {
+        "status": "superseded",
+        "memory_id": "888a4af1-a256-5e26-a192-088ba5db8822",
+        "memory_text": "Preference cũ — chỉ bay Vietnam Airlines",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "8ab2ba47-14b3-4b93-b480-03cf765a90ff",
+      "status": "skipped",
+      "error_summary": null,
+      "created_at": "2026-09-07T00:32:26.371031+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "flight"
+        ],
+        "actual": [
+          "flight"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "SKIP",
+      "detail": "no expected_applicability",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "flight_assistant",
+          "memory_recall_flight",
+          "flight_chat",
+          "search_one_way_flights_tool",
+          "search_one_way_flights_tool",
+          "flight_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize",
+          "memory_recall_global",
+          "primary_assistant",
+          "memory_recall_flight",
+          "flight_chat",
+          "search_round_trip_flights_tool",
+          "search_round_trip_flights_tool",
+          "flight_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize",
+          "memory_recall_global",
+          "primary_assistant",
+          "flight_assistant",
+          "memory_recall_flight",
+          "flight_chat",
+          "book_flight_by_id",
+          "book_flight_by_id",
+          "flight_chat",
+          "join_results",
+          "primary_assistant",
+          "summarize_conversation",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "flight_assistant",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "flight_assistant",
+      "graph": "primary",
+      "domain": "flight",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "memory_recall_flight",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_flight_nonstop",
+          "m_flight_economy"
+        ],
+        "applicability": {
+          "m_flight_nonstop": "apply",
+          "m_flight_economy": "apply"
+        },
+        "applicability_reasons": {
+          "m_flight_nonstop": "reconciled: direct-flight preference applies to search (llm: Direct flight preference maps directly to search_one_way parameters (direct/nonstop) and is not contradicted by the current query.; rule: direct-flight preference applies to search)",
+          "m_flight_economy": "reconciled: cabin class preference applies to flight search (llm: Economy cabin class preference maps directly to search_one_way parameters (cabin_class) and is not contradicted by the current query.; rule: cabin class preference applies to flight search)"
+        },
+        "applied_to_context": [
+          "m_flight_nonstop",
+          "m_flight_economy"
+        ]
+      }
+    },
+    {
+      "seq": 5,
+      "node": "flight_chat",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "search_one_way_flights_tool",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": [
+        {
+          "name": "search_one_way_flights_tool",
+          "arguments": {
+            "departure_date": "2026-10-10",
+            "origin": "SGN",
+            "destination": "DAD",
+            "cabin_class": "economy",
+            "stops": "1"
+          }
+        }
+      ],
+      "parent_chat_node": "flight_chat"
+    },
+    {
+      "seq": 7,
+      "node": "flight_chat",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": []
+    },
+    {
+      "seq": 8,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 9,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 11,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 12,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 13,
+      "node": "memory_recall_flight",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_flight_nonstop",
+          "m_flight_economy"
+        ],
+        "applicability": {
+          "m_flight_nonstop": "apply",
+          "m_flight_economy": "apply"
+        },
+        "applicability_reasons": {
+          "m_flight_nonstop": "reconciled: direct-flight preference applies to search (llm: Direct flight preference maps directly to the flight search direct/nonstop filter parameter and does not conflict with the request.; rule: direct-flight preference applies to search)",
+          "m_flight_economy": "reconciled: cabin class preference applies to flight search (llm: Economy cabin preference maps directly to the flight search cabin_class parameter and is consistent with the current request.; rule: cabin class preference applies to flight search)"
+        },
+        "applied_to_context": [
+          "m_flight_nonstop",
+          "m_flight_economy"
+        ]
+      }
+    },
+    {
+      "seq": 14,
+      "node": "flight_chat",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": []
+    },
+    {
+      "seq": 15,
+      "node": "search_round_trip_flights_tool",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": [
+        {
+          "name": "search_round_trip_flights_tool",
+          "arguments": {
+            "destination": "DAD",
+            "return_date": "2026-10-12",
+            "departure_date": "2026-10-10",
+            "stops": "1",
+            "origin": "SGN",
+            "cabin_class": "economy"
+          }
+        }
+      ],
+      "parent_chat_node": "flight_chat"
+    },
+    {
+      "seq": 16,
+      "node": "flight_chat",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": []
+    },
+    {
+      "seq": 17,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 18,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 19,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 20,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 21,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 22,
+      "node": "flight_assistant",
+      "graph": "primary",
+      "domain": "flight",
+      "tools": []
+    },
+    {
+      "seq": 23,
+      "node": "memory_recall_flight",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_flight_nonstop",
+          "m_flight_economy"
+        ],
+        "applicability": {
+          "m_flight_nonstop": "apply",
+          "m_flight_economy": "apply"
+        },
+        "applicability_reasons": {
+          "m_flight_nonstop": "reconciled: direct-flight preference applies to search (llm: The user is requesting to book a specific flight from existing search results; direct flight preference is not applicable as a tool parameter for booking.; rule: direct-flight preference applies to search)",
+          "m_flight_economy": "reconciled: cabin class preference applies to flight search (llm: The user is requesting to book a specific flight from existing search results; cabin class preference is not applicable as a tool parameter for booking.; rule: cabin class preference applies to flight search)"
+        },
+        "applied_to_context": [
+          "m_flight_nonstop",
+          "m_flight_economy"
+        ]
+      }
+    },
+    {
+      "seq": 24,
+      "node": "flight_chat",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": []
+    },
+    {
+      "seq": 25,
+      "node": "book_flight_by_id",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": [
+        {
+          "name": "book_flight_by_id",
+          "arguments": {
+            "flight_id": "FL-61F249"
+          }
+        }
+      ],
+      "parent_chat_node": "flight_chat"
+    },
+    {
+      "seq": 26,
+      "node": "flight_chat",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": []
+    },
+    {
+      "seq": 27,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 28,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 29,
+      "node": "summarize_conversation",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 30,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

@@ -84,13 +84,21 @@ Language (required):
 
 Multi-fact coverage (required — hard rule):
 - Count every durable preference in the user message; emit that many memories (1 fact = 1 memory).
-- "boutique gần biển, yên tĩnh" => exactly 3 memories covering boutique, gần biển, yên tĩnh.
-- "số tự động, rộng rãi, có tài xế" => exactly 3 memories; never only the first fact.
+- Split rule: for the head noun (xe / khách sạn / tour / chuyến bay), emit one
+  memory per independent search filter; stacked modifiers without commas still
+  split (do not merge into one compound). Before returning, re-check that every
+  constraint word appears in exactly one memory.
+- Example: "boutique gần biển, yên tĩnh" => exactly 3 memories covering boutique, gần biển, yên tĩnh.
+- Example: "số tự động, rộng rãi, có tài xế" => exactly 3 memories; never only the first fact.
 - Omitting any durable fact is a failure.
+
 
 Conditions (required — hard rule):
 - If the user says "khi đi công tác" / "khi đi gia đình", you MUST set condition to that phrase
   AND keep it visible in memory_text (e.g. "Thích business khi đi công tác").
+- Dual scopes in one utterance => one memory per scope (never merge into one compound):
+  "business khi đi công tác và economy khi đi du lịch" => 2 memories;
+  "resort khi nghỉ dưỡng và hostel khi backpacking" => 2 memories.
 - Forbidden: "Thích business class" / "Thích economy class" / "Thích resort yên tĩnh"
   without the matching condition when the user stated one.
 
@@ -107,7 +115,7 @@ Do not extract:
 - temporary tool/API search results, prices, or one-off trip logistics
 - assistant suggestions the user has not confirmed
 - claims without a clear user message as evidence
-- ambiguous/hedged claims ("có thể", "chưa chắc", "maybe", "nếu tiện", "nếu được", "có lẽ", "hình như")
+- ambiguous/hedged claims ("có thể", "chưa chắc", "maybe", "nếu tiện", "nếu được", "có lẽ", "hình như", "lần này", "chuyến này", "bữa nay", "hôm nay")
 - sensitive data (passport, card, CVV, password)
 
 Return no memory if evidence is ambiguous, sensitive, or not grounded in user text.\

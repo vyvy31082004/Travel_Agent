@@ -7,19 +7,33 @@
 - Applicability judge: `llm`
 - Judge model: `gemini-2.5-flash`
 
-## Metrics
+## Quality metrics
 
 | Metric | Value |
 |--------|-------|
 | SQL candidate pool completeness | 1.0000 |
+| Apply recall | 1.0000 |
+| Allowed context precision | 1.0000 |
+| Uncertain recall | 1.0000 |
+| Irrelevant leakage | 0.0000 |
+| Overridden leakage | 0.0000 |
+| Context case pass rate | 1.0000 |
+| Applicability macro-F1 | 0.9401 |
+
+## Isolation metrics
+
+| Metric | Value |
+|--------|-------|
 | Cross-user candidate leakage | 0.0000 |
 | Cross-domain candidate leakage | 0.0000 |
 | Inactive candidate leakage | 0.0000 |
-| Context recall (apply) | 0.9474 |
-| Context precision | 0.8090 |
-| Uncertain in final context | 0.1124 |
-| Overridden leakage | 0.0000 |
-| Applicability macro-F1 | 0.5341 |
 | Cross-user context leakage | 0.0000 |
 | Cross-domain context leakage | 0.0000 |
 | Inactive context leakage | 0.0000 |
+
+## Context composition diagnostics
+
+| Metric | Value |
+|--------|-------|
+| Apply-only share in final context (diagnostic) | 0.6022 |
+| Uncertain share in final context (diagnostic) | 0.3978 |

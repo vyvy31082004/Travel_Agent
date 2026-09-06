@@ -1,0 +1,1340 @@
+{
+  "metadata": {
+    "case_id": "e2e_multi_car_excursion_001",
+    "run_id": "0d0d9c9ff8bd",
+    "started_at": "2026-09-06T12:40:28.827502+00:00",
+    "finished_at": "2026-09-06T12:41:49.009453+00:00",
+    "user_id": "e2e-e2e_multi_car_excursion_001:user_a",
+    "thread_id": "e2e-e2e_multi_car_excursion_001-0d0d9c9ff8bd",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v2",
+    "git_commit": "e23fbaeebfc968930575b72dea73f6511f5519b0",
+    "fixture_to_uuid": {
+      "m_car_automatic": "421b2841-4c5f-581c-98d1-8844427af8fc",
+      "m_car_no_large": "7ac7122f-114b-5a11-ba6f-02c47ce499b5",
+      "m_car_other_user": "b79a01c1-9414-5bbc-a25d-4ad212d75d28",
+      "m_car_superseded": "a2f30787-ff92-5d36-8764-47e79cf78245",
+      "m_excursion_small_group": "4ba60a25-4628-5ea1-aad9-d970639a557c",
+      "m_excursion_afternoon": "6550614d-80ac-5d6f-a7b0-832ada2563f1",
+      "m_excursion_other_user": "8594ba93-6793-5b1f-8bf9-6dc693b1c916",
+      "m_excursion_superseded": "a29987e5-92fb-5c0b-b067-b686aaed8e21"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Ở Đà Nẵng ngày 10/10, thuê xe và tìm tour Bà Nà buổi chiều."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-06"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Ở Đà Nẵng ngày 10/10, thuê xe và tìm tour Bà Nà buổi chiều.",
+      "answer": "Dưới đây là thông tin chi tiết về tour tham quan Bà Nà Hills và các lựa chọn thuê xe tự lái tại Đà Nẵng vào ngày **10/10/2026**:\n\n---\n\n### 1. Tour Bà Nà Hills\n* **Tên tour:** Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times\n* **Mã tour (external_attraction_id):** `PRbeRPTXGXPd`\n* **Mô tả:** Tour nhóm nhỏ tham quan Bà Nà Hills & Cầu Vàng, miễn phí đưa đón tại trung tâm Đà Nẵng. Khung giờ khởi hành linh hoạt (7:30 AM hoặc 9:30 AM).\n* **Giá:** 1,284,755 VND\n* **Đánh giá:** 4.4 ⭐ (302 đánh giá)\n* **Lưu ý về giờ khởi hành:** Hiện chưa có tour Bà Nà Hills khởi hành hoàn toàn vào buổi chiều. Tour này hỗ trợ giờ xuất phát muộn hơn vào buổi sáng (**9:30 AM**), giúp bạn chủ động và linh hoạt hơn về thời gian.\n* **Hình ảnh:** ![Ba Na Hills - Golden Bridge Full-Day Tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\n\n---\n\n### 2. Danh sách xe tự lái khả dụng tại Đà Nẵng (10/10/2026)\n\n1. **VINFAST VF3 2025**\n   * **Mã xe (car_id):** `KGQRS1?carSearchIndex=1`\n   * **Giá sau giảm:** 524.000 VND/ngày (Giá gốc: 574.000 VND)\n   * **Thông số:** 4 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Hòa Cường Bắc, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (69 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/08/15/16/vfe5NPLEpW-TD4JpwnnfjQ.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-vf3-2025/KGQRS1?carSearchIndex=1)\n\n2. **VINFAST VF3 2025**\n   * **Mã xe (car_id):** `KJ89JC?carSearchIndex=2`\n   * **Giá sau giảm:** 524.000 VND/ngày (Giá gốc: 574.000 VND)\n   * **Thông số:** 4 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Hòa Khê, Quận Thanh Khê\n   * **Đánh giá:** 5.0 ⭐ (100+ chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=2)\n\n3. **VINFAST VF3 2025**\n   * **Mã xe (car_id):** `KEVEP3?carSearchIndex=3`\n   * **Giá sau giảm:** 524.000 VND/ngày (Giá gốc: 574.000 VND)\n   * **Thông số:** 4 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Thanh Khê Đông, Quận Thanh Khê\n   * **Đánh giá:** 5.0 ⭐ (100+ chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/06/24/08/y3JcD1sfPmmA10aPKHNH9A.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-vf3-2025/KEVEP3?carSearchIndex=3)\n\n4. **HYUNDAI ACCENT 2012**\n   * **Mã xe (car_id):** `KERE19?carSearchIndex=4`\n   * **Giá sau giảm:** 553.000 VND/ngày (Giá gốc: 653.000 VND)\n   * **Thông số:** 5 chỗ | Hộp số tự động | Nhiên liệu: Xăng\n   * **Địa chỉ:** Phường Hòa Cường Bắc, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (33 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![HYUNDAI ACCENT 2012](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_accent_2012/p/g/2026/00/07/16/s8NzuFe3IAhZXV4uY78P6g.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/hyundai-accent-2012/KERE19?carSearchIndex=4)\n\n5. **MAZDA 2 2024**\n   * **Mã xe (car_id):** `K3MCRQ?carSearchIndex=5`\n   * **Giá sau giảm:** 737.000 VND/ngày (Giá gốc: 837.000 VND)\n   * **Thông số:** 5 chỗ | Hộp số tự động | Nhiên liệu: Xăng\n   * **Địa chỉ:** Phường Hòa Thuận Đông, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (81 chuyến)\n   * **Dịch vụ:** Miễn thế chấp\n   * **Hình ảnh:** ![MAZDA 2 2024](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mazda_2_2024/p/g/2024/09/03/17/W0f5QcByIdPD9RO7wuQ9iw.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/mazda-2-2024/K3MCRQ?carSearchIndex=5)\n\n6. **VINFAST VF5 2026**\n   * **Mã xe (car_id):** `KFUKYQ?carSearchIndex=7`\n   * **Giá sau giảm:** 896.000 VND/ngày (Giá gốc: 976.000 VND)\n   * **Thông số:** 4 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Hải Châu II, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (7 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST VF5 2026](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf5_2026/p/g/2026/04/11/17/-F9e4_AZ2Pa4BrsYgYdLNw.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-vf5-2026/KFUKYQ?carSearchIndex=7)\n\n7. **VINFAST VF6 ECO 2025**\n   * **Mã xe (car_id):** `KH4Y1J?carSearchIndex=8`\n   * **Giá sau giảm:** 952.000 VND/ngày (Giá gốc: 1.032.000 VND)\n   * **Thông số:** 4 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Hòa Khê, Quận Thanh Khê\n   * **Đánh giá:** 5.0 ⭐ (28 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST VF6 ECO 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf6_eco_2025/p/g/2026/01/02/17/t0bd3OKH22CSOU_R5yHZnA.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-vf6-eco-2025/KH4Y1J?carSearchIndex=8)\n\n8. **MITSUBISHI OUTLANDER Premium 2019** (Xe 7 chỗ cỡ lớn)\n   * **Mã xe (car_id):** `KEQ7PS?carSearchIndex=9`\n   * **Giá sau giảm:** 1.028.000 VND/ngày (Giá gốc: 1.148.000 VND)\n   * **Thông số:** 7 chỗ | Hộp số tự động | Nhiên liệu: Xăng\n   * **Địa chỉ:** Phường Hòa Cường Bắc, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (1 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![MITSUBISHI OUTLANDER Premium 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=9)\n\n9. **VINFAST LIMO GREEN 2026** (Xe 7 chỗ cỡ lớn)\n   * **Mã xe (car_id):** `KLDAEP?carSearchIndex=10`\n   * **Giá sau giảm:** 1.372.000 VND/ngày (Giá gốc: 1.452.000 VND)\n   * **Thông số:** 7 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Hòa Thuận Đông, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (2 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST LIMO GREEN 2026](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=10)",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "excursion_assistant",
+        "car_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 5
+    }
+  ],
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "car",
+      "excursion"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToCarAssistant",
+        "args": {
+          "request": "Tìm dịch vụ thuê xe tại Đà Nẵng ngày 10/10/2026"
+        },
+        "timestamp": "2026-09-06T12:41:49.008062+00:00"
+      },
+      {
+        "name": "ToExcursionAssistant",
+        "args": {
+          "request": "Tìm tour Bà Nà Hills buổi chiều tại Đà Nẵng ngày 10/10/2026"
+        },
+        "timestamp": "2026-09-06T12:41:49.008062+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "car_assistant",
+      "excursion_assistant",
+      "memory_recall_car",
+      "car_chat",
+      "search_cars_tool",
+      "memory_recall_excursion",
+      "excursion_chat",
+      "search_attractions_tool",
+      "excursion_chat",
+      "fetch_attraction_details_tool",
+      "excursion_chat",
+      "car_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "car": {
+      "candidate_pool_ids": [
+        "m_car_no_large",
+        "m_car_automatic"
+      ],
+      "applicability": {
+        "m_car_no_large": "uncertain",
+        "m_car_automatic": "apply"
+      },
+      "applicability_reasons": {
+        "m_car_no_large": "reconciled: Avoiding large SUVs or big cars is a soft preference/ranking constraint that does not map directly to concrete tool/API fields like transmission or seat capacity for search_cars. (llm: Avoiding large SUVs or big cars is a soft preference/ranking constraint that does not map directly to concrete tool/API fields like transmission or seat capacity for search_cars.; rule: default uncertain (no specific tool-field rule matched))",
+        "m_car_automatic": "reconciled: transmission maps to user_needs on search_cars (llm: Automatic transmission preference directly maps to the transmission field in user_needs for search_cars.; rule: transmission maps to user_needs on search_cars)"
+      },
+      "final_context_ids": [
+        "m_car_no_large",
+        "m_car_automatic"
+      ],
+      "applied_constraints": [
+        "[421b2841-4c5f-581c-98d1-8844427af8fc] Thích xe số tự động",
+        "(soft) [7ac7122f-114b-5a11-ba6f-02c47ce499b5] Tránh xe cỡ lớn / SUV quá to"
+      ]
+    },
+    "excursion": {
+      "candidate_pool_ids": [
+        "m_excursion_afternoon",
+        "m_excursion_small_group"
+      ],
+      "applicability": {
+        "m_excursion_afternoon": "uncertain",
+        "m_excursion_small_group": "apply"
+      },
+      "applicability_reasons": {
+        "m_excursion_afternoon": "reconciled: Tour time preference (buổi chiều) aligns with the request but cannot be directly passed as a tool filter argument for search_attractions. (llm: Tour time preference (buổi chiều) aligns with the request but cannot be directly passed as a tool filter argument for search_attractions.; rule: default uncertain (no specific tool-field rule matched))",
+        "m_excursion_small_group": "reconciled: group-size preference applies to attraction search (llm: Group size preference (nhóm nhỏ) is relevant for ranking/reading tour details but does not map to a standard tool API filter for search_attractions.; rule: group-size preference applies to attraction search)"
+      },
+      "final_context_ids": [
+        "m_excursion_afternoon",
+        "m_excursion_small_group"
+      ],
+      "applied_constraints": [
+        "[4ba60a25-4628-5ea1-aad9-d970639a557c] Ưu tiên tour nhóm nhỏ",
+        "(soft) [6550614d-80ac-5d6f-a7b0-832ada2563f1] Ưu tiên tour buổi chiều"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "car",
+      "name": "search_cars_tool",
+      "arguments": {
+        "end_ms": "2026-10-10 20:00",
+        "address": "Đà Nẵng",
+        "start_ms": "2026-10-10 08:00",
+        "user_needs": "Tìm xe thuê tại Đà Nẵng ngày 10/10/2026, ưu tiên xe số tự động, tránh xe SUV quá to"
+      },
+      "timestamp": "2026-09-06T12:41:49.008062+00:00",
+      "raw_result": {
+        "search_id": "9a801435-0b4b-434f-a743-8dba063c1187",
+        "domain": "car",
+        "displayed_item_ids": [
+          "KGQRS1?carSearchIndex=1",
+          "KJ89JC?carSearchIndex=2",
+          "KEVEP3?carSearchIndex=3",
+          "KERE19?carSearchIndex=4",
+          "K3MCRQ?carSearchIndex=5",
+          "KFUKYQ?carSearchIndex=7",
+          "KH4Y1J?carSearchIndex=8",
+          "KEQ7PS?carSearchIndex=9",
+          "KLDAEP?carSearchIndex=10"
+        ],
+        "labels": [],
+        "total_results": 9
+      },
+      "normalized_result": {
+        "search_id": "9a801435-0b4b-434f-a743-8dba063c1187",
+        "request_id": "req_car_42709641",
+        "domain": "car",
+        "total_results": 9,
+        "items": [
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KGQRS1?carSearchIndex=1",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KGQRS1?carSearchIndex=1",
+            "name": "VINFAST VF3 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/08/15/16/vfe5NPLEpW-TD4JpwnnfjQ.jpg",
+            "price": "524K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/08/15/16/vfe5NPLEpW-TD4JpwnnfjQ.jpg",
+            "Rating": "5.0",
+            "car_id": "KGQRS1?carSearchIndex=1",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF3 2025",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KGQRS1?carSearchIndex=1",
+            "Giá gốc": "574K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "69 chuyến",
+            "Giá sau giảm": "524K",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=2",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=2",
+            "name": "VINFAST VF3 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg",
+            "price": "524K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg",
+            "Rating": "5.0",
+            "car_id": "KJ89JC?carSearchIndex=2",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF3 2025",
+            "address": "Phường Hòa Khê, Quận Thanh Khê",
+            "item_id": "KJ89JC?carSearchIndex=2",
+            "Giá gốc": "574K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hòa Khê, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "100+ chuyến",
+            "Giá sau giảm": "524K",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KEVEP3?carSearchIndex=3",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KEVEP3?carSearchIndex=3",
+            "name": "VINFAST VF3 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/06/24/08/y3JcD1sfPmmA10aPKHNH9A.jpg",
+            "price": "524K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/06/24/08/y3JcD1sfPmmA10aPKHNH9A.jpg",
+            "Rating": "5.0",
+            "car_id": "KEVEP3?carSearchIndex=3",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF3 2025",
+            "address": "Phường Thanh Khê Đông, Quận Thanh Khê",
+            "item_id": "KEVEP3?carSearchIndex=3",
+            "Giá gốc": "574K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Thanh Khê Đông, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "100+ chuyến",
+            "Giá sau giảm": "524K",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/hyundai-accent-2012/KERE19?carSearchIndex=4",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/hyundai-accent-2012/KERE19?carSearchIndex=4",
+            "name": "HYUNDAI ACCENT 2012",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_accent_2012/p/g/2026/00/07/16/s8NzuFe3IAhZXV4uY78P6g.jpg",
+            "price": "553K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_accent_2012/p/g/2026/00/07/16/s8NzuFe3IAhZXV4uY78P6g.jpg",
+            "Rating": "5.0",
+            "car_id": "KERE19?carSearchIndex=4",
+            "rating": "5.0",
+            "Tên xe": "HYUNDAI ACCENT 2012",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KERE19?carSearchIndex=4",
+            "Giá gốc": "653K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "33 chuyến",
+            "Giá sau giảm": "553K",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mazda-2-2024/K3MCRQ?carSearchIndex=5",
+            "Tags": "Miễn thế chấp",
+            "link": "https://www.mioto.vn/car/mazda-2-2024/K3MCRQ?carSearchIndex=5",
+            "name": "MAZDA 2 2024",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mazda_2_2024/p/g/2024/09/03/17/W0f5QcByIdPD9RO7wuQ9iw.jpg",
+            "price": "737K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mazda_2_2024/p/g/2024/09/03/17/W0f5QcByIdPD9RO7wuQ9iw.jpg",
+            "Rating": "5.0",
+            "car_id": "K3MCRQ?carSearchIndex=5",
+            "rating": "5.0",
+            "Tên xe": "MAZDA 2 2024",
+            "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "item_id": "K3MCRQ?carSearchIndex=5",
+            "Giá gốc": "837K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "81 chuyến",
+            "Giá sau giảm": "737K",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2020/KE1FA1?carSearchIndex=6",
+            "Tags": "Miễn thế chấp",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2020/KE1FA1?carSearchIndex=6",
+            "name": "MITSUBISHI XPANDER 2020",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2024/06/31/12/YvwXVHvldczHMGEIKqFteg.jpg",
+            "price": "738K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2024/06/31/12/YvwXVHvldczHMGEIKqFteg.jpg",
+            "Rating": "5.0",
+            "car_id": "KE1FA1?carSearchIndex=6",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2020",
+            "address": "Phường Xuân Hà, Quận Thanh Khê",
+            "item_id": "KE1FA1?carSearchIndex=6",
+            "Giá gốc": "858K",
+            "Hộp số": "Số sàn",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Xuân Hà, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "63 chuyến",
+            "Giá sau giảm": "738K",
+            "position": null,
+            "api_position": 6,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf5-2026/KFUKYQ?carSearchIndex=7",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf5-2026/KFUKYQ?carSearchIndex=7",
+            "name": "VINFAST VF5 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf5_2026/p/g/2026/04/11/17/-F9e4_AZ2Pa4BrsYgYdLNw.jpg",
+            "price": "896K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf5_2026/p/g/2026/04/11/17/-F9e4_AZ2Pa4BrsYgYdLNw.jpg",
+            "Rating": "5.0",
+            "car_id": "KFUKYQ?carSearchIndex=7",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF5 2026",
+            "address": "Phường Hải Châu II, Quận Hải Châu",
+            "item_id": "KFUKYQ?carSearchIndex=7",
+            "Giá gốc": "976K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hải Châu II, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "7 chuyến",
+            "Giá sau giảm": "896K",
+            "position": 6,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf6-eco-2025/KH4Y1J?carSearchIndex=8",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf6-eco-2025/KH4Y1J?carSearchIndex=8",
+            "name": "VINFAST VF6 ECO 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf6_eco_2025/p/g/2026/01/02/17/t0bd3OKH22CSOU_R5yHZnA.jpg",
+            "price": "952K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf6_eco_2025/p/g/2026/01/02/17/t0bd3OKH22CSOU_R5yHZnA.jpg",
+            "Rating": "5.0",
+            "car_id": "KH4Y1J?carSearchIndex=8",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF6 ECO 2025",
+            "address": "Phường Hòa Khê, Quận Thanh Khê",
+            "item_id": "KH4Y1J?carSearchIndex=8",
+            "Giá gốc": "1.032K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hòa Khê, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "28 chuyến",
+            "Giá sau giảm": "952K",
+            "position": 7,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=9",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=9",
+            "name": "MITSUBISHI OUTLANDER Premium 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg",
+            "price": "1.028K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg",
+            "Rating": "5.0",
+            "car_id": "KEQ7PS?carSearchIndex=9",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI OUTLANDER Premium 2019",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KEQ7PS?carSearchIndex=9",
+            "Giá gốc": "1.148K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "1 chuyến",
+            "Giá sau giảm": "1.028K",
+            "position": 8,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=10",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=10",
+            "name": "VINFAST LIMO GREEN 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg",
+            "price": "1.372K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg",
+            "Rating": "5.0",
+            "car_id": "KLDAEP?carSearchIndex=10",
+            "rating": "5.0",
+            "Tên xe": "VINFAST LIMO GREEN 2026",
+            "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "item_id": "KLDAEP?carSearchIndex=10",
+            "Giá gốc": "1.452K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "2 chuyến",
+            "Giá sau giảm": "1.372K",
+            "position": 9,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 7,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "KGQRS1?carSearchIndex=1",
+          "KJ89JC?carSearchIndex=2",
+          "KEVEP3?carSearchIndex=3",
+          "KERE19?carSearchIndex=4",
+          "K3MCRQ?carSearchIndex=5",
+          "KFUKYQ?carSearchIndex=7",
+          "KH4Y1J?carSearchIndex=8",
+          "KEQ7PS?carSearchIndex=9",
+          "KLDAEP?carSearchIndex=10"
+        ],
+        "items": [
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KGQRS1?carSearchIndex=1",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KGQRS1?carSearchIndex=1",
+            "name": "VINFAST VF3 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/08/15/16/vfe5NPLEpW-TD4JpwnnfjQ.jpg",
+            "price": "524K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/08/15/16/vfe5NPLEpW-TD4JpwnnfjQ.jpg",
+            "Rating": "5.0",
+            "car_id": "KGQRS1?carSearchIndex=1",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF3 2025",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KGQRS1?carSearchIndex=1",
+            "Giá gốc": "574K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "69 chuyến",
+            "Giá sau giảm": "524K",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=2",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=2",
+            "name": "VINFAST VF3 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg",
+            "price": "524K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg",
+            "Rating": "5.0",
+            "car_id": "KJ89JC?carSearchIndex=2",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF3 2025",
+            "address": "Phường Hòa Khê, Quận Thanh Khê",
+            "item_id": "KJ89JC?carSearchIndex=2",
+            "Giá gốc": "574K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hòa Khê, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "100+ chuyến",
+            "Giá sau giảm": "524K",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KEVEP3?carSearchIndex=3",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KEVEP3?carSearchIndex=3",
+            "name": "VINFAST VF3 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/06/24/08/y3JcD1sfPmmA10aPKHNH9A.jpg",
+            "price": "524K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/06/24/08/y3JcD1sfPmmA10aPKHNH9A.jpg",
+            "Rating": "5.0",
+            "car_id": "KEVEP3?carSearchIndex=3",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF3 2025",
+            "address": "Phường Thanh Khê Đông, Quận Thanh Khê",
+            "item_id": "KEVEP3?carSearchIndex=3",
+            "Giá gốc": "574K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Thanh Khê Đông, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "100+ chuyến",
+            "Giá sau giảm": "524K",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/hyundai-accent-2012/KERE19?carSearchIndex=4",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/hyundai-accent-2012/KERE19?carSearchIndex=4",
+            "name": "HYUNDAI ACCENT 2012",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_accent_2012/p/g/2026/00/07/16/s8NzuFe3IAhZXV4uY78P6g.jpg",
+            "price": "553K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_accent_2012/p/g/2026/00/07/16/s8NzuFe3IAhZXV4uY78P6g.jpg",
+            "Rating": "5.0",
+            "car_id": "KERE19?carSearchIndex=4",
+            "rating": "5.0",
+            "Tên xe": "HYUNDAI ACCENT 2012",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KERE19?carSearchIndex=4",
+            "Giá gốc": "653K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "33 chuyến",
+            "Giá sau giảm": "553K",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mazda-2-2024/K3MCRQ?carSearchIndex=5",
+            "Tags": "Miễn thế chấp",
+            "link": "https://www.mioto.vn/car/mazda-2-2024/K3MCRQ?carSearchIndex=5",
+            "name": "MAZDA 2 2024",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mazda_2_2024/p/g/2024/09/03/17/W0f5QcByIdPD9RO7wuQ9iw.jpg",
+            "price": "737K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mazda_2_2024/p/g/2024/09/03/17/W0f5QcByIdPD9RO7wuQ9iw.jpg",
+            "Rating": "5.0",
+            "car_id": "K3MCRQ?carSearchIndex=5",
+            "rating": "5.0",
+            "Tên xe": "MAZDA 2 2024",
+            "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "item_id": "K3MCRQ?carSearchIndex=5",
+            "Giá gốc": "837K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "81 chuyến",
+            "Giá sau giảm": "737K",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf5-2026/KFUKYQ?carSearchIndex=7",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf5-2026/KFUKYQ?carSearchIndex=7",
+            "name": "VINFAST VF5 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf5_2026/p/g/2026/04/11/17/-F9e4_AZ2Pa4BrsYgYdLNw.jpg",
+            "price": "896K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf5_2026/p/g/2026/04/11/17/-F9e4_AZ2Pa4BrsYgYdLNw.jpg",
+            "Rating": "5.0",
+            "car_id": "KFUKYQ?carSearchIndex=7",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF5 2026",
+            "address": "Phường Hải Châu II, Quận Hải Châu",
+            "item_id": "KFUKYQ?carSearchIndex=7",
+            "Giá gốc": "976K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hải Châu II, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "7 chuyến",
+            "Giá sau giảm": "896K",
+            "position": 6,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf6-eco-2025/KH4Y1J?carSearchIndex=8",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf6-eco-2025/KH4Y1J?carSearchIndex=8",
+            "name": "VINFAST VF6 ECO 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf6_eco_2025/p/g/2026/01/02/17/t0bd3OKH22CSOU_R5yHZnA.jpg",
+            "price": "952K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf6_eco_2025/p/g/2026/01/02/17/t0bd3OKH22CSOU_R5yHZnA.jpg",
+            "Rating": "5.0",
+            "car_id": "KH4Y1J?carSearchIndex=8",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF6 ECO 2025",
+            "address": "Phường Hòa Khê, Quận Thanh Khê",
+            "item_id": "KH4Y1J?carSearchIndex=8",
+            "Giá gốc": "1.032K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hòa Khê, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "28 chuyến",
+            "Giá sau giảm": "952K",
+            "position": 7,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=9",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=9",
+            "name": "MITSUBISHI OUTLANDER Premium 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg",
+            "price": "1.028K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg",
+            "Rating": "5.0",
+            "car_id": "KEQ7PS?carSearchIndex=9",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI OUTLANDER Premium 2019",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KEQ7PS?carSearchIndex=9",
+            "Giá gốc": "1.148K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "1 chuyến",
+            "Giá sau giảm": "1.028K",
+            "position": 8,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=10",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=10",
+            "name": "VINFAST LIMO GREEN 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg",
+            "price": "1.372K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg",
+            "Rating": "5.0",
+            "car_id": "KLDAEP?carSearchIndex=10",
+            "rating": "5.0",
+            "Tên xe": "VINFAST LIMO GREEN 2026",
+            "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "item_id": "KLDAEP?carSearchIndex=10",
+            "Giá gốc": "1.452K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "2 chuyến",
+            "Giá sau giảm": "1.372K",
+            "position": 9,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "tour",
+      "name": "search_attractions_tool",
+      "arguments": {
+        "end_date": "2026-10-10",
+        "location": "Đà Nẵng",
+        "start_date": "2026-10-10",
+        "destination": "Đà Nẵng"
+      },
+      "timestamp": "2026-09-06T12:41:49.008062+00:00",
+      "raw_result": {
+        "search_id": "a6203527-2573-4be1-bf7a-4588076eb803",
+        "domain": "excursion",
+        "displayed_item_ids": [
+          "PRbeRPTXGXPd"
+        ],
+        "labels": [],
+        "total_results": 1
+      },
+      "normalized_result": {
+        "search_id": "a6203527-2573-4be1-bf7a-4588076eb803",
+        "request_id": "req_tour_026a6b7e",
+        "domain": "excursion",
+        "total_results": 1,
+        "items": [
+          {
+            "name": "Vé Sun World Ba Na Hills",
+            "slug": "pr9of7hahjy9-sun-world-ba-na-hills-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=",
+            "price": 1018340,
+            "rating": null,
+            "item_id": "PR9oF7hAhjy9",
+            "currency": "VND",
+            "description": "Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills",
+            "review_count": null,
+            "external_attraction_id": "PR9oF7hAhjy9",
+            "position": null,
+            "api_position": 1,
+            "eligible": false
+          },
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 1,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 116544,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": null,
+            "api_position": 3,
+            "eligible": false
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": null,
+            "api_position": 4,
+            "eligible": false
+          },
+          {
+            "name": "Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)",
+            "slug": "prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=",
+            "price": 762700,
+            "rating": null,
+            "item_id": "PRVwSAVvgpO5",
+            "currency": "VND",
+            "description": "Morning tour: 8:30am to 1:00pm Afternoon tour: 2:00pm to 6:30pm You will be pick up by car by loc...",
+            "review_count": null,
+            "external_attraction_id": "PRVwSAVvgpO5",
+            "position": null,
+            "api_position": 5,
+            "eligible": false
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": null,
+            "api_position": 6,
+            "eligible": false
+          },
+          {
+            "name": "Tour Bà Nà Hills trọn ngày với bữa trưa buffet",
+            "slug": "prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=",
+            "price": 1709500,
+            "rating": null,
+            "item_id": "PRdCygydpY9o",
+            "currency": "VND",
+            "description": "Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa",
+            "review_count": null,
+            "external_attraction_id": "PRdCygydpY9o",
+            "position": null,
+            "api_position": 7,
+            "eligible": false
+          },
+          {
+            "name": "Hoi An Memories Show & Hoi An Impression Theme Park Ticket",
+            "slug": "prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=",
+            "price": 631200,
+            "rating": null,
+            "item_id": "PRWX9rush6bp",
+            "currency": "VND",
+            "description": "Located on the Hoi An Memories Land, the Hoi An Memories show is one of the outdoor performances ...",
+            "review_count": null,
+            "external_attraction_id": "PRWX9rush6bp",
+            "position": null,
+            "api_position": 8,
+            "eligible": false
+          },
+          {
+            "name": "Lớp hướng dẫn làm lồng đèn",
+            "slug": "prpc0nrrr1qm-lantern-making-class",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=",
+            "price": 257656,
+            "rating": null,
+            "item_id": "PRPC0NRRR1QM",
+            "currency": "VND",
+            "description": "Workshop làm đèn lồng Việt Nam từ nhiều chất liệu",
+            "review_count": null,
+            "external_attraction_id": "PRPC0NRRR1QM",
+            "position": null,
+            "api_position": 9,
+            "eligible": false
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": null,
+            "api_position": 10,
+            "eligible": false
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 10,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "PRbeRPTXGXPd"
+        ],
+        "items": [
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 1,
+            "api_position": 2,
+            "eligible": true
+          }
+        ]
+      }
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "car",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là danh sách xe tự lái số tự động khả dụng tại Đà Nẵng vào ngày 10/10/2026 (đã lọc theo ưu tiên **xe số tự động** và ưu tiên các dòng xe cỡ vừa/nhỏ):\\n\\n* **VINFAST VF3 2025**\\n  * **car_id:** `KGQRS1?carSearchIndex=1`\\n  * **Tên xe:** VINFAST VF3 2025\\n  * **Giá sau giảm:** 524K\\n  * **Giá gốc:** 574K\\n  * **Hộp số:** Số tự động\\n  * **Số chỗ:** 4 chỗ\\n  * **Nhiên liệu:** Điện\\n  * **Địa chỉ:** Phường Hòa Cường Bắc, Quận Hải Châu\\n  * **Rating:** 5.0\\n  * **Số chuyến:** 69 chuyến\\n  * **Tags:** Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh:** ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/08/15/16/vfe5NPLEpW-TD4JpwnnfjQ.jpg)\\n  * **Link:** https://www.mioto.vn/car/vinfast-vf3-2025/KGQRS1?carSearchIndex=1\\n\\n* **VINFAST VF3 2025**\\n  * **car_id:** `KJ89JC?carSearchIndex=2`\\n  * **Tên xe:** VINFAST VF3 2025\\n  * **Giá sau giảm:** 524K\\n  * **Giá gốc:** 574K\\n  * **Hộp số:** Số tự động\\n  * **Số chỗ:** 4 chỗ\\n  * **Nhiên liệu:** Điện\\n  * **Địa chỉ:** Phường Hòa Khê, Quận Thanh Khê\\n  * **Rating:** 5.0\\n  * **Số chuyến:** 100+ chuyến\\n  * **Tags:** Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh:** ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg)\\n  * **Link:** https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=2\\n\\n* **VINFAST VF3 2025**\\n  * **car_id:** `KEVEP3?carSearchIndex=3`\\n  * **Tên xe:** VINFAST VF3 2025\\n  * **Giá sau giảm:** 524K\\n  * **Giá gốc:** 574K\\n  * **Hộp số:** Số tự động\\n  * **Số chỗ:** 4 chỗ\\n  * **Nhiên liệu:** Điện\\n  * **Địa chỉ:** Phường Thanh Khê Đông, Quận Thanh Khê\\n  * **Rating:** 5.0\\n  * **Số chuyến:** 100+ chuyến\\n  * **Tags:** Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh:** ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/06/24/08/y3JcD1sfPmmA10aPKHNH9A.jpg)\\n  * **Link:** https://www.mioto.vn/car/vinfast-vf3-2025/KEVEP3?carSearchIndex=3\\n\\n* **HYUNDAI ACCENT 2012**\\n  * **car_id:** `KERE19?carSearchIndex=4`\\n  * **Tên xe:** HYUNDAI ACCENT 2012\\n  * **Giá sau giảm:** 553K\\n  * **Giá gốc:** 653K\\n  * **Hộp số:** Số tự động\\n  * **Số chỗ:** 5 chỗ\\n  * **Nhiên liệu:** Xăng\\n  * **Địa chỉ:** Phường Hòa Cường Bắc, Quận Hải Châu\\n  * **Rating:** 5.0\\n  * **Số chuyến:** 33 chuyến\\n  * **Tags:** Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh:** ![HYUNDAI ACCENT 2012](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_accent_2012/p/g/2026/00/07/16/s8NzuFe3IAhZXV4uY78P6g.jpg)\\n  * **Link:** https://www.mioto.vn/car/hyundai-accent-2012/KERE19?carSearchIndex=4\\n\\n* **MAZDA 2 2024**\\n  * **car_id:** `K3MCRQ?carSearchIndex=5`\\n  * **Tên xe:** MAZDA 2 2024\\n  * **Giá sau giảm:** 737K\\n  * **Giá gốc:** 837K\\n  * **Hộp số:** Số tự động\\n  * **Số chỗ:** 5 chỗ\\n  * **Nhiên liệu:** Xăng\\n  * **Địa chỉ:** Phường Hòa Thuận Đông, Quận Hải Châu\\n  * **Rating:** 5.0\\n  * **Số chuyến:** 81 chuyến\\n  * **Tags:** Miễn thế chấp\\n  * **Ảnh:** ![MAZDA 2 2024](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mazda_2_2024/p/g/2024/09/03/17/W0f5QcByIdPD9RO7wuQ9iw.jpg)\\n  * **Link:** https://www.mioto.vn/car/mazda-2-2024/K3MCRQ?carSearchIndex=5\\n\\n* **VINFAST VF5 2026**\\n  * **car_id:** `KFUKYQ?carSearchIndex=7`\\n  * **Tên xe:** VINFAST VF5 2026\\n  * **Giá sau giảm:** 896K\\n  * **Giá gốc:** 976K\\n  * **Hộp số:** Số tự động\\n  * **Số chỗ:** 4 chỗ\\n  * **Nhiên liệu:** Điện\\n  * **Địa chỉ:** Phường Hải Châu II, Quận Hải Châu\\n  * **Rating:** 5.0\\n  * **Số chuyến:** 7 chuyến\\n  * **Tags:** Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh:** ![VINFAST VF5 2026](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf5_2026/p/g/2026/04/11/17/-F9e4_AZ2Pa4BrsYgYdLNw.jpg)\\n  * **Link:** https://www.mioto.vn/car/vinfast-vf5-2026/KFUKYQ?carSearchIndex=7\\n\\n* **VINFAST VF6 ECO 2025**\\n  * **car_id:** `KH4Y1J?carSearchIndex=8`\\n  * **Tên xe:** VINFAST VF6 ECO 2025\\n  * **Giá sau giảm:** 952K\\n  * **Giá gốc:** 1.032K\\n  * **Hộp số:** Số tự động\\n  * **Số chỗ:** 4 chỗ\\n  * **Nhiên liệu:** Điện\\n  * **Địa chỉ:** Phường Hòa Khê, Quận Thanh Khê\\n  * **Rating:** 5.0\\n  * **Số chuyến:** 28 chuyến\\n  * **Tags:** Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh:** ![VINFAST VF6 ECO 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf6_eco_2025/p/g/2026/01/02/17/t0bd3OKH22CSOU_R5yHZnA.jpg)\\n  * **Link:** https://www.mioto.vn/car/vinfast-vf6-eco-2025/KH4Y1J?carSearchIndex=8\\n\\n*(Lưu ý về đánh đổi)*: Hai xe dưới đây cũng là **Số tự động**, tuy nhiên là dòng SUV/MPV 7 chỗ cỡ lớn hơn:\\n* **MITSUBISHI OUTLANDER Premium 2019**\\n  * **car_id:** `KEQ7PS?carSearchIndex=9`\\n  * **Tên xe:** MITSUBISHI OUTLANDER Premium 2019\\n  * **Giá sau giảm:** 1.028K\\n  * **Giá gốc:** 1.148K\\n  * **Hộp số:** Số tự động\\n  * **Số chỗ:** 7 chỗ\\n  * **Nhiên liệu:** Xăng\\n  * **Địa chỉ:** Phường Hòa Cường Bắc, Quận Hải Châu\\n  * **Rating:** 5.0\\n  * **Số chuyến:** 1 chuyến\\n  * **Tags:** Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh:** ![MITSUBISHI OUTLANDER Premium 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg)\\n  * **Link:** https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=9\\n\\n* **VINFAST LIMO GREEN 2026**\\n  * **car_id:** `KLDAEP?carSearchIndex=10`\\n  * **Tên xe:** VINFAST LIMO GREEN 2026\\n  * **Giá sau giảm:** 1.372K\\n  * **Giá gốc:** 1.452K\\n  * **Hộp số:** Số tự động\\n  * **Số chỗ:** 7 chỗ\\n  * **Nhiên liệu:** Điện\\n  * **Địa chỉ:** Phường Hòa Thuận Đông, Quận Hải Châu\\n  * **Rating:** 5.0\\n  * **Số chuyến:** 2 chuyến\\n  * **Tags:** Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh:** ![VINFAST LIMO GREEN 2026](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg)\\n  * **Link:** https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=10', 'extras': {'signature': 'EuVHCuJHARFNMg8kuK0LlHHB0x0YLp++UggeOnaIw0tkhhFnKUnaMRO8bjSMj+HEahEIDUmb06Qy4w2TayDnWTvP1cV461j7VoM8sSIoCCp8Tjl5dW+z8x30iYW1Nk9NPdsf8vnxwHCx1AHQA855gUlLO1dW2a7iEMq1hUuIY698Y5HiRIHcqB4k/2/mDWEkoW4zqMn+L2Ffy2dEGY9Ih1mxPHC/aL1uMcIg+u3ItpXYQZfFZzYLD0nJZ8rd08O6/rjASiMt65IIejlsCttUTitBDbEAXLEj7BnL3HJPCWFd1sHEFjNnO9x1e4A+3/EFO01QXztPEwK9c3AJErsRIYN6ZQTQzYIjKpdj3mOhAEeeRevOvCG7XpU3NbwwFcP9vjvfowe4gbNJGZbAYlfQlM1OU0h0i7g7zoj6Bq7UF9Ssl7ODRXM4FBGwje0pqVVdw9Tdowrg/s2L4I6d2I8arvt1mJ0g45+3QyYV3tXCEBoElU6mcoYs59gA5OsSbAaxir6aF80PwtcPX+yzMYahj3kWzdM2AXo0MLfE6tTkA5YX55evpXXBO8uA2Q0j8KA1QJk5DhHOYscbuRrJyMcuMcK4yKZIxIphdr5x+9EVXtif7T5tHbWbib8prCTd3mZi3gRNZqP5uU0jNt6avDioxqgK2VNdd7HDEuJOx0IJdr9X/DCHK6CloD1kJy6r1Y/t3pLvEMBuoS4HKkvnuxVH7l6FJ6b9mZ0bQGerl/PO6rj6XFDlLJ1OeyfFLha2dMht58BptQm2khvfMLu2UIouydeutj76sMBJjySmpTqY3Zxq+GaKK1ZQXPYJ5zLZFfVAC7OvqeSHSa+gBoQrNK1pcS4edD5PgR5tYvWTlbr1AsuQ+Coit4xnCUpwUmztIMXEN8xlHdKOJyqa2kf2o8xpy55qWUab0uoc4aDyhPLNRPxEacgVJE+Ln8ujeBAc+jsVvWVg7IkdjVqBQDh+C4Xfs0cH9MPXDlXcDCJPB0tQlF7No03VrvQKTRUr2gP0ZGOSyGMJNCYFayRlrPm7vDimAVGnj62w0tkfiRDtpq59ISqnKOt6+qxFt8lzoWRJkDc+LTZa4+G3jasvwGPIaMDWw04ONdHsB5+lHJstAD/iWDjkCAWlEh7/uzR92EyJO6MxEHe569JDowUl4V49QOCiczgoeWzNuLDME03bxjugBE1TWaG3A7QkOOn39exgwZ9tgYDLYYmqsLEWQ0/Yr+OpQgBv92tLwtT0qUdA4fMselLJvjWq6xEeZpwz5T+sObbT7u2cqwXenSOLQfhLe4nvEjwRf6H1ZMmq5e61rNiXSguTCEYHXt7lrQ2j1M7pSpZIqdoVYKilcos/xfOhZG6C1NTLpFceb0AlOJEc/ui45eWXD36e5a/6FKHYz6J76wwh7a0S3mYVrPuxtnfl5j9VNEfmEq8GfUsioay1tLQyQC/UDETj7nzAG3mGGZNsKRKqkIGKUQd+gZLmuDgVc0MsRuZ27gRVO6UKFzaPqlIMLbz3qTL7vdvaB5hGU+dZUzwqUls2W4xom15weyhT1Dp6QBp01LtIy2o2akqMlP0FlX0fwYxOiy4vBiJ+VkNQeUutjradtfwnBfpH/CI1ZVol8DrmRJIiSxH//V45JmTS1D2nxfmpO6nu6pFazDGNzOwHUK28cwJN1typn6T9llNNHrqMC4os6XH8KknxiLQKte0yX0nuxZUFm8TNfg0Ead169muvSpTougXTbGZ94IG+7nns952Cnm9gFRaoWAMFjVXSsvDeUao/BCO/yACkCl5CcZd+76SUM8u20mJGsGpEt9T4X93/MIsw5uqNF28AKr8CLmrCvdZiDIIgrCEjEnwytwxrhAHm57do4A1hKE/jWW50ZNraQpwFx3G7YdZGhxHps/+lkOG+cWbi7IjHB1EHgJxvFvc0kfpM7v8InwrMZfJpmoFCoKJ3a2BJKIVyAdtvsXJFqbO064pz74kENBRhoMaXJKwqrpWorQD3YyZnti/svou356MnIktYUYyo6p2UddoJC3QBwsU/pXH6zY2B4XY8mKMYs6ZBNuQsuXA49u0lG3eekIok5Cb4zIC0VCiJHXbJOrNUTR036sEGHVufYjm+TcnJnwuzV3ncMosweoOln7D1idfeO2PaKscjvexTEz6iM3kJ+AuePTIOPj4YNgvFapxX/3ZCP7Tr6kbMSI8YOo0Ixd5PLeQ/ia0VV6NgMMWXRgoaEP1WPixE008LCpcB1emNUA1wSCP+yM/VpGTvEzmXkl43qMwvYgAS2noK6WMb505ki4zKiBQVAATYFJuqNSGXvP0WjzR0ut97sDYRdbzLIN/Sf/dfTRFTXMSMu0HXWs2RfGYhi84c/P/KGkF4SROKksDJ7Gakh4hcm1P509Gk4+F8RpxmzKVKSQ6pM8LBV2wE2YmYFkw5+JV/JhoQV7cETGNXb8+xn1yD6Q3TxIWvlAJSN0Gvv1qDbrb0SiKigY5PFQ72W7Ys9NijTnIErd+PRuEX7EWMfN9yZV9fMi1dRb7qCfH0roWJbXAeoy2xUZvQVQT6k9R0hpF0VYMUbIbM8NSheMbnZzGsawt7aGKLA7yA1D5lxmRFdQFaKkHgsjvmvcmux29vWxA1ySdbMy4NOGOo3shaVM7bMRYsVLV/x/+kUETJ0oftCH53pw4ikXcDFhhDashqwdXUYRr3WvQ4Taxmz3wtbUpfHun6FOUNTvQiMTgw2o5GWbT2EnkC/KtbBrrs0+LxTFKsYNbbxFVMSkeR/cA+q0I5AnS03Rn50+63a0w2f+09iUuvTNk5b4xtLj2Ps4zNe7PlKvx1ofp5bvxRbgi7dmsJrrOMG0IlG8cFpUTzuPdA4rxUO0kuxd20lNLbTa7uPbtgZe382hl7Bd8K6xR8Z/GDxYDT8kY06vEx+nx+5y1vDf6XlpWoMzjaCVaeHfwX8YM1LU2KqhtDlgcEFgkHW+d+7cE64EQExVl5aGy/xX09opiEz8b7o+HKL8NGMRWjKlMHGJIXYI7+R/7az1uIS+15XpsuOff4rEvJXifpzGJ+H2Lqi8tACRAd5AIV4p2MSCJKnvUt7g7wutEFKmTLwwYa8AebZuCQUte65X3wmRE168oLlCGdQmSjpvht95QlA+6ig7BxEYWNJH2oOJKrMwIepbHbOxeAgvowWlouYMcsJ9zfq4d6eRlc4KPHkseDgSanEHsh4ec3DhcBtZTa7xC7RWkcGVb73bHlqPUD6K/5mUnRcT65ab12/5y3ALqPwPa7Xe1Nu3krOx+5D6PSvDFIcylv7lukhct0K8AZocdUPrF4sMSC93ksHLyoMKkpsBcxueYCi4qup6Gc19qV8qbGroSn3iuhEINyQJhvh5PmSt1Jk2zizxG5oO/hOlcoXcmNE1aQo0vnK0NexJlD/83oIDjpQ/65pYgpmumRNztz0D613I7IWfZ3VZXtYbglSZW2tOgm4A7yb43JTa68ZNPjKPr4s7GeHbDfVPjxJi8AG19FPUJVwUS7kpHmJvviJhxpTaow5XgwhzBo5/aMV1FHxdMu6XDirgGbAdsf9V7gR15oCh+xZegub3/g+eTNw1y8Lzc0Dew6L4fEc4lPofH03osg+yYaAADmAgxZGgNyb1UFLZLVa5Mcp+gdvvQK/lRLAhcdg9PISSu90VYN8r/nn6hX0HZJCsB2bMUX8mvWQ6+pmqyhM5FS13BjuKIo6rTaD2n8Ax1WpSB8j/8aw1Sa7VIr/iBTBBsw5diw20Pw2JWAc3SP0e5ZWM0snm4csD0+1rrqTCYFsnyq7xuXQa2hFmHUZloRkgNTrMQ3pQuwzhYwrHwdj4F8027f9/IYWf/UcRinUwFcrRjH37In5VB0Q6c7hIjr1kI0br+YHgsIb6pagpONYFCnPRG77Vw20weoDdLxVz4ImzQ2D5q/MDrtN0TggVimZXPRCDhJJWcIUCV2HIDMw6IT4emXdKxd32h1HbX2mfJri+adHUSj51vWa5qSFyEkvSZfoY9NfYJ2z7cZgF0mzTjP04HewA2DQlP3f/B4i/WoDKIjBXXbXGs8HCMc3iL88Yd5pXYnN0s1Lxda9U85rNf26JICOx+jC1elb/6PsLbTSRL/wCiCdnzn5knTte+dQpPfcbthXt0xHdWT6K98lcszT3aVdKqSWMcKmJlpLwTJFsp4B5NqwS6AZt+nL1MSo29X+NfXs8LTTGl0yxmJPR6z4j5JScJes6DALg+5xmgiO55PA6cNdRZsrsHYBFrF1MDmWQJn6tu4KQDHHurbeJIK685OMTChEHe3cm+9bA/ixyiDzOgomy1C+37W68kxijspdcN4d1Dqb3EKc1LYe3XQSqte29IAb1KmdlFAtw4gLtP/TdYk/y5IM0tHzBFgjBcnNuJ3I1vrCBS4xitGVgtua6RL6a6RK2CsIaJ802E9zzjT92IkwuUgygutuR9MlBd5UCuCaywGgT17U0vGhhvLj2+LW+wptcYroQySQIdQpSErpWvsvD3poWlOx6KVou2DyoIsjNHXzMjMzjnB2SbXuKam8fbN/73zc/4pPt5kgHOtrO0a17H5cOsMjD+G7b7us4e07Ose7O22YcUPvadfLr4rYnXoVDsiCzV8CdQbwoC9waxpVpJYIGTCfhlW+SoIgMQ5/WAIB8DQqAro7X/C8qeyl7jg3tKspSkVqefFNkLGE3Di9TworVUB36j2WZ9Vcq6F1wqR44jvPP3jLz9LRIvh1R03DbzLV2qY4pnjDfp8GF37hfekg+E+h9KVub1nF3XTSWa/cGK5xtENxPmqXjzQbQg84wQDLwwQz0TPHSLaFi7nSv22hbosm2DgXPAWsmCDakLyWWV5zMmRq7aEv8rrbxTtliiXDCy4WBpaZwAidp+78s5bhq72FWCu69tcCC9iIhyFwkF+cpWWZqUfZ28QpcF2BoEcS5LC0bDoCO6deAYpjOKX0bI8OWxINESD8GvnNsI8AKwbhdPlSPWmJg5QtvegV2LNSB+EcsJqeobvXPdp0YPEWUclVIhsxK8OLNQ7QktvA6BM+CthAR/421GsFwuGbRTwoMV03hjRXNQUsZM5qIMw0y8v8EO7r4P5gUUFP18Bewe8ecGfJOeGMo6MAKNXeNAhWXdnc4S7fRZ9xD2Fd4AXOZpVeTtNK3Ceh39Ou2R1ZX91gg1TuL84wJhX9ncjZ3wmku8FhAwr3Ql3XJ0abhYuAvJPb5banFvFg+z7LeOoetT4iqWPQY+lawuAahDkWFOBM+fdJBRFs1mEcygvhZwSS/FGn9v8WTiHjJYBFuGMxKdyxelpYnNWqQ4RoStCKFBCNQtDWMg5Q4L3hQOZs++/4bYCaWtb16HcZOIj2kh7fJmbCvQpkr4xGF8WTrdeNyt0oYO29ICyeJxYN+JOClSFhQIDMHfrH8N5YrughtVvjWW6MXEkPxQwsFheMKbXFWAkfL1hDQNBvgzbIsSl8jjpF2lNjEKfQ6GqkMgbhv8vNUELw6+KV8d6SlEJV70cg7O4EuV1mm8Y1DLhxZf7OrB30Qt9x7fGWsLTrVvrFfisRBk43bVpCKIFFzcevNJtdhW18tRgWjkhi0XaOw3zpUHa4YgDQJNzuukn85G4fSZ8hynK3S32czxPkbPsJtf0mpRADqLXmn1xWHB54DEM3j7C/a7A+Dfh5M74yq0fUF/KNapNwP+yq/x49ItToZH62rjmayMhrgMd7we6JQ5N/zIrd074BeMnRwJXBd3Q+G7kIc0qeqNRA3VIKhMUq3z26bRmsArRIGXI9bmrefxY+A77N0fizEb2gcQTEbbZKNsUFjLOGzPOtIhFnM4JFdG1b1cqpe6s8aDEHu/5vn2CN4aoJ/b5F7k1j8tihycibhjL5OiA9zQ/SYSYRSitRQo9yqYlMh6KygP/PqCnocMPvmhGCfCdfLR0mI8DanYgA89u+ncifboltJY2oCN5csNnjLC25cbMLTp2sSnhYwL8lCGIAzW5g3emwLotYCfZ2ruMmjOUExHf0OZg28Y9I/yXQ5dix3xAl3qUc4SpKUyqOOmffPozAqxExsQ291XYtw+EhYu+qqNaOO85HhBQVpBoMfWA3VfGvmhmaa3Q2IwF9LeBM+YPleA9bIIjrAQMy3YtXxcRQYLZfrCiQ+XpdB1XFNWSfqZs5NZ6lz1EpJWtQ2FgS+z9Aonqu6i1yo6QEpYJe+UvdMwzb/mNDudz121LTB7lsOUY2iIYjl2u45qm+ckD4UxxaBsbhxK2e1fjAj4nQ0q9aKUrrxEOSXumy/6qBJmq8CCVVErLGZGBQyR/+/DAbxJ7ePojlIBDh3oQL9MG4aygOg0zeNVyI6vw7GDzOSOFgiorbs7X/VKYsWmRN0FFCotUja24zKuCS0zHlCt4xxqocf26G2wAuK8s3Yr7BarBc8k2bYW6C64VO88v1QlD96YrFzGnNSi+MpDYhdxkYTewgun2C1PF9Qdb7ydlXILxvWGk0yzXXQmYL+ByKHFVox1ezQJ+83ztyCsyo1y3cW4IFchH6Ke5sandFqreK74UKtF/hQ0v4KMVXbnGtJfulhokplax6rYHs8oT9BwfHbVTqAgQSxMV7HAtSoX+fgAZuou/jA9MSWPVU5beh+qIOEeJsk1g0H8ebAFp66Ca6EH5OWtZIJyCEYGsJNcwjsY339fTEoiGfp/pTeeXuLWjPD0BYVf+vigfIItuTh0uK0AkCT2Y+baDZkb9xd22Gv0Sk/p0/J/DPYToV3gr8VuduqHKRq7RFTAf2HkESWVgRl/vT2AUWvpej8P4u5zp3k7CDwo0X9Vskbv4omzTpHnEhA+N1g+1Ikay/sCZJL2EmfZG8pIg5QcYXqhOoiKOVDGbcmeyEV5RZA/ReFhG8zAzAvI1mUYUWrxd7uIkxidVkMETIkE3aQPihxiivglEmwshPLTTTbONeJsGEAgUXVmxiwPH7ZDb2fO+NlUiUtkMyNhmYeaiut0I3In6V2HuhmWnFOzxek4EzX/kgG/oAgSKikv9c7AR7qTXuxmCGW/gjq4AHP6MF+3xGCS59LEaGRaO1Y0Zm+kkaz0t8MpmZjcfOLBO6gGEDrpZc8ZChZoKCDW1YNAwIEgPmnUw3N0BLW9oalERxZip0dDjUPOP1mjCp9OTQZkOfDO+c0GS+iNjb5szIHwbSj6Ax1fBhLo2Ko70i9omJNHw7Zli43zbFYhsNnu81hLUvbl8MsxBQpCxeJRBBiHImITh6NjLgONpSLc5tvyaq2MqJ9ivvZH3ONVUjVr3h6qVVfnmp6Llqr7/dVmUTgNGsLb6LRoiIvM2xBP3yZM4ugZ//cqd7hwr/lv47kvScTdhrdizPqdAhspeUrIrzUCTUpcoLNei5Wc7kNkx6YQjVdCzkP6zhYpdSbdkYsNZuqQEOf8wgleFLPfpVis98ltM1AWEt+1lDQ1/OYhvSCn8rIaSwXPctorpvVZEvifio4Ywv2CX0Hs1FVFZ6WWlTsSAu2VRMbXgnpXBrNRtnCMs78SZTBwVpPrdjVRcjkbHI14VR2s11PmXSki5AGihvWVSuXZXPOwJENVqjDMazE/WDJNYc5YXArJE14CKxEwM7GptmKH+c2S2iXNBoIaLV1lCBfB1dzd59CmRc5tvUdjjhG6QW4b8ML6sMjNtlSGgLXru5X+4ywCHdft2Jo//sUxzOUI/ipvqE3ccEaPuMyB0GxFw4X9ceWwHqlYk3CwvIyXCzGg/P3WOeIJ4zJl1sc3rGDVnfbWv3x9MLNfl0FlsoAeaiZcmvbILdi3gJgJyCX89uWSrLC4zzp3KE3AM/ENSJcVnk2L5HP+chotGXngWta5JFGBiJZEVfS2ra5t8pNhaecN7vj45flWr0BqzHU7e0WWrLO4cxbbJKTEyQuuKn+9VbU1mFmgP0zkxBG2Lw42y3WjPDkLpdBinJJtHatHTrJFLm/WWeEd9FZqL/avf2u2ukDywMuRqcVPsl8JALZCS8LuoJcBe0ejgitacZHBbt0sz8rsX6QD/u0bn7ovgiUFfuecuqdv5VZ+wwi4ox7FT4LngTtvzMjNJykaN4UHwI7WjhxrvW2Y06LW2WBfa+iv2+iCHoUyaQu3RXYrggOTQE8B2iGt6uOL6aEan5gfwCHdiHRynqMdo01D7gl91WHJOJK1wktU53mF6qMhnNELB4YmZww5tmwLYJcg0NjHR/ndDLFlX9l4M4t1gaTcfIhxhHWoIFPoYFz1J//B/ZBQCCU46KUzFFlzjoXaOM4kTNzPIHU2Y7v02uZiKtKq0k/TBlcTzPtkJ787rVa17tX49XuDPpysBpjPHqJWA05W8SCJS2pODb0Fk74c87aoGrP9218yCw2jpG+GCfB9mX+J7uosm0CKjg4BWTfcYdKGNyuIi+TUeztnmGfsRRMs4ETvQoCpMhIow885PrhIR931Cq/d34nNZEUrhHfTdSnYId5ljDqDVDJh+lnvsXHdJKqE4HowWSGQxjZ9dY7RvpvB+OwJXkNZIr1TstPflQL2kwUtdzE8DLdFFiynpZ62JFvRATrAoPDJYYHJXofRGhxBMgO8HMwoHkLEsHjffHpKWhssB5BpQpKDlRuggLEiTZViXEVK6Jb39ReVNO5lZuMTnjFYhjTX1+oIYWF7oJcZsJORKq0tO3UncW7UEUd9Wc9bbhEy2bLGzHhZ/buRAj7oqsPRmmesFuE9crmKMvPOBGgK5Nmx9hJGyXIKAHIgRihlzGWaVDWFSdjnaXEJIVTMVmQsn9SBRMGkCP/0ZO0Ng+oYlrNgfdRjObApc4+ubn6XMUpBo0TEwfF+IshtBBEgSLsArIAuhLCGFosC3fj7O1Nzq5nxM2ih70Su2R4UfA0BYWAeXW8dwEijNLm0phMYiKgspkoOJ5O2HZpeFHgf0FgEeQTsUAOQfwk7jVb+ATeuyea/PeH1Nnj7m2yvj1AdnwV47Hp0+7bknT1BgXEAwMiY9Z7E8Jsgw9Eh7A40Xzzu+n/UIX+Xx6qMMp0yD223B7sbzLQh+XCdcef+ozxly8VM3eGrhWp4B5f+92YtGlHBN7znnBhpEpWotsbPS0Ug3wdroW47eYhKsiSeUjo9dHA7Sdmy+G6kbKLnmLzyolM8jmB+Xm1f90tyBEBixEEj8uSpQOtforsR6FtSWGm7LAV5fOM/CyLSy4K20/ES3Z31RJpg6tm7tqfhVyFT6bTP+gaBZYdlgcyvNAW2CtjkZ50vKxZvKpmTbBONZQ/2E2v6iHSDetTaK9lxvGNRQ6aqphbA6356VH8dOtX5OqHZ/+RJbkeDcUfxRrzEMusNh/1NlRmRtvaLNdeYE7evN1v1bDAIF4sZn+nb5/fWT1Woq0NkSm9Lob683lRXW5RTphxB4Kme4n75wtpBBXELNlYogjuGK/Grq5b/LO8JNn3R/z5FE01bWz1Ivowh7MSltjqbVhCeLfO0PXXy6JXb6RgqsJr/2WoWhNwcmdR2kI4pGsfxhBDsN6BK6ijcgInnYZSmdmWFQrniYeL5dIjTsdmZxl+nS4COv/YB8BoVBKmd5zWauSNzP739h2aiqFUmGvTn9nSFiSPkgOuRUS4F4qhjLouNm0qS+Zx17GqgEWC9AezQI7zv1IPsZtB8VnkoVD/GD91DtUgauSdwXkBg/1BD37EtO0SZzB09/Bd6/BL0NLhbOWad7Uej/00TXo2RuPhfZ3o7vR0ATwywXweAhzDuUl7Yu946HtkAaAv7bwk1vQrWegA8xHCQTIjZTEjWmcb2aZE5QFL89O1rCLWYFS6gUUBvHzELkGqxMvlOeuJ2ZCh9zjb2OlbeMvN2surWh52/HRx09/kY7yT2Rq5G7TQO4d6kTQezPTYvPayS+bqmsBCcOz/areo8yN1Inu1XJfVWW3SSgoAH9NhV9LTDd6yVCS/jbve17smLLbUukEK6E4+ZxosCcSwvWjZ6RkEwsc7TwLrreRyo6uUQEgQJd2tP06uPf7gcYsMQObq1WcmBzoHD3rlDdFiu0Cxztmch4NHUGnn8h4CvEpTiPEahIT9+du6DZRyG8ZBy+ZxsDNfsy6H0ERB5RCscGMeOp1R1ynXgoFjzn8u9oOdoiksVFgRfwgfOIGWDdYZENZoUsfDatQfnC68ZVHLHBslPMeKq4+yp7STpJZgxjtALVoololuzyXjlSPSLc6gAsX/RN5FJVjV8eo+OJ28WZyvVhDPCxWrzZjPzEnlXH+DgE6C82UrRCdU2G7ckK6xVMGBeV1Msn0hd5wFVQDsmIj1ZszRZfQW5Igl7XrvMzum9YtRT+FCs72UUA8TQMZ/DVZo94nOANQE398x0hkevzcjk5ubsK0bsHJv10VQKzISL7B3B98QpsziSlXQJUC2eQ59H2E3A7Bk2/k7TVkKooEVbWn985F1FSBcuoDXuk/to1AqAim1Hsk1k5bGuq9d/DgY4Z0X8rh+ehaMP8e+yB1ozwNkezwr3xeZNFYRHlrxjfh+fN8Dyckgpa2yTfZ/aOhRc8wLMp6YezOnnB/utjhDt9Djjh4Bw+65JOVaRonRd8uU2NMERvhPu0F359yyPv/KNkx3C9t0r3y8MVad0P4jRXGVuh0/BvscN/OuZO+T8QN2mCNgOUFqIo8IYPypLVucTj8tBni+pDnH7N1LcFRGtBNftrItZzI+VrTLpT2gCkxzHd/nP/EjmNgXRCRIG67/+7UY9tuZwqNe56tGFxwxVYIIdMxsLDoSaZ1Wj3wLY8h8b2M1cIQLYkvv1Cim+9h5tSiYqAZRy49OVIvhvM1uYPiy5wrWnTl66/u9gfUixs3xuiCy/n+EyBNQMkoaK5HBkt+To5UAdGwnUITvAq3A5o6cCeLbcnHN9KC18njDQ1jjsBzSMPZLWSQkpHUHcF70LQweDaOn2AFrbbyBLP+iJeJqpGLm4oOHSjHYMMdT/38igfs+ICVF6/mfSCVea1OrhPIIA7k0DquAzCYIfAyU4QhAGi1Zq9YgQ/XbB/ZqAiyICpaTG58N5jPw9kTV5XSv2gXDw5ZZIP/D36eSwhCnrSCrFZsAHX5IgcXkf/wk71nYyOYf1yw+PCgsHSIXKuhWPgG8+xpgdDnsuH9ld59lx7f9s1RQ3B0gk1mo7444VPxdtE6XnVh75AOXRSzNSflpEsBT/pnCwASV3q4/2PNlDMPcymTFnaezhScaPR6uYsUfMhdc4zAUZw//aBuVQG+K2jCfutM30bHAeO301FUX5ge3uZzd1/xxU9iNT9AeyFlqScLjPwbI6kzARD1zNANs78cZJ//scVGqJNetZXqavXHiA0Mh4UbkkBoALtu2jYJry5LwEP0cqxMwmCD3Ej4K1BN0WLajLwy5onioIH6FY2BR4GOegQCpTLmgWcn+HtuHd7fQLu1zUQpTUDKYa7qiFzh1WodNA0CuY2AI9AaC3tNjXxXD6Jo7OyT4M7IrBCb3K2ylN1Hhs3m2nEkCknF5OSZSS0zrrIKKFXAxQ5r9w8u9HzfuNw8lrnQC3C5JWs2wLN7EWi6DeZVLXTh0kppyU3pCg9OV8BAyWWOTiaBMqPx8b/gcZIlFr2P24wsV+Ox4DHOMFpK3F2oAlo3T01Pq4J+wMbkEOTC7Vnhvvkj7uszW78dmjRKufqi8jwkbaixLe/Olfjmh7QONRfTvacGHXqid0Uhjc1ogppa9doLhfSAASR3G3audq3f0IYHIpUwRU4ACdpTonL9oTJNkh5mzcdTJTMPOBY1deJjgbkgZHZb769uP4cXXNUFIfk5mGjrDuIiRJUN8XOE+Xzsu7RwyeosopEbEUT+bMYW0+4o76x68bBlljPkL1F6hJB9aPRxlwDqWwJJylljVj27AHDXalrt2q4mwQc/ojieaG2vZq4VKnMqOlPH0rU4WcjqAyUEcxbQPK1xjl1WN4qx/RHpZyl8qH6te4i0TdmYol8QKDr5dG1+8ViIkRGmGvb4tRrYqSY05MC51I3WRUKx6Qln9TrVnGZQ4BDvHIe5qL2PSpsaRnaGzx+wyX/G/uME30MQ2JYdXySEXFKX5tcmtnt0UNB7niNQCqDigHNqBgGz/oDjZv6c+APxGWtaKr0APfEETilsvC4qbK7+Tj5WK6SMwfqhE+M+4w2hjJ8ngrYpIoTdjSJKc9RTPjxVb7PDZt8RR+X5o2d/U0xnndoLbsPbXp7hSakdWf+hOzoA8iTRDYKI9N0NXB4JypfFEyUhdZvcWY5+5HQc8VLE4pGmjox5jz8u/4AIjLsNW7wgP2KTGB6Gqru/LUTod2JIL9jcSNSSy7NAwKL9awl'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "[421b2841-4c5f-581c-98d1-8844427af8fc] Thích xe số tự động",
+        "(soft) [7ac7122f-114b-5a11-ba6f-02c47ce499b5] Tránh xe cỡ lớn / SUV quá to"
+      ],
+      "domain_action": "search_cars"
+    },
+    {
+      "domain": "excursion",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là tour Bà Nà Hills nhóm nhỏ phù hợp với yêu cầu của bạn cho ngày 10/10/2026:\\n\\n- **Mã tour (external_attraction_id):** `PRbeRPTXGXPd`\\n  - **Tên tour:** Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times\\n  - **Mô tả:** Tour nhóm nhỏ tham quan Bà Nà Hills & Cầu Vàng, miễn phí đưa đón tại trung tâm Đà Nẵng. Khung giờ khởi hành linh hoạt (7:30 sáng hoặc 9:30 sáng).\\n  - **Giá:** 1,284,755 VND\\n  - **Loại tiền tệ:** VND\\n  - **Đánh giá (rating):** 4.4\\n  - **Số lượng đánh giá (review_count):** 302\\n  - **Slug:** `prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group`\\n  - **Lưu ý về giờ khởi hành:** Hiện chưa có tour Bà Nà Hills khởi hành hoàn toàn vào buổi chiều. Tour này hỗ trợ khung giờ xuất phát muộn hơn vào buổi sáng (9:30 AM), giúp bạn linh hoạt hơn về thời gian.\\n  - **Hình ảnh:** ![Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)', 'extras': {'signature': 'EvEpCu4pARFNMg+PfAcA1F1IoRiwuy9Ryf3E1mT0QR7HoAkw91I0O6O8+typyyMgT0klNwoqBVHKMp6mEq6fYlf2+GC7jU4paqqjFJNADu7Ic7iwHQb/jWOFQ3xSJD6lSla64EJ9BtlmpmkS4vkTgXnTe4oRI67EtF9xHK7WsSo5p1NNOXaU0M7nTonC3u49kcrfyH0jtakIdzqsudp/v5uLcfGZgYQkfCvM7ao77FMXfdt3PQaGaJPmv3WvDPNvkJQaOoRF9S/UR3SC9fW1PWbUR4tRBUrr1FNgRKYgTGbCbmFoSyU/fMS4zkwT/GM2SXgSD6HEqECR9+OVOjZZBRSI2tQj4OCFPOOxpsZXvzwiWYLo7j0O2THGOY4FUyNVyHdHbJtBw+JsNV0733/39JB3JKbkaItwzOmxDln5Ub5fhVuix9SW+627FLLvvMOOezwcNX1fAA90KZyeHn+rjzDOCA2cUyya9llFywSdhSeJaUxW5tK2dHKcLg01xBddDPBkMmyiBl/cE7nZQcV3f46vNvDtHAHXy8Zk39m9QdYyz51Hwa9IIh7PBxyX/WHMoFVduOKrQdjoUdJ9NLX6FVZpWU2G1lgLpUNUXPrFF9hiP8fYSo10NVagPYRI4AflQ37SqZocy6tLbhNOvw95WD6om9JqRl7ZyFbuHo8VuIOAbtj1+9iJ/4WqAt52+zK0KQR3AS7Fce8E2jUH7aXjZaAoCnVO603M8rkEbz0zrcTieAC5pLDHXk0WjG5mOSvxWte/gbxgf1h+sydzbvngGEs2Rq/ksjeZQ0KyMOmPh+TscYPEyV+M/VULUzZyf5mWOY/tqvgO9/k3yajGFYrTrHdQFSzB9rXKit4le7rYR0B48Mrut1/yNLYnovLwmNW2W3vEkGQwLEZw9yh/9sPYb3Nju6F1ZtM1dSyaLn07DS3zKLRPIsm39RebSjW5Z9XnXSyB7EgmCrDcmxo2o5/TXUl2MojItQ2RU3lpGHq4ysyP16WtJCSryOhCJZzXI5h9xj0KdkM27mr/eBkm6CRD9HsVPSaqsXG4bNaSwGDlMHrH4k3LirsZSEr8xzohYaNrUHwaYzNVcK31w0F2dPhROXkDieaQCAALfR89I+FsqD916GqStJ/9zePmz0Ww23jXfIBYdF1ErqrndSeZe5BfCXTTOi30Z5sBcEgbAwcBLMHwIiw2qu5l6pCsYe3JjKea/fCmCOm4oiRt1/YzEj/YWEY8TXGKSPeBeenUt1pIPga4dY15AJDryp72SLyIzZd35RfNAuuM7VNWvGLbBoPYl15ZHWsYM+MWURaHQpriXHcWOzxKjaXEMCHRKCkX1fqnAQsI/53BgYD8AfJCiCTVyDuDWyUgafBW0eh3My3QHtMdb3FugqSjcRWGpzebOx911dK9VPm7AQniRmlbRdCjej1sMy3GaS1CRKtd28RlHoKRjC5OqEc+VhDPPeDSmpERTVa6CVEJSCTZ6dR9ql7/lb2p5rMV5esHqMkKn/i/IGFDyaCUJVTMl5aKgaT7ek1pVkzc/RvWsUBL0Cp3W4S5Kqso/upuPvbXwyd59525KXNX6v9Fnf3Cuog+E8bMOf5FKaJW/8TsVBNdd/5w5I7hfH0du26g1mRrZtsY98N0FVGtElRO43Fd172x4jZJHxvLhdRHqIhF2+dBtVLSkf+tZHGTIFOntA3w+7pK51sZKk6h5bBoQSfTorlVVcT1YHs5mG5XKKTU6TI7PyVomFQJrKWCF2gx9Ywj7pPgoPCD15FAeZLtl8gYbO0iO28xkCiaPn56hnlR4yLPFEOY1wio5vv4yOCGbPsX5p/PyqP+gqnDvULoA+R+Rau3tmLgy0JCs7rHhIW5EaXoRNXp/kgOwnpRmWIgmyXLhq8tBYwQ2ESj63TvxhT/A5RzSis1mdedWYdnXj4YRdglUS2BlXA/LdUjzPjU9iQOLcoRebmXiSptIXLcspm81pPdjBPWVo1UC8/cG+/0x7X9volXrA1lYa4YOxy5FWkdhTQ5PDgrAW35ykAa2vGHJXENxNSsQ/ELM/vp6quIt2bWJKfpDM9CqGuqZWSj8kC9q1e4PGSZnZC+YJF6AdiWUKe6hSyZtrj/9DAhg89Dj9MH63Ds+elbqLo3AB4hvoKMUAaxJWIa32+luBxMh6O/8xgJG7pXML/2D9yZq0HJSWZt0BFDSmQUe7WEm9Q7rwfVozZ/gAr1l51KzAtHuDhRqIOz1ndUvGkKNkvtH2JWWZZFYzEoWphIsx0Qb+VLZtlNuKt8EwTTWZwJXLZUltvTC8a+vwv+a79QrLTKLVDQQk5WaWJMnsIoiYYWObItF0BwZyAPbGWa/K9DYVZyuyTKQYGk/AhevqIe6zkDYF0c/eCOOiYpGxTFPqHHPe5wsyIf27SbGjk6byYhKaw3F1beeQ46xkv1k0pv6pynonTVyAIodkYRgx1lBcce32F2JQb3r3GIcHOx6Vcx8CXdsIWToVcuZU56jpcyru7mYHLZ5ydd917Kwm/Yld7xsbgDe1uQWsNXCHEYPpX5dYow/+MEr/b3+W3BUj0tQD3wRurRZTz3LbUMK6OyhxPW1368/5eP0pnR+rlt/nX7eOJrvIA6VSuY4elM+x9g6qvA32Ctkenu3slQKK6IhgCrsfPhUlWfbvqmESgHC5yC2OHJlWF/DlOO4gfo/RKpHsCCbokuFmLfswsIPNcpqZtWVThdEXr04MBwOhtXWY1cUh6d0KTdQjNGJ2CC0EQLv/XivCqRwZ6S6IM8BhFdzb3gTVxCekj+GoMIrC4QQ4rs7aoC9nSDeqlkBdNzFlBzxhbX3BULCyN9mGoahGkZEocvnYR6prokKl3ioeMZsBzZyw37pUwOZq28nTzaSg1SM6ZdhY8XSiGKizL3TSmTWQyS6ff5XwZIHYeK1A1Vgs2BsWFZ3b4uQU0tGCym4K8pc7qaoLJd+o9BBnMF6x7RWoS1f8iw9nYoiwRKlkrkGFgrfWI8hE5mDw38wH0czJhp0Ma2JnezINpqaSjgXAldNLBq7l8X25AmOgCUGbn80x7SHevkoDZBJ0zn6dr58cMbfxOft34FlBrfE4bifq7cw7TKbEieKTLxmXyPA3yzGhYLzVIXSR0+hYASGPjfNdCzh8hc2mZp3SoT22Vc0Mrgjcmnzfpsf5hi9vY4gtAHvJ8QwCw+DifdAZC9r/zpDB+8ELUEOdcT9yQj9Xr3SaSC1BaMROLjTqMSZyQJPKX2F80rFDpIbyY9aa76kDoBKr1qswtnnSBFUWYLZKuJLrDnF09o/Zzs623ekBhEpaq1TObh+MsAWyY7VNKkP9fojzjPnVdHqN/pQ7ep+pDPQ4RXTGaYkev58vC8ycBZhdeS1DICPLH10v0ewRfqd6cmpQPamK5oAmQV0j0VAuiNBkw+SHUwSk+ahaP2jF4uRuB9OEyeOmZYbGgUSlI8VcCYQMA8DUSbD5wvsc3FGObxo9L6+LC8qoWbkOUgEKQQsCXLs1cWMUhY7Bp7ttei8hDnOaUVm1LF4VK/Y+YwbF1IWwFEEEBOM/RKQugswLNFnRdvSuvXhxbl2MIkHo8QmtLtdHqGjMaRGoA5IyFYA7AQZvniHlYGv/AHAwODwgRnny6zjk5Fjo40DlXaXfokAX4/qYphThr4V16bZQJ0nw9ma7Oa1b+eNmqXUqKalr/R/8Dtib9cf4p2TRRzDVBfL/PkiDtb5MRbejG84suJBR6zd2wAmU0c1/XS+HDv1WYE79iOKDFWAxbETTlJx4qQMno8NGs+7hwaRqT0h1Mk4oNlVLSqM3FRlMwZ9QzwpU+HG5sHq3vNAf/ANzGdHw7ysHItDAzaIZUPmvBwnFGjYBLX4YIsVjJNTqBDSh8k5blqYnvcELmfoZEDXj7c7tco+oioXoLXNT4rVI0OFKsQ5pj+iiftBrGjv62Zs/TQPWhOQiPZwhy0cE7DnkwXt738zPa9Fyu0Tiv9eJDC+XrQsYczMxQ/akokOrvr3B0b0YyEUY/TCEoMv+9O0qAVNRlwa32S9vlbrBRnCikeTQ1ET6P07Ciy1sGParrnOZCOq3vfciW4Zij8RLK9Q5zaBVtqt7KfWfZQq6f64pcvTK3yEMhkKf1N+3MT1pZwklp9MiD/0zEnFeimZbcI5YID4IDpzM3LilTAI04Uqkn7cMGZrMDwhrM7PD5FfHT8VxRs9pWnqwhLZK5//7brzh8XzVvnsD5i54Fw86HXZcxbD3YviBnDyWxA2HIbqUAim5zwi2ATUO6NSoGpzwayxKIiVMHGbibz8lbE6vyLJuF00L1eUWbSepNtbRe2WBg3GK7ZlBbu1zVdByIzrS/eGzE6SGWxMEDh3B5Qb2gGZzkwfVJO4o4Wxr9lYNQcsKZ1cLPxvN9CKr4wOYls+wXglq/lV6BKCN877joXxxHw5x6Xmq8Qe9jjWaDXqm22kbeq6XrWE+mlX6W2cXXnrf82O6TATXWF63f6DEXVdursCSzpdHDZ8L1KytKx529dHgRpHDz3/qqmMJiwXyaR4JBA1pFmixa/CBsWkoF1xyvkWS4vR2ST25uNct8mCp+jrnesSv/mW3UTIqX9rANmBN8ILJ+cO8rqM5GwdVZJZTKMEYX9AgbIBzC1Qv7L69c0Evoe6NZQXUxbCFRy/ZgSh2Ke89vc/IdRU7sRcrH0zfecvnUfT6AGuyjyc78wrs03S9NrFDva5HtilqKqTvaMnOWH0ix/ydanbaKDRbrxplR6phHBBUKdlYviNbMJ4JLYhEz1XK4OplNVaibVdcOEJlUCkKInKkDhTHZHP4PeGYRDUFyUQxg5mYwkZPPb0p1UwcJItnmTDYyX3x2A8IUOCij1Cmc6vrKzU9ZooinAy9i7vfEVrrSJ+kcsyvooi/4k+tIRRbTqGnC2Y49tI6iUWmq1BG5NKs0hoDkV35lqYG0LrYhg58O7OkjNz5z6NY79SJYzxYjeUYD0X+60VGG5pAO+M+7JEtPBbhtZ2nh53niPjH6uCp8c9Of3MoKSjK71TMPAYPv7GV0gBFdKyYVWpD5/ZqmPe9IAZC3y2EM/c4JJufrokplC4r8kWLhvM/BInE16hRwvo4C3CbKNNoEhj8/Y49dbyubA3OEEX0RNJNv7ep939ILv46Nm+ZD0lN4vEf3W/DlZ5xEMU6ff+wK+GNBPfY6HcMEfoTNpbSX5DYp2fMvm7sZWJxF3gY1UwhNSqWi3YTEDLXeFkQVAmOrpDm3V7RZ8mznBgu45NA/pf0wtRvErg6Cms8VVZvPUkeY1NNqn+j9YiKCyh56l5dmPEIBSrKaONSMtzhn8K8GC5K6pdYyMITRdNJ9ZkYIcKurzZHiF0fofsOffKkPGcP48DIq25TGNz0sBkKQMNk6KR3Iq5YMDHMbcvY3vMkHfVzi7zOA5vvXl8FIPUl37bctaM6IuECCrYCFk/M/JepONgMK3VRXebvqIRlGVy9h+A61LjInMOoT1agcRFe16bRKiJhFLBNojOyPFUtTML3Pl6pVmafUEqNutFHINHaJO2A3B9RVIKi912wA3UTnL21InZyOIn3Kc2kjstxfFpn3tAb9B3z9Box/1C46xtjT/qx0bvM5I3VcgKOwX8qA8HLWUHNencGGAlPGe+GGICyYC4hikAY6REG+dXJxn+gjyftx1XZlp5G1J66kGHKV0wAOwGho3ITuANWebs+Rei582LZADDy844QbERJyiiG9I14djY7feiQB3JbphDz/gUKPVu6h/1ABDOR8ir0GgHNlgCE3z8UPrMfEHQftpRTcLgqvwwJvxSHCB24lO6C7KAfi66ub52DNuh61krvucaRZDibFtFKLBYz6S0hlO1HBUpcN62k0jT35Jt/uonO/4l+Tp2B+hGMhVSmKoEWsoQM9Jo6WoeO6irXAHEQ+hT71v56hQoaPsJsG7VJy6ifPqfrsoDcE1zrlzOXq7p/z61m4BqEX1XOdxpGBe6TyKaJn7TWSAg1CGtRHTwHJm8JBfWGZzP+bkRmCOBT/eMn3RHj/Wy76EmR/7DUgX/nr1eETBBNhCjluaWkv0h0Z7lM28fZZI5DfyA99LrMcwt7J3UL3aeGOQQcNdAh7ngdMKc+SXmXZiBTnrLky0l859axaXx8qEfqp4bUH8S6PTRKkeo8wkJn5Eol3RtIsI1zpw42Y2cg34v1hl0v9jwlQk0SBS6VRBbNo+HiAZhMRFoVNBcPsbkcvErEgKcRhvdanArUnHsRiOTydaorumrGIhNEwmXPw24d23rDNq9qg10RMFtgFWEjuGFYuT6fsyY4MKAqo/k7hTBmqMXZ5EOj3JcOs6O1T5auDJ3KAJ1jhGrJuJ3Ing1ahPs++GWnIu98nKNExng/VRpaKO2H2xguxmys1G+X20hk4zwL2IP9dgdpQsOv0Rbyl72SNZ9TxgJWbuggAZ9rxMjuIDpPv0EXYPDMdcDiNxRMiZq3yLkyXZDJZRBbAWiU+n+Tx44xjTRvQFNfXNR50HGTRpzGMvAIiaOYLyyN1TTIOfHRH3BXkV6B/8dU3fHBXJfAxfvGcs3/76AVCVkJfD6tPDOKnHioyWUapabmpmAfD6BKX3FDzNUR2ckVpjdxsQIclP0r5dm/R4Krls/7tdY0c7p47LX312hmT6uN1sFgpmz/gYI5HoVV0MVOIiw6LUz4phpZ9Z7lUdeoMD60yo7dH+Hc4c6bBmxlz6t+XPT10lwZaL4i1tpU7/JQoJB0coi1ytnQoQ5S96cIkHE9hQjJSA32rgxHIyIZlUd2/onFoThJyjobrZzx64xkUPdLVWX7rKLT9lizaZsE2JGC/vg7LQDYngtSgfetbxsE+uHFtdDe0l+2nTReabP+YScoFZu4/XwIM7bu4lNPYMi1jzYURQ3yvkPU0vHFCVTDvMH2qk2resCdfccaKanfmH+Y7lt3ZZpkuoste7gSVebSsX8UkmmrqjG7OKoPoD63kh/VN09MkcggFCsFbBGn9dUZfxvFpjlVCCGUC31IEfFXti51eKTQE7Y/GK5Ah2FHZRjKotfKrPDRI6NLlUhnkfz4at4so27u++jrbIbU0e1ZxaTl2ImypPBTckX6LsUmoiZfZMxFGMSo7aw76UNS+4RzOUPGn2xy/FERp/PKxwcWKCXrdVF57HRkr5QMROSsaQaZZO'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "[4ba60a25-4628-5ea1-aad9-d970639a557c] Ưu tiên tour nhóm nhỏ",
+        "(soft) [6550614d-80ac-5d6f-a7b0-832ada2563f1] Ưu tiên tour buổi chiều"
+      ],
+      "domain_action": "search_attractions"
+    }
+  ],
+  "join": {
+    "branch_count": 2,
+    "merged_domains": [
+      "car",
+      "excursion"
+    ]
+  },
+  "final_answer": "Dưới đây là thông tin chi tiết về tour tham quan Bà Nà Hills và các lựa chọn thuê xe tự lái tại Đà Nẵng vào ngày **10/10/2026**:\n\n---\n\n### 1. Tour Bà Nà Hills\n* **Tên tour:** Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times\n* **Mã tour (external_attraction_id):** `PRbeRPTXGXPd`\n* **Mô tả:** Tour nhóm nhỏ tham quan Bà Nà Hills & Cầu Vàng, miễn phí đưa đón tại trung tâm Đà Nẵng. Khung giờ khởi hành linh hoạt (7:30 AM hoặc 9:30 AM).\n* **Giá:** 1,284,755 VND\n* **Đánh giá:** 4.4 ⭐ (302 đánh giá)\n* **Lưu ý về giờ khởi hành:** Hiện chưa có tour Bà Nà Hills khởi hành hoàn toàn vào buổi chiều. Tour này hỗ trợ giờ xuất phát muộn hơn vào buổi sáng (**9:30 AM**), giúp bạn chủ động và linh hoạt hơn về thời gian.\n* **Hình ảnh:** ![Ba Na Hills - Golden Bridge Full-Day Tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\n\n---\n\n### 2. Danh sách xe tự lái khả dụng tại Đà Nẵng (10/10/2026)\n\n1. **VINFAST VF3 2025**\n   * **Mã xe (car_id):** `KGQRS1?carSearchIndex=1`\n   * **Giá sau giảm:** 524.000 VND/ngày (Giá gốc: 574.000 VND)\n   * **Thông số:** 4 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Hòa Cường Bắc, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (69 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/08/15/16/vfe5NPLEpW-TD4JpwnnfjQ.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-vf3-2025/KGQRS1?carSearchIndex=1)\n\n2. **VINFAST VF3 2025**\n   * **Mã xe (car_id):** `KJ89JC?carSearchIndex=2`\n   * **Giá sau giảm:** 524.000 VND/ngày (Giá gốc: 574.000 VND)\n   * **Thông số:** 4 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Hòa Khê, Quận Thanh Khê\n   * **Đánh giá:** 5.0 ⭐ (100+ chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=2)\n\n3. **VINFAST VF3 2025**\n   * **Mã xe (car_id):** `KEVEP3?carSearchIndex=3`\n   * **Giá sau giảm:** 524.000 VND/ngày (Giá gốc: 574.000 VND)\n   * **Thông số:** 4 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Thanh Khê Đông, Quận Thanh Khê\n   * **Đánh giá:** 5.0 ⭐ (100+ chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/06/24/08/y3JcD1sfPmmA10aPKHNH9A.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-vf3-2025/KEVEP3?carSearchIndex=3)\n\n4. **HYUNDAI ACCENT 2012**\n   * **Mã xe (car_id):** `KERE19?carSearchIndex=4`\n   * **Giá sau giảm:** 553.000 VND/ngày (Giá gốc: 653.000 VND)\n   * **Thông số:** 5 chỗ | Hộp số tự động | Nhiên liệu: Xăng\n   * **Địa chỉ:** Phường Hòa Cường Bắc, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (33 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![HYUNDAI ACCENT 2012](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_accent_2012/p/g/2026/00/07/16/s8NzuFe3IAhZXV4uY78P6g.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/hyundai-accent-2012/KERE19?carSearchIndex=4)\n\n5. **MAZDA 2 2024**\n   * **Mã xe (car_id):** `K3MCRQ?carSearchIndex=5`\n   * **Giá sau giảm:** 737.000 VND/ngày (Giá gốc: 837.000 VND)\n   * **Thông số:** 5 chỗ | Hộp số tự động | Nhiên liệu: Xăng\n   * **Địa chỉ:** Phường Hòa Thuận Đông, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (81 chuyến)\n   * **Dịch vụ:** Miễn thế chấp\n   * **Hình ảnh:** ![MAZDA 2 2024](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mazda_2_2024/p/g/2024/09/03/17/W0f5QcByIdPD9RO7wuQ9iw.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/mazda-2-2024/K3MCRQ?carSearchIndex=5)\n\n6. **VINFAST VF5 2026**\n   * **Mã xe (car_id):** `KFUKYQ?carSearchIndex=7`\n   * **Giá sau giảm:** 896.000 VND/ngày (Giá gốc: 976.000 VND)\n   * **Thông số:** 4 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Hải Châu II, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (7 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST VF5 2026](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf5_2026/p/g/2026/04/11/17/-F9e4_AZ2Pa4BrsYgYdLNw.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-vf5-2026/KFUKYQ?carSearchIndex=7)\n\n7. **VINFAST VF6 ECO 2025**\n   * **Mã xe (car_id):** `KH4Y1J?carSearchIndex=8`\n   * **Giá sau giảm:** 952.000 VND/ngày (Giá gốc: 1.032.000 VND)\n   * **Thông số:** 4 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Hòa Khê, Quận Thanh Khê\n   * **Đánh giá:** 5.0 ⭐ (28 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST VF6 ECO 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf6_eco_2025/p/g/2026/01/02/17/t0bd3OKH22CSOU_R5yHZnA.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-vf6-eco-2025/KH4Y1J?carSearchIndex=8)\n\n8. **MITSUBISHI OUTLANDER Premium 2019** (Xe 7 chỗ cỡ lớn)\n   * **Mã xe (car_id):** `KEQ7PS?carSearchIndex=9`\n   * **Giá sau giảm:** 1.028.000 VND/ngày (Giá gốc: 1.148.000 VND)\n   * **Thông số:** 7 chỗ | Hộp số tự động | Nhiên liệu: Xăng\n   * **Địa chỉ:** Phường Hòa Cường Bắc, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (1 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![MITSUBISHI OUTLANDER Premium 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=9)\n\n9. **VINFAST LIMO GREEN 2026** (Xe 7 chỗ cỡ lớn)\n   * **Mã xe (car_id):** `KLDAEP?carSearchIndex=10`\n   * **Giá sau giảm:** 1.372.000 VND/ngày (Giá gốc: 1.452.000 VND)\n   * **Thông số:** 7 chỗ | Hộp số tự động | Nhiên liệu: Điện\n   * **Địa chỉ:** Phường Hòa Thuận Đông, Quận Hải Châu\n   * **Đánh giá:** 5.0 ⭐ (2 chuyến)\n   * **Dịch vụ:** Miễn thế chấp, Giao xe tận nơi\n   * **Hình ảnh:** ![VINFAST LIMO GREEN 2026](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg)\n   * **Chi tiết:** [Xem xe trên Mioto](https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=10)",
+  "stm": {
+    "summary": null,
+    "message_count": 5,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "be92bc75-3ab2-4cdb-9365-5b7395491a3d",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "audits": [
+      {
+        "audit_id": "b5143022-a005-46df-ba82-f93071ba0319",
+        "job_id": "be92bc75-3ab2-4cdb-9365-5b7395491a3d",
+        "decision": "noop",
+        "proposed_transition": {
+          "action": "noop",
+          "reasons": [
+            "exact_duplicate"
+          ],
+          "candidate": {
+            "domain": "excursion",
+            "family": "travel_preferences",
+            "status": "active",
+            "user_id": "e2e-e2e_multi_car_excursion_001:user_a",
+            "category": "excursion_preference",
+            "metadata": {},
+            "valid_to": null,
+            "condition": null,
+            "memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "valid_from": null,
+            "memory_text": "Ưu tiên tour buổi chiều",
+            "evidence_text": "tìm tour Bà Nà buổi chiều",
+            "source_thread_id": "e2e-e2e_multi_car_excursion_001-0d0d9c9ff8bd",
+            "supersedes_memory_id": null
+          },
+          "existing_memory_id": "6550614d-80ac-5d6f-a7b0-832ada2563f1"
+        },
+        "rule_result": {
+          "reasons": [
+            "exact_duplicate"
+          ]
+        },
+        "verifier_result": {
+          "mode": "trustmem",
+          "model": "gemini-2.5-flash",
+          "reasons": [
+            "exact_duplicate"
+          ],
+          "decision": "noop",
+          "dimensions": {
+            "coverage": {
+              "score": 1.0,
+              "passed": true,
+              "reason": "no-op preserves existing memory",
+              "threshold": 0.8
+            },
+            "faithfulness": {
+              "score": 1.0,
+              "passed": true,
+              "reason": "no-op preserves existing memory",
+              "threshold": 0.95
+            },
+            "preservation": {
+              "score": 1.0,
+              "passed": true,
+              "reason": "no-op preserves existing memory",
+              "threshold": 0.9
+            }
+          },
+          "prompt_version": "trustmem-verifier-v2",
+          "fallback_reason": null
+        },
+        "affected_memory_ids": [
+          "6550614d-80ac-5d6f-a7b0-832ada2563f1"
+        ],
+        "created_at": "2026-09-06T19:41:48.994419+07:00"
+      }
+    ],
+    "seeded_status": {
+      "m_car_automatic": {
+        "status": "active",
+        "memory_id": "421b2841-4c5f-581c-98d1-8844427af8fc",
+        "memory_text": "Thích xe số tự động",
+        "supersedes_memory_id": null
+      },
+      "m_car_no_large": {
+        "status": "active",
+        "memory_id": "7ac7122f-114b-5a11-ba6f-02c47ce499b5",
+        "memory_text": "Tránh xe cỡ lớn / SUV quá to",
+        "supersedes_memory_id": null
+      },
+      "m_car_other_user": {
+        "status": "active",
+        "memory_id": "b79a01c1-9414-5bbc-a25d-4ad212d75d28",
+        "memory_text": "Memory user khác — thích xe số sàn",
+        "supersedes_memory_id": null
+      },
+      "m_car_superseded": {
+        "status": "superseded",
+        "memory_id": "a2f30787-ff92-5d36-8764-47e79cf78245",
+        "memory_text": "Preference cũ — chỉ thuê xe 4 chỗ",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_small_group": {
+        "status": "active",
+        "memory_id": "4ba60a25-4628-5ea1-aad9-d970639a557c",
+        "memory_text": "Ưu tiên tour nhóm nhỏ",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_afternoon": {
+        "status": "active",
+        "memory_id": "6550614d-80ac-5d6f-a7b0-832ada2563f1",
+        "memory_text": "Ưu tiên tour buổi chiều",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_other_user": {
+        "status": "active",
+        "memory_id": "8594ba93-6793-5b1f-8bf9-6dc693b1c916",
+        "memory_text": "Memory user khác — thích tour văn hóa",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_superseded": {
+        "status": "superseded",
+        "memory_id": "a29987e5-92fb-5c0b-b067-b686aaed8e21",
+        "memory_text": "Preference cũ — chỉ đi biển",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "be92bc75-3ab2-4cdb-9365-5b7395491a3d",
+      "status": "completed",
+      "error_summary": null,
+      "created_at": "2026-09-06T19:41:38.835997+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "car",
+          "excursion"
+        ],
+        "actual": [
+          "car",
+          "excursion"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "SKIP",
+      "detail": "no expected_applicability",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "car_assistant",
+          "excursion_assistant",
+          "memory_recall_car",
+          "car_chat",
+          "search_cars_tool",
+          "search_cars_tool",
+          "memory_recall_excursion",
+          "excursion_chat",
+          "search_attractions_tool",
+          "search_attractions_tool",
+          "searchLocation",
+          "searchAttractions",
+          "excursion_chat",
+          "fetch_attraction_details_tool",
+          "fetch_attraction_details_tool",
+          "excursion_chat",
+          "car_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "car_assistant",
+          "excursion_assistant",
+          "join_results",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "PASS",
+      "detail": "join integrity satisfied",
+      "evidence": {
+        "merged_domains": [
+          "car",
+          "excursion"
+        ]
+      }
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "car_assistant",
+      "graph": "primary",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "excursion_assistant",
+      "graph": "primary",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 5,
+      "node": "memory_recall_car",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_car_no_large",
+          "m_car_automatic"
+        ],
+        "applicability": {
+          "m_car_no_large": "uncertain",
+          "m_car_automatic": "apply"
+        },
+        "applicability_reasons": {
+          "m_car_no_large": "reconciled: Avoiding large SUVs or big cars is a soft preference/ranking constraint that does not map directly to concrete tool/API fields like transmission or seat capacity for search_cars. (llm: Avoiding large SUVs or big cars is a soft preference/ranking constraint that does not map directly to concrete tool/API fields like transmission or seat capacity for search_cars.; rule: default uncertain (no specific tool-field rule matched))",
+          "m_car_automatic": "reconciled: transmission maps to user_needs on search_cars (llm: Automatic transmission preference directly maps to the transmission field in user_needs for search_cars.; rule: transmission maps to user_needs on search_cars)"
+        },
+        "applied_to_context": [
+          "m_car_no_large",
+          "m_car_automatic"
+        ]
+      }
+    },
+    {
+      "seq": 6,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 7,
+      "node": "search_cars_tool",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [
+        {
+          "name": "search_cars_tool",
+          "arguments": {
+            "end_ms": "2026-10-10 20:00",
+            "address": "Đà Nẵng",
+            "user_needs": "Tìm xe thuê tại Đà Nẵng ngày 10/10/2026, ưu tiên xe số tự động, tránh xe SUV quá to",
+            "start_ms": "2026-10-10 08:00"
+          }
+        }
+      ],
+      "parent_chat_node": "car_chat"
+    },
+    {
+      "seq": 8,
+      "node": "memory_recall_excursion",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_excursion_afternoon",
+          "m_excursion_small_group"
+        ],
+        "applicability": {
+          "m_excursion_afternoon": "uncertain",
+          "m_excursion_small_group": "apply"
+        },
+        "applicability_reasons": {
+          "m_excursion_afternoon": "reconciled: Tour time preference (buổi chiều) aligns with the request but cannot be directly passed as a tool filter argument for search_attractions. (llm: Tour time preference (buổi chiều) aligns with the request but cannot be directly passed as a tool filter argument for search_attractions.; rule: default uncertain (no specific tool-field rule matched))",
+          "m_excursion_small_group": "reconciled: group-size preference applies to attraction search (llm: Group size preference (nhóm nhỏ) is relevant for ranking/reading tour details but does not map to a standard tool API filter for search_attractions.; rule: group-size preference applies to attraction search)"
+        },
+        "applied_to_context": [
+          "m_excursion_afternoon",
+          "m_excursion_small_group"
+        ]
+      }
+    },
+    {
+      "seq": 9,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "search_attractions_tool",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [
+        {
+          "name": "search_attractions_tool",
+          "arguments": {
+            "start_date": "2026-10-10",
+            "end_date": "2026-10-10",
+            "location": "Đà Nẵng"
+          },
+          "sub_steps": [
+            "searchLocation",
+            "searchAttractions"
+          ]
+        }
+      ],
+      "parent_chat_node": "excursion_chat"
+    },
+    {
+      "seq": 11,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 12,
+      "node": "fetch_attraction_details_tool",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [
+        {
+          "name": "fetch_attraction_details_tool",
+          "arguments": {
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group"
+          }
+        }
+      ],
+      "parent_chat_node": "excursion_chat"
+    },
+    {
+      "seq": 13,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 14,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 15,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 16,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 17,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}
