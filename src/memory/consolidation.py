@@ -82,8 +82,26 @@ Language (required):
 - Keep the user's key phrases (e.g. "bay thẳng", "bữa sáng", "gần biển", "yên tĩnh",
   "boutique", "đừng hỏi lại").
 
+Turn-scoped requests (required — hard rule, outranks Multi-fact coverage):
+- Check this section FIRST. A clause scoped to the current trip, turn, or day is
+  never a memory, however confident or specific it sounds.
+- Scope markers: "lần này", "chuyến này", "riêng lần này", "cho chuyến này",
+  "hôm nay", "bữa nay", "sáng nay", "chiều nay", "tối nay", "ngày mai".
+- These are NOT hedges. Apply the rule even when the clause states an exact
+  budget, cabin, transmission, group size, or date.
+- Example: "Lần này tìm khách sạn ở Đà Nẵng 10–12/10, dưới 1 triệu/đêm." => return [].
+- Example: "Chuyến này tôi bay business class." => return [].
+- Mixed scopes: emit memories only for the durable clause.
+  "Từ giờ tôi ưu tiên khách sạn yên tĩnh. Lần này dưới 1 triệu/đêm."
+  => exactly 1 memory ("ưu tiên khách sạn yên tĩnh"); the budget yields nothing.
+
+Evidence (required — hard rule):
+- evidence_text must be the single clause that states the fact, not the whole
+  message, so a durable clause is never backed by a turn-scoped one.
+
 Multi-fact coverage (required — hard rule):
-- Count every durable preference in the user message; emit that many memories (1 fact = 1 memory).
+- Count only the durable preferences left after the Turn-scoped and
+  Do-not-extract sections; emit that many memories (1 fact = 1 memory).
 - Split rule: for the head noun (xe / khách sạn / tour / chuyến bay), emit one
   memory per independent search filter; stacked modifiers without commas still
   split (do not merge into one compound). Before returning, re-check that every
@@ -115,10 +133,11 @@ Do not extract:
 - temporary tool/API search results, prices, or one-off trip logistics
 - assistant suggestions the user has not confirmed
 - claims without a clear user message as evidence
-- ambiguous/hedged claims ("có thể", "chưa chắc", "maybe", "nếu tiện", "nếu được", "có lẽ", "hình như", "lần này", "chuyến này", "bữa nay", "hôm nay")
+- ambiguous/hedged claims ("có thể", "chưa chắc", "maybe", "nếu tiện", "nếu được", "có lẽ", "hình như")
 - sensitive data (passport, card, CVV, password)
 
-Return no memory if evidence is ambiguous, sensitive, or not grounded in user text.\
+Return no memory if evidence is turn-scoped, ambiguous, sensitive, or not grounded
+in user text.\
 """
 
 
@@ -378,6 +397,11 @@ def validate_memory_candidate(candidate: TravelMemory) -> RuleResult:
         reasons.append("appears to be tool/API output rather than user evidence")
     if _is_ambiguous(lowered):
         reasons.append("evidence is ambiguous")
+    if _is_turn_scoped_candidate(
+        evidence_text=candidate.evidence_text,
+        memory_text=candidate.memory_text,
+    ):
+        reasons.append("evidence is scoped to the current turn")
     return RuleResult(ok=not reasons, reasons=reasons)
 
 
@@ -598,9 +622,61 @@ _AMBIGUOUS_MARKERS = (
     "e rằng",
 )
 
+# Confident but trip/turn-scoped wording: valid for this search, never durable.
+_TURN_SCOPED_MARKERS = (
+    "lần này",
+    "chuyến này",
+    "riêng lần này",
+    "cho chuyến này",
+    "bữa nay",
+    "hôm nay",
+    "sáng nay",
+    "chiều nay",
+    "tối nay",
+    "ngày mai",
+)
+
 
 def _is_ambiguous(lowered: str) -> bool:
     return any(token in lowered for token in _AMBIGUOUS_MARKERS)
+
+
+def _is_turn_scoped(text: str) -> bool:
+    lowered = " ".join(str(text).lower().split())
+    return any(marker in lowered for marker in _TURN_SCOPED_MARKERS)
+
+
+def _split_clauses(text: str) -> list[str]:
+    import re
+
+    return [part.strip() for part in re.split(r"[.;!?\n]+", str(text)) if part.strip()]
+
+
+def _is_turn_scoped_candidate(*, evidence_text: str, memory_text: str) -> bool:
+    """Reject candidates backed only by a clause scoped to the current turn.
+
+    One message can mix scopes ("Từ giờ … . Lần này …"), so the memory is matched
+    back to the clause that supports it instead of scanning the whole evidence.
+    """
+    if _is_turn_scoped(memory_text):
+        return True
+
+    clauses = _split_clauses(evidence_text)
+    scoped = [clause for clause in clauses if _is_turn_scoped(clause)]
+    if not scoped:
+        return False
+    if len(scoped) == len(clauses):
+        return True
+
+    memory_tokens = set(_normalize_statement(memory_text).split())
+    if not memory_tokens:
+        return False
+    overlap = {
+        clause: len(memory_tokens & set(_normalize_statement(clause).split()))
+        for clause in clauses
+    }
+    best = max(clauses, key=lambda clause: overlap[clause])
+    return overlap[best] > 0 and _is_turn_scoped(best)
 
 
 def _grounded_in_user_text(

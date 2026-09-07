@@ -343,6 +343,40 @@ def _message_content_text(content: object) -> str:
     return "".join(parts)
 
 
+def _messages_since_last_human(messages: list) -> list:
+    for index in range(len(messages) - 1, -1, -1):
+        if getattr(messages[index], "type", None) in ("human", "user"):
+            return list(messages[index + 1 :])
+    return list(messages)
+
+
+def _turn_messages(final_messages: list, old_messages: list) -> list:
+    """Return the messages produced by the current turn.
+
+    `summarize_conversation` prunes older messages through `RemoveMessage`, so
+    the final list can be shorter than the pre-turn one and positional slicing
+    would skip past the new answer entirely.
+    """
+    old_ids = {
+        getattr(message, "id", None)
+        for message in old_messages
+        if getattr(message, "id", None) is not None
+    }
+    if old_ids:
+        new_messages = [
+            message
+            for message in final_messages
+            if getattr(message, "id", None) not in old_ids
+        ]
+        if new_messages:
+            return new_messages
+
+    old_count = len(old_messages)
+    if len(final_messages) > old_count:
+        return list(final_messages[old_count:])
+    return _messages_since_last_human(final_messages)
+
+
 @app.post("/chat")
 async def chat(
     payload: ChatRequest,
@@ -380,7 +414,8 @@ async def chat(
     )
 
     snapshot = await primary_graph.aget_state(config)
-    old_count = len(snapshot.values.get("messages", [])) if snapshot.values else 0
+    old_messages = list(snapshot.values.get("messages", [])) if snapshot.values else []
+    old_count = len(old_messages)
 
     # Record the conversation for authenticated users so it can be listed and
     # reopened later. Anonymous callers get no conversation record. The title is
@@ -405,13 +440,23 @@ async def chat(
         config,
     )
 
-    new_messages = result["messages"][old_count:]
+    final_messages = list(result["messages"])
+    new_messages = _turn_messages(final_messages, old_messages)
     ai_responses: list[str] = []
     for msg in new_messages:
         if msg.type in ("ai", "assistant") and msg.content:
             content = _message_content_text(msg.content)
             if content and "Proceeding with the next requested task" not in content:
                 ai_responses.append(content)
+
+    if not ai_responses:
+        logger.warning(
+            "no assistant text for thread_id=%s (before=%d, after=%d, turn=%d)",
+            thread_id,
+            old_count,
+            len(final_messages),
+            len(new_messages),
+        )
 
     response = (
         "\n\n".join(ai_responses)
