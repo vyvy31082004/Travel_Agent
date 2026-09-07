@@ -5,8 +5,6 @@ from typing import Awaitable, Callable, Sequence
 
 from memory.applicability import (
     ApplicabilityJudge,
-    ApplicabilityLabel,
-    MockApplicabilityJudge,
     RuleBasedApplicabilityJudge,
 )
 from memory.long_term import MemoryCategory, MemoryDomain, MemoryFamily, TravelMemory
@@ -127,6 +125,11 @@ class DomainFlowCase:
     exclude_snippet: str
     noise_domain: str
     judge: ApplicabilityJudge | None = None
+    # Turn constraints that make the exclude memory OVERRIDDEN when the shared
+    # parallel-flow message does not already carry the conflict (car budget,
+    # excursion group-size). Empty when the query itself carries the conflict
+    # (flight "tối" vs "sáng") or the exclude is inherently irrelevant (hotel bathtub).
+    conflict_constraints: tuple[str, ...] = ()
     build_graph: Callable[..., Awaitable] | None = field(default=None, compare=False)
 
 
@@ -208,8 +211,10 @@ def _car_case() -> DomainFlowCase:
         tools_getter="get_car_tools",
         delegation_tool="ToCarAssistant",
         assistant_node="car_assistant",
-        user_query="Thuê xe số tự động ở Đà Nẵng",
-        delegated_request="Thuê xe số tự động Đà Nẵng",
+        # Query contradicts the stored budget so it is OVERRIDDEN (excluded from
+        # context) per the tool-field rubric; transmission still APPLIES.
+        user_query="Thuê xe số tự động, ngân sách dưới 1 triệu ở Đà Nẵng",
+        delegated_request="Thuê xe số tự động ngân sách dưới 1 triệu Đà Nẵng",
         expected_action="search_cars",
         memories=(
             _pref(
@@ -220,7 +225,7 @@ def _car_case() -> DomainFlowCase:
             ),
             _pref(
                 memory_id=exclude_id,
-                text="thích xe 7 chỗ",
+                text="ngân sách thuê xe tối đa 2 triệu",
                 domain=MemoryDomain.CAR,
                 category=MemoryCategory.CAR_PREFERENCE,
             ),
@@ -229,14 +234,10 @@ def _car_case() -> DomainFlowCase:
         apply_ids=frozenset({apply_id}),
         exclude_ids=frozenset({exclude_id}),
         apply_snippet="tự động",
-        exclude_snippet="7 chỗ",
+        exclude_snippet="2 triệu",
         noise_domain="excursion",
-        judge=MockApplicabilityJudge(
-            overrides={
-                apply_id: ApplicabilityLabel.APPLY,
-                exclude_id: ApplicabilityLabel.IRRELEVANT,
-            }
-        ),
+        conflict_constraints=("ngân sách dưới 1 triệu",),
+        judge=RuleBasedApplicabilityJudge(),
     )
 
 
@@ -248,19 +249,21 @@ def _excursion_case() -> DomainFlowCase:
         tools_getter="get_excursion_tools",
         delegation_tool="ToExcursionAssistant",
         assistant_node="excursion_assistant",
-        user_query="Tìm tour tham quan ở Đà Nẵng",
-        delegated_request="Tìm tour tham quan Đà Nẵng",
+        # Query "nhóm nhỏ" contradicts the stored "nhóm lớn" preference so it is
+        # OVERRIDDEN (excluded); group-size that matches the query APPLIES.
+        user_query="Tìm tour nhóm nhỏ ở Đà Nẵng",
+        delegated_request="Tìm tour nhóm nhỏ Đà Nẵng",
         expected_action="search_attractions",
         memories=(
             _pref(
                 memory_id=apply_id,
-                text="thích tour văn hóa",
+                text="thích tour nhóm nhỏ",
                 domain=MemoryDomain.EXCURSION,
                 category=MemoryCategory.EXCURSION_PREFERENCE,
             ),
             _pref(
                 memory_id=exclude_id,
-                text="thích tour biển",
+                text="thích tour nhóm lớn",
                 domain=MemoryDomain.EXCURSION,
                 category=MemoryCategory.EXCURSION_PREFERENCE,
             ),
@@ -268,15 +271,11 @@ def _excursion_case() -> DomainFlowCase:
         ),
         apply_ids=frozenset({apply_id}),
         exclude_ids=frozenset({exclude_id}),
-        apply_snippet="văn hóa",
-        exclude_snippet="biển",
+        apply_snippet="nhóm nhỏ",
+        exclude_snippet="nhóm lớn",
         noise_domain="car",
-        judge=MockApplicabilityJudge(
-            overrides={
-                apply_id: ApplicabilityLabel.APPLY,
-                exclude_id: ApplicabilityLabel.IRRELEVANT,
-            }
-        ),
+        conflict_constraints=("nhóm nhỏ",),
+        judge=RuleBasedApplicabilityJudge(),
     )
 
 

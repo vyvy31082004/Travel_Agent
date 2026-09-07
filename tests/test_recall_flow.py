@@ -16,7 +16,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT / "tests"))
 
-from memory.applicability import ApplicabilityLabel, MockApplicabilityJudge
+from memory.applicability import RuleBasedApplicabilityJudge
 from memory.long_term import MemoryFamily
 
 from helpers.recall_flow import (
@@ -228,19 +228,10 @@ def test_primary_delegation_recall_flow(case: DomainFlowCase):
     asyncio.run(_run())
 
 
-def _parallel_judge() -> MockApplicabilityJudge:
-    overrides: dict[str, ApplicabilityLabel] = {}
-    for case in DOMAIN_FLOW_CASES:
-        for memory_id in case.apply_ids:
-            overrides[memory_id] = ApplicabilityLabel.APPLY
-        label = (
-            ApplicabilityLabel.OVERRIDDEN
-            if case.domain == "flight"
-            else ApplicabilityLabel.IRRELEVANT
-        )
-        for memory_id in case.exclude_ids:
-            overrides[memory_id] = label
-    return MockApplicabilityJudge(overrides=overrides)
+def _parallel_judge() -> RuleBasedApplicabilityJudge:
+    # Use the same tool-field rule judge the domain graphs use; each case's
+    # conflict_constraints make the exclude memory OVERRIDDEN deterministically.
+    return RuleBasedApplicabilityJudge()
 
 
 def test_primary_parallel_four_domain_recall_flow():
@@ -264,7 +255,10 @@ def test_primary_parallel_four_domain_recall_flow():
                             "name": case.delegation_tool,
                             "args": {
                                 "request": case.delegated_request,
-                                "turn_constraints": [],
+                                # Inject each domain's conflict locally so the
+                                # exclude memory is OVERRIDDEN without spilling
+                                # phrases across sibling domain branches.
+                                "turn_constraints": list(case.conflict_constraints),
                             },
                         }
                     )

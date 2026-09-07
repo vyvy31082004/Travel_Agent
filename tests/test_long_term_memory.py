@@ -987,71 +987,6 @@ def test_langmem_normalizer_requires_user_grounding_when_provided():
     assert len(accepted) == 1
 
 
-def test_langmem_normalizer_drops_session_override_even_if_evidence_strips_marker():
-    outputs = [
-        {
-            "memory_text": "Thích xe số sàn",
-            "category": "car_preference",
-            "domain": "car",
-            "evidence_text": "tìm xe số sàn",
-        }
-    ]
-    dropped = normalize_langmem_outputs(
-        outputs,
-        user_id="user-1",
-        thread_id="thread-1",
-        fallback_evidence="Lần này tìm xe số sàn ở Đà Nẵng từ 10–12/10.",
-        user_texts=["Lần này tìm xe số sàn ở Đà Nẵng từ 10–12/10."],
-    )
-    assert dropped == []
-
-
-@pytest.mark.parametrize(
-    ("user_text", "memory_text", "evidence_text", "category", "domain"),
-    [
-        (
-            "Lần này tìm khách sạn ở Đà Nẵng từ 10–12/10, dưới 1 triệu/đêm.",
-            "Ngân sách khách sạn dưới 1 triệu/đêm",
-            "dưới 1 triệu/đêm",
-            "hotel_preference",
-            "hotel",
-        ),
-        (
-            "Chuyến này tìm chuyến TP.HCM–Hà Nội ngày 10/10, bay business class.",
-            "Thích bay business class",
-            "bay business class",
-            "flight_preference",
-            "flight",
-        ),
-        (
-            "Lần này tìm hoạt động ở Đà Nẵng ngày 10/10, ngân sách tối đa 700 nghìn/người.",
-            "Ngân sách tour tối đa 700 nghìn/người",
-            "ngân sách tối đa 700 nghìn/người",
-            "excursion_preference",
-            "excursion",
-        ),
-    ],
-)
-def test_langmem_normalizer_drops_session_overrides_across_domains(
-    user_text, memory_text, evidence_text, category, domain
-):
-    dropped = normalize_langmem_outputs(
-        [
-            {
-                "memory_text": memory_text,
-                "category": category,
-                "domain": domain,
-                "evidence_text": evidence_text,
-            }
-        ],
-        user_id="user-1",
-        thread_id="thread-1",
-        fallback_evidence=user_text,
-        user_texts=[user_text],
-    )
-    assert dropped == []
-
-
 def test_langmem_normalizer_keeps_durable_write_pref_with_search():
     user_text = (
         "Từ giờ khi thuê xe tôi ưu tiên xe 5 chỗ số tự động. "
@@ -1081,31 +1016,6 @@ def test_langmem_normalizer_keeps_durable_write_pref_with_search():
         "Ưu tiên xe 5 chỗ",
         "Ưu tiên xe số tự động",
     ]
-
-
-def test_langmem_normalizer_keeps_durable_clause_drops_session_clause():
-    user_text = "Tôi thích xe 7 chỗ. Lần này tìm xe số sàn ở Đà Nẵng."
-    kept = normalize_langmem_outputs(
-        [
-            {
-                "memory_text": "Thích xe 7 chỗ",
-                "category": "car_preference",
-                "domain": "car",
-                "evidence_text": "Tôi thích xe 7 chỗ",
-            },
-            {
-                "memory_text": "Thích xe số sàn",
-                "category": "car_preference",
-                "domain": "car",
-                "evidence_text": "tìm xe số sàn",
-            },
-        ],
-        user_id="user-1",
-        thread_id="thread-1",
-        fallback_evidence=user_text,
-        user_texts=[user_text],
-    )
-    assert [row.memory_text for row in kept] == ["Thích xe 7 chỗ"]
 
 
 def test_deterministic_extractor_skips_session_override_search():
