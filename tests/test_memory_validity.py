@@ -27,7 +27,7 @@ def _sample_memory(**overrides) -> TravelMemory:
     return TravelMemory(**base)
 
 
-def test_apply_default_validity_sets_three_day_window() -> None:
+def test_apply_default_validity_sets_default_window() -> None:
     memory = apply_default_validity_if_missing(_sample_memory())
     assert memory.valid_from is not None
     assert memory.valid_to is not None
@@ -48,4 +48,4 @@ def test_default_memory_validity_window_anchor() -> None:
     anchor = datetime(2026, 9, 1, tzinfo=timezone.utc)
     valid_from, valid_to = default_memory_validity_window(now=anchor)
     assert valid_from == anchor
-    assert valid_to == anchor + timedelta(days=3)
+    assert valid_to == anchor + timedelta(days=DEFAULT_MEMORY_VALIDITY_DAYS)

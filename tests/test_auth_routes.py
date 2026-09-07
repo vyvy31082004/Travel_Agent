@@ -82,12 +82,26 @@ class FakeAuthRepo:
         self.revoked.append(token)
 
 
+class FakeConversationsRepo:
+    async def upsert(self, *, thread_id, user_id, title=None, preview=None):
+        return None
+
+    async def list_by_user(self, user_id, *, limit=50):
+        return []
+
+    async def get_owner(self, thread_id):
+        return None
+
+
 @pytest.fixture
 def client():
     fake_auth = FakeAuthRepo()
     fake_graph = FakeGraph()
     app_module.app.state.settings = SimpleNamespace(cookie_secure=False)
     app_module.app.dependency_overrides[app_module.get_auth_repo] = lambda: fake_auth
+    app_module.app.dependency_overrides[app_module.get_conversations_repo] = (
+        lambda: FakeConversationsRepo()
+    )
     app_module.app.dependency_overrides[get_primary_graph] = lambda: fake_graph
     test_client = TestClient(app_module.app)
     try:

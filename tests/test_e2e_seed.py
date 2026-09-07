@@ -15,7 +15,7 @@ from memory.validity import (
 )
 
 
-def test_default_memory_validity_window_is_three_days() -> None:
+def test_default_memory_validity_window_uses_default() -> None:
     anchor = datetime(2026, 9, 1, 12, 0, tzinfo=timezone.utc)
     valid_from, valid_to = default_memory_validity_window(now=anchor)
     assert valid_from == anchor
@@ -31,5 +31,5 @@ def test_seed_memory_sets_validity_window() -> None:
     )
     assert memory.valid_from is not None
     assert memory.valid_to is not None
-    assert memory.valid_to - memory.valid_from == timedelta(days=3)
+    assert memory.valid_to - memory.valid_from == timedelta(days=DEFAULT_MEMORY_VALIDITY_DAYS)
     assert memory.is_active

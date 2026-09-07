@@ -5,8 +5,10 @@ from datetime import datetime, timedelta, timezone
 
 from memory.long_term import TravelMemory
 
-# TEMPORARY: default TTL for newly persisted memories without explicit validity.
-DEFAULT_MEMORY_VALIDITY_DAYS = 3
+# Default validity window (in days) for newly persisted memories without an
+# explicit validity. Bounded on purpose so stale preferences do not accumulate
+# indefinitely; recall filters on `valid_to > now()`.
+DEFAULT_MEMORY_VALIDITY_DAYS = 30
 
 
 def default_memory_validity_window(

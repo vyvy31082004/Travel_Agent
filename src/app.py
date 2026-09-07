@@ -1,3 +1,4 @@
+import logging
 import uuid
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
@@ -18,6 +19,7 @@ from memory.commit import MemoryCommitAdapter
 from memory.embeddings import MemoryEmbeddingService
 from memory.verifier import build_memory_verifier
 from memory.worker import MemoryWorker
+from repositories.conversations import ConversationsRepository
 from repositories.long_term_memory import PostgresLongTermMemoryRepository
 from repositories.result_store import ResultStoreRepository
 from services.auth import (
@@ -33,6 +35,8 @@ from utils.tracing import with_trace_config
 
 TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
+
+logger = logging.getLogger(__name__)
 
 
 class ChatRequest(BaseModel):
@@ -101,6 +105,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         app.state.checkpointer = postgres.checkpointer
         app.state.result_store = repo
         app.state.auth_repo = AuthRepository(postgres.pool)
+        app.state.conversations_repo = ConversationsRepository(postgres.pool)
         app.state.long_term_memory = memory_service
         app.state.primary_graph = await build_primary_graph(
             checkpointer=postgres.checkpointer,
@@ -124,6 +129,9 @@ async def _form_data(request: Request) -> dict[str, str]:
 
 def get_auth_repo(request: Request) -> AuthRepository:
     return request.app.state.auth_repo
+
+def get_conversations_repo(request: Request) -> ConversationsRepository:
+    return request.app.state.conversations_repo
 
 async def get_current_user(
     request: Request,
@@ -211,6 +219,55 @@ async def logout(request: Request, auth_repo: AuthRepository = Depends(get_auth_
     response.delete_cookie(SESSION_COOKIE_NAME)
     return response
 
+@app.get("/conversations")
+async def list_conversations(
+    current_user: AuthUser | None = Depends(get_current_user),
+    conversations_repo: ConversationsRepository = Depends(get_conversations_repo),
+) -> list[dict]:
+    if current_user is None:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    conversations = await conversations_repo.list_by_user(current_user.user_id)
+    return [
+        {
+            "thread_id": c.thread_id,
+            "title": c.title,
+            "preview": c.preview,
+            "updated_at": c.updated_at.isoformat() if c.updated_at else None,
+        }
+        for c in conversations
+    ]
+
+@app.get("/conversations/{thread_id}")
+async def get_conversation(
+    thread_id: str,
+    current_user: AuthUser | None = Depends(get_current_user),
+    conversations_repo: ConversationsRepository = Depends(get_conversations_repo),
+    primary_graph=Depends(get_primary_graph),
+) -> dict:
+    if current_user is None:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    owner = await conversations_repo.get_owner(thread_id)
+    if owner is None or owner != current_user.user_id:
+        # 404 (not 403) so a non-owner cannot probe which threads exist.
+        raise HTTPException(status_code=404, detail="Not found")
+    config = {"configurable": {"thread_id": thread_id, "user_id": current_user.user_id}}
+    snapshot = await primary_graph.aget_state(config)
+    stored = snapshot.values.get("messages", []) if snapshot.values else []
+    messages: list[dict] = []
+    for msg in stored:
+        role = getattr(msg, "type", None)
+        if role not in ("human", "ai", "assistant"):
+            continue
+        content = _message_content_text(getattr(msg, "content", ""))
+        if not content:
+            continue
+        if content == "Proceeding with the next requested task.":
+            continue
+        messages.append(
+            {"role": "user" if role == "human" else "ai", "content": content}
+        )
+    return {"thread_id": thread_id, "messages": messages}
+
 
 def _require_debug_access(
     request: Request, current_user: AuthUser | None
@@ -293,6 +350,7 @@ async def chat(
     response: Response,
     primary_graph=Depends(get_primary_graph),
     current_user: AuthUser | None = Depends(get_current_user),
+    conversations_repo: ConversationsRepository = Depends(get_conversations_repo),
 ) -> dict[str, str]:
     settings = request.app.state.settings
     thread_id = payload.thread_id or str(uuid.uuid4())
@@ -324,6 +382,20 @@ async def chat(
     snapshot = await primary_graph.aget_state(config)
     old_count = len(snapshot.values.get("messages", [])) if snapshot.values else 0
 
+    # Record the conversation for authenticated users so it can be listed and
+    # reopened later. Anonymous callers get no conversation record. The title is
+    # set from the first user message; later turns only refresh preview/updated.
+    if current_user:
+        try:
+            await conversations_repo.upsert(
+                thread_id=thread_id,
+                user_id=user_id,
+                title=payload.msg if old_count == 0 else None,
+                preview=payload.msg,
+            )
+        except Exception as exc:  # pragma: no cover - non-fatal bookkeeping
+            logger.warning("conversation upsert failed: %s", exc)
+
     result = await primary_graph.ainvoke(
         {
             "messages": ("user", payload.msg),
@@ -350,4 +422,28 @@ async def chat(
 
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=5000, reload=True)
+    import asyncio
+    import os
+    import sys
+
+    # Local dev entrypoint (cross-platform): `python src/app.py`.
+    #
+    # uvicorn >= 0.36 builds the loop via asyncio.run(..., loop_factory=...),
+    # which hard-codes ProactorEventLoop on Windows and ignores any event-loop
+    # policy. psycopg's async pool requires a SelectorEventLoop, so on Windows
+    # we run the server ourselves with an explicit SelectorEventLoop factory.
+    # Linux/macOS use the normal uvicorn.run(); production (uvicorn app:app on
+    # Linux via the start script) never executes this __main__ block.
+    host = os.getenv("WEB_HOST", "127.0.0.1")
+    port = int(os.getenv("PORT", "5000"))
+
+    if sys.platform == "win32":
+        import selectors
+
+        def _selector_loop() -> asyncio.AbstractEventLoop:
+            return asyncio.SelectorEventLoop(selectors.SelectSelector())
+
+        server = uvicorn.Server(uvicorn.Config(app, host=host, port=port))
+        asyncio.run(server.serve(), loop_factory=_selector_loop)
+    else:
+        uvicorn.run(app, host=host, port=port)

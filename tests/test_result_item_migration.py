@@ -23,10 +23,14 @@ def _load_migration():
     return module
 
 
-def test_result_item_presentation_migration_is_alembic_head():
+def test_result_item_presentation_migration_is_in_chain():
     config = Config(str(PROJECT_ROOT / "alembic.ini"))
     scripts = ScriptDirectory.from_config(config)
-    assert scripts.get_current_head() == "0008_result_item_presentation"
+    revisions = {script.revision for script in scripts.walk_revisions()}
+    # 0008 is part of the migration chain (no longer the head after 0009).
+    assert "0008_result_item_presentation" in revisions
+    # There is a single head and it is the conversations migration.
+    assert scripts.get_current_head() == "0009_conversations"
 
 
 def test_result_item_presentation_migration_has_safe_backfill(monkeypatch):

@@ -762,16 +762,7 @@
 
         <section class="sidebar-section history-section" aria-label="Lịch sử gần đây">
           <div class="section-label">Lịch sử gần đây</div>
-          <div id="history-list" class="history-list">
-            <button class="history-item" type="button" data-prompt="Tìm khách sạn ở Đà Nẵng rating từ 9.0">
-              <span class="nav-icon" aria-hidden="true">↺</span>
-              <span><strong>Đà Nẵng cuối tuần</strong><span>Khách sạn gần biển</span></span>
-            </button>
-            <button class="history-item" type="button" data-prompt="Gợi ý tour một ngày ở Hà Nội">
-              <span class="nav-icon" aria-hidden="true">↺</span>
-              <span><strong>Tour Hà Nội</strong><span>Ẩm thực và phố cổ</span></span>
-            </button>
-          </div>
+          <div id="history-list" class="history-list"></div>
         </section>
 
         <div class="sidebar-spacer"></div>
@@ -892,6 +883,7 @@
       let threadId = null;
       // Identity is resolved server-side (session cookie or a server-issued
       // anonymous cookie). The client no longer sends or stores a user_id.
+      const isAuthenticated = {{ 'true' if current_user else 'false' }};
 
       function escapeHtml(text) {
         const div = document.createElement('div');
@@ -949,18 +941,10 @@
         document.body.classList.remove('sidebar-open');
       }
 
-      function saveRecentPrompt(text) {
-        const current = JSON.parse(localStorage.getItem('viettrip_recent_prompts') || '[]');
-        const next = [text, ...current.filter((item) => item !== text)].slice(0, 5);
-        localStorage.setItem('viettrip_recent_prompts', JSON.stringify(next));
-        renderRecentPrompts();
-      }
-
-      function renderRecentPrompts() {
-        const recent = JSON.parse(localStorage.getItem('viettrip_recent_prompts') || '[]');
-        if (!recent.length) return;
+      function renderConversationList(conversations) {
         historyListEl.innerHTML = '';
-        recent.forEach((prompt) => {
+        if (!conversations || !conversations.length) return;
+        conversations.forEach((conv) => {
           const button = document.createElement('button');
           button.className = 'history-item';
           button.type = 'button';
@@ -969,18 +953,49 @@
           icon.setAttribute('aria-hidden', 'true');
           icon.textContent = '↺';
           const wrap = document.createElement('span');
+          const titleText = conv.title || conv.preview || 'Cuộc trò chuyện';
           const title = document.createElement('strong');
-          // User-derived prompt text — assign via textContent, never innerHTML.
-          title.textContent = prompt.slice(0, 28) + (prompt.length > 28 ? '…' : '');
+          // Server-derived text — assign via textContent, never innerHTML.
+          title.textContent = titleText.slice(0, 28) + (titleText.length > 28 ? '…' : '');
           const subtitle = document.createElement('span');
           subtitle.textContent = 'Tiếp tục cuộc trò chuyện';
           wrap.appendChild(title);
           wrap.appendChild(subtitle);
           button.appendChild(icon);
           button.appendChild(wrap);
-          button.addEventListener('click', () => setPrompt(prompt));
+          button.addEventListener('click', () => openConversation(conv.thread_id));
           historyListEl.appendChild(button);
         });
+      }
+
+      async function loadConversationList() {
+        if (!isAuthenticated) return;
+        try {
+          const res = await fetch('/conversations', { credentials: 'same-origin' });
+          if (!res.ok) return;
+          renderConversationList(await res.json());
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      async function openConversation(id) {
+        if (!isAuthenticated || !id) return;
+        try {
+          const res = await fetch('/conversations/' + encodeURIComponent(id), {
+            credentials: 'same-origin',
+          });
+          if (!res.ok) return;
+          const data = await res.json();
+          threadId = data.thread_id;
+          messagesEl.innerHTML = '';
+          (data.messages || []).forEach((m) => {
+            appendMessage(m.content, m.role === 'user' ? 'user' : 'ai');
+          });
+          document.body.classList.remove('sidebar-open');
+        } catch (err) {
+          console.error(err);
+        }
       }
 
       document.querySelectorAll('[data-prompt]').forEach((button) => {
@@ -1014,7 +1029,6 @@
         if (!text) return;
 
         appendMessage(text, 'user');
-        saveRecentPrompt(text);
         inputEl.value = '';
         autosizeInput();
         inputEl.focus();
@@ -1034,9 +1048,14 @@
           }
 
           const data = await res.json();
+          const wasNewThread = !threadId;
           threadId = data.thread_id;
           loadingRow.remove();
           appendMessage(data.response, 'ai');
+          // Refresh the sidebar so a new conversation appears / moves to top.
+          if (wasNewThread) {
+            loadConversationList();
+          }
         } catch (err) {
           console.error(err);
           loadingRow.remove();
@@ -1046,7 +1065,7 @@
         }
       });
 
-      renderRecentPrompts();
+      loadConversationList();
       autosizeInput();
     </script>
   </body>
