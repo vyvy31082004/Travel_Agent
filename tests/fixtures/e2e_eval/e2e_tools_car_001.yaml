@@ -1,0 +1,65 @@
+id: e2e_tools_car_001
+scenario: "2 turns phủ car search rồi get_car_details; NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_car_automatic
+      text: "Thích xe số tự động"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_car_other_user
+      text: "Memory user khác — thích xe số sàn"
+      domain: car
+      category: car_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_car_superseded
+      text: "Preference cũ — chỉ thuê xe 4 chỗ"
+      domain: car
+      category: car_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  force_summarize_penultimate: false
+  messages:
+    - "Thuê xe ở Đà Nẵng nhận 10/10 10:00 trả 12/10 10:00."
+    - "Với xe đầu tiên trong kết quả, gọi tool xem chi tiết xe đó."
+
+expected_trace:
+  expected_route: [car]
+  expected_context:
+    car:
+      must_include: [m_car_automatic]
+      must_exclude: [m_car_other_user, m_car_superseded]
+  expected_tools:
+    - name: search_cars_tool
+      required_arguments: [location, pickup_date, return_date]
+    - name: get_car_details_tool
+      required_arguments: [car_id, car_name]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - car_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "trace chứa đủ 2 car tools: search + get_car_details"
+    - "ngày giữ 10/10–12/10 khi tool có date args"
+    - "final answer phản ánh kết quả tool, không bịa giá/xe"
+  tradeoff_rule:
+    - "Nếu thiếu car_id để gọi detail, nêu rõ cần search trước"
+  forbidden_claims:
+    - "Giá/xe không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

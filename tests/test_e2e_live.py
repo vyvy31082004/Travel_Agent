@@ -54,6 +54,7 @@ MULTI_DOMAIN_CASES = [
     "e2e_multi_flight_car_001",
     "e2e_multi_car_excursion_001",
     "e2e_multi_excursion_hotel_001",
+    "e2e_trip_plan_001",
 ]
 
 

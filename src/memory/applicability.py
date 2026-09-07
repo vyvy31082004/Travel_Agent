@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from dataclasses import dataclass
 from enum import StrEnum
 from typing import Any, Protocol, Sequence
@@ -13,6 +14,23 @@ from memory.long_term import TravelMemory, format_memory_for_prompt
 logger = logging.getLogger(__name__)
 
 DEFAULT_APPLICABILITY_BATCH_SIZE = 10
+LLM_OVERRIDE_CONFIDENCE = 0.7
+_DEFAULT_RULE_REASON = "default uncertain (no specific tool-field rule matched)"
+
+# Car capacity prefs that map to search_cars user_needs (4/5/7 chỗ, seater, ...).
+_CAR_SEAT_CAPACITY_RE = re.compile(
+    r"("
+    r"\d+\s*chỗ"
+    r"|tối thiểu\s*\d+"
+    r"|bốn\s*chỗ|bảy\s*chỗ|năm\s*chỗ|sáu\s*chỗ|tám\s*chỗ|chín\s*chỗ"
+    r"|seater|seats?\b|capacity"
+    r")",
+    re.IGNORECASE,
+)
+
+
+def _is_car_seat_capacity_preference(text: str) -> bool:
+    return bool(_CAR_SEAT_CAPACITY_RE.search(text or ""))
 
 
 class ApplicabilityLabel(StrEnum):
@@ -28,6 +46,7 @@ class ApplicabilityJudgment:
     label: ApplicabilityLabel
     confidence: float
     reason: str
+    matched: bool = False
 
 
 class ApplicabilityJudge(Protocol):
@@ -90,15 +109,6 @@ class MockApplicabilityJudge:
         return results
 
 
-def _label_rank(label: ApplicabilityLabel) -> int:
-    return {
-        ApplicabilityLabel.OVERRIDDEN: 4,
-        ApplicabilityLabel.IRRELEVANT: 3,
-        ApplicabilityLabel.APPLY: 2,
-        ApplicabilityLabel.UNCERTAIN: 1,
-    }[label]
-
-
 def _query_specifies_origin(query: str) -> bool:
     return any(
         token in query
@@ -120,9 +130,9 @@ def _query_specifies_origin(query: str) -> bool:
 
 # Tool-field rubric (search actions):
 # - APPLY: preference maps to a tool/API arg for this action and is not contradicted
-#   (hotel: price_min/max; car: user_needs capacity/transmission; flight: cabin/direct/origin)
+#   (hotel: price_min/max; car: user_needs transmission; flight: cabin/direct/origin)
 # - UNCERTAIN: may still matter for ranking/reading results but has no tool arg
-#   (hotel: quiet, beach; car: surcharge; excursion: crowd)
+#   (hotel: quiet, beach; car: surcharge, seat capacity; excursion: crowd)
 # - IRRELEVANT: not usable for this action (hotel bathtub on search_hotels; flight seat before offers)
 # - OVERRIDDEN: same topic, user request replaces the stored value
 
@@ -150,7 +160,7 @@ def build_applicability_llm_prompt(
         "memory 'Ưu tiên tour nhóm lớn').\n"
         "Labels:\n"
         "- apply: still-valid preference that maps to tool/API fields for this action "
-        "(hotel price_min/price_max; car user_needs capacity/transmission; flight cabin_class, "
+        "(hotel price_min/price_max; car user_needs transmission; flight cabin_class, "
         "direct/nonstop, origin) and is not contradicted\n"
         "- overridden: user request contradicts or replaces this memory "
         "(even if the topic is still relevant to search)\n"
@@ -158,15 +168,16 @@ def build_applicability_llm_prompt(
         "(e.g. room bathtub amenity on hotel search_hotels; seat/window prefs before flight offers exist)\n"
         "- uncertain: may still matter when reading/ranking results but cannot be passed as a "
         "tool arg yet (e.g. hotel quiet/yên tĩnh, gần biển on search_hotels; excursion "
-        "nature/beach/culture tour-type prefs that are too general for location; car phụ phí "
-        "without breakdown; crowd avoidance without crowd data)\n"
+        "nature/beach/culture tour-type prefs that are too general for location; car seat capacity "
+        "/ phụ phí without a dedicated seats or surcharge tool field; crowd avoidance without "
+        "crowd data)\n"
         "Do NOT choose apply just because the preference is 'about' the domain/search.\n"
         "Do NOT choose apply only because the preference could soft-rank results — "
         "if there is no matching tool/API field for this action, use uncertain or irrelevant.\n"
         "If relevant but contradicted → overridden, not apply.\n"
-        "Car seat capacity (7 chỗ) maps via user_needs on search_cars → apply even if the query "
-        "omits capacity. Hotel quiet/beach and excursion nature/beach/culture tour-types are too "
-        "general for concrete tool args → uncertain.\n"
+        "Car seat capacity has no dedicated seats tool arg on search_cars → uncertain "
+        "(soft via result field Số chỗ / weak cateId alias). Hotel quiet/beach and excursion "
+        "nature/beach/culture tour-types are too general for concrete tool args → uncertain.\n"
         "\nExamples (search actions):\n"
         "- hotel search_hotels + 'Ngân sách 1–2 triệu' + 'Tìm KS Phú Quốc' → apply\n"
         "- hotel search_hotels + 'Thích yên tĩnh' + 'Tìm KS Phú Quốc' → uncertain "
@@ -176,10 +187,15 @@ def build_applicability_llm_prompt(
         "- hotel search_hotels + 'phòng có bồn tắm' → irrelevant "
         "(room amenity not a search_hotels arg)\n"
         "- hotel search_hotels công tác + budget/beach/bathtub → apply / uncertain / irrelevant\n"
+        "- hotel get_hotel_details + bathtub/budget → uncertain "
+        "(soft when reading rooms; no search tool fields on details)\n"
         "- flight search_one_way + economy/direct/SGN prefs + 'Bay HN sáng thứ Hai' → apply\n"
         "- flight + memory 'ưu tiên bay sáng' + query 'tìm chuyến tối' → overridden\n"
-        "- car search_cars + automatic pref → apply; 'tối thiểu 7 chỗ' → apply "
-        "(capacity via user_needs); phụ phí avoidance → uncertain\n"
+        "- flight search_one_way + 'thường chọn rẻ nhất' + 'đúng giờ nhất' → uncertain "
+        "(prioritizing schedule is not a hard cancellation of price preference)\n"
+        "- flight search_one_way + 'thường chọn rẻ nhất' + 'không cần rẻ' → irrelevant\n"
+        "- car search_cars + automatic pref → apply; seat capacity (5/7 chỗ) → uncertain "
+        "(no seats tool arg; soft via Số chỗ in results); phụ phí avoidance → uncertain\n"
         "- excursion search_attractions + nature/beach/culture tour-type prefs → uncertain "
         "(too general vs concrete location); avoid crowded → uncertain\n"
         "- excursion + memory 'Ưu tiên tour nhóm lớn' + query "
@@ -219,11 +235,10 @@ class RuleBasedApplicabilityJudge:
             text = memory.memory_text.lower()
             # Conservative default per the tool-field rubric: a preference that
             # no specific rule matched must NOT be promoted to a hard `apply`
-            # constraint (which would override a careful LLM `uncertain`). Leave
-            # it `uncertain` (soft context) so it never injects tool args on its
-            # own or wins reconciliation against the LLM.
+            # constraint (matched=False so reconcile will not fence on this label).
+            # Leave it `uncertain` (soft context) so it never injects tool args alone.
             label = ApplicabilityLabel.UNCERTAIN
-            reason = "default uncertain (no specific tool-field rule matched)"
+            reason = _DEFAULT_RULE_REASON
             if domain == "flight" and "sáng" in text and any(
                 token in query for token in ("tối", "chiều", "evening", "night")
             ):
@@ -268,6 +283,9 @@ class RuleBasedApplicabilityJudge:
                 if "bồn tắm" in text or "bathtub" in text:
                     label = ApplicabilityLabel.UNCERTAIN
                     reason = "room amenity uncertain at hotel details"
+                elif "ngân sách" in text or "triệu" in text:
+                    label = ApplicabilityLabel.UNCERTAIN
+                    reason = "budget has no get_hotel_details tool field; soft when reading rooms"
             elif domain == "hotel" and domain_action == "get_reviews":
                 if "bồn tắm" in text or "ngân sách" in text:
                     label = ApplicabilityLabel.IRRELEVANT
@@ -276,7 +294,10 @@ class RuleBasedApplicabilityJudge:
                 "search_one_way",
                 "search_round_trip",
             }:
-                if any(
+                if any(token in text for token in ("ghế", "cửa sổ", "seat")):
+                    label = ApplicabilityLabel.IRRELEVANT
+                    reason = "seat preference irrelevant before search"
+                elif any(
                     token in text
                     for token in ("phổ thông", "economy", "hạng phổ thông")
                 ) and any(
@@ -326,9 +347,9 @@ class RuleBasedApplicabilityJudge:
                 if "tự động" in text or "automatic" in text:
                     label = ApplicabilityLabel.APPLY
                     reason = "transmission maps to user_needs on search_cars"
-                elif "7 chỗ" in text or "bảy chỗ" in text or "tối thiểu 7" in text:
-                    label = ApplicabilityLabel.APPLY
-                    reason = "seat capacity maps to user_needs on search_cars"
+                elif _is_car_seat_capacity_preference(text):
+                    label = ApplicabilityLabel.UNCERTAIN
+                    reason = "seat capacity soft until results expose Số chỗ (no seats tool arg)"
                 elif "phụ phí" in text or "surcharge" in text:
                     label = ApplicabilityLabel.UNCERTAIN
                     reason = "surcharge avoidance soft until tool payload has breakdown"
@@ -338,10 +359,10 @@ class RuleBasedApplicabilityJudge:
                 ):
                     label = ApplicabilityLabel.UNCERTAIN
                     reason = "transmission uncertain when capacity dominates"
-                if "7 chỗ" in text or "bảy chỗ" in text:
+                if _is_car_seat_capacity_preference(text):
                     if any(token in query for token in ("gia đình", "6 người")):
                         label = ApplicabilityLabel.APPLY
-                        reason = "7-seat applies for family capacity"
+                        reason = "seat capacity applies for family capacity"
             elif domain == "excursion" and domain_action == "search_attractions":
                 memory_large = any(
                     token in text for token in ("nhóm lớn", "large group", "đoàn lớn")
@@ -405,12 +426,14 @@ class RuleBasedApplicabilityJudge:
                 if "bồn tắm" in text and domain_state.get("selected_hotel_id"):
                     label = ApplicabilityLabel.APPLY
                     reason = "bathtub applies when selecting room"
+            matched = reason != _DEFAULT_RULE_REASON
             results.append(
                 ApplicabilityJudgment(
                     memory_id=memory_id,
                     label=label,
                     confidence=0.9,
                     reason=reason,
+                    matched=matched,
                 )
             )
         return results
@@ -501,7 +524,12 @@ async def reconcile_judgments(
     domain_action: str,
     domain_state: dict[str, Any],
 ) -> list[ApplicabilityJudgment]:
-    """Upgrade LLM labels when rule judge is stronger; never downgrade overridden/irrelevant."""
+    """Reconcile LLM and rule labels with specificity-aware priority.
+
+    Order: overridden → specific rule irrelevant → keep specific rule
+    apply/uncertain (LLM irrelevant cannot drop) → unmatched demotes lone
+    LLM apply to uncertain; otherwise use LLM (high-conf irrelevant/overridden).
+    """
     rule_judge = RuleBasedApplicabilityJudge()
     rule_judgments = await rule_judge.judge_batch(
         user_query=user_query,
@@ -530,24 +558,107 @@ async def reconcile_judgments(
                 memory_id=memory_id,
                 label=ApplicabilityLabel.UNCERTAIN,
                 confidence=0.5,
-                reason="default uncertain (no specific tool-field rule matched)",
+                reason=_DEFAULT_RULE_REASON,
+                matched=False,
             ),
         )
-        if llm.label in {ApplicabilityLabel.OVERRIDDEN, ApplicabilityLabel.IRRELEVANT}:
-            chosen = llm
-        elif rule.label in {ApplicabilityLabel.OVERRIDDEN, ApplicabilityLabel.IRRELEVANT}:
-            chosen = rule
-        elif _label_rank(rule.label) > _label_rank(llm.label):
-            chosen = ApplicabilityJudgment(
-                memory_id=memory_id,
-                label=rule.label,
-                confidence=max(llm.confidence, rule.confidence),
-                reason=f"reconciled: {rule.reason} (llm: {llm.reason})",
-            )
-        else:
-            chosen = llm
+        chosen = _reconcile_one(llm=llm, rule=rule)
         reconciled.append(chosen)
     return reconciled
+
+
+def _reconcile_one(
+    *,
+    llm: ApplicabilityJudgment,
+    rule: ApplicabilityJudgment,
+) -> ApplicabilityJudgment:
+    memory_id = rule.memory_id or llm.memory_id
+
+    def _pick(
+        source: ApplicabilityJudgment,
+        *,
+        label: ApplicabilityLabel | None = None,
+        reason: str | None = None,
+    ) -> ApplicabilityJudgment:
+        final_label = label if label is not None else source.label
+        final_reason = reason or (
+            f"reconciled: {source.reason} (llm: {llm.reason}; rule: {rule.reason})"
+        )
+        return ApplicabilityJudgment(
+            memory_id=memory_id,
+            label=final_label,
+            confidence=max(llm.confidence, rule.confidence),
+            reason=final_reason,
+            matched=rule.matched,
+        )
+
+    # 1. Specific rule overridden always wins (deterministic lexical conflict).
+    if rule.label == ApplicabilityLabel.OVERRIDDEN:
+        return _pick(rule)
+
+    # 2. Specific rule irrelevant wins (known out-of-scope for this action).
+    if rule.matched and rule.label == ApplicabilityLabel.IRRELEVANT:
+        # LLM overridden (high-conf) can still flip specific irrelevant to overridden
+        # if the user explicitly cancelled a preference that the rule thought was irrelevant.
+        llm_overridden = (
+            llm.label == ApplicabilityLabel.OVERRIDDEN
+            and llm.confidence >= LLM_OVERRIDE_CONFIDENCE
+        )
+        if llm_overridden:
+            return _pick(llm, label=ApplicabilityLabel.OVERRIDDEN)
+        return _pick(rule)
+
+    # 3. Specific rule UNCERTAIN wins (fence against false LLM override/irrelevant).
+    # This prevents "cheapest" from being dropped when user asks for "on time".
+    if rule.matched and rule.label == ApplicabilityLabel.UNCERTAIN:
+        return _pick(rule)
+
+    # 4. LLM overridden (high-conf) wins over matched APPLY or unmatched rule.
+    # We trust LLM to catch paraphrase overrides that rule-base missed for hard constraints.
+    llm_overridden = (
+        llm.label == ApplicabilityLabel.OVERRIDDEN
+        and llm.confidence >= LLM_OVERRIDE_CONFIDENCE
+    )
+    if llm_overridden:
+        return _pick(llm, label=ApplicabilityLabel.OVERRIDDEN)
+
+    # 5. Specific rule APPLY wins (contract tool-field mapping).
+    if rule.matched and rule.label == ApplicabilityLabel.APPLY:
+        return _pick(rule)
+
+    # 6. Rule unmatched (default): do not trust lone LLM apply as hard constraint.
+    if llm.label == ApplicabilityLabel.APPLY:
+        return _pick(
+            llm,
+            label=ApplicabilityLabel.UNCERTAIN,
+            reason=(
+                f"reconciled: demoted llm apply to uncertain "
+                f"(llm: {llm.reason}; rule: {rule.reason})"
+            ),
+        )
+
+    # 7. Trust high-conf LLM irrelevant for long-tail.
+    if (
+        llm.label == ApplicabilityLabel.IRRELEVANT
+        and llm.confidence >= LLM_OVERRIDE_CONFIDENCE
+    ):
+        return _pick(llm)
+
+    # 8. Otherwise trust LLM or fallback to low-conf uncertain.
+    if llm.label in {
+        ApplicabilityLabel.IRRELEVANT,
+        ApplicabilityLabel.OVERRIDDEN,
+    }:
+        return _pick(
+            llm,
+            label=ApplicabilityLabel.UNCERTAIN,
+            reason=(
+                f"reconciled: low-conf llm {llm.label} → uncertain "
+                f"(llm: {llm.reason}; rule: {rule.reason})"
+            ),
+        )
+
+    return _pick(llm)
 
 
 def build_applicability_judge(

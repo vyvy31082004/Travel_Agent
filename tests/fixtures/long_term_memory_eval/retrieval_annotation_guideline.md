@@ -39,7 +39,23 @@ Memory trong pool nhưng `irrelevant`/`overridden` là **pass** cho SQL — lỗ
 
 `final_context` = memory có nhãn `apply` hoặc `uncertain` sau judge.
 
-`context_recall` / `context_precision` chỉ tính trên nhãn `apply`.
+Metric chất lượng:
+
+- `context_recall` = `apply` trong final / toàn bộ gold `apply`
+- `allowed_context_precision` = (`apply` + `uncertain`) trong final / toàn bộ final
+- `uncertain_recall` = `uncertain` trong final / toàn bộ gold `uncertain`
+- `irrelevant_leakage_rate` = `irrelevant` trong final / toàn bộ gold `irrelevant`
+- `overridden_leakage_rate` = `overridden` trong final / toàn bộ gold `overridden`
+- `context_case_pass_rate`: case pass khi không thiếu gold `apply` và không có
+  gold `irrelevant`/`overridden` trong final; `uncertain` là optional
+
+Metric composition (chỉ để chẩn đoán, không dùng làm KPI chất lượng):
+
+- `context_precision` = tỷ trọng gold `apply` trong final
+- `uncertain_context_rate` = tỷ trọng gold `uncertain` trong final
+
+Hai tỷ trọng trên phản ánh final context gồm hard hay soft preference nhiều hơn;
+`uncertain` không phải lỗi precision.
 
 ## 6. Presented constraints
 

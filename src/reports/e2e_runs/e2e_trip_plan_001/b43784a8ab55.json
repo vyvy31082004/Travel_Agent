@@ -1,0 +1,2612 @@
+{
+  "metadata": {
+    "case_id": "e2e_trip_plan_001",
+    "run_id": "b43784a8ab55",
+    "started_at": "2026-09-06T17:53:19.079375+00:00",
+    "finished_at": "2026-09-06T17:55:05.188944+00:00",
+    "user_id": "e2e-e2e_trip_plan_001:user_a",
+    "thread_id": "e2e-e2e_trip_plan_001-b43784a8ab55",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v2",
+    "git_commit": "e23fbaeebfc968930575b72dea73f6511f5519b0",
+    "fixture_to_uuid": {
+      "m_flight_economy": "33a6ff4b-3737-580b-ba27-dffc4221eb05",
+      "m_flight_morning": "4d8d2c44-b6f7-5ce1-9d0a-54a8b9bde6ae",
+      "m_flight_other_user": "830874d2-ed9f-53bf-a8be-c0b0e2c3d5d2",
+      "m_flight_superseded": "d3c588ea-5e2b-5cb7-a605-27eb52def1ad",
+      "m_hotel_quiet": "0b9f2680-b448-5468-805d-56ed7da284df",
+      "m_hotel_budget": "619ee223-00d5-5e73-a5a6-1fcf3702ef8f",
+      "m_hotel_other_user": "983b980a-7593-51ec-bab5-7e7a19092500",
+      "m_hotel_superseded": "629dce10-e770-5ad6-b65b-94b0a01fabd4",
+      "m_car_automatic": "92cb7e94-fbb1-5c59-9106-b1da43eab25b",
+      "m_car_5seats": "e3d8f92c-596c-558f-8411-de82c83609e8",
+      "m_car_other_user": "d318d608-9c69-5863-9635-8b7978247f3c",
+      "m_car_superseded": "a752d4bb-39a6-5c5e-ba36-5a387c253e19",
+      "m_excursion_outdoor": "c4817c9e-d84f-58e1-942c-a9dc32041fa7",
+      "m_excursion_small_group": "c19696de-4c99-58aa-bbdc-d997fd72eabe",
+      "m_excursion_other_user": "0240c245-8e0d-5d81-affa-85ed1cc0611d",
+      "m_excursion_superseded": "8eec18d3-82d6-558d-b40f-986b93494de5"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Lên kế hoạch 3 ngày 2 đêm Đà Nẵng từ TP.HCM: bay đi SGN→DAD ngày 10/10/2026, bay về DAD→SGN ngày 12/10/2026, check-in 10/10/2026, check-out 12/10/2026, 2 người lớn, ưu tiên yên tĩnh."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-07"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Lên kế hoạch 3 ngày 2 đêm Đà Nẵng từ TP.HCM: bay đi SGN→DAD ngày 10/10/2026, bay về DAD→SGN ngày 12/10/2026, check-in 10/10/2026, check-out 12/10/2026, 2 người lớn, ưu tiên yên tĩnh.",
+      "answer": "Dưới đây là kế hoạch chi tiết cho chuyến đi **Đà Nẵng 3 ngày 2 đêm (10/10/2026 – 12/10/2026)** dành cho **2 người lớn**, được tối ưu theo tiêu chí **ưu tiên không gian yên tĩnh và thoải mái**:\n\n---\n\n### ✈️ 1. Chuyến bay khứ hồi (SGN ⇄ DAD)\n\n* **Lựa chọn 1: Offer_ID `FL-DBA1B5`** *(Tối ưu giờ bay buổi sáng)*\n  * **Hãng:** Vietjet Air (Bay thẳng, Hạng phổ thông)\n  * **Tổng giá khứ hồi (2 người):** 3.073.684 VND\n  * **Chiều đi (10/10/2026):** VJ 628 | 07:05 (SGN) ➔ 08:25 (DAD)\n  * **Chiều về (12/10/2026):** VJ 625 | 07:10 (DAD) ➔ 08:30 (SGN)\n\n* **Lựa chọn 2: Offer_ID `FL-1175F1`** *(Tối ưu thời gian vui chơi ngày cuối)*\n  * **Hãng:** Vietjet Air (Bay thẳng, Hạng phổ thông)\n  * **Tổng giá khứ hồi (2 người):** 3.579.124 VND\n  * **Chiều đi (10/10/2026):** VJ 628 | 07:05 (SGN) ➔ 08:25 (DAD)\n  * **Chiều về (12/10/2026):** VJ 643 | 20:35 (DAD) ➔ 22:00 (SGN)\n\n---\n\n### 🏨 2. Khách sạn & Chỗ nghỉ (Check-in 10/10 – Check-out 12/10)\n\n1. **Coastal Nest - Steps to Sand** (ID: `15180703`)\n   * **Đánh giá:** 9.5 / 10 (Xuất sắc - 71 đánh giá)\n   * **Đặc điểm:** Giáp biển, cách trung tâm 2,8 km, 1 phòng riêng (2 giường).\n   * **Mức giá:** ~2.000.000 VND / 2 đêm (Hủy miễn phí, không cần thanh toán trước).\n   * ![Coastal Nest - Steps to Sand](https://cf.bstatic.com/xdata/images/hotel/square500/769680338.jpg?k=139ec568332886261be8d07d2ddae57690b2f4a3ed99d8bddcbc9f9ddd345b2f&o=)\n\n2. **Elites Hotel** (ID: `12183430`)\n   * **Đánh giá:** 8.2 / 10 (Rất tốt - 1.668 đánh giá) | Khách sạn 4 sao\n   * **Đặc điểm:** Giáp biển, cách trung tâm 2,6 km, 1 phòng khách sạn (1 giường).\n   * **Mức giá:** ~2.000.000 VND / 2 đêm (Đã giảm từ 4.000.000 VND, Hủy miễn phí).\n   * ![Elites Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/580194737.jpg?k=276dd7c149e86b4170e06bd0d35ce4f2514944b11acd8f43dd80ad3a96031690&o=)\n\n3. **Dragon Sea Hotel** (ID: `1071090`)\n   * **Đánh giá:** 7.0 / 10 (Tốt - 157 đánh giá) | Khách sạn 3 sao\n   * **Đặc điểm:** Cách biển 200m, cách trung tâm 2,7 km, 1 phòng khách sạn (2 giường).\n   * **Mức giá:** ~2.000.000 VND / 2 đêm (Đã giảm từ 8.000.000 VND).\n   * ![Dragon Sea Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/745735497.jpg?k=f62d4c25f609cc54d1c584d0093b80ae26a99bee1e2144d572492fae6cdbdd15&o=)\n\n---\n\n### 🎡 3. Gợi ý Lịch trình & Hoạt động tham quan\n\n*Lưu ý: Bạn nên chọn các tour nhóm nhỏ hoặc khung giờ linh hoạt để tận hưởng không gian yên tĩnh, tránh giờ cao điểm đông đúc.*\n\n1. **Vé Sun World Ba Na Hills** (ID: `PR9oF7hAhjy9`)\n   * Khám phá cáp treo, Cầu Vàng và làng Pháp.\n   * **Giá:** 940.444 VND / người\n   * ![Vé Sun World Ba Na Hills](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=)\n\n2. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times** (ID: `PRbeRPTXGXPd`)\n   * Tour nhóm nhỏ với giờ khởi hành linh hoạt, có xe đưa đón tận nơi.\n   * **Giá:** 1.284.755 VND / người\n   * ![Ba Na Hills Tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\n\n3. **Du thuyền đêm trên sông Hàn** (ID: `PRa7fah7ikJw`)\n   * Ngắm cảnh thành phố và các cây cầu lung linh về đêm.\n   * **Giá:** 104.860 VND / người\n   * ![Du thuyền đêm sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\n\n4. **Hoi An Basket Boat Ride in Water Coconut Forest** (ID: `PRNgBhNmHUwd`)\n   * Trải nghiệm đi thuyền thúng hòa mình vào thiên nhiên tại rừng dừa Cẩm Thanh.\n   * **Giá:** 315.600 VND / người\n   * ![Hoi An Basket Boat](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\n\n5. **Hoi An Cooking Class (Local Market, Basket Boat, Fishing & Cooking)** (ID: `PRVwSAVvgpO5`)\n   * Trải nghiệm đi chợ địa phương, chèo thuyền thúng, câu cua và học nấu ăn.\n   * **Giá:** 762.700 VND / người\n   * ![Hoi An Cooking Class](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=)\n\n6. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour** (ID: `PRFhLYK7act7`)\n   * Tour nhóm nhỏ tham quan Ngũ Hành Sơn, Động Âm Phủ và ngắm hoàng hôn Bán đảo Sơn Trà.\n   * **Giá:** 578.600 VND / người\n   * ![Marble Mountains Tour](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\n\n7. **Tour Bà Nà Hills trọn ngày với bữa trưa buffet** (ID: `PRdCygydpY9o`)\n   * Tour trọn gói Bà Nà Hills, Cầu Vàng, Fantasy Park bao gồm ăn trưa buffet.\n   * **Giá:** 1.709.500 VND / người\n   * ![Tour Bà Nà Hills trọn ngày](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=)\n\n8. **Hoi An Memories Show & Hoi An Impression Theme Park Ticket** (ID: `PRWX9rush6bp`)\n   * Thưởng thức show thực cảnh Ký ức Hội An và công viên văn hóa.\n   * **Giá:** 631.200 VND / người\n   * ![Hoi An Memories Show](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=)\n\n9. **Lớp hướng dẫn làm lồng đèn** (ID: `PRPC0NRRR1QM`)\n   * Trải nghiệm làm đèn lồng thủ công trong không gian yên tĩnh, mang dấu ấn cá nhân.\n   * **Giá:** 257.656 VND / người\n   * ![Lớp làm lồng đèn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=)\n\n10. **Hoai River Boat Trip by Night with Release Lantern** (ID: `PRfykNA7eqX0`)\n    * Đi thuyền trên sông Hoài đêm và thả hoa đăng ước nguyện.\n    * **Giá:** 236.700 VND / người\n    * ![Hoai River Boat Trip](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\n\n---\n\n### 🚗 4. Phụ kiện & Thuê xe tự lái (10/10 – 12/10)\n\nTất cả các xe đều là xe số tự động 7 chỗ, phù hợp cho trải nghiệm di chuyển riêng tư và thoải mái:\n\n1. **MITSUBISHI XPANDER 2021** (ID: `KJHL8A?carSearchIndex=5`)\n   * **Giá:** 807.000 VND/ngày | 5.0 ⭐ (100+ chuyến)\n   * **Địa điểm:** Hòa Cường Bắc, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/mitsubishi-xpander-2021/KJHL8A?carSearchIndex=5)\n\n2. **TOYOTA VELOZ CROSS 2022** (ID: `KI16T7?carSearchIndex=9`)\n   * **Giá:** 948.000 VND/ngày | 5.0 ⭐ (20 chuyến)\n   * **Địa điểm:** Xuân Hà, Thanh Khê | Miễn thế chấp.\n   * [Xem thông tin xe](https://www.mioto.vn/car/toyota-veloz-cross-2022/KI16T7?carSearchIndex=9)\n\n3. **MITSUBISHI XPANDER 2024** (ID: `KLSN1M?carSearchIndex=6`)\n   * **Giá:** 992.000 VND/ngày | 5.0 ⭐ (27 chuyến)\n   * **Địa điểm:** Hòa Thuận Tây, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/mitsubishi-xpander-2024/KLSN1M?carSearchIndex=6)\n\n4. **MITSUBISHI XPANDER 2023** (ID: `KGASGK?carSearchIndex=7`)\n   * **Giá:** 1.061.000 VND/ngày | 5.0 ⭐ (49 chuyến)\n   * **Địa điểm:** Thạch Thang, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/mitsubishi-xpander-2023/KGASGK?carSearchIndex=7)\n\n5. **MITSUBISHI OUTLANDER Premium 2019** (ID: `KEQ7PS?carSearchIndex=3`)\n   * **Giá:** 1.108.000 VND/ngày | 5.0 ⭐\n   * **Địa điểm:** Hòa Cường Bắc, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=3)\n\n6. **VINFAST LIMO GREEN 2026 (Xe điện)** (ID: `KKXHM8?carSearchIndex=8`)\n   * **Giá:** 1.255.000 VND/ngày | 5.0 ⭐\n   * **Địa điểm:** Thanh Bình, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/vinfast-limo-green-2026/KKXHM8?carSearchIndex=8)\n\n7. **VINFAST LIMO GREEN 2026 (Xe điện)** (ID: `KHUNR7?carSearchIndex=10`)\n   * **Giá:** 1.263.000 VND/ngày | 5.0 ⭐\n   * **Địa điểm:** Phước Ninh, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/vinfast-limo-green-2026/KHUNR7?carSearchIndex=10)\n\n8. **VINFAST LIMO GREEN 2026 (Xe điện)** (ID: `KLDAEP?carSearchIndex=4`)\n   * **Giá:** 1.405.000 VND/ngày | 5.0 ⭐\n   * **Địa điểm:** Hòa Thuận Đông, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=4)\n\n---\n\nNếu bạn muốn chốt lựa chọn nào hoặc cần thêm chi tiết nào về từng dịch vụ, vui lòng báo để mình hỗ trợ ngay nhé!",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "hotel_assistant",
+        "excursion_assistant",
+        "flight_assistant",
+        "car_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 7
+    }
+  ],
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "car",
+      "excursion",
+      "flight",
+      "hotel"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToFlightAssistant",
+        "args": {
+          "request": "Tìm vé máy bay khứ hồi SGN - DAD đi ngày 10/10/2026, về ngày 12/10/2026 cho 2 người lớn"
+        },
+        "timestamp": "2026-09-06T17:55:05.188944+00:00"
+      },
+      {
+        "name": "ToHotelAssistant",
+        "args": {
+          "request": "Tìm khách sạn tại Đà Nẵng, check-in 10/10/2026, check-out 12/10/2026, 2 người lớn",
+          "turn_constraints": [
+            "ưu tiên yên tĩnh"
+          ]
+        },
+        "timestamp": "2026-09-06T17:55:05.188944+00:00"
+      },
+      {
+        "name": "ToExcursionAssistant",
+        "args": {
+          "request": "Gợi ý tour và hoạt động du lịch tại Đà Nẵng 3 ngày 2 đêm từ 10/10/2026 đến 12/10/2026 cho 2 người lớn",
+          "turn_constraints": [
+            "ưu tiên yên tĩnh"
+          ]
+        },
+        "timestamp": "2026-09-06T17:55:05.188944+00:00"
+      },
+      {
+        "name": "ToCarAssistant",
+        "args": {
+          "request": "Tìm dịch vụ thuê xe tự lái hoặc có tài xế tại Đà Nẵng từ 10/10/2026 đến 12/10/2026"
+        },
+        "timestamp": "2026-09-06T17:55:05.188944+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "flight_assistant",
+      "hotel_assistant",
+      "excursion_assistant",
+      "car_assistant",
+      "memory_recall_excursion",
+      "memory_recall_hotel",
+      "excursion_chat",
+      "search_attractions_tool",
+      "memory_recall_flight",
+      "memory_recall_car",
+      "hotel_chat",
+      "search_hotels_tool",
+      "flight_chat",
+      "search_round_trip_flights_tool",
+      "car_chat",
+      "search_cars_tool",
+      "hotel_chat",
+      "excursion_chat",
+      "flight_chat",
+      "car_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "flight": {
+      "candidate_pool_ids": [
+        "m_flight_morning",
+        "m_flight_economy"
+      ],
+      "applicability": {
+        "m_flight_morning": "uncertain",
+        "m_flight_economy": "apply"
+      },
+      "applicability_reasons": {
+        "m_flight_morning": "reconciled: Buổi sáng là sở thích thời gian bay, không có trường tham số lọc cứng tương ứng trong công cụ tìm kiếm chuyến bay nên không thể dùng làm tool argument trực tiếp. (llm: Buổi sáng là sở thích thời gian bay, không có trường tham số lọc cứng tương ứng trong công cụ tìm kiếm chuyến bay nên không thể dùng làm tool argument trực tiếp.; rule: default uncertain (no specific tool-field rule matched))",
+        "m_flight_economy": "reconciled: cabin class preference applies to flight search (llm: Chuyến đi là đi du lịch Đà Nẵng, phù hợp điều kiện và sở thích hạng phổ thông (economy) tương ứng trực tiếp với tham số cabin_class của API tìm kiếm chuyến bay khứ hồi.; rule: cabin class preference applies to flight search)"
+      },
+      "final_context_ids": [
+        "m_flight_morning",
+        "m_flight_economy"
+      ],
+      "applied_constraints": [
+        "[33a6ff4b-3737-580b-ba27-dffc4221eb05] Thường bay hạng phổ thông (economy) khi đi du lịch",
+        "(soft) [4d8d2c44-b6f7-5ce1-9d0a-54a8b9bde6ae] Ưu tiên bay buổi sáng"
+      ]
+    },
+    "hotel": {
+      "candidate_pool_ids": [
+        "m_hotel_budget",
+        "m_hotel_quiet"
+      ],
+      "applicability": {
+        "m_hotel_budget": "uncertain",
+        "m_hotel_quiet": "uncertain"
+      },
+      "applicability_reasons": {
+        "m_hotel_budget": "reconciled: demoted llm apply to uncertain (llm: Hotel budget preference (2–3 triệu/đêm) is not contradicted by the query and can be applied as price constraints for hotel search.; rule: default uncertain (no specific tool-field rule matched))",
+        "m_hotel_quiet": "reconciled: Quietness preference ('yên tĩnh') is relevant to hotel selection but does not map to a concrete search tool parameter. (llm: Quietness preference ('yên tĩnh') is relevant to hotel selection but does not map to a concrete search tool parameter.; rule: default uncertain (no specific tool-field rule matched))"
+      },
+      "final_context_ids": [
+        "m_hotel_budget",
+        "m_hotel_quiet"
+      ],
+      "applied_constraints": [
+        "ưu tiên yên tĩnh",
+        "(soft) [619ee223-00d5-5e73-a5a6-1fcf3702ef8f] Ngân sách hotel thường 2–3 triệu/đêm",
+        "(soft) [0b9f2680-b448-5468-805d-56ed7da284df] Thích khách sạn yên tĩnh"
+      ]
+    },
+    "excursion": {
+      "candidate_pool_ids": [
+        "m_excursion_small_group",
+        "m_excursion_outdoor"
+      ],
+      "applicability": {
+        "m_excursion_small_group": "uncertain",
+        "m_excursion_outdoor": "uncertain"
+      },
+      "applicability_reasons": {
+        "m_excursion_small_group": "reconciled: Private/small group tour preference is relevant for excursion recommendations/ranking, but there is no direct search filter parameter for group size. (llm: Private/small group tour preference is relevant for excursion recommendations/ranking, but there is no direct search filter parameter for group size.; rule: default uncertain (no specific tool-field rule matched))",
+        "m_excursion_outdoor": "reconciled: Preference for outdoor activities is relevant for suggesting attractions in Da Nang, but cannot be passed directly as a search filter parameter. (llm: Preference for outdoor activities is relevant for suggesting attractions in Da Nang, but cannot be passed directly as a search filter parameter.; rule: default uncertain (no specific tool-field rule matched))"
+      },
+      "final_context_ids": [
+        "m_excursion_small_group",
+        "m_excursion_outdoor"
+      ],
+      "applied_constraints": [
+        "ưu tiên yên tĩnh",
+        "(soft) [c19696de-4c99-58aa-bbdc-d997fd72eabe] Ưu tiên tour riêng hoặc nhóm nhỏ",
+        "(soft) [c4817c9e-d84f-58e1-942c-a9dc32041fa7] Thích hoạt động ngoài trời khi đi chơi"
+      ]
+    },
+    "car": {
+      "candidate_pool_ids": [
+        "m_car_5seats",
+        "m_car_automatic"
+      ],
+      "applicability": {
+        "m_car_5seats": "uncertain",
+        "m_car_automatic": "uncertain"
+      },
+      "applicability_reasons": {
+        "m_car_5seats": "reconciled: Car seat capacity preference cannot be directly filtered via a dedicated tool argument in car search/booking, so it is classified as uncertain. (llm: Car seat capacity preference cannot be directly filtered via a dedicated tool argument in car search/booking, so it is classified as uncertain.; rule: default uncertain (no specific tool-field rule matched))",
+        "m_car_automatic": "reconciled: demoted llm apply to uncertain (llm: Preference for automatic transmission directly maps to the transmission filter field for car preferences and is not contradicted by the query.; rule: default uncertain (no specific tool-field rule matched))"
+      },
+      "final_context_ids": [
+        "m_car_5seats",
+        "m_car_automatic"
+      ],
+      "applied_constraints": [
+        "(soft) [e3d8f92c-596c-558f-8411-de82c83609e8] Cần xe tối thiểu 5 chỗ",
+        "(soft) [92cb7e94-fbb1-5c59-9106-b1da43eab25b] Thích xe số tự động"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "adults": 2,
+        "origin": "SGN",
+        "cabin_class": "economy",
+        "destination": "DAD",
+        "return_date": "2026-10-12",
+        "departure_date": "2026-10-10"
+      },
+      "timestamp": "2026-09-06T17:55:05.188944+00:00",
+      "raw_result": {
+        "search_id": "8b6b4d10-9ddb-409d-ab69-823720effe23",
+        "domain": "flight",
+        "displayed_item_ids": [
+          "FL-DBA1B5",
+          "FL-1175F1"
+        ],
+        "labels": [],
+        "total_results": 2
+      },
+      "normalized_result": {
+        "search_id": "8b6b4d10-9ddb-409d-ab69-823720effe23",
+        "request_id": "req_flight_15bf409e",
+        "domain": "flight",
+        "total_results": 2,
+        "items": [
+          {
+            "price": 3073684.0,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": {
+              "price": 3073684,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "08:30",
+                  "flight_number": "VJ 625",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "07:10",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 08:30 AM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 07:10 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "item_id": "FL-DBA1B5",
+            "warning": null,
+            "Offer_ID": "FL-DBA1B5",
+            "currency": "VND",
+            "offer_id": "FL-DBA1B5",
+            "outbound": {
+              "price": 3073684,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-10",
+                  "arrival_time": "08:25",
+                  "flight_number": "VJ 628",
+                  "departure_date": "2026-10-10",
+                  "departure_time": "07:05",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "DAD",
+                  "arrival_airport_name": "Danang International Airport",
+                  "departure_airport_code": "SGN",
+                  "departure_airport_name": "Tan Son Nhat International Airport"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-10",
+              "arrival_time": "10-10-2026 08:25 AM",
+              "departure_date": "2026-10-10",
+              "departure_time": "10-10-2026 07:05 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "DAD",
+              "departure_airport_code": "SGN"
+            },
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:25",
+                "flight_number": "VJ 628",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:05",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 3073684.0,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:25 AM",
+            "detail_token": "W1sxLDEsWyIyIiwiMCIsIjAiLCIwIl0sWyJDalJJVkcxRlNVazJibXh2ZFdOQldFUTVhRkZDUnkwdExTMHRMUzB0TFMxelpXSjNOMEZCUVVGQlIzRmtjVXQzVHpCME9VOUJFZ1ZXU2pZeU5Sb01DSlROdXdFUUFCb0RWazVFT0J4d2sxdz0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2MjgiXV1dLFsiMjAyNi0xMC0xMiIsIkRBRCIsIlNHTiIsW1siREFEIiwiMjAyNi0xMC0xMiIsIlNHTiIsIlZKIiwiNjI1Il1dXV0=",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": {
+              "price": 3073684,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "08:30",
+                  "flight_number": "VJ 625",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "07:10",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 08:30 AM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 07:10 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": true,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "price": 3579124.0,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": {
+              "price": 3579124,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "22:00",
+                  "flight_number": "VJ 643",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "20:35",
+                  "duration_minutes": 85,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 10:00 PM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 08:35 PM",
+              "duration_minutes": 85,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "item_id": "FL-1175F1",
+            "warning": null,
+            "Offer_ID": "FL-1175F1",
+            "currency": "VND",
+            "offer_id": "FL-1175F1",
+            "outbound": {
+              "price": 3073684,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-10",
+                  "arrival_time": "08:25",
+                  "flight_number": "VJ 628",
+                  "departure_date": "2026-10-10",
+                  "departure_time": "07:05",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "DAD",
+                  "arrival_airport_name": "Danang International Airport",
+                  "departure_airport_code": "SGN",
+                  "departure_airport_name": "Tan Son Nhat International Airport"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-10",
+              "arrival_time": "10-10-2026 08:25 AM",
+              "departure_date": "2026-10-10",
+              "departure_time": "10-10-2026 07:05 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "DAD",
+              "departure_airport_code": "SGN"
+            },
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:25",
+                "flight_number": "VJ 628",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:05",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 3579124.0,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:25 AM",
+            "detail_token": "W1sxLDEsWyIyIiwiMCIsIjAiLCIwIl0sWyJDalJJVkcxRlNVazJibXh2ZFdOQldFUTVhRkZDUnkwdExTMHRMUzB0TFMxelpXSjNOMEZCUVVGQlIzRmtjVXQzVHpCME9VOUJFZ1ZXU2pZME14b01DUFM1MmdFUUFCb0RWazVFT0J4d3Btcz0iXV0sWyIyMDI2LTEwLTEwIiwiU0dOIiwiREFEIixbWyJTR04iLCIyMDI2LTEwLTEwIiwiREFEIiwiVkoiLCI2MjgiXV1dLFsiMjAyNi0xMC0xMiIsIkRBRCIsIlNHTiIsW1siREFEIiwiMjAyNi0xMC0xMiIsIlNHTiIsIlZKIiwiNjQzIl1dXV0=",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": {
+              "price": 3579124,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "22:00",
+                  "flight_number": "VJ 643",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "20:35",
+                  "duration_minutes": 85,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 10:00 PM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 08:35 PM",
+              "duration_minutes": 85,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": true,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "FL-DBA1B5",
+          "FL-1175F1"
+        ],
+        "items": [
+          {
+            "price": 3073684.0,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": {
+              "price": 3073684,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "08:30",
+                  "flight_number": "VJ 625",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "07:10",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 08:30 AM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 07:10 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "item_id": "FL-DBA1B5",
+            "warning": null,
+            "Offer_ID": "FL-DBA1B5",
+            "currency": "VND",
+            "offer_id": "FL-DBA1B5",
+            "outbound": {
+              "price": 3073684,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-10",
+                  "arrival_time": "08:25",
+                  "flight_number": "VJ 628",
+                  "departure_date": "2026-10-10",
+                  "departure_time": "07:05",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "DAD",
+                  "arrival_airport_name": "Danang International Airport",
+                  "departure_airport_code": "SGN",
+                  "departure_airport_name": "Tan Son Nhat International Airport"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-10",
+              "arrival_time": "10-10-2026 08:25 AM",
+              "departure_date": "2026-10-10",
+              "departure_time": "10-10-2026 07:05 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "DAD",
+              "departure_airport_code": "SGN"
+            },
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:25",
+                "flight_number": "VJ 628",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:05",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 3073684.0,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:25 AM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": {
+              "price": 3073684,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "08:30",
+                  "flight_number": "VJ 625",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "07:10",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 08:30 AM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 07:10 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": true,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "price": 3579124.0,
+            "stops": 0,
+            "airline": "Vietjet",
+            "baggage": null,
+            "inbound": {
+              "price": 3579124,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "22:00",
+                  "flight_number": "VJ 643",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "20:35",
+                  "duration_minutes": 85,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 10:00 PM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 08:35 PM",
+              "duration_minutes": 85,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "item_id": "FL-1175F1",
+            "warning": null,
+            "Offer_ID": "FL-1175F1",
+            "currency": "VND",
+            "offer_id": "FL-1175F1",
+            "outbound": {
+              "price": 3073684,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-10",
+                  "arrival_time": "08:25",
+                  "flight_number": "VJ 628",
+                  "departure_date": "2026-10-10",
+                  "departure_time": "07:05",
+                  "duration_minutes": 80,
+                  "arrival_airport_code": "DAD",
+                  "arrival_airport_name": "Danang International Airport",
+                  "departure_airport_code": "SGN",
+                  "departure_airport_name": "Tan Son Nhat International Airport"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-10",
+              "arrival_time": "10-10-2026 08:25 AM",
+              "departure_date": "2026-10-10",
+              "departure_time": "10-10-2026 07:05 AM",
+              "duration_minutes": 80,
+              "arrival_airport_code": "DAD",
+              "departure_airport_code": "SGN"
+            },
+            "segments": [
+              {
+                "flight_ID": null,
+                "seat_width": "71 cm",
+                "cabin_class": "Below average legroom",
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-10-10",
+                "arrival_time": "08:25",
+                "flight_number": "VJ 628",
+                "departure_date": "2026-10-10",
+                "departure_time": "07:05",
+                "duration_minutes": 80,
+                "arrival_airport_code": "DAD",
+                "arrival_airport_name": "Danang International Airport",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Tan Son Nhat International Airport"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 3579124.0,
+            "airline_code": "VJ",
+            "airline_name": "Vietjet",
+            "arrival_date": "2026-10-10",
+            "arrival_time": "10-10-2026 08:25 AM",
+            "flight_number": null,
+            "departure_date": "2026-10-10",
+            "departure_time": "10-10-2026 07:05 AM",
+            "arrival_airport": "DAD",
+            "inbound_options": {
+              "price": 3579124,
+              "stops": 0,
+              "segments": [
+                {
+                  "flight_ID": null,
+                  "seat_width": "71 cm",
+                  "cabin_class": "Below average legroom",
+                  "aircraftName": "Airbus A321",
+                  "airline_code": "VJ",
+                  "airline_name": "Vietjet",
+                  "arrival_date": "2026-10-12",
+                  "arrival_time": "22:00",
+                  "flight_number": "VJ 643",
+                  "departure_date": "2026-10-12",
+                  "departure_time": "20:35",
+                  "duration_minutes": 85,
+                  "arrival_airport_code": "SGN",
+                  "arrival_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất",
+                  "departure_airport_code": "DAD",
+                  "departure_airport_name": "Cảng hàng không quốc tế Đà Nẵng"
+                }
+              ],
+              "airline_code": "VJ",
+              "airline_name": "Vietjet",
+              "arrival_date": "2026-10-12",
+              "arrival_time": "12-10-2026 10:00 PM",
+              "departure_date": "2026-10-12",
+              "departure_time": "12-10-2026 08:35 PM",
+              "duration_minutes": 85,
+              "arrival_airport_code": "SGN",
+              "departure_airport_code": "DAD"
+            },
+            "duration_minutes": 80,
+            "departure_airport": "SGN",
+            "complete_roundtrip": true,
+            "arrival_airport_code": "DAD",
+            "departure_airport_code": "SGN",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "adults": 2,
+        "location": "Đà Nẵng",
+        "price_max": 2000000,
+        "price_min": 2000000,
+        "checkin_date": "2026-10-10",
+        "checkout_date": "2026-10-12",
+        "destination": "Đà Nẵng",
+        "check_in": "2026-10-10",
+        "check_out": "2026-10-12"
+      },
+      "timestamp": "2026-09-06T17:55:05.188944+00:00",
+      "raw_result": {
+        "search_id": "ce55d563-a2f5-4592-83ca-a174aa51c369",
+        "domain": "hotel",
+        "displayed_item_ids": [
+          "15180703",
+          "12183430",
+          "1071090"
+        ],
+        "labels": [],
+        "total_results": 3
+      },
+      "normalized_result": {
+        "search_id": "ce55d563-a2f5-4592-83ca-a174aa51c369",
+        "request_id": "req_hotel_00c9bb55",
+        "domain": "hotel",
+        "total_results": 3,
+        "items": [
+          {
+            "name": "Coastal Nest - Steps to Sand",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/769680338.jpg?k=139ec568332886261be8d07d2ddae57690b2f4a3ed99d8bddcbc9f9ddd345b2f&o=",
+            "price": 1000000,
+            "rating": 9.5,
+            "address": null,
+            "item_id": "15180703",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "15180703",
+            "accessibilityLabel": [
+              "Coastal Nest - Steps to Sand",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "9,5 Xuất sắc 71 đánh giá",
+              "2,8km từ trung tâm",
+              "Giáp biển",
+              "1 phòng riêng : 2 giường",
+              "2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 1 căn với giá này trên Booking.com"
+            ],
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Elites Hotel",
+            "star": 4,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/580194737.jpg?k=276dd7c149e86b4170e06bd0d35ce4f2514944b11acd8f43dd80ad3a96031690&o=",
+            "price": 1000000,
+            "rating": 8.2,
+            "address": null,
+            "item_id": "12183430",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "12183430",
+            "accessibilityLabel": [
+              "Elites Hotel",
+              "4 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "8,2 Rất tốt 1668 đánh giá",
+              "2,6km từ trung tâm",
+              "Giáp biển",
+              "Ưu Đãi Cuối Năm",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 4000000 VND",
+              "Giá hiện tại là 2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 7 căn với giá này trên Booking.com"
+            ],
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Dragon Sea Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/745735497.jpg?k=f62d4c25f609cc54d1c584d0093b80ae26a99bee1e2144d572492fae6cdbdd15&o=",
+            "price": 1000000,
+            "rating": 7,
+            "address": null,
+            "item_id": "1071090",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "1071090",
+            "accessibilityLabel": [
+              "Dragon Sea Hotel",
+              "3 trên 5 sao",
+              "7,0 Tốt 157 đánh giá",
+              "2,7km từ trung tâm",
+              "Cách biển 200m",
+              "1 phòng khách sạn : 2 giường",
+              "Giá gốc là 8000000 VND",
+              "Giá hiện tại là 2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Chỉ còn 3 căn với giá này trên Booking.com"
+            ],
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 14,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "15180703",
+          "12183430",
+          "1071090"
+        ],
+        "items": [
+          {
+            "name": "Coastal Nest - Steps to Sand",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/769680338.jpg?k=139ec568332886261be8d07d2ddae57690b2f4a3ed99d8bddcbc9f9ddd345b2f&o=",
+            "price": 1000000,
+            "rating": 9.5,
+            "address": null,
+            "item_id": "15180703",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "15180703",
+            "accessibilityLabel": [
+              "Coastal Nest - Steps to Sand",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "9,5 Xuất sắc 71 đánh giá",
+              "2,8km từ trung tâm",
+              "Giáp biển",
+              "1 phòng riêng : 2 giường",
+              "2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 1 căn với giá này trên Booking.com"
+            ],
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Elites Hotel",
+            "star": 4,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/580194737.jpg?k=276dd7c149e86b4170e06bd0d35ce4f2514944b11acd8f43dd80ad3a96031690&o=",
+            "price": 1000000,
+            "rating": 8.2,
+            "address": null,
+            "item_id": "12183430",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "12183430",
+            "accessibilityLabel": [
+              "Elites Hotel",
+              "4 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "8,2 Rất tốt 1668 đánh giá",
+              "2,6km từ trung tâm",
+              "Giáp biển",
+              "Ưu Đãi Cuối Năm",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 4000000 VND",
+              "Giá hiện tại là 2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chỉ còn 7 căn với giá này trên Booking.com"
+            ],
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Dragon Sea Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/745735497.jpg?k=f62d4c25f609cc54d1c584d0093b80ae26a99bee1e2144d572492fae6cdbdd15&o=",
+            "price": 1000000,
+            "rating": 7,
+            "address": null,
+            "item_id": "1071090",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "1071090",
+            "accessibilityLabel": [
+              "Dragon Sea Hotel",
+              "3 trên 5 sao",
+              "7,0 Tốt 157 đánh giá",
+              "2,7km từ trung tâm",
+              "Cách biển 200m",
+              "1 phòng khách sạn : 2 giường",
+              "Giá gốc là 8000000 VND",
+              "Giá hiện tại là 2000000 VND",
+              "Đã bao gồm thuế và phí",
+              "Chỉ còn 3 căn với giá này trên Booking.com"
+            ],
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "tour",
+      "name": "search_attractions_tool",
+      "arguments": {
+        "location": "Đà Nẵng",
+        "destination": "Đà Nẵng"
+      },
+      "timestamp": "2026-09-06T17:55:05.188944+00:00",
+      "raw_result": {
+        "search_id": "2970bf8a-ef4b-4fdd-b6b9-f39254941261",
+        "domain": "excursion",
+        "displayed_item_ids": [
+          "PR9oF7hAhjy9",
+          "PRbeRPTXGXPd",
+          "PRa7fah7ikJw",
+          "PRNgBhNmHUwd",
+          "PRVwSAVvgpO5",
+          "PRFhLYK7act7",
+          "PRdCygydpY9o",
+          "PRWX9rush6bp",
+          "PRPC0NRRR1QM",
+          "PRfykNA7eqX0"
+        ],
+        "labels": [],
+        "total_results": 10
+      },
+      "normalized_result": {
+        "search_id": "2970bf8a-ef4b-4fdd-b6b9-f39254941261",
+        "request_id": "req_tour_c327abd6",
+        "domain": "excursion",
+        "total_results": 10,
+        "items": [
+          {
+            "name": "Vé Sun World Ba Na Hills",
+            "slug": "pr9of7hahjy9-sun-world-ba-na-hills-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=",
+            "price": 940444,
+            "rating": null,
+            "item_id": "PR9oF7hAhjy9",
+            "currency": "VND",
+            "description": "Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills",
+            "review_count": null,
+            "external_attraction_id": "PR9oF7hAhjy9",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 104860,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)",
+            "slug": "prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=",
+            "price": 762700,
+            "rating": null,
+            "item_id": "PRVwSAVvgpO5",
+            "currency": "VND",
+            "description": "Morning tour: 8:30am to 1:00pm Afternoon tour: 2:00pm to 6:30pm You will be pick up by car by loc...",
+            "review_count": null,
+            "external_attraction_id": "PRVwSAVvgpO5",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Tour Bà Nà Hills trọn ngày với bữa trưa buffet",
+            "slug": "prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=",
+            "price": 1709500,
+            "rating": null,
+            "item_id": "PRdCygydpY9o",
+            "currency": "VND",
+            "description": "Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa",
+            "review_count": null,
+            "external_attraction_id": "PRdCygydpY9o",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Memories Show & Hoi An Impression Theme Park Ticket",
+            "slug": "prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=",
+            "price": 631200,
+            "rating": null,
+            "item_id": "PRWX9rush6bp",
+            "currency": "VND",
+            "description": "Located on the Hoi An Memories Land, the Hoi An Memories show is one of the outdoor performances ...",
+            "review_count": null,
+            "external_attraction_id": "PRWX9rush6bp",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Lớp hướng dẫn làm lồng đèn",
+            "slug": "prpc0nrrr1qm-lantern-making-class",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=",
+            "price": 257656,
+            "rating": null,
+            "item_id": "PRPC0NRRR1QM",
+            "currency": "VND",
+            "description": "Workshop làm đèn lồng Việt Nam từ nhiều chất liệu",
+            "review_count": null,
+            "external_attraction_id": "PRPC0NRRR1QM",
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 10,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "PR9oF7hAhjy9",
+          "PRbeRPTXGXPd",
+          "PRa7fah7ikJw",
+          "PRNgBhNmHUwd",
+          "PRVwSAVvgpO5",
+          "PRFhLYK7act7",
+          "PRdCygydpY9o",
+          "PRWX9rush6bp",
+          "PRPC0NRRR1QM",
+          "PRfykNA7eqX0"
+        ],
+        "items": [
+          {
+            "name": "Vé Sun World Ba Na Hills",
+            "slug": "pr9of7hahjy9-sun-world-ba-na-hills-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=",
+            "price": 940444,
+            "rating": null,
+            "item_id": "PR9oF7hAhjy9",
+            "currency": "VND",
+            "description": "Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills",
+            "review_count": null,
+            "external_attraction_id": "PR9oF7hAhjy9",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 104860,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)",
+            "slug": "prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=",
+            "price": 762700,
+            "rating": null,
+            "item_id": "PRVwSAVvgpO5",
+            "currency": "VND",
+            "description": "Morning tour: 8:30am to 1:00pm Afternoon tour: 2:00pm to 6:30pm You will be pick up by car by loc...",
+            "review_count": null,
+            "external_attraction_id": "PRVwSAVvgpO5",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Tour Bà Nà Hills trọn ngày với bữa trưa buffet",
+            "slug": "prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=",
+            "price": 1709500,
+            "rating": null,
+            "item_id": "PRdCygydpY9o",
+            "currency": "VND",
+            "description": "Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa",
+            "review_count": null,
+            "external_attraction_id": "PRdCygydpY9o",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Memories Show & Hoi An Impression Theme Park Ticket",
+            "slug": "prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=",
+            "price": 631200,
+            "rating": null,
+            "item_id": "PRWX9rush6bp",
+            "currency": "VND",
+            "description": "Located on the Hoi An Memories Land, the Hoi An Memories show is one of the outdoor performances ...",
+            "review_count": null,
+            "external_attraction_id": "PRWX9rush6bp",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Lớp hướng dẫn làm lồng đèn",
+            "slug": "prpc0nrrr1qm-lantern-making-class",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=",
+            "price": 257656,
+            "rating": null,
+            "item_id": "PRPC0NRRR1QM",
+            "currency": "VND",
+            "description": "Workshop làm đèn lồng Việt Nam từ nhiều chất liệu",
+            "review_count": null,
+            "external_attraction_id": "PRPC0NRRR1QM",
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "car",
+      "name": "search_cars_tool",
+      "arguments": {
+        "end_ms": "2026-10-12 20:00",
+        "address": "Đà Nẵng",
+        "start_ms": "2026-10-10 08:00",
+        "user_needs": "Thuê xe tự lái 5 chỗ số tự động tại Đà Nẵng"
+      },
+      "timestamp": "2026-09-06T17:55:05.188944+00:00",
+      "raw_result": {
+        "search_id": "3e399607-6280-4c96-aa7e-8fbb070acba2",
+        "domain": "car",
+        "displayed_item_ids": [
+          "KEQ7PS?carSearchIndex=3",
+          "KLDAEP?carSearchIndex=4",
+          "KJHL8A?carSearchIndex=5",
+          "KLSN1M?carSearchIndex=6",
+          "KGASGK?carSearchIndex=7",
+          "KKXHM8?carSearchIndex=8",
+          "KI16T7?carSearchIndex=9",
+          "KHUNR7?carSearchIndex=10"
+        ],
+        "labels": [],
+        "total_results": 8
+      },
+      "normalized_result": {
+        "search_id": "3e399607-6280-4c96-aa7e-8fbb070acba2",
+        "request_id": "req_car_80c71ab4",
+        "domain": "car",
+        "total_results": 8,
+        "items": [
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2020/KE1FA1?carSearchIndex=1",
+            "Tags": "Miễn thế chấp",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2020/KE1FA1?carSearchIndex=1",
+            "name": "MITSUBISHI XPANDER 2020",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2024/06/31/12/YvwXVHvldczHMGEIKqFteg.jpg",
+            "price": "792K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2024/06/31/12/YvwXVHvldczHMGEIKqFteg.jpg",
+            "Rating": "5.0",
+            "car_id": "KE1FA1?carSearchIndex=1",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2020",
+            "address": "Phường Xuân Hà, Quận Thanh Khê",
+            "item_id": "KE1FA1?carSearchIndex=1",
+            "Giá gốc": "832K",
+            "Hộp số": "Số sàn",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Xuân Hà, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "63 chuyến",
+            "Giá sau giảm": "792K",
+            "position": null,
+            "api_position": 1,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf6-eco-2025/KH4Y1J?carSearchIndex=2",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf6-eco-2025/KH4Y1J?carSearchIndex=2",
+            "name": "VINFAST VF6 ECO 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf6_eco_2025/p/g/2026/01/02/17/t0bd3OKH22CSOU_R5yHZnA.jpg",
+            "price": "1.005K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf6_eco_2025/p/g/2026/01/02/17/t0bd3OKH22CSOU_R5yHZnA.jpg",
+            "Rating": "5.0",
+            "car_id": "KH4Y1J?carSearchIndex=2",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF6 ECO 2025",
+            "address": "Phường Hòa Khê, Quận Thanh Khê",
+            "item_id": "KH4Y1J?carSearchIndex=2",
+            "Giá gốc": "1.032K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hòa Khê, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "28 chuyến",
+            "Giá sau giảm": "1.005K",
+            "position": null,
+            "api_position": 2,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=3",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=3",
+            "name": "MITSUBISHI OUTLANDER Premium 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg",
+            "price": "1.108K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg",
+            "Rating": "5.0",
+            "car_id": "KEQ7PS?carSearchIndex=3",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI OUTLANDER Premium 2019",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KEQ7PS?carSearchIndex=3",
+            "Giá gốc": "1.148K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "1 chuyến",
+            "Giá sau giảm": "1.108K",
+            "position": 1,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=4",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=4",
+            "name": "VINFAST LIMO GREEN 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg",
+            "price": "1.405K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg",
+            "Rating": "5.0",
+            "car_id": "KLDAEP?carSearchIndex=4",
+            "rating": "5.0",
+            "Tên xe": "VINFAST LIMO GREEN 2026",
+            "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "item_id": "KLDAEP?carSearchIndex=4",
+            "Giá gốc": "1.431K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "2 chuyến",
+            "Giá sau giảm": "1.405K",
+            "position": 2,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2021/KJHL8A?carSearchIndex=5",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2021/KJHL8A?carSearchIndex=5",
+            "name": "MITSUBISHI XPANDER 2021",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2021/p/g/2024/04/14/17/l-Y_Ocgd5YlnmLTLgDoE9w.jpg",
+            "price": "807K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2021/p/g/2024/04/14/17/l-Y_Ocgd5YlnmLTLgDoE9w.jpg",
+            "Rating": "5.0",
+            "car_id": "KJHL8A?carSearchIndex=5",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2021",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KJHL8A?carSearchIndex=5",
+            "Giá gốc": "847K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "100+ chuyến",
+            "Giá sau giảm": "807K",
+            "position": 3,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2024/KLSN1M?carSearchIndex=6",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2024/KLSN1M?carSearchIndex=6",
+            "name": "MITSUBISHI XPANDER 2024",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/09/16/07/dVXESlRjv14aUmmrHIlCcg.jpg",
+            "price": "992K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/09/16/07/dVXESlRjv14aUmmrHIlCcg.jpg",
+            "Rating": "5.0",
+            "car_id": "KLSN1M?carSearchIndex=6",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2024",
+            "address": "Phường Hòa Thuận Tây, Quận Hải Châu",
+            "item_id": "KLSN1M?carSearchIndex=6",
+            "Giá gốc": "1.032K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Tây, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "27 chuyến",
+            "Giá sau giảm": "992K",
+            "position": 4,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2023/KGASGK?carSearchIndex=7",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2023/KGASGK?carSearchIndex=7",
+            "name": "MITSUBISHI XPANDER 2023",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2023/10/19/09/H_T4uEjzI0lyglsa0x-N9Q.jpg",
+            "price": "1.061K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2023/10/19/09/H_T4uEjzI0lyglsa0x-N9Q.jpg",
+            "Rating": "5.0",
+            "car_id": "KGASGK?carSearchIndex=7",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2023",
+            "address": "Phường Thạch Thang, Quận Hải Châu",
+            "item_id": "KGASGK?carSearchIndex=7",
+            "Giá gốc": "1.101K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Thạch Thang, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "49 chuyến",
+            "Giá sau giảm": "1.061K",
+            "position": 5,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KKXHM8?carSearchIndex=8",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KKXHM8?carSearchIndex=8",
+            "name": "VINFAST LIMO GREEN 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/19/11/wfwa0ktq2UwEjHcnXw-mLg.jpg",
+            "price": "1.255K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/19/11/wfwa0ktq2UwEjHcnXw-mLg.jpg",
+            "Rating": "5.0",
+            "car_id": "KKXHM8?carSearchIndex=8",
+            "rating": "5.0",
+            "Tên xe": "VINFAST LIMO GREEN 2026",
+            "address": "Phường Thanh Bình, Quận Hải Châu",
+            "item_id": "KKXHM8?carSearchIndex=8",
+            "Giá gốc": "1.282K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Thanh Bình, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "4 chuyến",
+            "Giá sau giảm": "1.255K",
+            "position": 6,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/toyota-veloz-cross-2022/KI16T7?carSearchIndex=9",
+            "Tags": "Miễn thế chấp",
+            "link": "https://www.mioto.vn/car/toyota-veloz-cross-2022/KI16T7?carSearchIndex=9",
+            "name": "TOYOTA VELOZ CROSS 2022",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2022/p/g/2024/09/23/13/yRDrU9SkZhQrUrXKEZeyaw.jpg",
+            "price": "948K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2022/p/g/2024/09/23/13/yRDrU9SkZhQrUrXKEZeyaw.jpg",
+            "Rating": "5.0",
+            "car_id": "KI16T7?carSearchIndex=9",
+            "rating": "5.0",
+            "Tên xe": "TOYOTA VELOZ CROSS 2022",
+            "address": "Phường Xuân Hà, Quận Thanh Khê",
+            "item_id": "KI16T7?carSearchIndex=9",
+            "Giá gốc": "988K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Xuân Hà, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "20 chuyến",
+            "Giá sau giảm": "948K",
+            "position": 7,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KHUNR7?carSearchIndex=10",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KHUNR7?carSearchIndex=10",
+            "name": "VINFAST LIMO GREEN 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/04/12/g7BU6Mwcg25pEG4cx9Y0UQ.jpg",
+            "price": "1.263K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/04/12/g7BU6Mwcg25pEG4cx9Y0UQ.jpg",
+            "Rating": "5.0",
+            "car_id": "KHUNR7?carSearchIndex=10",
+            "rating": "5.0",
+            "Tên xe": "VINFAST LIMO GREEN 2026",
+            "address": "Phường Phước Ninh, Quận Hải Châu",
+            "item_id": "KHUNR7?carSearchIndex=10",
+            "Giá gốc": "1.289K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Phước Ninh, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "9 chuyến",
+            "Giá sau giảm": "1.263K",
+            "position": 8,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 18,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "KEQ7PS?carSearchIndex=3",
+          "KLDAEP?carSearchIndex=4",
+          "KJHL8A?carSearchIndex=5",
+          "KLSN1M?carSearchIndex=6",
+          "KGASGK?carSearchIndex=7",
+          "KKXHM8?carSearchIndex=8",
+          "KI16T7?carSearchIndex=9",
+          "KHUNR7?carSearchIndex=10"
+        ],
+        "items": [
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=3",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=3",
+            "name": "MITSUBISHI OUTLANDER Premium 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg",
+            "price": "1.108K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg",
+            "Rating": "5.0",
+            "car_id": "KEQ7PS?carSearchIndex=3",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI OUTLANDER Premium 2019",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KEQ7PS?carSearchIndex=3",
+            "Giá gốc": "1.148K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "1 chuyến",
+            "Giá sau giảm": "1.108K",
+            "position": 1,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=4",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=4",
+            "name": "VINFAST LIMO GREEN 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg",
+            "price": "1.405K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg",
+            "Rating": "5.0",
+            "car_id": "KLDAEP?carSearchIndex=4",
+            "rating": "5.0",
+            "Tên xe": "VINFAST LIMO GREEN 2026",
+            "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "item_id": "KLDAEP?carSearchIndex=4",
+            "Giá gốc": "1.431K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "2 chuyến",
+            "Giá sau giảm": "1.405K",
+            "position": 2,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2021/KJHL8A?carSearchIndex=5",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2021/KJHL8A?carSearchIndex=5",
+            "name": "MITSUBISHI XPANDER 2021",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2021/p/g/2024/04/14/17/l-Y_Ocgd5YlnmLTLgDoE9w.jpg",
+            "price": "807K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2021/p/g/2024/04/14/17/l-Y_Ocgd5YlnmLTLgDoE9w.jpg",
+            "Rating": "5.0",
+            "car_id": "KJHL8A?carSearchIndex=5",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2021",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KJHL8A?carSearchIndex=5",
+            "Giá gốc": "847K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "100+ chuyến",
+            "Giá sau giảm": "807K",
+            "position": 3,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2024/KLSN1M?carSearchIndex=6",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2024/KLSN1M?carSearchIndex=6",
+            "name": "MITSUBISHI XPANDER 2024",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/09/16/07/dVXESlRjv14aUmmrHIlCcg.jpg",
+            "price": "992K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/09/16/07/dVXESlRjv14aUmmrHIlCcg.jpg",
+            "Rating": "5.0",
+            "car_id": "KLSN1M?carSearchIndex=6",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2024",
+            "address": "Phường Hòa Thuận Tây, Quận Hải Châu",
+            "item_id": "KLSN1M?carSearchIndex=6",
+            "Giá gốc": "1.032K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Tây, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "27 chuyến",
+            "Giá sau giảm": "992K",
+            "position": 4,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2023/KGASGK?carSearchIndex=7",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2023/KGASGK?carSearchIndex=7",
+            "name": "MITSUBISHI XPANDER 2023",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2023/10/19/09/H_T4uEjzI0lyglsa0x-N9Q.jpg",
+            "price": "1.061K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2023/10/19/09/H_T4uEjzI0lyglsa0x-N9Q.jpg",
+            "Rating": "5.0",
+            "car_id": "KGASGK?carSearchIndex=7",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2023",
+            "address": "Phường Thạch Thang, Quận Hải Châu",
+            "item_id": "KGASGK?carSearchIndex=7",
+            "Giá gốc": "1.101K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Thạch Thang, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "49 chuyến",
+            "Giá sau giảm": "1.061K",
+            "position": 5,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KKXHM8?carSearchIndex=8",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KKXHM8?carSearchIndex=8",
+            "name": "VINFAST LIMO GREEN 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/19/11/wfwa0ktq2UwEjHcnXw-mLg.jpg",
+            "price": "1.255K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/19/11/wfwa0ktq2UwEjHcnXw-mLg.jpg",
+            "Rating": "5.0",
+            "car_id": "KKXHM8?carSearchIndex=8",
+            "rating": "5.0",
+            "Tên xe": "VINFAST LIMO GREEN 2026",
+            "address": "Phường Thanh Bình, Quận Hải Châu",
+            "item_id": "KKXHM8?carSearchIndex=8",
+            "Giá gốc": "1.282K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Thanh Bình, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "4 chuyến",
+            "Giá sau giảm": "1.255K",
+            "position": 6,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/toyota-veloz-cross-2022/KI16T7?carSearchIndex=9",
+            "Tags": "Miễn thế chấp",
+            "link": "https://www.mioto.vn/car/toyota-veloz-cross-2022/KI16T7?carSearchIndex=9",
+            "name": "TOYOTA VELOZ CROSS 2022",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2022/p/g/2024/09/23/13/yRDrU9SkZhQrUrXKEZeyaw.jpg",
+            "price": "948K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2022/p/g/2024/09/23/13/yRDrU9SkZhQrUrXKEZeyaw.jpg",
+            "Rating": "5.0",
+            "car_id": "KI16T7?carSearchIndex=9",
+            "rating": "5.0",
+            "Tên xe": "TOYOTA VELOZ CROSS 2022",
+            "address": "Phường Xuân Hà, Quận Thanh Khê",
+            "item_id": "KI16T7?carSearchIndex=9",
+            "Giá gốc": "988K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Xuân Hà, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "20 chuyến",
+            "Giá sau giảm": "948K",
+            "position": 7,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KHUNR7?carSearchIndex=10",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-limo-green-2026/KHUNR7?carSearchIndex=10",
+            "name": "VINFAST LIMO GREEN 2026",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/04/12/g7BU6Mwcg25pEG4cx9Y0UQ.jpg",
+            "price": "1.263K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/04/12/g7BU6Mwcg25pEG4cx9Y0UQ.jpg",
+            "Rating": "5.0",
+            "car_id": "KHUNR7?carSearchIndex=10",
+            "rating": "5.0",
+            "Tên xe": "VINFAST LIMO GREEN 2026",
+            "address": "Phường Phước Ninh, Quận Hải Châu",
+            "item_id": "KHUNR7?carSearchIndex=10",
+            "Giá gốc": "1.289K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Phước Ninh, Quận Hải Châu",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "9 chuyến",
+            "Giá sau giảm": "1.263K",
+            "position": 8,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "tour",
+      "name": "search_attractions_tool",
+      "arguments": {
+        "location": "Đà Nẵng"
+      },
+      "timestamp": "2026-09-06T17:55:05.188944+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 10
+    },
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "adults": 2,
+        "price_max": 2000000,
+        "checkin_date": "2026-10-10",
+        "price_min": 2000000,
+        "checkout_date": "2026-10-12",
+        "location": "Đà Nẵng"
+      },
+      "timestamp": "2026-09-06T17:55:05.188944+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 14
+    },
+    {
+      "domain": "flight",
+      "name": "search_round_trip_flights_tool",
+      "arguments": {
+        "departure_date": "2026-10-10",
+        "return_date": "2026-10-12",
+        "cabin_class": "economy",
+        "adults": 2,
+        "origin": "SGN",
+        "destination": "DAD"
+      },
+      "timestamp": "2026-09-06T17:55:05.188944+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 16
+    },
+    {
+      "domain": "car",
+      "name": "search_cars_tool",
+      "arguments": {
+        "start_ms": "2026-10-10 08:00",
+        "address": "Đà Nẵng",
+        "user_needs": "Thuê xe tự lái 5 chỗ số tự động tại Đà Nẵng",
+        "end_ms": "2026-10-12 20:00"
+      },
+      "timestamp": "2026-09-06T17:55:05.188944+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 18
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "flight",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là các lựa chọn vé máy bay khứ hồi từ TP. Hồ Chí Minh (SGN) đi Đà Nẵng (DAD) dành cho 2 người lớn (hạng phổ thông):\\n\\n* **Mã vé (Offer_ID): FL-DBA1B5** *(Ưu tiên bay buổi sáng cho cả 2 chiều)*\\n  - **Tổng giá khứ hồi:** 3.073.684 VND\\n  - **Hãng hàng không:** Vietjet (VJ)\\n  - **Số điểm dừng:** 0 (Bay thẳng)\\n  - **Chiều đi (10/10/2026):** \\n    - Chuyến bay: VJ 628 | Tàu bay: Airbus A321\\n    - Khởi hành: 07:05 (10/10/2026) từ SGN (Sân bay Tân Sơn Nhất)\\n    - Đến nơi: 08:25 (10/10/2026) tại DAD (Sân bay Đà Nẵng)\\n    - Thời gian bay: 1 giờ 20 phút\\n  - **Chiều về (12/10/2026):** \\n    - Chuyến bay: VJ 625 | Tàu bay: Airbus A321\\n    - Khởi hành: 07:10 (12/10/2026) từ DAD (Sân bay Đà Nẵng)\\n    - Đến nơi: 08:30 (12/10/2026) tại SGN (Sân bay Tân Sơn Nhất)\\n    - Thời gian bay: 1 giờ 20 phút\\n\\n* **Mã vé (Offer_ID): FL-1175F1**\\n  - **Tổng giá khứ hồi:** 3.579.124 VND\\n  - **Hãng hàng không:** Vietjet (VJ)\\n  - **Số điểm dừng:** 0 (Bay thẳng)\\n  - **Chiều đi (10/10/2026):** \\n    - Chuyến bay: VJ 628 | Tàu bay: Airbus A321\\n    - Khởi hành: 07:05 (10/10/2026) từ SGN (Sân bay Tân Sơn Nhất)\\n    - Đến nơi: 08:25 (10/10/2026) tại DAD (Sân bay Đà Nẵng)\\n    - Thời gian bay: 1 giờ 20 phút\\n  - **Chiều về (12/10/2026):** \\n    - Chuyến bay: VJ 643 | Tàu bay: Airbus A321\\n    - Khởi hành: 20:35 (12/10/2026) từ DAD (Sân bay Đà Nẵng)\\n    - Đến nơi: 22:00 (12/10/2026) tại SGN (Sân bay Tân Sơn Nhất)\\n    - Thời gian bay: 1 giờ 25 phút', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "[33a6ff4b-3737-580b-ba27-dffc4221eb05] Thường bay hạng phổ thông (economy) khi đi du lịch",
+        "(soft) [4d8d2c44-b6f7-5ce1-9d0a-54a8b9bde6ae] Ưu tiên bay buổi sáng"
+      ],
+      "domain_action": "search_round_trip"
+    },
+    {
+      "domain": "hotel",
+      "summary": "[{'type': 'text', 'text': 'Kết quả tìm kiếm khách sạn tại Đà Nẵng (check-in 10/10/2026, check-out 12/10/2026, 2 người lớn) đã được lọc theo ngân sách từ 2–3 triệu VND/đêm. Lưu ý: Do dữ liệu từ hệ thống chưa cung cấp thông tin mức độ yên tĩnh cụ thể, mức độ yên tĩnh của các khách sạn dưới đây chưa thể xác nhận hoàn toàn.\\n\\n*   **Coastal Nest - Steps to Sand** (ID: 15180703)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 1000000 VND\\n    *   Đánh giá: 9.5\\n    *   Hạng sao: 0\\n    *   accessibilityLabel:\\n        *   Coastal Nest - Steps to Sand\\n        *   3 trên 5 cho xếp hạng chỗ nghỉ\\n        *   9,5 Xuất sắc 71 đánh giá\\n        *   2,8km từ trung tâm\\n        *   Giáp biển\\n        *   1 phòng riêng : 2 giường\\n        *   2000000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 1 căn với giá này trên Booking.com\\n    *   ![Coastal Nest - Steps to Sand](https://cf.bstatic.com/xdata/images/hotel/square500/769680338.jpg?k=139ec568332886261be8d07d2ddae57690b2f4a3ed99d8bddcbc9f9ddd345b2f&o=)\\n\\n*   **Elites Hotel** (ID: 12183430)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 1000000 VND\\n    *   Đánh giá: 8.2\\n    *   Hạng sao: 4\\n    *   accessibilityLabel:\\n        *   Elites Hotel\\n        *   4 trên 5 sao\\n        *   Đây là chỗ nghỉ Ưu tiên\\n        *   8,2 Rất tốt 1668 đánh giá\\n        *   2,6km từ trung tâm\\n        *   Giáp biển\\n        *   Ưu Đãi Cuối Năm\\n        *   1 phòng khách sạn : 1 giường\\n        *   Giá gốc là 4000000 VND\\n        *   Giá hiện tại là 2000000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chỉ còn 7 căn với giá này trên Booking.com\\n    *   ![Elites Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/580194737.jpg?k=276dd7c149e86b4170e06bd0d35ce4f2514944b11acd8f43dd80ad3a96031690&o=)\\n\\n*   **Dragon Sea Hotel** (ID: 1071090)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 1000000 VND\\n    *   Đánh giá: 7\\n    *   Hạng sao: 3\\n    *   accessibilityLabel:\\n        *   Dragon Sea Hotel\\n        *   3 trên 5 sao\\n        *   7,0 Tốt 157 đánh giá\\n        *   2,7km từ trung tâm\\n        *   Cách biển 200m\\n        *   1 phòng khách sạn : 2 giường\\n        *   Giá gốc là 8000000 VND\\n        *   Giá hiện tại là 2000000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Chỉ còn 3 căn với giá này trên Booking.com\\n    *   ![Dragon Sea Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/745735497.jpg?k=f62d4c25f609cc54d1c584d0093b80ae26a99bee1e2144d572492fae6cdbdd15&o=)', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "ưu tiên yên tĩnh",
+        "(soft) [619ee223-00d5-5e73-a5a6-1fcf3702ef8f] Ngân sách hotel thường 2–3 triệu/đêm",
+        "(soft) [0b9f2680-b448-5468-805d-56ed7da284df] Thích khách sạn yên tĩnh"
+      ],
+      "domain_action": "general"
+    },
+    {
+      "domain": "excursion",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là danh sách các tour và hoạt động tham quan tại Đà Nẵng - Hội An phù hợp cho chuyến đi 3 ngày 2 đêm (2 người lớn). \\n\\n*Lưu ý về sở thích yên tĩnh & nhóm nhỏ:* Mức độ đông đúc thực tế tại các điểm tham quan không hiển thị trong dữ liệu hệ thống, do đó một số điểm du lịch nổi tiếng (như Bà Nà Hills, Du thuyền Sông Hàn) có thể khá nhộn nhịp vào giờ cao điểm. Bạn nên cân nhắc các tour nhóm nhỏ hoặc khung giờ linh hoạt để có không gian thoải mái, yên tĩnh hơn.\\n\\n1. **Vé Sun World Ba Na Hills**\\n   - **Mã hoạt động (ID):** `PR9oF7hAhjy9`\\n   - **Mô tả:** Khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills, đi cáp treo và tham quan Cầu Vàng.\\n   - **Giá:** 940.444 VND / người\\n   - **Lưu ý:** Địa điểm du lịch lớn, có thể đông đúc vào giờ cao điểm.\\n   ![Vé Sun World Ba Na Hills](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=)\\n\\n2. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times**\\n   - **Mã hoạt động (ID):** `PRbeRPTXGXPd`\\n   - **Mô tả:** Tour khám phá Bà Nà Hills và Cầu Vàng theo hình thức nhóm nhỏ với giờ khởi hành linh hoạt, có xe đưa đón tại trung tâm Đà Nẵng. Phù hợp nếu ưu tiên di chuyển nhóm nhỏ.\\n   - **Giá:** 1.284.755 VND / người\\n   ![Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\\n\\n3. **Du thuyền đêm trên sông Hàn**\\n   - **Mã hoạt động (ID):** `PRa7fah7ikJw`\\n   - **Mô tả:** Trải nghiệm du thuyền ngắm cảnh thành phố Đà Nẵng và các cây cầu lung linh về đêm.\\n   - **Giá:** 104.860 VND / người\\n   ![Du thuyền đêm trên sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\\n\\n4. **Hoi An Basket Boat Ride in Water Coconut Forest**\\n   - **Mã hoạt động (ID):** `PRNgBhNmHUwd`\\n   - **Mô tả:** Trải nghiệm đi thuyền thúng tham quan rừng dừa Cẩm Thanh tại Hội An.\\n   - **Giá:** 315.600 VND / người\\n   ![Hoi An Basket Boat Ride in Water Coconut Forest](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\\n\\n5. **Hoi An Cooking Class (Local Market, Basket Boat, Fishing & Cooking)**\\n   - **Mã hoạt động (ID):** `PRVwSAVvgpO5`\\n   - **Mô tả:** Trải nghiệm nửa ngày đi chợ địa phương, chèo thuyền thúng, câu cua và học nấu ăn món ăn truyền thống.\\n   - **Giá:** 762.700 VND / người\\n   ![Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=)\\n\\n6. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\\n   - **Mã hoạt động (ID):** `PRFhLYK7act7`\\n   - **Mô tả:** Tour nhóm nhỏ tham quan Ngũ Hành Sơn, Động Âm Phủ và ngắm hoàng hôn tại Bán đảo Sơn Trà. Phù hợp cho không gian thiên nhiên và nhóm nhỏ.\\n   - **Giá:** 578.600 VND / người\\n   ![Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\\n\\n7. **Tour Bà Nà Hills trọn ngày với bữa trưa buffet**\\n   - **Mã hoạt động (ID):** `PRdCygydpY9o`\\n   - **Mô tả:** Tour trọn gói tham quan Bà Nà Hills, Cầu Vàng, Công viên Fantasy Park bao gồm bữa trưa buffet.\\n   - **Giá:** 1.709.500 VND / người\\n   ![Tour Bà Nà Hills trọn ngày với bữa trưa buffet](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=)\\n\\n8. **Hoi An Memories Show & Hoi An Impression Theme Park Ticket**\\n   - **Mã hoạt động (ID):** `PRWX9rush6bp`\\n   - **Mô tả:** Vé xem show diễn thực cảnh Ký ức Hội An ngoài trời và tham quan Công viên Ấn tượng Hội An.\\n   - **Giá:** 631.200 VND / người\\n   ![Hoi An Memories Show & Hoi An Impression Theme Park Ticket](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=)\\n\\n9. **Lớp hướng dẫn làm lồng đèn**\\n   - **Mã hoạt động (ID):** `PRPC0NRRR1QM`\\n   - **Mô tả:** Workshop trải nghiệm tự tay làm đèn lồng truyền thống Việt Nam tại Hội An. Không gian yên tĩnh, sáng tạo.\\n   - **Giá:** 257.656 VND / người\\n   ![Lớp hướng dẫn làm lồng đèn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=)\\n\\n10. **Hoai River Boat Trip by Night with Release Lantern**\\n    - **Mã hoạt động (ID):** `PRfykNA7eqX0`\\n    - **Mô tả:** Đi thuyền trên sông Hoài vào ban đêm và thả hoa đăng ngắm phố cổ Hội An.\\n    - **Giá:** 236.700 VND / người\\n    ![Hoai River Boat Trip by Night with Release Lantern](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\\n\\nHãy cho mình biết nếu bạn muốn đặt tour hoặc cần xem thêm chi tiết/đánh giá của bất kỳ hoạt động nào trên!', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "ưu tiên yên tĩnh",
+        "(soft) [c19696de-4c99-58aa-bbdc-d997fd72eabe] Ưu tiên tour riêng hoặc nhóm nhỏ",
+        "(soft) [c4817c9e-d84f-58e1-942c-a9dc32041fa7] Thích hoạt động ngoài trời khi đi chơi"
+      ],
+      "domain_action": "general"
+    },
+    {
+      "domain": "car",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là danh sách xe tự động từ 5 chỗ trở lên khả dụng tại Đà Nẵng từ ngày 10/10/2026 đến 12/10/2026:\\n\\n* **MITSUBISHI XPANDER 2021**\\n  * **car_id**: `KJHL8A?carSearchIndex=5`\\n  * **Tên xe**: MITSUBISHI XPANDER 2021\\n  * **Giá sau giảm**: 807K\\n  * **Giá gốc**: 847K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 7 chỗ\\n  * **Nhiên liệu**: Xăng\\n  * **Địa chỉ**: Phường Hòa Cường Bắc, Quận Hải Châu\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 100+ chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![MITSUBISHI XPANDER 2021](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2021/p/g/2024/04/14/17/l-Y_Ocgd5YlnmLTLgDoE9w.jpg)\\n  * **Link**: https://www.mioto.vn/car/mitsubishi-xpander-2021/KJHL8A?carSearchIndex=5\\n\\n* **TOYOTA VELOZ CROSS 2022**\\n  * **car_id**: `KI16T7?carSearchIndex=9`\\n  * **Tên xe**: TOYOTA VELOZ CROSS 2022\\n  * **Giá sau giảm**: 948K\\n  * **Giá gốc**: 988K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 7 chỗ\\n  * **Nhiên liệu**: Xăng\\n  * **Địa chỉ**: Phường Xuân Hà, Quận Thanh Khê\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 20 chuyến\\n  * **Tags**: Miễn thế chấp\\n  * **Ảnh**: ![TOYOTA VELOZ CROSS 2022](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2022/p/g/2024/09/23/13/yRDrU9SkZhQrUrXKEZeyaw.jpg)\\n  * **Link**: https://www.mioto.vn/car/toyota-veloz-cross-2022/KI16T7?carSearchIndex=9\\n\\n* **MITSUBISHI XPANDER 2024**\\n  * **car_id**: `KLSN1M?carSearchIndex=6`\\n  * **Tên xe**: MITSUBISHI XPANDER 2024\\n  * **Giá sau giảm**: 992K\\n  * **Giá gốc**: 1.032K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 7 chỗ\\n  * **Nhiên liệu**: Xăng\\n  * **Địa chỉ**: Phường Hòa Thuận Tây, Quận Hải Châu\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 27 chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![MITSUBISHI XPANDER 2024](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/09/16/07/dVXESlRjv14aUmmrHIlCcg.jpg)\\n  * **Link**: https://www.mioto.vn/car/mitsubishi-xpander-2024/KLSN1M?carSearchIndex=6\\n\\n* **MITSUBISHI XPANDER 2023**\\n  * **car_id**: `KGASGK?carSearchIndex=7`\\n  * **Tên xe**: MITSUBISHI XPANDER 2023\\n  * **Giá sau giảm**: 1.061K\\n  * **Giá gốc**: 1.101K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 7 chỗ\\n  * **Nhiên liệu**: Xăng\\n  * **Địa chỉ**: Phường Thạch Thang, Quận Hải Châu\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 49 chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![MITSUBISHI XPANDER 2023](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2023/10/19/09/H_T4uEjzI0lyglsa0x-N9Q.jpg)\\n  * **Link**: https://www.mioto.vn/car/mitsubishi-xpander-2023/KGASGK?carSearchIndex=7\\n\\n* **MITSUBISHI OUTLANDER Premium 2019**\\n  * **car_id**: `KEQ7PS?carSearchIndex=3`\\n  * **Tên xe**: MITSUBISHI OUTLANDER Premium 2019\\n  * **Giá sau giảm**: 1.108K\\n  * **Giá gốc**: 1.148K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 7 chỗ\\n  * **Nhiên liệu**: Xăng\\n  * **Địa chỉ**: Phường Hòa Cường Bắc, Quận Hải Châu\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 1 chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![MITSUBISHI OUTLANDER Premium 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_outlander_premium_2019/p/g/2026/07/01/14/H3zVbS6tdWbt0yv3tghSaA.jpg)\\n  * **Link**: https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=3\\n\\n* **VINFAST LIMO GREEN 2026**\\n  * **car_id**: `KKXHM8?carSearchIndex=8`\\n  * **Tên xe**: VINFAST LIMO GREEN 2026\\n  * **Giá sau giảm**: 1.255K\\n  * **Giá gốc**: 1.282K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 7 chỗ\\n  * **Nhiên liệu**: Điện\\n  * **Địa chỉ**: Phường Thanh Bình, Quận Hải Châu\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 4 chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![VINFAST LIMO GREEN 2026](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/19/11/wfwa0ktq2UwEjHcnXw-mLg.jpg)\\n  * **Link**: https://www.mioto.vn/car/vinfast-limo-green-2026/KKXHM8?carSearchIndex=8\\n\\n* **VINFAST LIMO GREEN 2026**\\n  * **car_id**: `KHUNR7?carSearchIndex=10`\\n  * **Tên xe**: VINFAST LIMO GREEN 2026\\n  * **Giá sau giảm**: 1.263K\\n  * **Giá gốc**: 1.289K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 7 chỗ\\n  * **Nhiên liệu**: Điện\\n  * **Địa chỉ**: Phường Phước Ninh, Quận Hải Châu\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 9 chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![VINFAST LIMO GREEN 2026](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/06/04/12/g7BU6Mwcg25pEG4cx9Y0UQ.jpg)\\n  * **Link**: https://www.mioto.vn/car/vinfast-limo-green-2026/KHUNR7?carSearchIndex=10\\n\\n* **VINFAST LIMO GREEN 2026**\\n  * **car_id**: `KLDAEP?carSearchIndex=4`\\n  * **Tên xe**: VINFAST LIMO GREEN 2026\\n  * **Giá sau giảm**: 1.405K\\n  * **Giá gốc**: 1.431K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 7 chỗ\\n  * **Nhiên liệu**: Điện\\n  * **Địa chỉ**: Phường Hòa Thuận Đông, Quận Hải Châu\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 2 chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![VINFAST LIMO GREEN 2026](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_limo_green_2026/p/g/2026/07/10/00/dI-vSRhvu5FUqjLya0_V9w.jpg)\\n  * **Link**: https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=4', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "(soft) [e3d8f92c-596c-558f-8411-de82c83609e8] Cần xe tối thiểu 5 chỗ",
+        "(soft) [92cb7e94-fbb1-5c59-9106-b1da43eab25b] Thích xe số tự động"
+      ],
+      "domain_action": "general"
+    }
+  ],
+  "join": {
+    "branch_count": 4,
+    "merged_domains": [
+      "flight",
+      "hotel",
+      "excursion",
+      "car"
+    ]
+  },
+  "final_answer": "Dưới đây là kế hoạch chi tiết cho chuyến đi **Đà Nẵng 3 ngày 2 đêm (10/10/2026 – 12/10/2026)** dành cho **2 người lớn**, được tối ưu theo tiêu chí **ưu tiên không gian yên tĩnh và thoải mái**:\n\n---\n\n### ✈️ 1. Chuyến bay khứ hồi (SGN ⇄ DAD)\n\n* **Lựa chọn 1: Offer_ID `FL-DBA1B5`** *(Tối ưu giờ bay buổi sáng)*\n  * **Hãng:** Vietjet Air (Bay thẳng, Hạng phổ thông)\n  * **Tổng giá khứ hồi (2 người):** 3.073.684 VND\n  * **Chiều đi (10/10/2026):** VJ 628 | 07:05 (SGN) ➔ 08:25 (DAD)\n  * **Chiều về (12/10/2026):** VJ 625 | 07:10 (DAD) ➔ 08:30 (SGN)\n\n* **Lựa chọn 2: Offer_ID `FL-1175F1`** *(Tối ưu thời gian vui chơi ngày cuối)*\n  * **Hãng:** Vietjet Air (Bay thẳng, Hạng phổ thông)\n  * **Tổng giá khứ hồi (2 người):** 3.579.124 VND\n  * **Chiều đi (10/10/2026):** VJ 628 | 07:05 (SGN) ➔ 08:25 (DAD)\n  * **Chiều về (12/10/2026):** VJ 643 | 20:35 (DAD) ➔ 22:00 (SGN)\n\n---\n\n### 🏨 2. Khách sạn & Chỗ nghỉ (Check-in 10/10 – Check-out 12/10)\n\n1. **Coastal Nest - Steps to Sand** (ID: `15180703`)\n   * **Đánh giá:** 9.5 / 10 (Xuất sắc - 71 đánh giá)\n   * **Đặc điểm:** Giáp biển, cách trung tâm 2,8 km, 1 phòng riêng (2 giường).\n   * **Mức giá:** ~2.000.000 VND / 2 đêm (Hủy miễn phí, không cần thanh toán trước).\n   * ![Coastal Nest - Steps to Sand](https://cf.bstatic.com/xdata/images/hotel/square500/769680338.jpg?k=139ec568332886261be8d07d2ddae57690b2f4a3ed99d8bddcbc9f9ddd345b2f&o=)\n\n2. **Elites Hotel** (ID: `12183430`)\n   * **Đánh giá:** 8.2 / 10 (Rất tốt - 1.668 đánh giá) | Khách sạn 4 sao\n   * **Đặc điểm:** Giáp biển, cách trung tâm 2,6 km, 1 phòng khách sạn (1 giường).\n   * **Mức giá:** ~2.000.000 VND / 2 đêm (Đã giảm từ 4.000.000 VND, Hủy miễn phí).\n   * ![Elites Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/580194737.jpg?k=276dd7c149e86b4170e06bd0d35ce4f2514944b11acd8f43dd80ad3a96031690&o=)\n\n3. **Dragon Sea Hotel** (ID: `1071090`)\n   * **Đánh giá:** 7.0 / 10 (Tốt - 157 đánh giá) | Khách sạn 3 sao\n   * **Đặc điểm:** Cách biển 200m, cách trung tâm 2,7 km, 1 phòng khách sạn (2 giường).\n   * **Mức giá:** ~2.000.000 VND / 2 đêm (Đã giảm từ 8.000.000 VND).\n   * ![Dragon Sea Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/745735497.jpg?k=f62d4c25f609cc54d1c584d0093b80ae26a99bee1e2144d572492fae6cdbdd15&o=)\n\n---\n\n### 🎡 3. Gợi ý Lịch trình & Hoạt động tham quan\n\n*Lưu ý: Bạn nên chọn các tour nhóm nhỏ hoặc khung giờ linh hoạt để tận hưởng không gian yên tĩnh, tránh giờ cao điểm đông đúc.*\n\n1. **Vé Sun World Ba Na Hills** (ID: `PR9oF7hAhjy9`)\n   * Khám phá cáp treo, Cầu Vàng và làng Pháp.\n   * **Giá:** 940.444 VND / người\n   * ![Vé Sun World Ba Na Hills](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=)\n\n2. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times** (ID: `PRbeRPTXGXPd`)\n   * Tour nhóm nhỏ với giờ khởi hành linh hoạt, có xe đưa đón tận nơi.\n   * **Giá:** 1.284.755 VND / người\n   * ![Ba Na Hills Tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\n\n3. **Du thuyền đêm trên sông Hàn** (ID: `PRa7fah7ikJw`)\n   * Ngắm cảnh thành phố và các cây cầu lung linh về đêm.\n   * **Giá:** 104.860 VND / người\n   * ![Du thuyền đêm sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\n\n4. **Hoi An Basket Boat Ride in Water Coconut Forest** (ID: `PRNgBhNmHUwd`)\n   * Trải nghiệm đi thuyền thúng hòa mình vào thiên nhiên tại rừng dừa Cẩm Thanh.\n   * **Giá:** 315.600 VND / người\n   * ![Hoi An Basket Boat](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\n\n5. **Hoi An Cooking Class (Local Market, Basket Boat, Fishing & Cooking)** (ID: `PRVwSAVvgpO5`)\n   * Trải nghiệm đi chợ địa phương, chèo thuyền thúng, câu cua và học nấu ăn.\n   * **Giá:** 762.700 VND / người\n   * ![Hoi An Cooking Class](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=)\n\n6. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour** (ID: `PRFhLYK7act7`)\n   * Tour nhóm nhỏ tham quan Ngũ Hành Sơn, Động Âm Phủ và ngắm hoàng hôn Bán đảo Sơn Trà.\n   * **Giá:** 578.600 VND / người\n   * ![Marble Mountains Tour](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\n\n7. **Tour Bà Nà Hills trọn ngày với bữa trưa buffet** (ID: `PRdCygydpY9o`)\n   * Tour trọn gói Bà Nà Hills, Cầu Vàng, Fantasy Park bao gồm ăn trưa buffet.\n   * **Giá:** 1.709.500 VND / người\n   * ![Tour Bà Nà Hills trọn ngày](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=)\n\n8. **Hoi An Memories Show & Hoi An Impression Theme Park Ticket** (ID: `PRWX9rush6bp`)\n   * Thưởng thức show thực cảnh Ký ức Hội An và công viên văn hóa.\n   * **Giá:** 631.200 VND / người\n   * ![Hoi An Memories Show](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=)\n\n9. **Lớp hướng dẫn làm lồng đèn** (ID: `PRPC0NRRR1QM`)\n   * Trải nghiệm làm đèn lồng thủ công trong không gian yên tĩnh, mang dấu ấn cá nhân.\n   * **Giá:** 257.656 VND / người\n   * ![Lớp làm lồng đèn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=)\n\n10. **Hoai River Boat Trip by Night with Release Lantern** (ID: `PRfykNA7eqX0`)\n    * Đi thuyền trên sông Hoài đêm và thả hoa đăng ước nguyện.\n    * **Giá:** 236.700 VND / người\n    * ![Hoai River Boat Trip](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\n\n---\n\n### 🚗 4. Phụ kiện & Thuê xe tự lái (10/10 – 12/10)\n\nTất cả các xe đều là xe số tự động 7 chỗ, phù hợp cho trải nghiệm di chuyển riêng tư và thoải mái:\n\n1. **MITSUBISHI XPANDER 2021** (ID: `KJHL8A?carSearchIndex=5`)\n   * **Giá:** 807.000 VND/ngày | 5.0 ⭐ (100+ chuyến)\n   * **Địa điểm:** Hòa Cường Bắc, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/mitsubishi-xpander-2021/KJHL8A?carSearchIndex=5)\n\n2. **TOYOTA VELOZ CROSS 2022** (ID: `KI16T7?carSearchIndex=9`)\n   * **Giá:** 948.000 VND/ngày | 5.0 ⭐ (20 chuyến)\n   * **Địa điểm:** Xuân Hà, Thanh Khê | Miễn thế chấp.\n   * [Xem thông tin xe](https://www.mioto.vn/car/toyota-veloz-cross-2022/KI16T7?carSearchIndex=9)\n\n3. **MITSUBISHI XPANDER 2024** (ID: `KLSN1M?carSearchIndex=6`)\n   * **Giá:** 992.000 VND/ngày | 5.0 ⭐ (27 chuyến)\n   * **Địa điểm:** Hòa Thuận Tây, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/mitsubishi-xpander-2024/KLSN1M?carSearchIndex=6)\n\n4. **MITSUBISHI XPANDER 2023** (ID: `KGASGK?carSearchIndex=7`)\n   * **Giá:** 1.061.000 VND/ngày | 5.0 ⭐ (49 chuyến)\n   * **Địa điểm:** Thạch Thang, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/mitsubishi-xpander-2023/KGASGK?carSearchIndex=7)\n\n5. **MITSUBISHI OUTLANDER Premium 2019** (ID: `KEQ7PS?carSearchIndex=3`)\n   * **Giá:** 1.108.000 VND/ngày | 5.0 ⭐\n   * **Địa điểm:** Hòa Cường Bắc, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/mitsubishi-outlander-premium-2019/KEQ7PS?carSearchIndex=3)\n\n6. **VINFAST LIMO GREEN 2026 (Xe điện)** (ID: `KKXHM8?carSearchIndex=8`)\n   * **Giá:** 1.255.000 VND/ngày | 5.0 ⭐\n   * **Địa điểm:** Thanh Bình, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/vinfast-limo-green-2026/KKXHM8?carSearchIndex=8)\n\n7. **VINFAST LIMO GREEN 2026 (Xe điện)** (ID: `KHUNR7?carSearchIndex=10`)\n   * **Giá:** 1.263.000 VND/ngày | 5.0 ⭐\n   * **Địa điểm:** Phước Ninh, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/vinfast-limo-green-2026/KHUNR7?carSearchIndex=10)\n\n8. **VINFAST LIMO GREEN 2026 (Xe điện)** (ID: `KLDAEP?carSearchIndex=4`)\n   * **Giá:** 1.405.000 VND/ngày | 5.0 ⭐\n   * **Địa điểm:** Hòa Thuận Đông, Hải Châu | Miễn thế chấp, giao xe tận nơi.\n   * [Xem thông tin xe](https://www.mioto.vn/car/vinfast-limo-green-2026/KLDAEP?carSearchIndex=4)\n\n---\n\nNếu bạn muốn chốt lựa chọn nào hoặc cần thêm chi tiết nào về từng dịch vụ, vui lòng báo để mình hỗ trợ ngay nhé!",
+  "stm": {
+    "summary": null,
+    "message_count": 7,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "c1a313d8-59d8-4e8e-9aa8-1a212509a8df",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "audits": [],
+    "seeded_status": {
+      "m_flight_economy": {
+        "status": "active",
+        "memory_id": "33a6ff4b-3737-580b-ba27-dffc4221eb05",
+        "memory_text": "Thường bay hạng phổ thông (economy) khi đi du lịch",
+        "supersedes_memory_id": null
+      },
+      "m_flight_morning": {
+        "status": "active",
+        "memory_id": "4d8d2c44-b6f7-5ce1-9d0a-54a8b9bde6ae",
+        "memory_text": "Ưu tiên bay buổi sáng",
+        "supersedes_memory_id": null
+      },
+      "m_flight_other_user": {
+        "status": "active",
+        "memory_id": "830874d2-ed9f-53bf-a8be-c0b0e2c3d5d2",
+        "memory_text": "Memory user khác — thích business class",
+        "supersedes_memory_id": null
+      },
+      "m_flight_superseded": {
+        "status": "superseded",
+        "memory_id": "d3c588ea-5e2b-5cb7-a605-27eb52def1ad",
+        "memory_text": "Preference cũ — chỉ bay Vietnam Airlines",
+        "supersedes_memory_id": null
+      },
+      "m_hotel_quiet": {
+        "status": "active",
+        "memory_id": "0b9f2680-b448-5468-805d-56ed7da284df",
+        "memory_text": "Thích khách sạn yên tĩnh",
+        "supersedes_memory_id": null
+      },
+      "m_hotel_budget": {
+        "status": "active",
+        "memory_id": "619ee223-00d5-5e73-a5a6-1fcf3702ef8f",
+        "memory_text": "Ngân sách hotel thường 2–3 triệu/đêm",
+        "supersedes_memory_id": null
+      },
+      "m_hotel_other_user": {
+        "status": "active",
+        "memory_id": "983b980a-7593-51ec-bab5-7e7a19092500",
+        "memory_text": "Memory user khác — thích resort cao cấp",
+        "supersedes_memory_id": null
+      },
+      "m_hotel_superseded": {
+        "status": "superseded",
+        "memory_id": "629dce10-e770-5ad6-b65b-94b0a01fabd4",
+        "memory_text": "Preference cũ — thích hostel",
+        "supersedes_memory_id": null
+      },
+      "m_car_automatic": {
+        "status": "active",
+        "memory_id": "92cb7e94-fbb1-5c59-9106-b1da43eab25b",
+        "memory_text": "Thích xe số tự động",
+        "supersedes_memory_id": null
+      },
+      "m_car_5seats": {
+        "status": "active",
+        "memory_id": "e3d8f92c-596c-558f-8411-de82c83609e8",
+        "memory_text": "Cần xe tối thiểu 5 chỗ",
+        "supersedes_memory_id": null
+      },
+      "m_car_other_user": {
+        "status": "active",
+        "memory_id": "d318d608-9c69-5863-9635-8b7978247f3c",
+        "memory_text": "Memory user khác — thích xe số sàn",
+        "supersedes_memory_id": null
+      },
+      "m_car_superseded": {
+        "status": "superseded",
+        "memory_id": "a752d4bb-39a6-5c5e-ba36-5a387c253e19",
+        "memory_text": "Preference cũ — chỉ thuê xe 4 chỗ",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_outdoor": {
+        "status": "active",
+        "memory_id": "c4817c9e-d84f-58e1-942c-a9dc32041fa7",
+        "memory_text": "Thích hoạt động ngoài trời khi đi chơi",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_small_group": {
+        "status": "active",
+        "memory_id": "c19696de-4c99-58aa-bbdc-d997fd72eabe",
+        "memory_text": "Ưu tiên tour riêng hoặc nhóm nhỏ",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_other_user": {
+        "status": "active",
+        "memory_id": "0240c245-8e0d-5d81-affa-85ed1cc0611d",
+        "memory_text": "Memory user khác — thích tour văn hóa",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_superseded": {
+        "status": "superseded",
+        "memory_id": "8eec18d3-82d6-558d-b40f-986b93494de5",
+        "memory_text": "Preference cũ — chỉ đi biển",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "c1a313d8-59d8-4e8e-9aa8-1a212509a8df",
+      "status": "skipped",
+      "error_summary": null,
+      "created_at": "2026-09-07T00:54:59.897693+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "car",
+          "excursion",
+          "flight",
+          "hotel"
+        ],
+        "actual": [
+          "car",
+          "excursion",
+          "flight",
+          "hotel"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "SKIP",
+      "detail": "no expected_applicability",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "flight_assistant",
+          "hotel_assistant",
+          "excursion_assistant",
+          "car_assistant",
+          "memory_recall_excursion",
+          "memory_recall_hotel",
+          "excursion_chat",
+          "search_attractions_tool",
+          "search_attractions_tool",
+          "searchLocation",
+          "searchAttractions",
+          "memory_recall_flight",
+          "memory_recall_car",
+          "hotel_chat",
+          "search_hotels_tool",
+          "search_hotels_tool",
+          "flight_chat",
+          "search_round_trip_flights_tool",
+          "search_round_trip_flights_tool",
+          "car_chat",
+          "search_cars_tool",
+          "search_cars_tool",
+          "hotel_chat",
+          "excursion_chat",
+          "flight_chat",
+          "car_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "flight_assistant",
+          "hotel_assistant",
+          "excursion_assistant",
+          "car_assistant",
+          "join_results",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "PASS",
+      "detail": "join integrity satisfied",
+      "evidence": {
+        "merged_domains": [
+          "car",
+          "excursion",
+          "flight",
+          "hotel"
+        ]
+      }
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "flight_assistant",
+      "graph": "primary",
+      "domain": "flight",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "hotel_assistant",
+      "graph": "primary",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 5,
+      "node": "excursion_assistant",
+      "graph": "primary",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "car_assistant",
+      "graph": "primary",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 7,
+      "node": "memory_recall_excursion",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_excursion_small_group",
+          "m_excursion_outdoor"
+        ],
+        "applicability": {
+          "m_excursion_small_group": "uncertain",
+          "m_excursion_outdoor": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_excursion_small_group": "reconciled: Private/small group tour preference is relevant for excursion recommendations/ranking, but there is no direct search filter parameter for group size. (llm: Private/small group tour preference is relevant for excursion recommendations/ranking, but there is no direct search filter parameter for group size.; rule: default uncertain (no specific tool-field rule matched))",
+          "m_excursion_outdoor": "reconciled: Preference for outdoor activities is relevant for suggesting attractions in Da Nang, but cannot be passed directly as a search filter parameter. (llm: Preference for outdoor activities is relevant for suggesting attractions in Da Nang, but cannot be passed directly as a search filter parameter.; rule: default uncertain (no specific tool-field rule matched))"
+        },
+        "applied_to_context": [
+          "m_excursion_small_group",
+          "m_excursion_outdoor"
+        ]
+      }
+    },
+    {
+      "seq": 8,
+      "node": "memory_recall_hotel",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_hotel_budget",
+          "m_hotel_quiet"
+        ],
+        "applicability": {
+          "m_hotel_budget": "uncertain",
+          "m_hotel_quiet": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_hotel_budget": "reconciled: demoted llm apply to uncertain (llm: Hotel budget preference (2–3 triệu/đêm) is not contradicted by the query and can be applied as price constraints for hotel search.; rule: default uncertain (no specific tool-field rule matched))",
+          "m_hotel_quiet": "reconciled: Quietness preference ('yên tĩnh') is relevant to hotel selection but does not map to a concrete search tool parameter. (llm: Quietness preference ('yên tĩnh') is relevant to hotel selection but does not map to a concrete search tool parameter.; rule: default uncertain (no specific tool-field rule matched))"
+        },
+        "applied_to_context": [
+          "m_hotel_budget",
+          "m_hotel_quiet"
+        ]
+      }
+    },
+    {
+      "seq": 9,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "search_attractions_tool",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [
+        {
+          "name": "search_attractions_tool",
+          "arguments": {
+            "location": "Đà Nẵng"
+          },
+          "sub_steps": [
+            "searchLocation",
+            "searchAttractions"
+          ]
+        }
+      ],
+      "parent_chat_node": "excursion_chat"
+    },
+    {
+      "seq": 11,
+      "node": "memory_recall_flight",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_flight_morning",
+          "m_flight_economy"
+        ],
+        "applicability": {
+          "m_flight_morning": "uncertain",
+          "m_flight_economy": "apply"
+        },
+        "applicability_reasons": {
+          "m_flight_morning": "reconciled: Buổi sáng là sở thích thời gian bay, không có trường tham số lọc cứng tương ứng trong công cụ tìm kiếm chuyến bay nên không thể dùng làm tool argument trực tiếp. (llm: Buổi sáng là sở thích thời gian bay, không có trường tham số lọc cứng tương ứng trong công cụ tìm kiếm chuyến bay nên không thể dùng làm tool argument trực tiếp.; rule: default uncertain (no specific tool-field rule matched))",
+          "m_flight_economy": "reconciled: cabin class preference applies to flight search (llm: Chuyến đi là đi du lịch Đà Nẵng, phù hợp điều kiện và sở thích hạng phổ thông (economy) tương ứng trực tiếp với tham số cabin_class của API tìm kiếm chuyến bay khứ hồi.; rule: cabin class preference applies to flight search)"
+        },
+        "applied_to_context": [
+          "m_flight_morning",
+          "m_flight_economy"
+        ]
+      }
+    },
+    {
+      "seq": 12,
+      "node": "memory_recall_car",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_car_5seats",
+          "m_car_automatic"
+        ],
+        "applicability": {
+          "m_car_5seats": "uncertain",
+          "m_car_automatic": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_car_5seats": "reconciled: Car seat capacity preference cannot be directly filtered via a dedicated tool argument in car search/booking, so it is classified as uncertain. (llm: Car seat capacity preference cannot be directly filtered via a dedicated tool argument in car search/booking, so it is classified as uncertain.; rule: default uncertain (no specific tool-field rule matched))",
+          "m_car_automatic": "reconciled: demoted llm apply to uncertain (llm: Preference for automatic transmission directly maps to the transmission filter field for car preferences and is not contradicted by the query.; rule: default uncertain (no specific tool-field rule matched))"
+        },
+        "applied_to_context": [
+          "m_car_5seats",
+          "m_car_automatic"
+        ]
+      }
+    },
+    {
+      "seq": 13,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 14,
+      "node": "search_hotels_tool",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [
+        {
+          "name": "search_hotels_tool",
+          "arguments": {
+            "adults": 2,
+            "price_max": 2000000,
+            "checkin_date": "2026-10-10",
+            "price_min": 2000000,
+            "checkout_date": "2026-10-12",
+            "location": "Đà Nẵng"
+          }
+        }
+      ],
+      "parent_chat_node": "hotel_chat"
+    },
+    {
+      "seq": 15,
+      "node": "flight_chat",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": []
+    },
+    {
+      "seq": 16,
+      "node": "search_round_trip_flights_tool",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": [
+        {
+          "name": "search_round_trip_flights_tool",
+          "arguments": {
+            "departure_date": "2026-10-10",
+            "return_date": "2026-10-12",
+            "cabin_class": "economy",
+            "adults": 2,
+            "origin": "SGN",
+            "destination": "DAD"
+          }
+        }
+      ],
+      "parent_chat_node": "flight_chat"
+    },
+    {
+      "seq": 17,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 18,
+      "node": "search_cars_tool",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [
+        {
+          "name": "search_cars_tool",
+          "arguments": {
+            "start_ms": "2026-10-10 08:00",
+            "address": "Đà Nẵng",
+            "user_needs": "Thuê xe tự lái 5 chỗ số tự động tại Đà Nẵng",
+            "end_ms": "2026-10-12 20:00"
+          }
+        }
+      ],
+      "parent_chat_node": "car_chat"
+    },
+    {
+      "seq": 19,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 20,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 21,
+      "node": "flight_chat",
+      "graph": "flight_assistant",
+      "domain": "flight",
+      "tools": []
+    },
+    {
+      "seq": 22,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 23,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 24,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 25,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

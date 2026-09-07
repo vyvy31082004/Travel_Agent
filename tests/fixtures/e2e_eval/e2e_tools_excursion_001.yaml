@@ -1,0 +1,68 @@
+id: e2e_tools_excursion_001
+scenario: "3 turns phủ attraction search rồi details rồi reviews; NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_excursion_outdoor
+      text: "Thích hoạt động ngoài trời khi đi chơi"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_excursion_other_user
+      text: "Memory user khác — thích tour văn hóa"
+      domain: excursion
+      category: excursion_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_excursion_superseded
+      text: "Preference cũ — chỉ đi biển"
+      domain: excursion
+      category: excursion_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  force_summarize_penultimate: false
+  messages:
+    - "Tìm tour hoặc điểm tham quan ở Đà Nẵng ngày 11/10."
+    - "Với attraction đầu tiên trong kết quả, gọi tool xem chi tiết."
+    - "Gọi tool xem review của attraction đó."
+
+expected_trace:
+  expected_route: [excursion]
+  expected_context:
+    excursion:
+      must_include: [m_excursion_outdoor]
+      must_exclude: [m_excursion_other_user, m_excursion_superseded]
+  expected_tools:
+    - name: search_attractions_tool
+      required_arguments: [location]
+    - name: fetch_attraction_details_tool
+      required_arguments: [slug]
+    - name: fetch_attraction_reviews_tool
+      required_arguments: [id]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - excursion_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "trace chứa đủ 3 excursion tools: search + details + reviews"
+    - "ngày giữ 11/10 khi tool có date args"
+    - "final answer phản ánh kết quả tool, không bịa giá/tour"
+  tradeoff_rule:
+    - "Nếu thiếu id/slug để gọi detail, nêu rõ cần search trước"
+  forbidden_claims:
+    - "Giá/tour không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

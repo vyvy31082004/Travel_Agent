@@ -1,0 +1,983 @@
+{
+  "metadata": {
+    "case_id": "e2e_tools_excursion_001",
+    "run_id": "820092ebaf1e",
+    "started_at": "2026-09-06T17:29:17.057442+00:00",
+    "finished_at": "2026-09-06T17:31:14.799395+00:00",
+    "user_id": "e2e-e2e_tools_excursion_001:user_a",
+    "thread_id": "e2e-e2e_tools_excursion_001-820092ebaf1e",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v2",
+    "git_commit": "e23fbaeebfc968930575b72dea73f6511f5519b0",
+    "fixture_to_uuid": {
+      "m_excursion_outdoor": "8f7a62c0-7e2d-5b84-a27a-27d0e2ace09a",
+      "m_excursion_other_user": "f042ead0-8aa4-5b69-a1a2-89f12923eaf1",
+      "m_excursion_superseded": "1667f05a-a0d2-5afa-9c7b-24c69be3857d"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Tìm tour hoặc điểm tham quan ở Đà Nẵng ngày 11/10.",
+      "Với attraction đầu tiên trong kết quả, gọi tool xem chi tiết.",
+      "Gọi tool xem review của attraction đó."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-07"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Tìm tour hoặc điểm tham quan ở Đà Nẵng ngày 11/10.",
+      "answer": "Dưới đây là danh sách các tour và điểm tham quan ngoài trời tại Đà Nẵng và khu vực lân cận vào ngày **11/10/2026**:\n\n1. **Vé Sun World Ba Na Hills**\n   - **Mã:** `PR9oF7hAhjy9`\n   - **Mô tả:** Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills.\n   - **Giá:** 1,018,340 VND\n   - **Đánh giá:** Chưa có đánh giá\n   ![Vé Sun World Ba Na Hills](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=)\n\n2. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times**\n   - **Mã:** `PRbeRPTXGXPd`\n   - **Mô tả:** Dịch vụ đón trả khách miễn phí khu vực trung tâm Đà Nẵng, tham quan Bà Nà Hills và Cầu Vàng trọn ngày.\n   - **Giá:** 1,284,755 VND\n   - **Đánh giá:** Chưa có đánh giá\n   ![Ba Na Hills - Golden Bridge Full-Day Tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\n\n3. **Du thuyền đêm trên sông Hàn**\n   - **Mã:** `PRa7fah7ikJw`\n   - **Mô tả:** Du thuyền ngắm cảnh thành phố về đêm.\n   - **Giá:** 116,544 VND\n   - **Đánh giá:** Chưa có đánh giá\n   ![Du thuyền đêm trên sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\n\n4. **Hoi An Basket Boat Ride in Water Coconut Forest**\n   - **Mã:** `PRNgBhNmHUwd`\n   - **Mô tả:** Trải nghiệm đi thuyền thúng tham quan rừng dừa Cẩm Thanh.\n   - **Giá:** 315,600 VND\n   - **Đánh giá:** Chưa có đánh giá\n   ![Hoi An Basket Boat Ride](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\n\n5. **Hoi An Cooking Class (Local Market, Basket Boat, Fishing & Cooking)**\n   - **Mã:** `PRVwSAVvgpO5`\n   - **Mô tả:** Tour trải nghiệm chợ địa phương, đi thuyền thúng, câu cá và học nấu ăn.\n   - **Giá:** 762,700 VND\n   - **Đánh giá:** Chưa có đánh giá\n   ![Hoi An Cooking Class](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=)\n\n6. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\n   - **Mã:** `PRFhLYK7act7`\n   - **Mô tả:** Tour nhóm nhỏ tham quan Ngũ Hành Sơn, Động Âm Phủ và ngắm hoàng hôn tại Bán đảo Sơn Trà.\n   - **Giá:** 578,600 VND\n   - **Đánh giá:** Chưa có đánh giá\n   ![Marble Mountains Sunset tour](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\n\n7. **Tour Bà Nà Hills trọn ngày với bữa trưa buffet**\n   - **Mã:** `PRdCygydpY9o`\n   - **Mô tả:** Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa buffet.\n   - **Giá:** 1,709,500 VND\n   - **Đánh giá:** Chưa có đánh giá\n   ![Tour Bà Nà Hills trọn ngày](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=)\n\n8. **Hoi An Memories Show & Hoi An Impression Theme Park Ticket**\n   - **Mã:** `PRWX9rush6bp`\n   - **Mô tả:** Vé xem show diễn Ký Ức Hội An và tham quan Công viên Ấn Tượng Hội An.\n   - **Giá:** 631,200 VND\n   - **Đánh giá:** Chưa có đánh giá\n   ![Hoi An Memories Show Ticket](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=)\n\n9. **Hoai River Boat Trip by Night with Release Lantern**\n   - **Mã:** `PRfykNA7eqX0`\n   - **Mô tả:** Đi thuyền đêm trên sông Hoài và thả đèn hoa đăng.\n   - **Giá:** 236,700 VND\n   - **Đánh giá:** Chưa có đánh giá\n   ![Hoai River Boat Trip](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\n\nNếu bạn cần thêm thông tin thông tin chi tiết hoặc muốn đặt vé/tour nào, xin vui lòng cho tôi biết!",
+      "summarize_forced": false,
+      "scored": false,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "excursion_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 4
+    },
+    {
+      "turn": 2,
+      "user_message": "Với attraction đầu tiên trong kết quả, gọi tool xem chi tiết.",
+      "answer": "Để xem chi tiết thông tin và đánh giá cho hoạt động đầu tiên — **Vé Sun World Ba Na Hills** (Mã: `PR9oF7hAhjy9`), hệ thống cần bạn cung cấp tên hoạt động hoặc địa điểm cụ thể để tra cứu chi tiết. \n\nBạn vui lòng xác nhận xem thông tin chi tiết của **Vé Sun World Ba Na Hills** tại **Đà Nẵng** hay một tour/hoạt động cụ thể nào khác để mình tiến hành tải thông tin chi tiết giúp bạn nhé!\n\n---\n\n*Danh sách các lựa chọn trong kết quả tìm kiếm:*\n1. **Vé Sun World Ba Na Hills** (`PR9oF7hAhjy9`)\n2. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times** (`PRbeRPTXGXPd`)\n3. **Du thuyền đêm trên sông Hàn** (`PRa7fah7ikJw`)\n4. **Hoi An Basket Boat Ride in Water Coconut Forest** (`PRNgBhNmHUwd`)\n5. **Hoi An Cooking Class (Local Market, Basket Boat, Fishing & Cooking)** (`PRVwSAVvgpO5`)\n6. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour** (`PRFhLYK7act7`)\n7. **Tour Bà Nà Hills trọn ngày với bữa trưa buffet** (`PRdCygydpY9o`)\n8. **Hoi An Memories Show & Hoi An Impression Theme Park Ticket** (`PRWX9rush6bp`)\n9. **Hoai River Boat Trip by Night with Release Lantern** (`PRfykNA7eqX0`)",
+      "summarize_forced": false,
+      "scored": false,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "excursion_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 8
+    },
+    {
+      "turn": 3,
+      "user_message": "Gọi tool xem review của attraction đó.",
+      "answer": "Dưới đây là tổng hợp đánh giá của du khách về **Vé Sun World Ba Na Hills** (ID: `PR9oF7hAhjy9`):\n\n###  Đánh giá tích cực:\n* **5/5★**: Trải nghiệm tuyệt vời, rất đáng đi. Việc di chuyển bằng Grab tới điểm tham quan khá thuận tiện, vé mua trước giúp qua cổng nhanh chóng. Du khách chụp được nhiều ảnh đẹp tại các khu vực ngoài trời và các điểm tham quan nổi tiếng.\n* **5/5★**: Cảnh quan đẹp và ấn tượng.\n* **4/5★**: Các điểm tham quan đẹp, buffet tại nhà hàng ngon miệng. Tuy nhiên, vào thời điểm cao điểm khu vực này có thể khá đông đúc và thời tiết hơi nóng.\n* **3/5★**: Đông người đúng như dự kiến, sơ đồ lối ra đôi khi hơi khó tìm đối với khách lần đầu ghé thăm.\n\n###  Lưu ý từ du khách (1/5★ & 2/5★):\n* Cảnh quan ngoài trời và Bà Nà Hills rất đẹp (nên dành trọn 1 ngày để trải nghiệm hết).\n* **Quy định chiều cao vé:** Trẻ em cao trên 139 cm sẽ tính theo vé người lớn.\n* Nên kiểm tra kỹ lịch trình của đơn vị cung cấp tour để tránh các bất tiện không mong muốn.\n\n> ** Mẹo nhỏ (cho người thích hoạt động ngoài trời):** Bà Nà Hills có nhiều điểm tham quan ngoài trời nổi tiếng như Cầu Vàng, Làng Pháp, Cáp treo, Vườn hoa... Bạn nên theo dõi trước dự báo thời tiết và mang theo ô/mũ vì thời tiết trên núi có thể thay đổi hoặc nắng nóng vào giữa trưa.",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "excursion_assistant",
+        "join_results",
+        "primary_assistant",
+        "summarize_conversation",
+        "memory_finalize"
+      ],
+      "message_count": 8
+    }
+  ],
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "excursion"
+    ],
+    "delegation_tool_calls": [],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "excursion_assistant",
+      "memory_recall_excursion",
+      "excursion_chat",
+      "search_attractions_tool",
+      "excursion_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize",
+      "memory_recall_global",
+      "primary_assistant",
+      "memory_recall_excursion",
+      "excursion_chat",
+      "fetch_attraction_details_tool",
+      "excursion_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize",
+      "memory_recall_global",
+      "primary_assistant",
+      "excursion_assistant",
+      "memory_recall_excursion",
+      "excursion_chat",
+      "fetch_attraction_reviews_tool",
+      "excursion_chat",
+      "join_results",
+      "primary_assistant",
+      "summarize_conversation",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "excursion": {
+      "candidate_pool_ids": [
+        "m_excursion_outdoor"
+      ],
+      "applicability": {
+        "m_excursion_outdoor": "uncertain"
+      },
+      "applicability_reasons": {
+        "m_excursion_outdoor": "reconciled: Sở thích hoạt động ngoài trời thuộc loại sở thích chung về chuyến đi/tour, không có trường tham số lọc cứng tương ứng trong tool search_attractions nên không thể apply. (llm: Sở thích hoạt động ngoài trời thuộc loại sở thích chung về chuyến đi/tour, không có trường tham số lọc cứng tương ứng trong tool search_attractions nên không thể apply.; rule: default uncertain (no specific tool-field rule matched))"
+      },
+      "final_context_ids": [
+        "m_excursion_outdoor"
+      ],
+      "applied_constraints": [
+        "(soft) [8f7a62c0-7e2d-5b84-a27a-27d0e2ace09a] Thích hoạt động ngoài trời khi đi chơi"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "tour",
+      "name": "search_attractions_tool",
+      "arguments": {
+        "end_date": "2026-10-11",
+        "location": "Đà Nẵng",
+        "start_date": "2026-10-11",
+        "destination": "Đà Nẵng"
+      },
+      "timestamp": "2026-09-06T17:31:14.797894+00:00",
+      "raw_result": {
+        "search_id": "73f7ec58-9f02-4f27-a664-9b052ab74a21",
+        "domain": "excursion",
+        "displayed_item_ids": [
+          "PR9oF7hAhjy9",
+          "PRbeRPTXGXPd",
+          "PRa7fah7ikJw",
+          "PRNgBhNmHUwd",
+          "PRVwSAVvgpO5",
+          "PRFhLYK7act7",
+          "PRdCygydpY9o",
+          "PRWX9rush6bp",
+          "PRfykNA7eqX0"
+        ],
+        "labels": [],
+        "total_results": 9
+      },
+      "normalized_result": {
+        "search_id": "73f7ec58-9f02-4f27-a664-9b052ab74a21",
+        "request_id": "req_tour_c1922f80",
+        "domain": "excursion",
+        "total_results": 9,
+        "items": [
+          {
+            "name": "Vé Sun World Ba Na Hills",
+            "slug": "pr9of7hahjy9-sun-world-ba-na-hills-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=",
+            "price": 1018340,
+            "rating": null,
+            "item_id": "PR9oF7hAhjy9",
+            "currency": "VND",
+            "description": "Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills",
+            "review_count": null,
+            "external_attraction_id": "PR9oF7hAhjy9",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 116544,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)",
+            "slug": "prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=",
+            "price": 762700,
+            "rating": null,
+            "item_id": "PRVwSAVvgpO5",
+            "currency": "VND",
+            "description": "Morning tour: 8:30am to 1:00pm Afternoon tour: 2:00pm to 6:30pm You will be pick up by car by loc...",
+            "review_count": null,
+            "external_attraction_id": "PRVwSAVvgpO5",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Tour Bà Nà Hills trọn ngày với bữa trưa buffet",
+            "slug": "prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=",
+            "price": 1709500,
+            "rating": null,
+            "item_id": "PRdCygydpY9o",
+            "currency": "VND",
+            "description": "Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa",
+            "review_count": null,
+            "external_attraction_id": "PRdCygydpY9o",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Memories Show & Hoi An Impression Theme Park Ticket",
+            "slug": "prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=",
+            "price": 631200,
+            "rating": null,
+            "item_id": "PRWX9rush6bp",
+            "currency": "VND",
+            "description": "Located on the Hoi An Memories Land, the Hoi An Memories show is one of the outdoor performances ...",
+            "review_count": null,
+            "external_attraction_id": "PRWX9rush6bp",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Lớp hướng dẫn làm lồng đèn",
+            "slug": "prpc0nrrr1qm-lantern-making-class",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=",
+            "price": 257656,
+            "rating": null,
+            "item_id": "PRPC0NRRR1QM",
+            "currency": "VND",
+            "description": "Workshop làm đèn lồng Việt Nam từ nhiều chất liệu",
+            "review_count": null,
+            "external_attraction_id": "PRPC0NRRR1QM",
+            "position": null,
+            "api_position": 9,
+            "eligible": false
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": 9,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "PR9oF7hAhjy9",
+          "PRbeRPTXGXPd",
+          "PRa7fah7ikJw",
+          "PRNgBhNmHUwd",
+          "PRVwSAVvgpO5",
+          "PRFhLYK7act7",
+          "PRdCygydpY9o",
+          "PRWX9rush6bp",
+          "PRfykNA7eqX0"
+        ],
+        "items": [
+          {
+            "name": "Vé Sun World Ba Na Hills",
+            "slug": "pr9of7hahjy9-sun-world-ba-na-hills-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=",
+            "price": 1018340,
+            "rating": null,
+            "item_id": "PR9oF7hAhjy9",
+            "currency": "VND",
+            "description": "Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills",
+            "review_count": null,
+            "external_attraction_id": "PR9oF7hAhjy9",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 116544,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)",
+            "slug": "prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=",
+            "price": 762700,
+            "rating": null,
+            "item_id": "PRVwSAVvgpO5",
+            "currency": "VND",
+            "description": "Morning tour: 8:30am to 1:00pm Afternoon tour: 2:00pm to 6:30pm You will be pick up by car by loc...",
+            "review_count": null,
+            "external_attraction_id": "PRVwSAVvgpO5",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Tour Bà Nà Hills trọn ngày với bữa trưa buffet",
+            "slug": "prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=",
+            "price": 1709500,
+            "rating": null,
+            "item_id": "PRdCygydpY9o",
+            "currency": "VND",
+            "description": "Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa",
+            "review_count": null,
+            "external_attraction_id": "PRdCygydpY9o",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Memories Show & Hoi An Impression Theme Park Ticket",
+            "slug": "prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=",
+            "price": 631200,
+            "rating": null,
+            "item_id": "PRWX9rush6bp",
+            "currency": "VND",
+            "description": "Located on the Hoi An Memories Land, the Hoi An Memories show is one of the outdoor performances ...",
+            "review_count": null,
+            "external_attraction_id": "PRWX9rush6bp",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": 9,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "tour",
+      "name": "search_attractions_tool",
+      "arguments": {
+        "end_date": "2026-10-11",
+        "location": "Đà Nẵng",
+        "start_date": "2026-10-11"
+      },
+      "timestamp": "2026-09-06T17:31:14.797894+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 6
+    },
+    {
+      "domain": "excursion",
+      "name": "fetch_attraction_details_tool",
+      "arguments": {
+        "slug": "PR9oF7hAhjy9"
+      },
+      "timestamp": "2026-09-06T17:31:14.797894+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 15
+    },
+    {
+      "domain": "excursion",
+      "name": "fetch_attraction_reviews_tool",
+      "arguments": {
+        "id": "PR9oF7hAhjy9"
+      },
+      "timestamp": "2026-09-06T17:31:14.797894+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 25
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "excursion",
+      "summary": "[{'type': 'text', 'text': 'Đánh giá của du khách về **Vé Sun World Ba Na Hills** (ID: `PR9oF7hAhjy9`):\\n\\n### Đánh giá tích cực:\\n* **5/5★**: Trải nghiệm tuyệt vời, đáng đi. Di chuyển bằng Grab thuận tiện, vé giúp qua cổng nhanh. Chụp được nhiều ảnh đẹp tại các khu vực ngoài trời và điểm tham quan.\\n* **5/5★**: Cảnh quan đẹp và ấn tượng.\\n* **4/5★**: Các điểm tham quan đẹp, buffet tại nhà hàng ngon. Tuy nhiên, thời điểm cao điểm có thể khá đông đúc và nóng.\\n* **3/5★**: Đông người đúng như mong đợi, sơ đồ lối ra đôi khi hơi khó tìm.\\n\\n### Đánh giá cần lưu ý:\\n* **1/5★ & 2/5★**: Cảnh quan ngoài trời và Bà Nà Hills rất đẹp (nên dành trọn 1 ngày để trải nghiệm hết), tuy nhiên cần lưu ý kiểm tra kỹ quy định chiều cao vé (trẻ em cao trên 139cm tính vé người lớn) và lịch trình của đơn vị cung cấp tour để tránh bất tiện.\\n\\n*Lưu ý (Sở thích hoạt động ngoài trời):* Bà Nà Hills có nhiều điểm tham quan ngoài trời nổi tiếng (Cầu Vàng, Làng Pháp, Cáp treo, Vườn hoa...), tuy nhiên du khách nên theo dõi thời tiết và chuẩn bị ô/mũ do thời tiết trên núi có thể thay đổi hoặc nắng nóng vào buổi trưa.', 'extras': {'signature': 'Er8bCrwbARFNMg+fg66TJ7S7IFdfCsa9InqBqQzob4avd7L0yoCeDSOyJ9n7x/UJbfRmTwiF+AvcYKW9OsOchySgcYC225AL3wthvKkSWdCFnF6J/xnf2v0b6c816gMOVHdqdiZTeFbyoMWl46TPM3yM/ykbu23iWJuz8jWcQb3t152jEghFfgg2LL26PYBJtjPSDBrSvIH4UEV6iK8cto5aAr1UNstS9/AD65YkN6iJ5+iOVXWOaxdC/x2AyWVDAPqd34CvdxDB3gYImdhpWs+i8yA+kXqVmTN4F3QYJmydWmIJwyAfDoQa0lnIj2zpKuJQb78ClYTFbaXDiNou769yXrhu7Q0YGv9VrzSDAz34dOGomFZDSfqlW2sOuELxI0AMqOBCAO44DfxUxRdpKTmvtiHr2aQAlXb38VL/hmueha7CsC0dkrlIx8+x1EQhgPd93BXzDUniDcnID9PpWDruBEzDXgkxxjNiaaHMbS0I6eqTnaTGsYpY4aSEIY2pNqiSui6ehPFxDr+pQj8taJu3zB9nKWpHYMo2ZJ3PfbjRFT+xPrqMDXuyOOPM6ylQYYTCYl3s4IK5BGGdMdnYF+6dlAeEoycT99lw/6ZLJ/9yOiie7ty+4zb/OKi1NjGL59IS1YVfEVrq/XeCoP9zvTH2bsDh/m4ar/2iYMR42yfCBCOsIm5qmGLWdq0nsyPBxPJ+I58FAuUMsdSWE8Uz3TPNhn6zBx4aZjqPB2sCpdhtPlPNBtR8A9UDiBgCwp8bgES2z29HOH5FEj2458ldatb/LKU09LEuypbUFzEwyFyczlzJk7bQLLgK8jssH3fwjaB7WUY6/fA+X22C4zJJKLfCAwpOIzzhDWqLm9oHorXhEkk4TO7NzqMaCj9mt64VYnwS/pqt1FzQ8VsO2CsK6R6qqyq2e82Z2f7ehZ1sMWZJT4dsI8YgUPlYGpJruySLKPnaXQOs+zhfCVQcnZ4zFkT4gNGuqChg0IFy87O+9WoP29HwpGYCUtwP5RG/gCia7mThzOqKI//o9k6ZGDynK0g02X5Fw3VB+7/JC29e0tQRP7I0PDTPiGOHuaDi8ZDpR6QsxyfgtzRLfWl1o6BnOTipPjmI5XBuNptt1m3i4IEmJ9y4VPR5EiYiJBZR/aqirpl1jvsQC0dIRAfBRVpoGewEZpsjPo5viXB9ZD0mmotSH4G+1P9znmimqt1gLdN+GQ9m0w4g+eaGunOmHFOe1DaVym+USR2969tAk1wUk4RtT0kbPZ2GtC5UkvB0iy/Hq1A+JcAKjWMTCZm8Ph18iDo/sjPh/Xtt5o+rLNQP+U9n+i89GpVA9u97YMUE9IgFXMpQy7TFahDpSb1yM3Fi60LERoSHU/PPJf4XjpoJesPBgIFKCm2nB0AaDs3K4+Kpd+OHcLVi9b9tMXosYLAQ2iZSln6F7WH2pXPyW8a7OnL0JIXaMu5gu3RDajd3IZeelukkG0TQRNDSt6ixGxwOSTOQfp13bjYaanwOQdnjSiyq2KAE3vAWZA0uSJaPwKVa4hmZcBwJRTzLhQ4+Hn/c7A0pb3WrV5SHQ/PeWYC3c390GpglMG3fUyNZIkkPIUuqhGnfXFYuGLWa+q1ipCioGY7HTiqv16doGwRkkAA6AWy9ykbNCGHApxdK+DgvZzz39zmVcG9295WdJ1vZfAZC3B3ymEjlvHGDg6NoeJatamPAUgOJE6KHTzufEldFQ6Y0hKXg9EtJduUKCFprCNIa/1Lg3oGr6AoN3nxlLPe/MJKoXnnnvfTinGrVy5Mqt9FWquCCLEClvQ/zIUISmsyg9U9VX6OIPUDaLlWQpSbmliM3f4aiHHDxCuQM0gqdOj2laFln1gKFqGQbG0Q8q6QpWkZ6FsnyWIFud4ql0dln+lXkxWHWaikCUoaj0zIdSYwwrHvZRnNkcCCnTAzXOqdGv6ktwsskcupMFaSa9p6M0wy9UV7cGs2CIt6FH9HzMH21JeoCJcAOS5rpsRmCPk9k4rP5CGVYjL65FsSjJrxOPvhp8FFN4H2i0Eo4yzY8q1eTBuiNonTGAF19nkwYdLfDe2tivr4btvZSM0dfA8MNUN/n5FnfrErf9GS4Jl+YZ8CYspWOCTIM/Tb0cqWh37xNpzP8Wg3NWUAwlxxSyvv7do9bxzLvNU2arI3e7CysRY/46aW+unjlqErWs0yvjYXdOVNOB77KZuifdylGKAYkYsadHvuQaF5/tkgqzZpBtcS9o45ke7/+o1w3q0yTpd79U438KJ5U2fXb9zs6vIZ7N1b/HdyDXqdX8PE7020aSD2Mk9PuVDtzqSnrhcnvGpAWAu/RZo7uKxi0DZKX2sWBFcUh08oMuW71WO6hee+4MMy4kH+RwZSuzrM51oLOOmEstaCLyjFhv1TP60qyWK8u27wo9bygsSygJeowkkoHuUxLONghJrZ+BvjJgehBMR6pSiLrdN4dBNo7iAlXUzEsjjUI2CNopoo/L3PNouhDJu9OTLjBqSM2AhXjSOrjq+n4V9oQcm2oPj5RkFX8i2kTicM87TldGrYZPeEfZy9BzntrPxH2SAunhmz8yp/jEC7oSx1+wwCV9nmcHdfzEygoW27cwOAlIVIzA5xMsUbmW2rSaP2Pg2n2YjLkgbtL9TEaFhiEbyT55dV9aZ647LkTuJTwNn4HC4+pT8MstbzRaRDg0UheWSAt9jp+qZSwqzpBMaHNkYnldtYa0Dv5K5WFWpHoUV/qvBR5wNEwjh8zewRqDQV1bXrbppcoEPIJv8pP/MQXldxfbKmZ6KmV5Zn6x0b6Y87fCBO1tUIIIDZhAjFlcC3+qpKbN9QBRuVd4pjTuqWp7I4Wvhy0wZ1eiQ1pK3AD6v7XhAMoxoMW3T1iCsP2hA4vyeQorGUlfq95qNoWdywGcGEOp9BFAgAjbTPXRMEuCUWXmKqOzBs0QwbxO2ydF+qOj8YaloxB4zXD1Aw5d7PV4vlR1+AcDASX0TFwm3k/Ewi7xJoNS7LH793nFDx6yj63Q18swVHuRM6z/GF7udpnqyoZibJ3CfUpfg0TJHdlsontXfuEGeb7UL3D1RhBCwGP6Bit+savCDNWUhp7uSwN+Es8rgAtYAdRY41eg8cbCDHnZ1Lmwg+N2czl9N5LNTkJEPfwbJbUBJbIEmvYC5cd2d5pDXn4ag3XBQ9NmsTzIQCNZc3V2m6+QzvGyXael5CT9UhpxEk3veMSf1u5MVHqajdRrcMNjavLpZh3+VUEIGTw/p4idBcYnedtGX9abIpogtJ8Y8cD8h6MNG9YjTnR7L7o/klgd6m7fcNbbBexF6nhJHgGklyzAqTsRnPBh+ulVcv59sOFvwEZjT/0Ao7sshWc+RuBiIDsmRWcStyB9g0LyiPLOq5nDT1r9XHzf0hSnpigpjBKqjM6u3RGh6PW/AvCnUyx/mjAF4/tKcdNe0PR0R7hsO58vbDOY9Y6kUGWxWtcnVyWaWOENw/vQy6wF14bt2tMz5iEMbI4uH/MpTC9s9nidJvnrcGu20neycMrKZM3QkzsSjRHeOtSGesig7mYVwfTZkz64XFHihfVHyHucVDOmqLeVxwgYZXZ/VSdK8hLe8ZinB/VmgpdqxtRkXZDlhNrpQzEwgh6SbtQDe6O4eBep9u8E4mBnOTJosJDYjjqJiJ05+6yLNko1LOAWfpBQ/FapduVcIDG54Spn+j1dqR/vAoKHcmCU/ZgB+sxRlUgmK1Pn68Cwth01wdYxI0sJvvzKoE2Di8l2UQGOFw7lbGHx+0c4wBgt/yGdTMo1h0oVuTABuHatUgRabXDSk61xt570O8CytCOMDWxFDLfCWArdj/eNiHAmiapR8tQN8lTangTtBKLcqo4LwqyjDz1UczOTTLQxD/N7FKuiiecZyp6cCmRqhn2W1DsUHgm6Kj8BVDe0eYy+fs+g8uffmtWkdxU1FT+jzZPcSRZxqLO8WM/EFTeZRxI7p39LtCUBbjPXCmpKggJC3hTLochnBb9nLHpL33yTSd6T/bpDA5dKRF7Y+9rx1+QxnnCVFFKiUlZjYyP1qee/K24Ix1PynYf+8GaHVu/nsxHPRIyHPHih2VPL4+tElbo10p2PCeFzZ1DQaQtp0RoT0LLLk0h0mMziV7vBv5/6sDR9c2nwRciX0mY+VTtuycr5tRIxdBWgeqOiWhsuyfseRAGpqTe/A+bAvjEXsXuAp8XHB/mzTek2YQ6K+EW0QeAegvqILTBz/L+OYmq2aLfpCUfsqqTSBTk9Aqb5YnwTzfwt4a16FmjT4D6lIotf6MymdSPLmCsm/q8LbWeyKs5JH7aKUjOmf/XDA6Se789DRgTE0C+CjLVhadj4MOEBAbZ9Q06wL1MSekiiA9bV3VuHOYq/J110wuioJTiasM5DycPG8zuj00NPOZdGQ/vjCHuFoHY/PYkMyOk2XivFSgxDTFZ2V+ZSzoOU+0OkekcC4SpCgwLd5ymR/hRSqBR5zuRRQYEzxohUlBCSTxjEKMcdyXS+ALxaQakJGn8VpxjSGfMtaOKQIfpPDOILlMqHXPMjd4LcYlNt7WzPU60pUUiW2t9bULUIYS8ELVuioHSslSZSpz5ojBgc6WDRNpB69jQRVIUnwakBq7IBQtN6WosWZTm/t0EimgI79Kt3ukS8Lk0O2NxRX58E5qV6GBAfx9DIGpiV8ZAT4AjIdyta9tQCAWoo3OM'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "(soft) [8f7a62c0-7e2d-5b84-a27a-27d0e2ace09a] Thích hoạt động ngoài trời khi đi chơi"
+      ],
+      "domain_action": "search_attractions"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "excursion"
+    ]
+  },
+  "final_answer": "Dưới đây là tổng hợp đánh giá của du khách về **Vé Sun World Ba Na Hills** (ID: `PR9oF7hAhjy9`):\n\n###  Đánh giá tích cực:\n* **5/5★**: Trải nghiệm tuyệt vời, rất đáng đi. Việc di chuyển bằng Grab tới điểm tham quan khá thuận tiện, vé mua trước giúp qua cổng nhanh chóng. Du khách chụp được nhiều ảnh đẹp tại các khu vực ngoài trời và các điểm tham quan nổi tiếng.\n* **5/5★**: Cảnh quan đẹp và ấn tượng.\n* **4/5★**: Các điểm tham quan đẹp, buffet tại nhà hàng ngon miệng. Tuy nhiên, vào thời điểm cao điểm khu vực này có thể khá đông đúc và thời tiết hơi nóng.\n* **3/5★**: Đông người đúng như dự kiến, sơ đồ lối ra đôi khi hơi khó tìm đối với khách lần đầu ghé thăm.\n\n###  Lưu ý từ du khách (1/5★ & 2/5★):\n* Cảnh quan ngoài trời và Bà Nà Hills rất đẹp (nên dành trọn 1 ngày để trải nghiệm hết).\n* **Quy định chiều cao vé:** Trẻ em cao trên 139 cm sẽ tính theo vé người lớn.\n* Nên kiểm tra kỹ lịch trình của đơn vị cung cấp tour để tránh các bất tiện không mong muốn.\n\n> ** Mẹo nhỏ (cho người thích hoạt động ngoài trời):** Bà Nà Hills có nhiều điểm tham quan ngoài trời nổi tiếng như Cầu Vàng, Làng Pháp, Cáp treo, Vườn hoa... Bạn nên theo dõi trước dự báo thời tiết và mang theo ô/mũ vì thời tiết trên núi có thể thay đổi hoặc nắng nóng vào giữa trưa.",
+  "stm": {
+    "summary": "**Bản tóm tắt cập nhật:**\n\n- **Yêu cầu của người dùng:** Tìm kiếm tour hoặc điểm tham quan tại Đà Nẵng cho ngày 11/10/2026 (ưu tiên các hoạt động ngoài trời).\n- **Trạng thái/Kết quả:** Trợ lý đã tìm thấy và đề xuất 9 lựa chọn tour/điểm tham quan ở Đà Nẵng và khu vực lân cận (Bà Nà Hills, du thuyền sông Hàn, thuyền thúng rừng dừa Hội An, tour Ngũ Hành Sơn - Sơn Trà, show Ký Ức Hội An,...). \n- **Lựa chọn đã chốt/từ chối:** Chưa có.",
+    "message_count": 8,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "b06c4a0f-239a-4cd5-a2e5-885c378cb077",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "audits": [],
+    "seeded_status": {
+      "m_excursion_outdoor": {
+        "status": "active",
+        "memory_id": "8f7a62c0-7e2d-5b84-a27a-27d0e2ace09a",
+        "memory_text": "Thích hoạt động ngoài trời khi đi chơi",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_other_user": {
+        "status": "active",
+        "memory_id": "f042ead0-8aa4-5b69-a1a2-89f12923eaf1",
+        "memory_text": "Memory user khác — thích tour văn hóa",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_superseded": {
+        "status": "superseded",
+        "memory_id": "1667f05a-a0d2-5afa-9c7b-24c69be3857d",
+        "memory_text": "Preference cũ — chỉ đi biển",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "b06c4a0f-239a-4cd5-a2e5-885c378cb077",
+      "status": "skipped",
+      "error_summary": null,
+      "created_at": "2026-09-07T00:31:10.508435+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "excursion"
+        ],
+        "actual": [
+          "excursion"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "SKIP",
+      "detail": "no expected_applicability",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "excursion_assistant",
+          "memory_recall_excursion",
+          "excursion_chat",
+          "search_attractions_tool",
+          "search_attractions_tool",
+          "searchLocation",
+          "searchAttractions",
+          "excursion_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize",
+          "memory_recall_global",
+          "primary_assistant",
+          "memory_recall_excursion",
+          "excursion_chat",
+          "fetch_attraction_details_tool",
+          "fetch_attraction_details_tool",
+          "excursion_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize",
+          "memory_recall_global",
+          "primary_assistant",
+          "excursion_assistant",
+          "memory_recall_excursion",
+          "excursion_chat",
+          "fetch_attraction_reviews_tool",
+          "fetch_attraction_reviews_tool",
+          "excursion_chat",
+          "join_results",
+          "primary_assistant",
+          "summarize_conversation",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "excursion_assistant",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "excursion_assistant",
+      "graph": "primary",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "memory_recall_excursion",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_excursion_outdoor"
+        ],
+        "applicability": {
+          "m_excursion_outdoor": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_excursion_outdoor": "reconciled: General activity preferences like outdoor activities do not map directly to a dedicated search filter argument for excursion search_attractions, but may be used to rank or select results. (llm: General activity preferences like outdoor activities do not map directly to a dedicated search filter argument for excursion search_attractions, but may be used to rank or select results.; rule: default uncertain (no specific tool-field rule matched))"
+        },
+        "applied_to_context": [
+          "m_excursion_outdoor"
+        ]
+      }
+    },
+    {
+      "seq": 5,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "search_attractions_tool",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [
+        {
+          "name": "search_attractions_tool",
+          "arguments": {
+            "end_date": "2026-10-11",
+            "location": "Đà Nẵng",
+            "start_date": "2026-10-11"
+          },
+          "sub_steps": [
+            "searchLocation",
+            "searchAttractions"
+          ]
+        }
+      ],
+      "parent_chat_node": "excursion_chat"
+    },
+    {
+      "seq": 7,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 8,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 9,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 11,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 12,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 13,
+      "node": "memory_recall_excursion",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_excursion_outdoor"
+        ],
+        "applicability": {
+          "m_excursion_outdoor": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_excursion_outdoor": "reconciled: generic tour prefs uncertain at details (llm: The get_details action takes a specific attraction ID rather than filter arguments, but this preference may be relevant when reviewing the details of the attraction.; rule: generic tour prefs uncertain at details)"
+        },
+        "applied_to_context": [
+          "m_excursion_outdoor"
+        ]
+      }
+    },
+    {
+      "seq": 14,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 15,
+      "node": "fetch_attraction_details_tool",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [
+        {
+          "name": "fetch_attraction_details_tool",
+          "arguments": {
+            "slug": "PR9oF7hAhjy9"
+          }
+        }
+      ],
+      "parent_chat_node": "excursion_chat"
+    },
+    {
+      "seq": 16,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 17,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 18,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 19,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 20,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 21,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 22,
+      "node": "excursion_assistant",
+      "graph": "primary",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 23,
+      "node": "memory_recall_excursion",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_excursion_outdoor"
+        ],
+        "applicability": {
+          "m_excursion_outdoor": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_excursion_outdoor": "reconciled: Sở thích hoạt động ngoài trời thuộc loại sở thích chung về chuyến đi/tour, không có trường tham số lọc cứng tương ứng trong tool search_attractions nên không thể apply. (llm: Sở thích hoạt động ngoài trời thuộc loại sở thích chung về chuyến đi/tour, không có trường tham số lọc cứng tương ứng trong tool search_attractions nên không thể apply.; rule: default uncertain (no specific tool-field rule matched))"
+        },
+        "applied_to_context": [
+          "m_excursion_outdoor"
+        ]
+      }
+    },
+    {
+      "seq": 24,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 25,
+      "node": "fetch_attraction_reviews_tool",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [
+        {
+          "name": "fetch_attraction_reviews_tool",
+          "arguments": {
+            "id": "PR9oF7hAhjy9"
+          }
+        }
+      ],
+      "parent_chat_node": "excursion_chat"
+    },
+    {
+      "seq": 26,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 27,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 28,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 29,
+      "node": "summarize_conversation",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 30,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

@@ -8,7 +8,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from memory.applicability import ApplicabilityLabel, MockApplicabilityJudge
 from memory_eval.common import load_jsonl
+from memory_eval.retrieval_report import render_retrieval_report_markdown
 from memory_eval.suites import (
     evaluate_answer_file,
     evaluate_retrieval_file,
@@ -246,6 +248,148 @@ def test_retrieval_metrics_and_zero_leakage():
     assert dev.metrics["candidate_pool_completeness"].value == 1.0
     assert dev.metrics["overridden_leakage_rate"].value == 0.0
     assert dev.metrics["cross_user_candidate_leakage"].value == 0.0
+
+
+def _retrieval_metric_case(case_id: str, predictions: dict[str, str]) -> dict:
+    memory_store = [
+        {
+            "memory_id": memory_id,
+            "user_id": "metric-user",
+            "memory_text": f"preference {memory_id}",
+            "category": "hotel_preference",
+            "domain": "hotel",
+            "family": "travel_preferences",
+            "evidence_text": f"preference {memory_id}",
+            "source_thread_id": "metric-thread",
+            "status": "active",
+        }
+        for memory_id in predictions
+    ]
+    return {
+        "case_id": case_id,
+        "split": "test",
+        "scenario_type": "metric_formula",
+        "user_id": "metric-user",
+        "user_query": "Tìm khách sạn",
+        "domain": "hotel",
+        "memory_store": memory_store,
+        "expected_sql_pool": list(predictions),
+        "expected_applicability": {
+            memory_id: gold_label
+            for memory_id, gold_label in predictions.items()
+        },
+    }
+
+
+def test_retrieval_context_quality_metric_formulas(tmp_path, monkeypatch):
+    gold_by_case = {
+        "good": {
+            "good-apply": "apply",
+            "good-uncertain": "uncertain",
+            "good-irrelevant": "irrelevant",
+            "good-overridden": "overridden",
+        },
+        "bad": {
+            "bad-apply": "apply",
+            "bad-uncertain": "uncertain",
+            "bad-irrelevant": "irrelevant",
+            "bad-overridden": "overridden",
+        },
+    }
+    predicted = {
+        "good-apply": ApplicabilityLabel.APPLY,
+        "good-uncertain": ApplicabilityLabel.UNCERTAIN,
+        "good-irrelevant": ApplicabilityLabel.IRRELEVANT,
+        "good-overridden": ApplicabilityLabel.OVERRIDDEN,
+        "bad-apply": ApplicabilityLabel.IRRELEVANT,
+        "bad-uncertain": ApplicabilityLabel.IRRELEVANT,
+        "bad-irrelevant": ApplicabilityLabel.APPLY,
+        "bad-overridden": ApplicabilityLabel.APPLY,
+    }
+    judge = MockApplicabilityJudge(overrides=predicted)
+    monkeypatch.setattr(
+        "memory_eval.suites.build_retrieval_applicability_judge",
+        lambda mode, judge_model: judge,
+    )
+
+    fixture = tmp_path / "retrieval_metrics.jsonl"
+    fixture.write_text(
+        "\n".join(
+            json.dumps(_retrieval_metric_case(case_id, labels))
+            for case_id, labels in gold_by_case.items()
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    report = asyncio.run(
+        evaluate_retrieval_file(fixture, make_eval_settings(), split="test")
+    )
+
+    assert report.metrics["context_recall"].value == pytest.approx(0.5)
+    assert report.metrics["allowed_context_precision"].value == pytest.approx(0.5)
+    assert report.metrics["uncertain_recall"].value == pytest.approx(0.5)
+    assert report.metrics["irrelevant_leakage_rate"].value == pytest.approx(0.5)
+    assert report.metrics["overridden_leakage_rate"].value == pytest.approx(0.5)
+    assert report.metrics["context_case_pass_rate"].value == pytest.approx(0.5)
+    assert report.metrics["context_precision"].value == pytest.approx(0.25)
+    assert report.metrics["uncertain_context_rate"].value == pytest.approx(0.25)
+
+    by_id = {case["case_id"]: case for case in report.cases}
+    assert by_id["good"]["context_ok"] is True
+    assert by_id["bad"]["context_ok"] is False
+    assert by_id["bad"]["irrelevant_leaked"] == ["bad-irrelevant"]
+    assert by_id["bad"]["overridden_leaked"] == ["bad-overridden"]
+
+
+def test_retrieval_context_quality_empty_denominators(tmp_path):
+    fixture = tmp_path / "empty_retrieval_metrics.jsonl"
+    fixture.write_text(
+        json.dumps(
+            {
+                "case_id": "empty",
+                "split": "test",
+                "scenario_type": "metric_empty",
+                "user_id": "metric-user",
+                "user_query": "Tìm khách sạn",
+                "domain": "hotel",
+                "memory_store": [],
+                "expected_sql_pool": [],
+                "expected_applicability": {},
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    report = asyncio.run(
+        evaluate_retrieval_file(fixture, make_eval_settings(), split="test")
+    )
+
+    assert report.metrics["allowed_context_precision"].value is None
+    assert report.metrics["uncertain_recall"].value is None
+    assert report.metrics["irrelevant_leakage_rate"].value is None
+    assert report.metrics["overridden_leakage_rate"].value is None
+    assert report.metrics["context_case_pass_rate"].value == 1.0
+
+
+def test_retrieval_report_separates_quality_and_diagnostics():
+    payload = {
+        "suite": "retrieval",
+        "split": "test",
+        "case_count": 1,
+        "report": {
+            "metrics": {
+                "allowed_context_precision": {"value": 1.0},
+                "context_precision": {"value": 0.6},
+            }
+        },
+    }
+    markdown = render_retrieval_report_markdown(payload)
+
+    assert "## Quality metrics" in markdown
+    assert "| Allowed context precision | 1.0000 |" in markdown
+    assert "## Isolation metrics" in markdown
+    assert "## Context composition diagnostics" in markdown
+    assert "| Apply-only share in final context (diagnostic) | 0.6000 |" in markdown
 
 
 def test_answer_accuracy_and_partial_f1():

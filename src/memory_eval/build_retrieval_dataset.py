@@ -34,38 +34,40 @@ FAMILY_BY_CATEGORY = {
     "profile_fact": "profile_facts",
 }
 
-# (development_count, test_count) per scenario_type — totals 65 / 85
+# (development_count, test_count) per scenario_type — totals 65 / 85.
+# Test primary-label balance (priority overridden > irrelevant > uncertain > apply):
+#   apply≈21, uncertain≈21, irrelevant≈21, overridden≈21, empty=1.
 SPLIT_COUNTS: dict[str, tuple[int, int]] = {
-    "scope_same_user_same_domain": (2, 3),
+    "scope_same_user_same_domain": (3, 2),
     "scope_cross_user": (2, 3),
-    "scope_cross_domain": (2, 3),
+    "scope_cross_domain": (3, 2),
     "scope_inactive": (2, 3),
     "scope_global_not_in_pool": (2, 3),
-    "scope_empty_pool": (2, 3),
-    "action_contrast_hotel_search": (1, 3),
-    "action_contrast_hotel_details": (1, 2),
+    "scope_empty_pool": (3, 1),
+    "action_contrast_hotel_search": (2, 3),
+    "action_contrast_hotel_details": (2, 2),
     "action_contrast_hotel_select_room": (2, 2),
-    "action_contrast_hotel_reviews": (1, 2),
-    "action_contrast_flight_search": (2, 2),
-    "action_contrast_flight_compare": (1, 2),
+    "action_contrast_hotel_reviews": (2, 4),
+    "action_contrast_flight_search": (2, 3),
+    "action_contrast_flight_compare": (2, 2),
     "action_contrast_car_search": (2, 2),
-    "action_contrast_car_select": (1, 2),
+    "action_contrast_car_select": (2, 2),
     "action_contrast_excursion_search": (2, 2),
-    "action_contrast_excursion_details": (1, 2),
-    "override_flight_time": (2, 3),
-    "override_hotel_budget": (2, 3),
+    "action_contrast_excursion_details": (2, 3),
+    "override_flight_time": (2, 5),
+    "override_hotel_budget": (2, 5),
     "override_hotel_location_uncertain": (2, 3),
-    "override_car_transmission": (2, 3),
-    "override_flight_departure": (2, 3),
-    "soft_hotel_quiet_uncertain": (3, 3),
-    "soft_hotel_avoid_groups_uncertain": (3, 3),
-    "soft_hotel_bathtub_uncertain": (3, 3),
-    "soft_flight_direct_apply": (3, 4),
-    "soft_flight_lowest_price_uncertain": (2, 3),
-    "state_hotel_bathtub_apply_with_selection": (4, 4),
-    "state_hotel_bathtub_irrelevant_without_selection": (4, 4),
-    "state_flight_seat_with_shortlist": (4, 4),
-    "state_car_capacity_with_trip_context": (3, 3),
+    "override_car_transmission": (2, 5),
+    "override_flight_departure": (2, 6),
+    "soft_hotel_quiet_uncertain": (2, 1),
+    "soft_hotel_avoid_groups_uncertain": (2, 1),
+    "soft_hotel_bathtub_uncertain": (2, 4),
+    "soft_flight_direct_apply": (2, 4),
+    "soft_flight_lowest_price_uncertain": (2, 2),
+    "state_hotel_bathtub_apply_with_selection": (3, 2),
+    "state_hotel_bathtub_irrelevant_without_selection": (2, 3),
+    "state_flight_seat_with_shortlist": (2, 3),
+    "state_car_capacity_with_trip_context": (3, 2),
 }
 
 CODE_PATH = [
@@ -75,6 +77,10 @@ CODE_PATH = [
 METRICS = [
     "candidate_pool_completeness",
     "context_recall",
+    "allowed_context_precision",
+    "uncertain_recall",
+    "irrelevant_leakage_rate",
+    "context_case_pass_rate",
     "context_precision",
     "applicability_macro_f1",
     "overridden_leakage_rate",
@@ -406,13 +412,16 @@ def _action_hotel_details(split: str, index: int) -> dict[str, Any]:
         domain_state={"selected_hotel_id": "hotel_123"},
         memory_store=store,
         expected_sql_pool=[bathtub_id, budget_id],
-        expected_applicability={bathtub_id: "uncertain", budget_id: "apply"},
+        expected_applicability={bathtub_id: "uncertain", budget_id: "uncertain"},
         expected_action="get_hotel_details",
         expected_presented_constraints=[
             {"memory_id": bathtub_id, "constraint": "prefer_bathtub", "strength": "soft_preference"},
             {"memory_id": budget_id, "constraint": "budget=1-2m", "strength": "soft_preference"},
         ],
-        rationale="Bathtub may be soft-priority at get_hotel_details.",
+        rationale=(
+            "Budget has no get_hotel_details tool field (price_min/max is search_hotels); "
+            "bathtub/budget may still soft-rank when reading room details → uncertain."
+        ),
     )
 
 
@@ -536,9 +545,9 @@ def _action_car_search(split: str, index: int) -> dict[str, Any]:
         domain="car",
         memory_store=store,
         expected_sql_pool=[auto_id, seven_id],
-        expected_applicability={auto_id: "apply", seven_id: "apply"},
+        expected_applicability={auto_id: "apply", seven_id: "uncertain"},
         expected_action="search_cars",
-        rationale="Both transmission and 7-seat capacity map via user_needs on search_cars.",
+        rationale="Transmission maps via user_needs; seat capacity is soft (no seats tool arg).",
     )
 
 
@@ -836,12 +845,13 @@ def _soft_hotel_bathtub(split: str, index: int) -> dict[str, Any]:
         domain="hotel",
         memory_store=store,
         expected_sql_pool=[bath_id],
-        expected_applicability={bath_id: "uncertain"},
+        expected_applicability={bath_id: "irrelevant"},
         expected_action="search_hotels",
-        expected_presented_constraints=[
-            {"memory_id": bath_id, "constraint": "prefer_bathtub", "strength": "soft_preference"},
-        ],
-        rationale="Bathtub uncertain at search without room-level data.",
+        expected_presented_constraints=[],
+        rationale=(
+            "Bathtub amenity is not a search_hotels tool field → irrelevant "
+            "(align with action_contrast / tool-field rubric)."
+        ),
     )
 
 
@@ -1003,12 +1013,12 @@ def _state_car_capacity(split: str, index: int) -> dict[str, Any]:
         domain_state={"passengers": 6, "trip_purpose": "family"},
         memory_store=store,
         expected_sql_pool=[seven_id],
-        expected_applicability={seven_id: "apply"},
+        expected_applicability={seven_id: "uncertain"},
         expected_action="search_cars",
         expected_presented_constraints=[
             {"memory_id": seven_id, "constraint": "prefer_7_seats", "strength": "soft_preference"},
         ],
-        rationale="7-seat preference applies with family trip context.",
+        rationale="7-seat preference is soft on search_cars (no seats tool arg); still recalled.",
     )
 
 

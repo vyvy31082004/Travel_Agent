@@ -1,0 +1,624 @@
+{
+  "metadata": {
+    "case_id": "e2e_override_excursion_001",
+    "run_id": "8e4f7bd74d75",
+    "started_at": "2026-09-06T11:34:26.625141+00:00",
+    "finished_at": "2026-09-06T11:35:14.298212+00:00",
+    "user_id": "e2e-e2e_override_excursion_001:user_a",
+    "thread_id": "e2e-e2e_override_excursion_001-8e4f7bd74d75",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v2",
+    "git_commit": "e23fbaeebfc968930575b72dea73f6511f5519b0",
+    "fixture_to_uuid": {
+      "m_budget": "e99e1eb6-71bc-584a-8409-096e9d065b7c",
+      "m_nature": "8416f94f-57e5-50a5-b0bb-e3623e405843",
+      "m_other_user": "25fa37c0-0c42-5d9c-bb8d-dfc6a59032a1",
+      "m_superseded": "18346776-1d13-50d6-9e04-01795368c442"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Lần này tìm hoạt động ở Đà Nẵng ngày 10/10, ngân sách tối đa 700 nghìn/người."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-06"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Lần này tìm hoạt động ở Đà Nẵng ngày 10/10, ngân sách tối đa 700 nghìn/người.",
+      "answer": "Dưới đây là danh sách các hoạt động và tour tại khu vực Đà Nẵng - Hội An ngày 10/10/2026 phù hợp với ngân sách tối đa 700.000 VNĐ/người:\n\n1. **Du thuyền đêm trên sông Hàn**\n   * **Mã tour (ID)**: `PRa7fah7ikJw`\n   * **Mô tả**: Du thuyền ngắm cảnh sông nước Đà Nẵng về đêm.\n   * **Giá**: 116.544 VNĐ / người\n   * ![Du thuyền đêm trên sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\n\n2. **Hoi An Basket Boat Ride in Water Coconut Forest**\n   * **Mã tour (ID)**: `PRNgBhNmHUwd`\n   * **Mô tả**: Trải nghiệm dã ngoại đi thuyền thúng khám phá thiên nhiên Rừng dừa nước Cẩm Thanh.\n   * **Giá**: 315.600 VNĐ / người\n   * ![Hoi An Basket Boat Ride in Water Coconut Forest](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\n\n3. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\n   * **Mã tour (ID)**: `PRFhLYK7act7`\n   * **Mô tả**: Tour dã ngoại thiên nhiên nhóm nhỏ tham quan Ngũ Hành Sơn, Động Âm Phủ và ngắm hoàng hôn tại Bán đảo Sơn Trà (Monkey Mountain).\n   * **Giá**: 578.600 VNĐ / người\n   * ![Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\n\n4. **Hoai River Boat Trip by Night with Release Lantern**\n   * **Mã tour (ID)**: `PRfykNA7eqX0`\n   * **Mô tả**: Trải nghiệm dạo thuyền trên sông Hoài ngoài trời về đêm và thả hoa đăng.\n   * **Giá**: 236.700 VNĐ / người\n   * ![Hoai River Boat Trip by Night with Release Lantern](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\n\nQuý khách có thể sử dụng Mã tour (ID) tương ứng để tiến hành đặt chỗ hoặc yêu cầu xem thêm thông tin chi tiết.",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "excursion_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 4
+    }
+  ],
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "excursion"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToExcursionAssistant",
+        "args": {
+          "turn_constraints": [
+            "ngân sách tối đa 700000 VNĐ/người",
+            "ngày 10/10/2026",
+            "địa điểm Đà Nẵng"
+          ],
+          "request": "Tìm hoạt động, tour dã ngoại tại Đà Nẵng ngày 10/10/2026, ngân sách tối đa 700.000 VNĐ/người"
+        },
+        "timestamp": "2026-09-06T11:35:14.298212+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "excursion_assistant",
+      "memory_recall_excursion",
+      "excursion_chat",
+      "search_attractions_tool",
+      "excursion_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "excursion": {
+      "candidate_pool_ids": [
+        "m_nature",
+        "m_budget"
+      ],
+      "applicability": {
+        "m_nature": "uncertain",
+        "m_budget": "overridden"
+      },
+      "applicability_reasons": {
+        "m_nature": "reconciled: nature tour-type is too general for concrete attraction tool args (llm: General preference for nature spots cannot be passed directly as a concrete tool argument in excursion search, but may be useful when filtering or ranking results.; rule: nature tour-type is too general for concrete attraction tool args)",
+        "m_budget": "reconciled: per-person budget overridden by explicit higher cap (llm: The user explicitly set a specific budget constraint of 700,000 VND/person for this request ('Lần này... ngân sách tối đa 700 nghìn/người'), overriding the general memory of usually spending under 300,000 VND/person.; rule: per-person budget overridden by explicit higher cap)"
+      },
+      "final_context_ids": [
+        "m_nature",
+        "m_budget"
+      ],
+      "applied_constraints": [
+        "ngân sách tối đa 700000 VNĐ/người",
+        "ngày 10/10/2026",
+        "địa điểm Đà Nẵng",
+        "(soft) [8416f94f-57e5-50a5-b0bb-e3623e405843] Thích điểm tham quan thiên nhiên"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "tour",
+      "name": "search_attractions_tool",
+      "arguments": {
+        "end_date": "2026-10-10",
+        "location": "Đà Nẵng",
+        "start_date": "2026-10-10",
+        "destination": "Đà Nẵng"
+      },
+      "timestamp": "2026-09-06T11:35:14.298212+00:00",
+      "raw_result": {
+        "search_id": "22fc54cd-247b-4132-9b30-008fe25db64d",
+        "domain": "excursion",
+        "displayed_item_ids": [
+          "PRa7fah7ikJw",
+          "PRNgBhNmHUwd",
+          "PRFhLYK7act7",
+          "PRfykNA7eqX0"
+        ],
+        "labels": [],
+        "total_results": 4
+      },
+      "normalized_result": {
+        "search_id": "22fc54cd-247b-4132-9b30-008fe25db64d",
+        "request_id": "req_tour_6ea7cd84",
+        "domain": "excursion",
+        "total_results": 4,
+        "items": [
+          {
+            "name": "Vé Sun World Ba Na Hills",
+            "slug": "pr9of7hahjy9-sun-world-ba-na-hills-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/642461919.jpg?k=f5f6c2bc3f6e0ef9e24382a51f332bead7cfd96f6b36389e6663cf2056e842a0&o=",
+            "price": 1018340,
+            "rating": null,
+            "item_id": "PR9oF7hAhjy9",
+            "currency": "VND",
+            "description": "Cơ hội khám phá khu phức hợp nghỉ dưỡng và vui chơi giải trí Sun World Ba Na Hills",
+            "review_count": null,
+            "external_attraction_id": "PR9oF7hAhjy9",
+            "position": null,
+            "api_position": 1,
+            "eligible": false
+          },
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": null,
+            "api_position": 2,
+            "eligible": false
+          },
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 116544,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": 1,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": 2,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)",
+            "slug": "prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=",
+            "price": 762700,
+            "rating": null,
+            "item_id": "PRVwSAVvgpO5",
+            "currency": "VND",
+            "description": "Morning tour: 8:30am to 1:00pm Afternoon tour: 2:00pm to 6:30pm You will be pick up by car by loc...",
+            "review_count": null,
+            "external_attraction_id": "PRVwSAVvgpO5",
+            "position": null,
+            "api_position": 5,
+            "eligible": false
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 3,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Tour Bà Nà Hills trọn ngày với bữa trưa buffet",
+            "slug": "prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=",
+            "price": 1709500,
+            "rating": null,
+            "item_id": "PRdCygydpY9o",
+            "currency": "VND",
+            "description": "Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa",
+            "review_count": null,
+            "external_attraction_id": "PRdCygydpY9o",
+            "position": null,
+            "api_position": 7,
+            "eligible": false
+          },
+          {
+            "name": "Hoi An Memories Show & Hoi An Impression Theme Park Ticket",
+            "slug": "prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=",
+            "price": 631200,
+            "rating": null,
+            "item_id": "PRWX9rush6bp",
+            "currency": "VND",
+            "description": "Located on the Hoi An Memories Land, the Hoi An Memories show is one of the outdoor performances ...",
+            "review_count": null,
+            "external_attraction_id": "PRWX9rush6bp",
+            "position": null,
+            "api_position": 8,
+            "eligible": false
+          },
+          {
+            "name": "Lớp hướng dẫn làm lồng đèn",
+            "slug": "prpc0nrrr1qm-lantern-making-class",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=",
+            "price": 257656,
+            "rating": null,
+            "item_id": "PRPC0NRRR1QM",
+            "currency": "VND",
+            "description": "Workshop làm đèn lồng Việt Nam từ nhiều chất liệu",
+            "review_count": null,
+            "external_attraction_id": "PRPC0NRRR1QM",
+            "position": null,
+            "api_position": 9,
+            "eligible": false
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": 4,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "PRa7fah7ikJw",
+          "PRNgBhNmHUwd",
+          "PRFhLYK7act7",
+          "PRfykNA7eqX0"
+        ],
+        "items": [
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 116544,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": 1,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": 2,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 3,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": 4,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "excursion",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là danh sách các hoạt động, tour dã ngoại và thiên nhiên tại khu vực Đà Nẵng - Hội An phù hợp với ngân sách tối đa 700.000 VNĐ/người cho ngày 10/10/2026:\\n\\n* **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\\n  * **external_attraction_id**: `PRFhLYK7act7`\\n  * **Tên**: Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour\\n  * **Mô tả**: Tour dã ngoại thiên nhiên nhóm nhỏ tham quan Ngũ Hành Sơn, Động Âm Phủ và ngắm hoàng hôn tại Bán đảo Sơn Trà (Monkey Mountain).\\n  * **Giá**: 578.600 VND\\n  * **Đơn vị tiền tệ**: VND\\n  * **Đánh giá (Rating)**: N/A\\n  * **Số lượng đánh giá**: N/A\\n  * **Hình ảnh**: ![Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\\n  * **Slug**: `prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour`\\n\\n* **Hoi An Basket Boat Ride in Water Coconut Forest**\\n  * **external_attraction_id**: `PRNgBhNmHUwd`\\n  * **Tên**: Hoi An Basket Boat Ride in Water Coconut Forest\\n  * **Mô tả**: Trải nghiệm dã ngoại đi thuyền thúng khám phá thiên nhiên Rừng dừa nước Cẩm Thanh.\\n  * **Giá**: 315.600 VND\\n  * **Đơn vị tiền tệ**: VND\\n  * **Đánh giá (Rating)**: N/A\\n  * **Số lượng đánh giá**: N/A\\n  * **Hình ảnh**: ![Hoi An Basket Boat Ride in Water Coconut Forest](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\\n  * **Slug**: `prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest`\\n\\n* **Du thuyền đêm trên sông Hàn**\\n  * **external_attraction_id**: `PRa7fah7ikJw`\\n  * **Tên**: Du thuyền đêm trên sông Hàn\\n  * **Mô tả**: Du thuyền ngắm cảnh sông nước Đà Nẵng về đêm.\\n  * **Giá**: 116.544 VND\\n  * **Đơn vị tiền tệ**: VND\\n  * **Đánh giá (Rating)**: N/A\\n  * **Số lượng đánh giá**: N/A\\n  * **Hình ảnh**: ![Du thuyền đêm trên sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\\n  * **Slug**: `pra7fah7ikjw-han-river-night-cruise`\\n\\n* **Hoai River Boat Trip by Night with Release Lantern**\\n  * **external_attraction_id**: `PRfykNA7eqX0`\\n  * **Tên**: Hoai River Boat Trip by Night with Release Lantern\\n  * **Mô tả**: Trải nghiệm dạo thuyền trên sông Hoài ngoài trời về đêm và thả hoa đăng.\\n  * **Giá**: 236.700 VND\\n  * **Đơn vị tiền tệ**: VND\\n  * **Đánh giá (Rating)**: N/A\\n  * **Số lượng đánh giá**: N/A\\n  * **Hình ảnh**: ![Hoai River Boat Trip by Night with Release Lantern](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\\n  * **Slug**: `prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern`\\n\\n Quý khách có thể sử dụng `external_attraction_id` của tour tương ứng để tiến hành đặt chỗ.', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "ngân sách tối đa 700000 VNĐ/người",
+        "ngày 10/10/2026",
+        "địa điểm Đà Nẵng",
+        "(soft) [8416f94f-57e5-50a5-b0bb-e3623e405843] Thích điểm tham quan thiên nhiên"
+      ],
+      "domain_action": "search_attractions"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "excursion"
+    ]
+  },
+  "final_answer": "Dưới đây là danh sách các hoạt động và tour tại khu vực Đà Nẵng - Hội An ngày 10/10/2026 phù hợp với ngân sách tối đa 700.000 VNĐ/người:\n\n1. **Du thuyền đêm trên sông Hàn**\n   * **Mã tour (ID)**: `PRa7fah7ikJw`\n   * **Mô tả**: Du thuyền ngắm cảnh sông nước Đà Nẵng về đêm.\n   * **Giá**: 116.544 VNĐ / người\n   * ![Du thuyền đêm trên sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\n\n2. **Hoi An Basket Boat Ride in Water Coconut Forest**\n   * **Mã tour (ID)**: `PRNgBhNmHUwd`\n   * **Mô tả**: Trải nghiệm dã ngoại đi thuyền thúng khám phá thiên nhiên Rừng dừa nước Cẩm Thanh.\n   * **Giá**: 315.600 VNĐ / người\n   * ![Hoi An Basket Boat Ride in Water Coconut Forest](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\n\n3. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\n   * **Mã tour (ID)**: `PRFhLYK7act7`\n   * **Mô tả**: Tour dã ngoại thiên nhiên nhóm nhỏ tham quan Ngũ Hành Sơn, Động Âm Phủ và ngắm hoàng hôn tại Bán đảo Sơn Trà (Monkey Mountain).\n   * **Giá**: 578.600 VNĐ / người\n   * ![Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\n\n4. **Hoai River Boat Trip by Night with Release Lantern**\n   * **Mã tour (ID)**: `PRfykNA7eqX0`\n   * **Mô tả**: Trải nghiệm dạo thuyền trên sông Hoài ngoài trời về đêm và thả hoa đăng.\n   * **Giá**: 236.700 VNĐ / người\n   * ![Hoai River Boat Trip by Night with Release Lantern](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\n\nQuý khách có thể sử dụng Mã tour (ID) tương ứng để tiến hành đặt chỗ hoặc yêu cầu xem thêm thông tin chi tiết.",
+  "stm": {
+    "summary": null,
+    "message_count": 4,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "9c774dcb-0977-47f7-8ecf-bbcc26fb1d7b",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "audits": [],
+    "seeded_status": {
+      "m_budget": {
+        "status": "active",
+        "memory_id": "e99e1eb6-71bc-584a-8409-096e9d065b7c",
+        "memory_text": "Ngân sách tour thường dưới 300 nghìn/người",
+        "supersedes_memory_id": null
+      },
+      "m_nature": {
+        "status": "active",
+        "memory_id": "8416f94f-57e5-50a5-b0bb-e3623e405843",
+        "memory_text": "Thích điểm tham quan thiên nhiên",
+        "supersedes_memory_id": null
+      },
+      "m_other_user": {
+        "status": "active",
+        "memory_id": "25fa37c0-0c42-5d9c-bb8d-dfc6a59032a1",
+        "memory_text": "Memory user khác — thích tour văn hóa",
+        "supersedes_memory_id": null
+      },
+      "m_superseded": {
+        "status": "superseded",
+        "memory_id": "18346776-1d13-50d6-9e04-01795368c442",
+        "memory_text": "Preference cũ — tránh tour ngoài trời",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "9c774dcb-0977-47f7-8ecf-bbcc26fb1d7b",
+      "status": "skipped",
+      "error_summary": null,
+      "created_at": "2026-09-06T18:35:08.535708+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "excursion"
+        ],
+        "actual": [
+          "excursion"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "PASS",
+      "detail": "applicability labels match",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "excursion_assistant",
+          "memory_recall_excursion",
+          "excursion_chat",
+          "search_attractions_tool",
+          "search_attractions_tool",
+          "searchLocation",
+          "searchAttractions",
+          "excursion_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "excursion_assistant",
+          "memory_recall_excursion",
+          "excursion_chat",
+          "searchLocation",
+          "searchAttractions",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "excursion_assistant",
+      "graph": "primary",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "memory_recall_excursion",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_nature",
+          "m_budget"
+        ],
+        "applicability": {
+          "m_nature": "uncertain",
+          "m_budget": "overridden"
+        },
+        "applicability_reasons": {
+          "m_nature": "reconciled: nature tour-type is too general for concrete attraction tool args (llm: General preference for nature spots cannot be passed directly as a concrete tool argument in excursion search, but may be useful when filtering or ranking results.; rule: nature tour-type is too general for concrete attraction tool args)",
+          "m_budget": "reconciled: per-person budget overridden by explicit higher cap (llm: The user explicitly set a specific budget constraint of 700,000 VND/person for this request ('Lần này... ngân sách tối đa 700 nghìn/người'), overriding the general memory of usually spending under 300,000 VND/person.; rule: per-person budget overridden by explicit higher cap)"
+        },
+        "applied_to_context": [
+          "m_nature"
+        ]
+      }
+    },
+    {
+      "seq": 5,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "search_attractions_tool",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [
+        {
+          "name": "search_attractions_tool",
+          "arguments": {
+            "start_date": "2026-10-10",
+            "location": "Đà Nẵng",
+            "end_date": "2026-10-10"
+          },
+          "sub_steps": [
+            "searchLocation",
+            "searchAttractions"
+          ]
+        }
+      ],
+      "parent_chat_node": "excursion_chat"
+    },
+    {
+      "seq": 7,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 8,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 9,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

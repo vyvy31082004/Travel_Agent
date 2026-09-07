@@ -32,7 +32,10 @@ ALL_CASE_FILES = [
     "e2e_write_excursion_supersede_001.yaml",
     "e2e_write_global_name_001.yaml",
     "e2e_global_profile_name_001.yaml",
-    "e2e_tools_all_001.yaml",
+    "e2e_tools_hotel_001.yaml",
+    "e2e_tools_car_001.yaml",
+    "e2e_tools_excursion_001.yaml",
+    "e2e_tools_flight_001.yaml",
 ]
 
 MULTI_CASE_IDS = {
@@ -56,7 +59,19 @@ WRITE_CASE_IDS = {
     "e2e_write_global_name_001",
 }
 
-TOOLS_ALL_CASE_ID = "e2e_tools_all_001"
+TOOLS_CASE_EXPECTED_COUNTS = {
+    "e2e_tools_hotel_001": 5,
+    "e2e_tools_car_001": 2,
+    "e2e_tools_excursion_001": 3,
+    "e2e_tools_flight_001": 3,
+}
+
+TOOLS_CASE_MESSAGE_COUNTS = {
+    "e2e_tools_hotel_001": 4,
+    "e2e_tools_car_001": 2,
+    "e2e_tools_excursion_001": 3,
+    "e2e_tools_flight_001": 3,
+}
 
 
 @pytest.mark.parametrize("case_file", ALL_CASE_FILES)
@@ -80,14 +95,15 @@ def test_e2e_fixture_validates(case_file: str) -> None:
         assert "memory_finalize" in case.expected_trace.expected_node_sequence_contains
         assert case.expected_finalize.action.value in {"NOOP", "INSERT", "SUPERSEDE"}
         assert case.expected_finalize.memories
-    if case.id == TOOLS_ALL_CASE_ID:
-        assert len(case.input.messages) == 4
+    if case.id in TOOLS_CASE_EXPECTED_COUNTS:
+        assert len(case.input.messages) == TOOLS_CASE_MESSAGE_COUNTS[case.id]
         assert case.input.force_summarize_penultimate is False
-        assert len(case.expected_trace.expected_tools) == 13
+        assert len(case.expected_trace.expected_route) == 1
+        assert len(case.expected_trace.expected_tools) == TOOLS_CASE_EXPECTED_COUNTS[case.id]
         assert case.expected_finalize.action.value == "NO_STORE"
 
 
 def test_manifest_loads_all_cases() -> None:
     cases = load_cases_from_dir(DEFAULT_FIXTURE_DIR)
-    assert len(cases) == 22
+    assert len(cases) == 25
     assert {case.id for case in cases} == set(path.replace(".yaml", "") for path in ALL_CASE_FILES)

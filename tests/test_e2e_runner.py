@@ -31,7 +31,7 @@ def test_graph_turn_config_omits_summarize_when_false() -> None:
     config = build_graph_turn_config(
         thread_id="thread-1",
         user_id="user-1",
-        case_id="e2e_tools_all_001",
+        case_id="e2e_tools_flight_001",
         e2e_run_id="abc123",
         turn=7,
         summarize_all=False,
