@@ -71,7 +71,7 @@ def test_production_env_example_documents_required_variables():
     ]:
         assert name in env
     assert "replace-with" in env
-    assert "LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION=trustmem-verifier-v2" in env
+    assert "LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION=trustmem-verifier-v3" in env
 
 
 def test_mcp_wait_scripts_cover_all_sidecar_ports():
@@ -132,14 +132,16 @@ def test_azure_scripts_are_concrete_and_secret_safe():
     assert 'value: "/tmp/viettrip-rapidapi.lock"' in deploy_web
     assert '/start?api-version=2024-03-01' in deploy_web
     assert 'did not reach Running after deployment' in deploy_web
-    assert "trustmem-verifier-v2" in deploy_web
+    assert "trustmem-verifier-v3" in deploy_web
+    assert "trustmem-verifier-v2" not in deploy_web
     assert "trustmem-verifier-v1" not in deploy_web
     worker = read("infra/azure/containerapps/06-create-memory-worker-job.sh")
     backfill = read("infra/azure/containerapps/07-create-backfill-job.sh")
     assert '--command "scripts/run-memory-worker-once.sh"' in worker
     assert '--command "scripts/run-memory-embedding-backfill.sh"' in backfill
     assert 'RAPIDAPI_LOCK_FILE=/tmp/viettrip-rapidapi.lock' in worker
-    assert "trustmem-verifier-v2" in worker
+    assert "trustmem-verifier-v3" in worker
+    assert "trustmem-verifier-v2" not in worker
     assert "trustmem-verifier-v1" not in worker
     assert 'RAPIDAPI_LOCK_FILE=/tmp/viettrip-rapidapi.lock' in backfill
     assert 'az containerapp job delete' in worker
@@ -182,7 +184,8 @@ def test_docs_and_workflow_cover_deployment_lifecycle():
     assert 'Path("src/notebooks").glob("*.ipynb")' in production_workflow
     assert 'cell.get("outputs")' in production_workflow
     assert 'cell.get("execution_count") is not None' in production_workflow
-    assert "LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION: trustmem-verifier-v2" in production_workflow
+    assert "LONG_TERM_MEMORY_TRUSTMEM_PROMPT_VERSION: trustmem-verifier-v3" in production_workflow
+    assert "trustmem-verifier-v2" not in production_workflow
     assert "trustmem-verifier-v1" not in production_workflow
     assert "az containerapp revision list" in production_workflow
     assert "properties.trafficWeight" in production_workflow

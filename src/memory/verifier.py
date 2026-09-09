@@ -10,7 +10,11 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import BaseModel, Field
 
-from memory.consolidation import MemoryTransition, TransitionAction
+from memory.consolidation import (
+    MemoryTransition,
+    TransitionAction,
+    strip_turn_scoped_clauses,
+)
 from memory.long_term import MemoryStatus, TravelMemory
 from settings import Settings
 
@@ -33,11 +37,24 @@ text still listed when its status is superseded. Only penalize if a contradicted
 old preference remains status=active, or if valid unrelated memories were deleted /
 distorted / over-generalized / merged with lost conditions.
 
+Turn-scoped clauses (required — hard rule for coverage):
+- Clauses with markers such as "lần này", "chuyến này", "riêng lần này",
+  "cho chuyến này", "hôm nay", "bữa nay", "sáng nay", "chiều nay", "tối nay",
+  "ngày mai" are trip/turn-scoped, NOT durable preferences.
+- Do NOT require coverage of turn-scoped clauses. Do NOT lower coverage because a
+  candidate omits a turn-scoped hotel/flight/budget/date fact.
+- Mixed-scope utterances (durable + turn-scoped): only the durable clause(s) must
+  be covered. Example: "Từ giờ tôi ưu tiên khách sạn yên tĩnh. Lần này dưới 1 triệu."
+  — covering "yên tĩnh" alone is full coverage; the budget sentence is ignored.
+- The chunk may already have turn-scoped clauses stripped; still apply this rule
+  if any remain.
+
 Dimensions:
 - coverage: durable user facts/preferences in the chunk are collectively preserved
   across THIS candidate AND sibling_candidates. A candidate may cover only part of
   the chunk when siblings cover the remainder. Penalize coverage only if a durable
-  fact is missing from BOTH this candidate AND all siblings.
+  fact is missing from BOTH this candidate AND all siblings. Ignore turn-scoped
+  clauses entirely when scoring coverage.
 - preservation: valid old memories are not incorrectly deleted, distorted, over-generalized, or merged with lost conditions (e.g. business vs leisure, family vs solo).
   Correct supersede (old status=superseded + new active preference) preserves history
   and should score high.
@@ -501,10 +518,13 @@ def _compact_memory(memory: TravelMemory | None) -> dict[str, Any] | None:
 def _compact_chunk(chunk: Sequence[dict[str, Any]]) -> list[dict[str, str]]:
     compact: list[dict[str, str]] = []
     for message in list(chunk)[-12:]:
+        content = strip_turn_scoped_clauses(str(message.get("content") or ""))
+        if not content:
+            continue
         compact.append(
             {
                 "type": str(message.get("type") or message.get("role") or ""),
-                "content": str(message.get("content") or "")[:1000],
+                "content": content[:1000],
             }
         )
     return compact
@@ -517,7 +537,12 @@ async def _maybe_await(value: Any) -> Any:
 
 
 def _chunk_text(chunk: Sequence[dict[str, Any]]) -> str:
-    return "\n".join(str(message.get("content") or "") for message in chunk).lower()
+    parts: list[str] = []
+    for message in chunk:
+        content = strip_turn_scoped_clauses(str(message.get("content") or ""))
+        if content:
+            parts.append(content)
+    return "\n".join(parts).lower()
 
 
 def _candidate_text(transition: MemoryTransition) -> str:

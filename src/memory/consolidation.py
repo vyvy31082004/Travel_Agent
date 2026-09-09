@@ -652,6 +652,20 @@ def _split_clauses(text: str) -> list[str]:
     return [part.strip() for part in re.split(r"[.;!?\n]+", str(text)) if part.strip()]
 
 
+def strip_turn_scoped_clauses(text: str) -> str:
+    """Drop clauses scoped to the current turn/trip; keep durable remainder.
+
+    Used by TrustMem coverage so turn-scoped facts (\"lần này\", \"chuyến này\", …)
+    are not treated as durable preferences that must be covered by a candidate.
+    Returns empty string when every clause is turn-scoped.
+    """
+    clauses = _split_clauses(text)
+    if not clauses:
+        return " ".join(str(text).split()).strip()
+    kept = [clause for clause in clauses if not _is_turn_scoped(clause)]
+    return " ".join(kept).strip()
+
+
 def _is_turn_scoped_candidate(*, evidence_text: str, memory_text: str) -> bool:
     """Reject candidates backed only by a clause scoped to the current turn.
 
