@@ -36,7 +36,9 @@ def render_stm_report_markdown(payload: dict[str, Any]) -> str:
         "| Metric | Value | Numerator | Denominator |",
         "|--------|-------|-----------|-------------|",
     ]
-    for key, label in METRIC_LABELS.items():
+    metric_keys = [key for key in METRIC_LABELS if key in metrics] or list(metrics)
+    for key in metric_keys:
+        label = METRIC_LABELS.get(key, key)
         metric = metrics.get(key) or {}
         value = metric.get("value")
         display = "n/a" if value is None else f"{value:.4f}"
@@ -73,6 +75,15 @@ def render_stm_report_markdown(payload: dict[str, Any]) -> str:
                 display = "n/a" if value is None else f"{value:.4f}"
                 lines.append(f"  - `{phase}`: {display}")
         lines.append("")
+
+    live_cases = report.get("cases")
+    if isinstance(live_cases, list) and live_cases:
+        errors = [c for c in live_cases if c.get("error")]
+        lines.extend(["## Live cases", "", f"- Errors: `{len(errors)}`", ""])
+        for err in errors[:20]:
+            lines.append(f"- `{err.get('case_id')}`: {err.get('error')}")
+        if errors:
+            lines.append("")
     return "\n".join(lines)
 
 

@@ -40,6 +40,32 @@ def test_graph_turn_config_omits_summarize_when_false() -> None:
     assert "e2e_summarize_all" not in config["configurable"]
 
 
+def test_penultimate_summarize_flag_is_the_defer_delegation_signal() -> None:
+    """e2e_summarize_all also gates primary domain delegation on that turn."""
+    from services.summarize import e2e_summarize_all_enabled
+
+    on = build_graph_turn_config(
+        thread_id="thread-1",
+        user_id="user-1",
+        case_id="e2e_summary_flight_001",
+        e2e_run_id="abc123",
+        turn=2,
+        summarize_all=True,
+        collector=None,
+    )
+    off = build_graph_turn_config(
+        thread_id="thread-1",
+        user_id="user-1",
+        case_id="e2e_summary_flight_001",
+        e2e_run_id="abc123",
+        turn=3,
+        summarize_all=False,
+        collector=None,
+    )
+    assert e2e_summarize_all_enabled(on) is True
+    assert e2e_summarize_all_enabled(off) is False
+
+
 def test_coerce_update_chunk_accepts_dict_and_tuples() -> None:
     assert _coerce_update_chunk({"primary_assistant": {"x": 1}}) == {
         "primary_assistant": {"x": 1}

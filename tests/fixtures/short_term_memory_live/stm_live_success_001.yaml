@@ -1,0 +1,12 @@
+id: stm_live_success_001
+split: development
+scenario: Task success search hotel Đà Nẵng
+metrics:
+- success
+messages:
+- Tìm khách sạn Đà Nẵng, check-in 14/11/2026, ở 2 đêm, 2 người, ngân sách dưới 3 triệu.
+constraints:
+  destination: Đà Nẵng
+  check_in: '2026-11-14'
+  check_out: '2026-11-16'
+success_domain: hotel

@@ -1,0 +1,23 @@
+id: stm_live_ref_oor_004
+split: development
+scenario: Out-of-range position → clarification
+metrics:
+- reference
+messages:
+- Chọn giúp mình cái thứ 9 đi.
+reference:
+  args:
+    domain: excursion
+    position: 9
+  gold:
+    clarification: true
+  seed_visible_state:
+    visible_results:
+      req-excursion-4:
+        domain: excursion
+        search_id: s-4
+        displayed_item_ids:
+        - excursion_1
+        - excursion_2
+        - excursion_3
+    active_request_id: req-excursion-4

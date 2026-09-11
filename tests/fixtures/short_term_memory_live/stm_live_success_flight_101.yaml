@@ -1,0 +1,12 @@
+id: stm_live_success_flight_101
+split: test
+scenario: Search flight TP.HCM → Đà Lạt
+metrics:
+- success
+messages:
+- Tìm vé máy bay từ TP.HCM đi Đà Lạt ngày 15/10/2026 cho 3 người.
+constraints:
+  origin: TP.HCM
+  destination: Đà Lạt
+  date: '2026-10-15'
+success_domain: flight

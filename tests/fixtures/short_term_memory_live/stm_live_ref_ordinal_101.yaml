@@ -1,0 +1,23 @@
+id: stm_live_ref_ordinal_101
+split: test
+scenario: Resolve ordinal position=2 trong flight
+metrics:
+- reference
+messages:
+- Xin chào, mình đang xem kết quả tìm kiếm.
+reference:
+  args:
+    domain: flight
+    position: 2
+  gold:
+    item_id: flight_2
+  seed_visible_state:
+    visible_results:
+      req-flight-101:
+        domain: flight
+        search_id: s-101
+        displayed_item_ids:
+        - flight_1
+        - flight_2
+        - flight_3
+    active_request_id: req-flight-101

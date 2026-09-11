@@ -121,6 +121,18 @@ def test_success_rate_and_violation():
     assert rate.numerator < rate.denominator
 
 
+def test_constraint_values_match_place_and_datetime():
+    from memory_eval.short_term import constraint_values_match, normalize_value
+
+    assert normalize_value("2026-10-12 08:00") == "2026-10-12"
+    assert constraint_values_match("SGN", "TP.HCM")
+    assert constraint_values_match("CXR", "Nha Trang")
+    assert constraint_values_match("Sân bay Phú Bài, Huế", "Huế")
+    assert constraint_values_match("2026-10-12 08:00", "2026-10-12")
+    assert not constraint_values_match("HAN", "TP.HCM")
+    assert not constraint_values_match(None, "Huế")
+
+
 def test_stm_report_writer(tmp_path: Path):
     payload = {
         "suite": "stm-all",

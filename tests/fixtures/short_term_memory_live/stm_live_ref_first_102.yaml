@@ -1,0 +1,22 @@
+id: stm_live_ref_first_102
+split: test
+scenario: Resolve position=1 car
+metrics:
+- reference
+messages:
+- Cho mình xem lại danh sách kết quả vừa rồi.
+reference:
+  args:
+    position: 1
+  gold:
+    item_id: car_1
+  seed_visible_state:
+    visible_results:
+      req-car-102:
+        domain: car
+        search_id: s-102
+        displayed_item_ids:
+        - car_1
+        - car_2
+        - car_3
+    active_request_id: req-car-102

@@ -1,0 +1,15 @@
+id: stm_live_success_hotel_108
+split: test
+scenario: Search hotel Huế với ngày/ngân sách
+metrics:
+- success
+messages:
+- Mình muốn khách sạn ở Huế.
+- Check-in 22/10/2026, check-out 24/10/2026, 1 người, ngân sách khoảng 2 triệu một
+  đêm.
+- Tìm khách sạn giúp mình.
+constraints:
+  destination: Huế
+  check_in: '2026-10-22'
+  check_out: '2026-10-24'
+success_domain: hotel

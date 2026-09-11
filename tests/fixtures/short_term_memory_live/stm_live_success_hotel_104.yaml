@@ -1,0 +1,15 @@
+id: stm_live_success_hotel_104
+split: test
+scenario: Search hotel Cần Thơ với ngày/ngân sách
+metrics:
+- success
+messages:
+- Mình muốn khách sạn ở Cần Thơ.
+- Check-in 18/10/2026, check-out 20/10/2026, 3 người, ngân sách khoảng 3 triệu một
+  đêm.
+- Tìm khách sạn giúp mình.
+constraints:
+  destination: Cần Thơ
+  check_in: '2026-10-18'
+  check_out: '2026-10-20'
+success_domain: hotel

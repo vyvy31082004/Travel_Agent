@@ -1,0 +1,407 @@
+{
+  "suite": "stm-live",
+  "development": 20,
+  "test": 30,
+  "cases": [
+    {
+      "id": "stm_live_success_hotel_001",
+      "file": "stm_live_success_hotel_001.yaml",
+      "tags": [
+        "success",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_success_flight_002",
+      "file": "stm_live_success_flight_002.yaml",
+      "tags": [
+        "success",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_success_car_003",
+      "file": "stm_live_success_car_003.yaml",
+      "tags": [
+        "success",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_success_change_004",
+      "file": "stm_live_success_change_004.yaml",
+      "tags": [
+        "success",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_success_hotel_005",
+      "file": "stm_live_success_hotel_005.yaml",
+      "tags": [
+        "success",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_ref_ordinal_001",
+      "file": "stm_live_ref_ordinal_001.yaml",
+      "tags": [
+        "reference",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_ref_first_002",
+      "file": "stm_live_ref_first_002.yaml",
+      "tags": [
+        "reference",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_ref_ambiguous_003",
+      "file": "stm_live_ref_ambiguous_003.yaml",
+      "tags": [
+        "reference",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_ref_oor_004",
+      "file": "stm_live_ref_oor_004.yaml",
+      "tags": [
+        "reference",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_ref_itemid_005",
+      "file": "stm_live_ref_itemid_005.yaml",
+      "tags": [
+        "reference",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_factual_001",
+      "file": "stm_live_factual_001.yaml",
+      "tags": [
+        "factual_recall",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_factual_002",
+      "file": "stm_live_factual_002.yaml",
+      "tags": [
+        "factual_recall",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_factual_003",
+      "file": "stm_live_factual_003.yaml",
+      "tags": [
+        "factual_recall",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_factual_004",
+      "file": "stm_live_factual_004.yaml",
+      "tags": [
+        "factual_recall",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_factual_005",
+      "file": "stm_live_factual_005.yaml",
+      "tags": [
+        "factual_recall",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_success_001",
+      "file": "stm_live_success_001.yaml",
+      "tags": [
+        "success",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_success_002",
+      "file": "stm_live_success_002.yaml",
+      "tags": [
+        "success",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_success_003",
+      "file": "stm_live_success_003.yaml",
+      "tags": [
+        "success",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_success_004",
+      "file": "stm_live_success_004.yaml",
+      "tags": [
+        "success",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_success_005",
+      "file": "stm_live_success_005.yaml",
+      "tags": [
+        "success",
+        "development"
+      ]
+    },
+    {
+      "id": "stm_live_success_flight_101",
+      "file": "stm_live_success_flight_101.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_car_102",
+      "file": "stm_live_success_car_102.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_change_103",
+      "file": "stm_live_success_change_103.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_hotel_104",
+      "file": "stm_live_success_hotel_104.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_flight_105",
+      "file": "stm_live_success_flight_105.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_car_106",
+      "file": "stm_live_success_car_106.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_change_107",
+      "file": "stm_live_success_change_107.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_hotel_108",
+      "file": "stm_live_success_hotel_108.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_flight_109",
+      "file": "stm_live_success_flight_109.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_car_110",
+      "file": "stm_live_success_car_110.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_ref_ordinal_101",
+      "file": "stm_live_ref_ordinal_101.yaml",
+      "tags": [
+        "reference",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_ref_first_102",
+      "file": "stm_live_ref_first_102.yaml",
+      "tags": [
+        "reference",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_ref_ambiguous_103",
+      "file": "stm_live_ref_ambiguous_103.yaml",
+      "tags": [
+        "reference",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_ref_oor_104",
+      "file": "stm_live_ref_oor_104.yaml",
+      "tags": [
+        "reference",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_ref_itemid_105",
+      "file": "stm_live_ref_itemid_105.yaml",
+      "tags": [
+        "reference",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_ref_ordinal_106",
+      "file": "stm_live_ref_ordinal_106.yaml",
+      "tags": [
+        "reference",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_ref_first_107",
+      "file": "stm_live_ref_first_107.yaml",
+      "tags": [
+        "reference",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_ref_ambiguous_108",
+      "file": "stm_live_ref_ambiguous_108.yaml",
+      "tags": [
+        "reference",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_ref_oor_109",
+      "file": "stm_live_ref_oor_109.yaml",
+      "tags": [
+        "reference",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_ref_itemid_110",
+      "file": "stm_live_ref_itemid_110.yaml",
+      "tags": [
+        "reference",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_factual_101",
+      "file": "stm_live_factual_101.yaml",
+      "tags": [
+        "factual_recall",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_factual_102",
+      "file": "stm_live_factual_102.yaml",
+      "tags": [
+        "factual_recall",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_factual_103",
+      "file": "stm_live_factual_103.yaml",
+      "tags": [
+        "factual_recall",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_factual_104",
+      "file": "stm_live_factual_104.yaml",
+      "tags": [
+        "factual_recall",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_factual_105",
+      "file": "stm_live_factual_105.yaml",
+      "tags": [
+        "factual_recall",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_101",
+      "file": "stm_live_success_101.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_102",
+      "file": "stm_live_success_102.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_103",
+      "file": "stm_live_success_103.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_104",
+      "file": "stm_live_success_104.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    },
+    {
+      "id": "stm_live_success_105",
+      "file": "stm_live_success_105.yaml",
+      "tags": [
+        "success",
+        "test"
+      ]
+    }
+  ]
+}

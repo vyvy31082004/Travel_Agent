@@ -1,0 +1,23 @@
+id: stm_live_ref_itemid_105
+split: test
+scenario: Resolve direct item_id flight_1
+metrics:
+- reference
+messages:
+- Chọn đúng mã flight_1 giúp mình.
+reference:
+  args:
+    domain: flight
+    item_id: flight_1
+  gold:
+    item_id: flight_1
+  seed_visible_state:
+    visible_results:
+      req-flight-105:
+        domain: flight
+        search_id: s-105
+        displayed_item_ids:
+        - flight_1
+        - flight_2
+        - flight_3
+    active_request_id: req-flight-105

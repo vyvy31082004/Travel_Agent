@@ -46,6 +46,7 @@ SINGLE_DOMAIN_CASES = [
     "e2e_write_car_insert_001",
     "e2e_write_excursion_supersede_001",
     "e2e_write_global_name_001",
+    "e2e_write_flight_reject_001",
     "e2e_global_profile_name_001",
 ]
 

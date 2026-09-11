@@ -1,0 +1,23 @@
+id: stm_live_ref_ordinal_106
+split: test
+scenario: Resolve ordinal position=2 trong car
+metrics:
+- reference
+messages:
+- Xin chào, mình đang xem kết quả tìm kiếm.
+reference:
+  args:
+    domain: car
+    position: 2
+  gold:
+    item_id: car_2
+  seed_visible_state:
+    visible_results:
+      req-car-106:
+        domain: car
+        search_id: s-106
+        displayed_item_ids:
+        - car_1
+        - car_2
+        - car_3
+    active_request_id: req-car-106

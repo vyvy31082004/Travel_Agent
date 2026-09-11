@@ -1,0 +1,476 @@
+{
+  "suite": "stm-live",
+  "gold_path": "E:\\Travel Agent\\customer-support-agent\\tests\\fixtures\\short_term_memory_live",
+  "split": "test",
+  "case_count": 20,
+  "model": "gemini-2.5-flash",
+  "report": {
+    "metrics": {
+      "resolution_accuracy": {
+        "numerator": 5,
+        "denominator": 5,
+        "value": 1.0
+      },
+      "factual_recall_accuracy": {
+        "numerator": 5,
+        "denominator": 5,
+        "value": 1.0
+      },
+      "success_rate": {
+        "numerator": 10,
+        "denominator": 10,
+        "value": 1.0
+      }
+    },
+    "reference": {
+      "suite": "reference",
+      "metrics": {
+        "resolution_accuracy": {
+          "numerator": 5,
+          "denominator": 5,
+          "value": 1.0
+        }
+      },
+      "extra": {},
+      "cases": [
+        {
+          "case_id": "stm_live_ref_ordinal_001",
+          "expected": {
+            "item_id": "hotel_2"
+          },
+          "resolved_item_id": "hotel_2",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "stm_live_ref_first_002",
+          "expected": {
+            "item_id": "flight_1"
+          },
+          "resolved_item_id": "flight_1",
+          "clarification": false,
+          "correct": true
+        },
+        {
+          "case_id": "stm_live_ref_ambiguous_003",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "stm_live_ref_oor_004",
+          "expected": {
+            "clarification": true
+          },
+          "resolved_item_id": null,
+          "clarification": true,
+          "correct": true
+        },
+        {
+          "case_id": "stm_live_ref_itemid_005",
+          "expected": {
+            "item_id": "hotel_1"
+          },
+          "resolved_item_id": "hotel_1",
+          "clarification": false,
+          "correct": true
+        }
+      ]
+    },
+    "factual_recall": {
+      "suite": "factual_recall",
+      "metrics": {
+        "factual_recall_accuracy": {
+          "numerator": 5,
+          "denominator": 5,
+          "value": 1.0
+        }
+      },
+      "extra": {
+        "by_position": {
+          "đầu": {
+            "numerator": 2,
+            "denominator": 2,
+            "value": 1.0
+          },
+          "giữa": {
+            "numerator": 2,
+            "denominator": 2,
+            "value": 1.0
+          },
+          "cuối": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          }
+        },
+        "by_phase": {
+          "after": {
+            "numerator": 5,
+            "denominator": 5,
+            "value": 1.0
+          }
+        }
+      },
+      "cases": [
+        {
+          "case_id": "stm_live_factual_001",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "stm_live_factual_002",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "stm_live_factual_003",
+          "position": "cuối",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "stm_live_factual_004",
+          "position": "giữa",
+          "phase": "after",
+          "correct": true
+        },
+        {
+          "case_id": "stm_live_factual_005",
+          "position": "đầu",
+          "phase": "after",
+          "correct": true
+        }
+      ]
+    },
+    "success": {
+      "suite": "success",
+      "metrics": {
+        "success_rate": {
+          "numerator": 10,
+          "denominator": 10,
+          "value": 1.0
+        }
+      },
+      "extra": {},
+      "cases": [
+        {
+          "case_id": "stm_live_success_hotel_001",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "stm_live_success_flight_002",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "stm_live_success_car_003",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "stm_live_success_change_004",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "stm_live_success_hotel_005",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "stm_live_success_001",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "stm_live_success_002",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "stm_live_success_003",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "stm_live_success_004",
+          "success": true,
+          "violated_constraints": []
+        },
+        {
+          "case_id": "stm_live_success_005",
+          "success": true,
+          "violated_constraints": []
+        }
+      ]
+    },
+    "cases": [
+      {
+        "case_id": "stm_live_success_hotel_001",
+        "split": "development",
+        "metrics": [
+          "success"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": {
+          "location": "Đà Nẵng",
+          "adults": 1,
+          "checkin_date": "2026-10-10",
+          "price_max": 1000000,
+          "checkout_date": "2026-10-12"
+        }
+      },
+      {
+        "case_id": "stm_live_success_flight_002",
+        "split": "development",
+        "metrics": [
+          "success"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": {
+          "adults": 2,
+          "origin": "SGN",
+          "departure_date": "2026-10-11",
+          "stops": "0",
+          "destination": "CXR"
+        }
+      },
+      {
+        "case_id": "stm_live_success_car_003",
+        "split": "development",
+        "metrics": [
+          "success"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": {
+          "address": "Sân bay Phú Bài, Huế",
+          "user_needs": "xe 4 chỗ đón tại sân bay, trả tại Huế ngày 12/10/2026",
+          "end_ms": "2026-10-12 20:00",
+          "start_ms": "2026-10-12 08:00"
+        }
+      },
+      {
+        "case_id": "stm_live_success_change_004",
+        "split": "development",
+        "metrics": [
+          "success"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": {
+          "adults": 2,
+          "location": "Hội An",
+          "checkout_date": "2026-10-15",
+          "checkin_date": "2026-10-13"
+        }
+      },
+      {
+        "case_id": "stm_live_success_hotel_005",
+        "split": "development",
+        "metrics": [
+          "success"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": {
+          "price_max": 3000000,
+          "adults": 2,
+          "location": "Phú Quốc",
+          "checkin_date": "2026-10-14",
+          "checkout_date": "2026-10-16"
+        }
+      },
+      {
+        "case_id": "stm_live_ref_ordinal_001",
+        "split": "development",
+        "metrics": [
+          "reference"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": null
+      },
+      {
+        "case_id": "stm_live_ref_first_002",
+        "split": "development",
+        "metrics": [
+          "reference"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": null
+      },
+      {
+        "case_id": "stm_live_ref_ambiguous_003",
+        "split": "development",
+        "metrics": [
+          "reference"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": null
+      },
+      {
+        "case_id": "stm_live_ref_oor_004",
+        "split": "development",
+        "metrics": [
+          "reference"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": null
+      },
+      {
+        "case_id": "stm_live_ref_itemid_005",
+        "split": "development",
+        "metrics": [
+          "reference"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": null
+      },
+      {
+        "case_id": "stm_live_factual_001",
+        "split": "development",
+        "metrics": [
+          "factual_recall"
+        ],
+        "error": null,
+        "probe_answer": "Ngân sách khách sạn bạn đã đưa ra là **dưới 2.000.000 VNĐ / đêm**. \n\nBạn có muốn thay đổi mức ngân sách này hay giữ nguyên để tiến hành tìm kiếm phòng?",
+        "search_arguments": null
+      },
+      {
+        "case_id": "stm_live_factual_002",
+        "split": "development",
+        "metrics": [
+          "factual_recall"
+        ],
+        "error": null,
+        "probe_answer": "Giới hạn thời gian quá cảnh (transit) bạn đã chọn là **tối đa 3 giờ** ($\\le$ 3 giờ).",
+        "search_arguments": null
+      },
+      {
+        "case_id": "stm_live_factual_003",
+        "split": "development",
+        "metrics": [
+          "factual_recall"
+        ],
+        "error": null,
+        "probe_answer": "Theo thông tin bạn vừa cung cấp, thời lượng tour dự kiến kéo dài **khoảng 4 tiếng** (nửa ngày) vào ngày 12/10/2026. \n\nNếu bạn muốn điều chỉnh thời lượng tour (ví dụ: tour nguyên ngày 8 tiếng, tour 2-3 tiếng) hoặc muốn mình tìm danh sách tour Huế phù hợp với khoảng thời gian này, bạn cứ cho mình biết nhé!",
+        "search_arguments": null
+      },
+      {
+        "case_id": "stm_live_factual_004",
+        "split": "development",
+        "metrics": [
+          "factual_recall"
+        ],
+        "error": null,
+        "probe_answer": "Việc có cần ghế trẻ em hay không phụ thuộc vào độ tuổi và nhu cầu của bé trong chuyến đi của bạn:\n\n1. **Về mặt an toàn:** Nếu bạn đi cùng trẻ sơ sinh hoặc trẻ nhỏ (thường dưới 4–10 tuổi hoặc chiều cao dưới 1,35m), việc trang bị ghế trẻ em là **rất nên có** để đảm bảo an toàn tối đa cho bé trong suốt quá trình xe di chuyển từ Sân bay Đà Nẵng về Hội An.\n2. **Quy định pháp luật:** Nhiều quy định an toàn giao thông hiện nay cũng khuyến nghị/bắt buộc sử dụng thiết bị an toàn phù hợp cho trẻ em khi ngồi trên ô tô.\n3. **Nhu cầu thực tế:** \n   * **Nên dùng:** Nếu bé còn nhỏ, chưa tự ngồi vững hoặc cần ghế riêng để ngủ/ngồi an toàn.\n   * **Không cần:** Nếu đoàn của bạn không có trẻ em, hoặc bé đã lớn và có thể thắt dây an toàn người lớn một cách thoải mái.\n\nNếu bạn đi cùng bé nhỏ, bạn có muốn giữ yêu cầu ghế trẻ em này khi đặt xe không?",
+        "search_arguments": null
+      },
+      {
+        "case_id": "stm_live_factual_005",
+        "split": "development",
+        "metrics": [
+          "factual_recall"
+        ],
+        "error": null,
+        "probe_answer": "Ngân sách khách sạn bạn đã đưa ra là **dưới 2.000.000 VNĐ / đêm**.",
+        "search_arguments": null
+      },
+      {
+        "case_id": "stm_live_success_001",
+        "split": "development",
+        "metrics": [
+          "success"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": {
+          "price_max": 3000000,
+          "adults": 2,
+          "checkin_date": "2026-11-14",
+          "checkout_date": "2026-11-16",
+          "location": "Đà Nẵng"
+        }
+      },
+      {
+        "case_id": "stm_live_success_002",
+        "split": "development",
+        "metrics": [
+          "success"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": {
+          "checkin_date": "2026-11-15",
+          "location": "Nha Trang",
+          "checkout_date": "2026-11-17",
+          "adults": 3,
+          "price_max": 3000000
+        }
+      },
+      {
+        "case_id": "stm_live_success_003",
+        "split": "development",
+        "metrics": [
+          "success"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": {
+          "checkout_date": "2026-11-18",
+          "checkin_date": "2026-11-16",
+          "price_max": 3000000,
+          "location": "Huế",
+          "adults": 2
+        }
+      },
+      {
+        "case_id": "stm_live_success_004",
+        "split": "development",
+        "metrics": [
+          "success"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": {
+          "checkin_date": "2026-11-17",
+          "location": "Hội An",
+          "price_max": 3000000,
+          "adults": 3,
+          "checkout_date": "2026-11-19"
+        }
+      },
+      {
+        "case_id": "stm_live_success_005",
+        "split": "development",
+        "metrics": [
+          "success"
+        ],
+        "error": null,
+        "probe_answer": null,
+        "search_arguments": {
+          "price_max": 3000000,
+          "checkout_date": "2026-11-20",
+          "adults": 2,
+          "checkin_date": "2026-11-18",
+          "location": "Phú Quốc"
+        }
+      }
+    ],
+    "errors": []
+  }
+}

@@ -1,0 +1,11 @@
+id: stm_live_success_car_110
+split: test
+scenario: Thuê xe đón sân bay về Phú Quốc
+metrics:
+- success
+messages:
+- Cần thuê xe đón tại sân bay, trả tại Phú Quốc, ngày 24/10/2026, 4 chỗ.
+constraints:
+  dropoff: Phú Quốc
+  date: '2026-10-24'
+success_domain: car

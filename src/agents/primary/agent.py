@@ -194,15 +194,25 @@ async def primary_chat(state: State, config: RunnableConfig) -> dict:
     if context_messages:
         invoke_state["messages"] = [*context_messages, *messages]
 
-    result = await primary_runnable.ainvoke(
-        invoke_state,
-        config=with_trace_config(
-            config,
-            run_name="primary_assistant",
-            tags=["customer-support", "primary"],
-            metadata={"agent": "primary"},
-        ),
+    trace_config = with_trace_config(
+        config,
+        run_name="primary_assistant",
+        tags=["customer-support", "primary"],
+        metadata={"agent": "primary"},
     )
+    # Penultimate e2e summarize turn: answer in text only so force-summarize
+    # cases cannot early-route into domain search before STM is written.
+    if e2e_summarize_all_enabled(config):
+        result = await (primary_prompts | llm).with_config(
+            with_trace_config(
+                config,
+                run_name="primary_llm",
+                tags=["customer-support", "primary", "llm", "e2e-defer-delegation"],
+                metadata={"agent": "primary", "e2e_defer_delegation": True},
+            )
+        ).ainvoke(invoke_state, config=trace_config)
+    else:
+        result = await primary_runnable.ainvoke(invoke_state, config=trace_config)
     return {"messages": [result]}
 
 
@@ -469,6 +479,10 @@ async def run_delegated_assistant(
 
 
 def route_primary_assistant(state: State, config: RunnableConfig | None = None):
+    # Safety net for e2e force-summarize turns: never fan out to domain assistants.
+    if e2e_summarize_all_enabled(config):
+        return should_summarize(state, config=config)
+
     tool_calls = getattr(state["messages"][-1], "tool_calls", None) or []
     sends = []
 

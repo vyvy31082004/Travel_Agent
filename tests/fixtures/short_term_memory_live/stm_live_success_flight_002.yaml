@@ -1,0 +1,12 @@
+id: stm_live_success_flight_002
+split: development
+scenario: Search flight TP.HCM → Nha Trang
+metrics:
+- success
+messages:
+- Tìm vé máy bay từ TP.HCM đi Nha Trang ngày 11/10/2026 cho 2 người.
+constraints:
+  origin: TP.HCM
+  destination: Nha Trang
+  date: '2026-10-11'
+success_domain: flight

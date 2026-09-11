@@ -7,7 +7,7 @@
     "user_id": "e2e-e2e_tools_excursion_001:user_a",
     "thread_id": "e2e-e2e_tools_excursion_001-820092ebaf1e",
     "model": "gemini-2.5-flash",
-    "prompt_version": "trustmem-verifier-v2",
+    "prompt_version": "trustmem-verifier-v3",
     "git_commit": "e23fbaeebfc968930575b72dea73f6511f5519b0",
     "fixture_to_uuid": {
       "m_excursion_outdoor": "8f7a62c0-7e2d-5b84-a27a-27d0e2ace09a",

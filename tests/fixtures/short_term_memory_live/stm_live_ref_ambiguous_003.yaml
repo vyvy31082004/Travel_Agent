@@ -1,0 +1,27 @@
+id: stm_live_ref_ambiguous_003
+split: development
+scenario: Ambiguous multi-domain → clarification
+metrics:
+- reference
+messages:
+- Mình muốn chọn cái đầu tiên.
+reference:
+  args:
+    position: 1
+  gold:
+    clarification: true
+  seed_visible_state:
+    visible_results:
+      req-car-3:
+        domain: car
+        search_id: s-a-3
+        displayed_item_ids:
+        - car_1
+        - car_2
+        - car_3
+      req-flight-3:
+        domain: flight
+        search_id: s-b-3
+        displayed_item_ids:
+        - flight_1
+        - flight_2

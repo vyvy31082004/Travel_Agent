@@ -1,0 +1,11 @@
+id: stm_live_success_car_106
+split: test
+scenario: Thuê xe đón sân bay về Đà Nẵng
+metrics:
+- success
+messages:
+- Cần thuê xe đón tại sân bay, trả tại Đà Nẵng, ngày 20/10/2026, 4 chỗ.
+constraints:
+  dropoff: Đà Nẵng
+  date: '2026-10-20'
+success_domain: car

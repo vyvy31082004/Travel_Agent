@@ -7,7 +7,7 @@
     "user_id": "e2e-e2e_trip_plan_001:user_a",
     "thread_id": "e2e-e2e_trip_plan_001-b43784a8ab55",
     "model": "gemini-2.5-flash",
-    "prompt_version": "trustmem-verifier-v2",
+    "prompt_version": "trustmem-verifier-v3",
     "git_commit": "e23fbaeebfc968930575b72dea73f6511f5519b0",
     "fixture_to_uuid": {
       "m_flight_economy": "33a6ff4b-3737-580b-ba27-dffc4221eb05",

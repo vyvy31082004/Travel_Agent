@@ -1,0 +1,14 @@
+id: stm_live_factual_002
+split: development
+scenario: Factual recall after summary (giữa)
+metrics:
+- factual_recall
+force_summarize_penultimate: true
+messages:
+- Mình không muốn transit quá 3 giờ khi bay tới Nha Trang ngày 11/10/2026.
+- Ok mình ghi nhận vậy, chưa cần tìm ngay.
+- Tóm lại giúp mình các ràng buộc vừa nói.
+probe: Giới hạn transit là bao nhiêu giờ?
+gold_answer: 3 gio
+position: giữa
+phase: after

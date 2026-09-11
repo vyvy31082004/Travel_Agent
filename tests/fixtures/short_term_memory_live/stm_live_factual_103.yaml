@@ -1,0 +1,14 @@
+id: stm_live_factual_103
+split: test
+scenario: Factual recall after summary (giữa)
+metrics:
+- factual_recall
+force_summarize_penultimate: true
+messages:
+- Thuê xe đón sân bay về Hạ Long ngày 17/10/2026, cần ghế trẻ em.
+- Ok mình ghi nhận vậy, chưa cần tìm ngay.
+- Tóm lại giúp mình các ràng buộc vừa nói.
+probe: Có cần ghế trẻ em không?
+gold_answer: ghe tre em
+position: giữa
+phase: after

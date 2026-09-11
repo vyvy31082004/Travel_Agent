@@ -31,6 +31,7 @@ ALL_CASE_FILES = [
     "e2e_write_car_insert_001.yaml",
     "e2e_write_excursion_supersede_001.yaml",
     "e2e_write_global_name_001.yaml",
+    "e2e_write_flight_reject_001.yaml",
     "e2e_global_profile_name_001.yaml",
     "e2e_trip_plan_001.yaml",
     "e2e_tools_hotel_001.yaml",
@@ -58,6 +59,11 @@ WRITE_CASE_IDS = {
     "e2e_write_car_insert_001",
     "e2e_write_excursion_supersede_001",
     "e2e_write_global_name_001",
+    "e2e_write_flight_reject_001",
+}
+
+WRITE_REJECT_CASE_IDS = {
+    "e2e_write_flight_reject_001",
 }
 
 TOOLS_CASE_EXPECTED_COUNTS = {
@@ -94,8 +100,12 @@ def test_e2e_fixture_validates(case_file: str) -> None:
         assert "summarize_conversation" not in case.expected_trace.expected_node_sequence_contains
         assert "join_results" in case.expected_trace.expected_node_sequence_contains
         assert "memory_finalize" in case.expected_trace.expected_node_sequence_contains
-        assert case.expected_finalize.action.value in {"NOOP", "INSERT", "SUPERSEDE"}
-        assert case.expected_finalize.memories
+        if case.id in WRITE_REJECT_CASE_IDS:
+            assert case.expected_finalize.action.value == "NO_STORE"
+            assert not case.expected_finalize.memories
+        else:
+            assert case.expected_finalize.action.value in {"NOOP", "INSERT", "SUPERSEDE"}
+            assert case.expected_finalize.memories
     if case.id in TOOLS_CASE_EXPECTED_COUNTS:
         assert len(case.input.messages) == TOOLS_CASE_MESSAGE_COUNTS[case.id]
         assert case.input.force_summarize_penultimate is False
@@ -106,5 +116,5 @@ def test_e2e_fixture_validates(case_file: str) -> None:
 
 def test_manifest_loads_all_cases() -> None:
     cases = load_cases_from_dir(DEFAULT_FIXTURE_DIR)
-    assert len(cases) == 26
+    assert len(cases) == 27
     assert {case.id for case in cases} == set(path.replace(".yaml", "") for path in ALL_CASE_FILES)

@@ -7,7 +7,7 @@
     "user_id": "e2e-e2e_tools_hotel_001:user_a",
     "thread_id": "e2e-e2e_tools_hotel_001-7181f237730a",
     "model": "gemini-2.5-flash",
-    "prompt_version": "trustmem-verifier-v2",
+    "prompt_version": "trustmem-verifier-v3",
     "git_commit": "e23fbaeebfc968930575b72dea73f6511f5519b0",
     "fixture_to_uuid": {
       "m_hotel_quiet": "7bd6991b-834b-5b11-ba83-282e3c359145",

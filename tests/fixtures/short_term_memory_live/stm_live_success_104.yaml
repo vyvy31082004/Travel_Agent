@@ -1,0 +1,12 @@
+id: stm_live_success_104
+split: test
+scenario: Task success search hotel Cần Thơ
+metrics:
+- success
+messages:
+- Tìm khách sạn Cần Thơ, check-in 22/11/2026, ở 2 đêm, 2 người, ngân sách dưới 3 triệu.
+constraints:
+  destination: Cần Thơ
+  check_in: '2026-11-22'
+  check_out: '2026-11-24'
+success_domain: hotel

@@ -1,0 +1,14 @@
+id: stm_live_factual_005
+split: development
+scenario: Factual recall after summary (đầu)
+metrics:
+- factual_recall
+force_summarize_penultimate: true
+messages:
+- Ngân sách khách sạn ở Phú Quốc dưới 2 triệu một đêm, 2 người, ở từ 14/10 đến 16/10/2026.
+- Ok mình ghi nhận vậy, chưa cần tìm ngay.
+- Tóm lại giúp mình các ràng buộc vừa nói.
+probe: Ngân sách khách sạn là bao nhiêu?
+gold_answer: duoi 2 trieu
+position: đầu
+phase: after

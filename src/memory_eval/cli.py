@@ -34,12 +34,17 @@ from memory_eval.short_term import (
     evaluate_state_file,
     evaluate_success_file,
 )
+from memory_eval.stm_live import evaluate_stm_live
+from memory_eval.stm_live_schema import DEFAULT_FIXTURE_DIR as STM_LIVE_FIXTURE_DIR
 from memory_eval.stm_report import (
     default_stm_report_paths,
     write_stm_reports,
 )
 
 STM_SUITES = frozenset(
+    {"state", "reference", "factual-recall", "success", "stm-all", "stm-live"}
+)
+STM_OFFLINE_SUITES = frozenset(
     {"state", "reference", "factual-recall", "success", "stm-all"}
 )
 
@@ -61,9 +66,13 @@ def build_parser() -> argparse.ArgumentParser:
             "factual-recall",
             "success",
             "stm-all",
+            "stm-live",
         ),
         default="extraction",
-        help="Evaluation suite to run",
+        help=(
+            "Evaluation suite to run. stm-live runs the primary agent with Gemini "
+            "(requires GOOGLE_API_KEY/GEMINI_API_KEY + DATABASE_URL); not for default CI."
+        ),
     )
     parser.add_argument(
         "--gold",
@@ -120,6 +129,32 @@ def build_parser() -> argparse.ArgumentParser:
         default="gemini-2.5-flash",
         help="Model used when --applicability-judge llm",
     )
+    parser.add_argument(
+        "--fixtures",
+        default=None,
+        help="Fixture directory for stm-live (default: tests/fixtures/short_term_memory_live)",
+    )
+    parser.add_argument(
+        "--model",
+        default=None,
+        help="Optional Gemini model override for stm-live",
+    )
+    parser.add_argument(
+        "--case",
+        default=None,
+        help="Optional single stm-live case id",
+    )
+    parser.add_argument(
+        "--keep-db",
+        action="store_true",
+        help="Keep Postgres artifacts after stm-live (default: teardown)",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Verbose turn logging for stm-live",
+    )
     parser.add_argument("--output", help="Optional path for the JSON report")
     parser.add_argument(
         "--no-report",
@@ -173,7 +208,16 @@ async def evaluate_file(
 
 
 async def evaluate_suite(args: argparse.Namespace) -> dict:
-    if args.suite in STM_SUITES:
+    if args.suite == "stm-live":
+        return await evaluate_stm_live(
+            fixtures=args.fixtures or STM_LIVE_FIXTURE_DIR,
+            split=args.split,
+            verbose=bool(args.verbose),
+            teardown=not bool(args.keep_db),
+            model=args.model,
+            case_id=args.case,
+        )
+    if args.suite in STM_OFFLINE_SUITES:
         return evaluate_stm_suite(args)
     if args.suite == "extraction":
         if not args.gold:

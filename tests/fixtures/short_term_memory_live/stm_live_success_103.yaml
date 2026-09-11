@@ -1,0 +1,12 @@
+id: stm_live_success_103
+split: test
+scenario: Task success search hotel Hạ Long
+metrics:
+- success
+messages:
+- Tìm khách sạn Hạ Long, check-in 21/11/2026, ở 2 đêm, 3 người, ngân sách dưới 3 triệu.
+constraints:
+  destination: Hạ Long
+  check_in: '2026-11-21'
+  check_out: '2026-11-23'
+success_domain: hotel

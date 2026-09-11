@@ -1,0 +1,23 @@
+id: stm_live_ref_itemid_110
+split: test
+scenario: Resolve direct item_id car_1
+metrics:
+- reference
+messages:
+- Chọn đúng mã car_1 giúp mình.
+reference:
+  args:
+    domain: car
+    item_id: car_1
+  gold:
+    item_id: car_1
+  seed_visible_state:
+    visible_results:
+      req-car-110:
+        domain: car
+        search_id: s-110
+        displayed_item_ids:
+        - car_1
+        - car_2
+        - car_3
+    active_request_id: req-car-110

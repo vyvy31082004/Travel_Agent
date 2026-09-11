@@ -1,0 +1,12 @@
+id: stm_live_success_flight_105
+split: test
+scenario: Search flight TP.HCM → Vũng Tàu
+metrics:
+- success
+messages:
+- Tìm vé máy bay từ TP.HCM đi Vũng Tàu ngày 19/10/2026 cho 1 người.
+constraints:
+  origin: TP.HCM
+  destination: Vũng Tàu
+  date: '2026-10-19'
+success_domain: flight

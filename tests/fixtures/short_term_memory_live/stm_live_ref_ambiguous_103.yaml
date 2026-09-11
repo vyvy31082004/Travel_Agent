@@ -1,0 +1,27 @@
+id: stm_live_ref_ambiguous_103
+split: test
+scenario: Ambiguous multi-domain → clarification
+metrics:
+- reference
+messages:
+- Mình muốn chọn cái đầu tiên.
+reference:
+  args:
+    position: 1
+  gold:
+    clarification: true
+  seed_visible_state:
+    visible_results:
+      req-excursion-103:
+        domain: excursion
+        search_id: s-a-103
+        displayed_item_ids:
+        - excursion_1
+        - excursion_2
+        - excursion_3
+      req-flight-103:
+        domain: flight
+        search_id: s-b-103
+        displayed_item_ids:
+        - flight_1
+        - flight_2
