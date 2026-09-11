@@ -1,0 +1,22 @@
+id: stm_live_ref_first_107
+split: test
+scenario: Resolve position=1 excursion
+metrics:
+- reference
+messages:
+- Cho mình xem lại danh sách kết quả vừa rồi.
+reference:
+  args:
+    position: 1
+  gold:
+    item_id: excursion_1
+  seed_visible_state:
+    visible_results:
+      req-excursion-107:
+        domain: excursion
+        search_id: s-107
+        displayed_item_ids:
+        - excursion_1
+        - excursion_2
+        - excursion_3
+    active_request_id: req-excursion-107

@@ -1,0 +1,14 @@
+id: stm_live_success_change_107
+split: test
+scenario: Đổi ý destination sang Nha Trang rồi search
+metrics:
+- success
+messages:
+- Ban đầu mình nghĩ đi Nha Trang, check-in 12/10/2026, 2 người.
+- Thôi đổi sang Nha Trang giúp mình, vẫn 2 người, check-in 21/10/2026 check-out 23/10/2026.
+- Tìm khách sạn theo lịch mới.
+constraints:
+  destination: Nha Trang
+  check_in: '2026-10-21'
+  check_out: '2026-10-23'
+success_domain: hotel

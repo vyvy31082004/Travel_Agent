@@ -1,0 +1,70 @@
+id: e2e_write_hotel_001
+scenario: "Từ giờ restated quiet hotel preference (trùng seed) + search Đà Nẵng; NOOP duplicate_active_memory"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_quiet
+      text: "Thích khách sạn yên tĩnh"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích resort cao cấp"
+      domain: hotel
+      category: hotel_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ đã superseded — thích hostel"
+      domain: hotel
+      category: hotel_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Từ giờ tôi vẫn ưu tiên khách sạn yên tĩnh. Tìm khách sạn ở Đà Nẵng từ 10–12/10 cho 2 người."
+
+expected_trace:
+  expected_route: [hotel]
+  expected_context:
+    hotel:
+      must_include: [m_quiet]
+      must_exclude: [m_other_user, m_superseded]
+      expected_applicability:
+        m_quiet: uncertain
+  expected_tools:
+    - name: search_hotels_tool
+      required_arguments: [destination, check_in, check_out, adults]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - hotel_assistant
+    - memory_recall_hotel
+    - hotel_chat
+    - search_hotels_tool
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "khách sạn Đà Nẵng 10–12/10 cho 2 người"
+    - "ưu tiên yên tĩnh khi tool/fixture xác nhận"
+  tradeoff_rule:
+    - "Nếu tool không có đặc tính yên tĩnh, nêu giới hạn dữ liệu — không bịa quiet"
+  forbidden_claims:
+    - "Giá/đặc điểm không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NOOP
+  memories:
+    - existing_fixture_id: m_quiet
+      reasons_any: [exact_duplicate, relation_equivalent, duplicate_active_memory]

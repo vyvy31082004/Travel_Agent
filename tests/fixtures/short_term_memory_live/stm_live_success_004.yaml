@@ -1,0 +1,12 @@
+id: stm_live_success_004
+split: development
+scenario: Task success search hotel Hội An
+metrics:
+- success
+messages:
+- Tìm khách sạn Hội An, check-in 17/11/2026, ở 2 đêm, 3 người, ngân sách dưới 3 triệu.
+constraints:
+  destination: Hội An
+  check_in: '2026-11-17'
+  check_out: '2026-11-19'
+success_domain: hotel

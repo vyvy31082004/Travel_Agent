@@ -1,0 +1,23 @@
+id: stm_live_ref_ordinal_001
+split: development
+scenario: Resolve ordinal position=2 trong hotel
+metrics:
+- reference
+messages:
+- Xin chào, mình đang xem kết quả tìm kiếm.
+reference:
+  args:
+    domain: hotel
+    position: 2
+  gold:
+    item_id: hotel_2
+  seed_visible_state:
+    visible_results:
+      req-hotel-1:
+        domain: hotel
+        search_id: s-1
+        displayed_item_ids:
+        - hotel_1
+        - hotel_2
+        - hotel_3
+    active_request_id: req-hotel-1

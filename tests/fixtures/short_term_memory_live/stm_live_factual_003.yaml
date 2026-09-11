@@ -1,0 +1,14 @@
+id: stm_live_factual_003
+split: development
+scenario: Factual recall after summary (cuối)
+metrics:
+- factual_recall
+force_summarize_penultimate: true
+messages:
+- Tour ở Huế ngày 12/10/2026 khoảng 4 tiếng, 2 người lớn.
+- Ok mình ghi nhận vậy, chưa cần tìm ngay.
+- Tóm lại giúp mình các ràng buộc vừa nói.
+probe: Tour kéo dài bao lâu?
+gold_answer: 4 tieng
+position: cuối
+phase: after

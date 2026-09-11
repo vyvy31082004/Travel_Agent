@@ -518,25 +518,41 @@ def fetch_attraction_reviews_from_api(
         return {
             "error": "Bạn cần cung cấp id của attraction."
         }
-    data = _booking_get(
-        "/attraction/getAttractionReviews",
-        {
-            "id": id,
-        },
-    )
-    limit = 5 
-    good_reviews =[]
-    bad_reviews =[]
-    for rev in data:
-        if isinstance(rev, dict):
-            if rev.get("content")!=None and float(rev.get("numericRating")) >= 3:
-                good_reviews.append({"content": rev.get("content"), "numericRating": rev.get("numericRating")})
-            if rev.get("content")!=None and float(rev.get("numericRating")) <= 2:
-                bad_reviews.append({"content": rev.get("content"), "numericRating": rev.get("numericRating")})
-    return {
-        "source": "booking_com15_rapidapi",
-        "id": id,
-        "good_reviews": good_reviews[:limit],
-        "bad_reviews": bad_reviews[:limit],
+    try:
+        data = _booking_get(
+            "/attraction/getAttractionReviews",
+            {
+                "id": id,
+            },
+        )
 
-    }
+        limit = 5
+        good_reviews = []
+        bad_reviews = []
+        reviews = data if isinstance(data, list) else []
+        for rev in reviews:
+            if not isinstance(rev, dict):
+                continue
+            content = rev.get("content")
+            if content is None:
+                continue
+            rating_raw = rev.get("numericRating")
+            try:
+                rating = float(rating_raw)
+            except (TypeError, ValueError):
+                continue
+            if rating >= 3:
+                good_reviews.append({"content": content, "numericRating": rating_raw})
+            elif rating <= 2:
+                bad_reviews.append({"content": content, "numericRating": rating_raw})
+
+        return {
+            "source": "booking_com15_rapidapi",
+            "id": id,
+            "good_reviews": good_reviews[:limit],
+            "bad_reviews": bad_reviews[:limit],
+        }
+    except Exception as e:
+        return {
+            "error": f"Lỗi khi lấy attraction reviews: {str(e)}"
+        }

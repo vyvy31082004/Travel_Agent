@@ -174,14 +174,15 @@ def test_fetch_domain_candidates_uses_sql_pool():
     assert repo.last_domain_fetch == ("user-1", "hotel", 50)
 
 
-def test_recall_domain_with_applicability_filters_irrelevant():
-    hotel = TravelMemory(
+def test_recall_domain_with_applicability_filters_irrelevant_bathtub():
+    """Bathtub has no search_hotels arg → IRRELEVANT and must leave recalled ids."""
+    bathtub = TravelMemory(
         memory_id="hotel-1",
         user_id="user-1",
-        memory_text="resort gần biển",
+        memory_text="phòng có bồn tắm",
         category=MemoryCategory.HOTEL_PREFERENCE,
         domain=MemoryDomain.HOTEL,
-        evidence_text="resort gần biển",
+        evidence_text="phòng có bồn tắm",
         source_thread_id="thread-1",
     )
     budget = TravelMemory(
@@ -193,7 +194,7 @@ def test_recall_domain_with_applicability_filters_irrelevant():
         evidence_text="ngân sách 1-2 triệu",
         source_thread_id="thread-1",
     )
-    repo = FilteringRepo([hotel, budget])
+    repo = FilteringRepo([bathtub, budget])
     service = MemoryService(
         settings=make_settings(),
         repository=repo,
@@ -244,6 +245,66 @@ def test_domain_memory_recall_node_uses_user_query():
     assert "hotel-1" in result["recalled_memory_ids"]
     assert str(result["domain_action"]) == "search_hotels"
     assert "ngân sách" in result["domain_memory_context"]
+
+
+def test_domain_memory_recall_prefers_full_utterance_over_delegated():
+    large = TravelMemory(
+        memory_id="m_large_group",
+        user_id="user-1",
+        memory_text="Ưu tiên tour nhóm lớn",
+        category=MemoryCategory.EXCURSION_PREFERENCE,
+        domain=MemoryDomain.EXCURSION,
+        evidence_text="Ưu tiên tour nhóm lớn",
+        source_thread_id="thread-1",
+    )
+    repo = FilteringRepo([large])
+    service = MemoryService(
+        settings=make_settings(),
+        repository=repo,
+        applicability_judge=RuleBasedApplicabilityJudge(),
+    )
+    node = make_domain_memory_recall_node(service, domain=MemoryDomain.EXCURSION)
+    result = asyncio.run(
+        node(
+            {
+                "trip_plan_user_message": (
+                    "Từ giờ, khi chọn tour tôi ưu tiên nhóm nhỏ. "
+                    "Tìm hoạt động ở Hội An cho 2 người vào chiều 12/10."
+                ),
+                "user_query": (
+                    "Từ giờ, khi chọn tour tôi ưu tiên nhóm nhỏ. "
+                    "Tìm hoạt động ở Hội An cho 2 người vào chiều 12/10."
+                ),
+                "delegated_request": (
+                    "Tìm hoạt động/tour ở Hội An cho 2 người lớn vào chiều ngày 12/10/2026"
+                ),
+                "turn_constraints": ["ưu tiên nhóm nhỏ"],
+                "user_id": "user-1",
+                "messages": [],
+            },
+            {"configurable": {"user_id": "user-1", "thread_id": "thread-1"}},
+        )
+    )
+    labels = {
+        item["memory_id"]: item["label"] for item in result["memory_applicability"]
+    }
+    assert labels["m_large_group"] == "overridden"
+    assert "m_large_group" not in result["recalled_memory_ids"]
+
+
+def test_applicability_user_query_appends_missing_constraints():
+    from memory.recall_nodes import applicability_user_query
+
+    query = applicability_user_query(
+        {
+            "delegated_request": "Tìm hoạt động ở Hội An",
+            "trip_plan_user_message": "",
+            "user_query": "",
+            "turn_constraints": ["ưu tiên nhóm nhỏ"],
+        }
+    )
+    assert "Hội An" in query
+    assert "nhóm nhỏ" in query
 
 
 def test_build_domain_branch_result_merges_constraints():

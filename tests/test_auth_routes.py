@@ -82,12 +82,26 @@ class FakeAuthRepo:
         self.revoked.append(token)
 
 
+class FakeConversationsRepo:
+    async def upsert(self, *, thread_id, user_id, title=None, preview=None):
+        return None
+
+    async def list_by_user(self, user_id, *, limit=50):
+        return []
+
+    async def get_owner(self, thread_id):
+        return None
+
+
 @pytest.fixture
 def client():
     fake_auth = FakeAuthRepo()
     fake_graph = FakeGraph()
     app_module.app.state.settings = SimpleNamespace(cookie_secure=False)
     app_module.app.dependency_overrides[app_module.get_auth_repo] = lambda: fake_auth
+    app_module.app.dependency_overrides[app_module.get_conversations_repo] = (
+        lambda: FakeConversationsRepo()
+    )
     app_module.app.dependency_overrides[get_primary_graph] = lambda: fake_graph
     test_client = TestClient(app_module.app)
     try:
@@ -181,3 +195,122 @@ def test_authenticated_chat_uses_session_user_id(client):
     assert response.status_code == 200
     assert response.json()["user_id"] == "auth-user-1"
     assert fake_graph.payloads[-1]["user_id"] == "auth-user-1"
+
+def test_unauthenticated_chat_ignores_client_user_id_and_mints_anon(client):
+    test_client, _, fake_graph = client
+    response = test_client.post(
+        "/chat",
+        json={"msg": "Xin chào", "thread_id": "thread-1", "user_id": "auth-user-1"},
+    )
+    assert response.status_code == 200
+    used_user_id = fake_graph.payloads[-1]["user_id"]
+    # The spoofed/other-user id must NOT be used; a server-issued anon id is minted.
+    assert used_user_id != "auth-user-1"
+    assert used_user_id.startswith("anon-")
+    # A server-controlled anonymous cookie is set (httponly), not a shared bucket.
+    set_cookie = response.headers.get("set-cookie", "")
+    assert app_module.ANON_COOKIE_NAME in set_cookie
+    assert "HttpOnly" in set_cookie
+
+def test_unauthenticated_chat_reuses_valid_anon_cookie(client):
+    test_client, _, fake_graph = client
+    import uuid as _uuid
+
+    anon = str(_uuid.uuid4())
+    response = test_client.post(
+        "/chat",
+        json={"msg": "Xin chào", "thread_id": "thread-1"},
+        cookies={app_module.ANON_COOKIE_NAME: anon},
+    )
+    assert response.status_code == 200
+    assert fake_graph.payloads[-1]["user_id"] == f"anon-{anon}"
+
+def test_unauthenticated_chat_rejects_malformed_anon_cookie(client):
+    test_client, _, fake_graph = client
+    response = test_client.post(
+        "/chat",
+        json={"msg": "Xin chào", "thread_id": "thread-1"},
+        cookies={app_module.ANON_COOKIE_NAME: "not-a-uuid"},
+    )
+    assert response.status_code == 200
+    used_user_id = fake_graph.payloads[-1]["user_id"]
+    assert used_user_id.startswith("anon-")
+    assert "not-a-uuid" not in used_user_id
+    # A fresh valid id is issued to replace the malformed one.
+    set_cookie = response.headers.get("set-cookie", "")
+    assert app_module.ANON_COOKIE_NAME in set_cookie
+
+
+class _FakeCursor:
+    def __init__(self, rows):
+        self._rows = rows
+
+    async def fetchall(self):
+        return self._rows
+
+
+class _FakeConn:
+    def __init__(self, rows):
+        self._rows = rows
+
+    async def execute(self, *args, **kwargs):
+        return _FakeCursor(self._rows)
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *exc):
+        return False
+
+
+class _FakePool:
+    def __init__(self, rows):
+        self._rows = rows
+
+    def connection(self):
+        return _FakeConn(self._rows)
+
+
+@pytest.fixture
+def debug_client():
+    fake_auth = FakeAuthRepo()
+    app_module.app.state.settings = SimpleNamespace(
+        cookie_secure=False, long_term_memory_debug_enabled=True
+    )
+    app_module.app.state.database_pool = _FakePool([{"job_id": "j1", "user_id": "u1"}])
+    app_module.app.dependency_overrides[app_module.get_auth_repo] = lambda: fake_auth
+    test_client = TestClient(app_module.app)
+    try:
+        yield test_client
+    finally:
+        app_module.app.dependency_overrides.clear()
+
+
+def test_debug_endpoints_require_authentication(debug_client):
+    # Unauthenticated -> 404 (does not reveal existence / no data leak).
+    for path in ("/debug/memory/jobs", "/debug/memory/audit"):
+        anon = debug_client.get(path)
+        assert anon.status_code == 404
+
+
+def test_debug_endpoints_allow_authenticated_when_flag_on(debug_client):
+    debug_client.cookies.set(SESSION_COOKIE_NAME, "valid-session")
+    resp = debug_client.get("/debug/memory/jobs")
+    assert resp.status_code == 200
+    assert resp.json() == [{"job_id": "j1", "user_id": "u1"}]
+
+
+def test_debug_endpoints_404_when_flag_off():
+    fake_auth = FakeAuthRepo()
+    app_module.app.state.settings = SimpleNamespace(
+        cookie_secure=False, long_term_memory_debug_enabled=False
+    )
+    app_module.app.state.database_pool = _FakePool([])
+    app_module.app.dependency_overrides[app_module.get_auth_repo] = lambda: fake_auth
+    test_client = TestClient(app_module.app)
+    test_client.cookies.set(SESSION_COOKIE_NAME, "valid-session")
+    try:
+        assert test_client.get("/debug/memory/jobs").status_code == 404
+        assert test_client.get("/debug/memory/audit").status_code == 404
+    finally:
+        app_module.app.dependency_overrides.clear()

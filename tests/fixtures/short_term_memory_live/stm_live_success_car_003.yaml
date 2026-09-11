@@ -1,0 +1,11 @@
+id: stm_live_success_car_003
+split: development
+scenario: Thuê xe đón sân bay về Huế
+metrics:
+- success
+messages:
+- Cần thuê xe đón tại sân bay, trả tại Huế, ngày 12/10/2026, 4 chỗ.
+constraints:
+  dropoff: Huế
+  date: '2026-10-12'
+success_domain: car

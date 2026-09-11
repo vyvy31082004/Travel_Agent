@@ -1,0 +1,1030 @@
+{
+  "metadata": {
+    "case_id": "e2e_tools_car_001",
+    "run_id": "c65b17e07e62",
+    "started_at": "2026-09-10T14:05:54.468484+00:00",
+    "finished_at": "2026-09-10T14:09:14.989914+00:00",
+    "user_id": "e2e-e2e_tools_car_001:user_a",
+    "thread_id": "e2e-e2e_tools_car_001-c65b17e07e62",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v3",
+    "git_commit": "3e3fa9a47da427240014ed8e3fa1ed5f1375ff34",
+    "fixture_to_uuid": {
+      "m_car_automatic": "8a93bb10-a067-50a4-9602-6a3a91713d95",
+      "m_car_other_user": "73efb939-2365-5da9-ac18-3783ca242711",
+      "m_car_superseded": "4a9d7b3e-1892-578e-84b8-972644e67655"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Thuê xe ở Đà Nẵng nhận 10/10 10:00 trả 12/10 10:00.",
+      "Với xe đầu tiên trong kết quả, gọi tool xem chi tiết xe đó."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-10"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Thuê xe ở Đà Nẵng nhận 10/10 10:00 trả 12/10 10:00.",
+      "answer": "Dưới đây là danh sách các xe số tự động khả dụng tại Đà Nẵng từ **10:00 ngày 10/10/2026** đến **10:00 ngày 12/10/2026**:\n\n1. **KIA K3 PREMIUM 2022**\n   - **Mã xe (car_id)**: `KH2I33?carSearchIndex=1`\n   - **Giá sau giảm**: 1.151.000 VNĐ (Giá gốc: 1.201.000 VNĐ)\n   - **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Xăng\n   - **Địa chỉ**: Phường Tam Thuận, Quận Thanh Khê\n   - **Đánh giá**: 4.6 ⭐ (71 chuyến)\n   - **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi\n   - **Hình ảnh**: ![KIA K3 PREMIUM 2022](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg)\n   - **Link đặt xe**: [Xem xe KIA K3 PREMIUM 2022](https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1)\n\n2. **HONDA CITY RS 2025**\n   - **Mã xe (car_id)**: `KEFFUA?carSearchIndex=2`\n   - **Giá sau giảm**: 1.085.000 VNĐ (Giá gốc: 1.135.000 VNĐ)\n   - **Hộp số**: Số tự động | **Số chỗ**: 5 chỗ | **Nhiên liệu**: Xăng\n   - **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê\n   - **Đánh giá**: 5.0 ⭐ (9 chuyến)\n   - **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi\n   - **Hình ảnh**: ![HONDA CITY RS 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_city_rs_2025/p/g/2026/02/08/16/5xu4tkTw8SfcxjP4LDi9SQ.jpg)\n   - **Link đặt xe**: [Xem xe HONDA CITY RS 2025](https://www.mioto.vn/car/honda-city-rs-2025/KEFFUA?carSearchIndex=2)\n\n3. **HYUNDAI ELANTRA 2018**\n   - **Mã xe (car_id)**: `KFETZB?carSearchIndex=3`\n   - **Giá sau giảm**: 754.000 VNĐ (Giá gốc: 804.000 VNĐ)\n   - **Hộp số**: Số tự động | **Số chỗ**: 5 chỗ | **Nhiên liệu**: Xăng\n   - **Địa chỉ**: Phường Hòa Thuận Đông, Quận Hải Châu\n   - **Đánh giá**: 5.0 ⭐ (69 chuyến)\n   - **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi\n   - **Hình ảnh**: ![HYUNDAI ELANTRA 2018](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_elantra_2018/p/g/2024/05/07/09/PHUtiS-dEy2LlFFIUvU3Kg.jpg)\n   - **Link đặt xe**: [Xem xe HYUNDAI ELANTRA 2018](https://www.mioto.vn/car/hyundai-elantra-2018/KFETZB?carSearchIndex=3)\n\n4. **HONDA CIVIC RS 2018**\n   - **Mã xe (car_id)**: `KGPB5R?carSearchIndex=4`\n   - **Giá sau giảm**: 867.000 VNĐ (Giá gốc: 917.000 VNĐ)\n   - **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Xăng\n   - **Địa chỉ**: Phường Thạch Thang, Quận Hải Châu\n   - **Đánh giá**: 4.6 ⭐ (9 chuyến)\n   - **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi\n   - **Hình ảnh**: ![HONDA CIVIC RS 2018](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_civic_rs_2018/p/g/2026/06/10/15/2OhsHHOWayKczAiM0DCohg.jpg)\n   - **Link đặt xe**: [Xem xe HONDA CIVIC RS 2018](https://www.mioto.vn/car/honda-civic-rs-2018/KGPB5R?carSearchIndex=4)\n\n5. **HYUNDAI ELANTRA 2019**\n   - **Mã xe (car_id)**: `KH7HM8?carSearchIndex=5`\n   - **Giá sau giảm**: 852.000 VNĐ (Giá gốc: 902.000 VNĐ)\n   - **Hộp số**: Số tự động | **Số chỗ**: 5 chỗ | **Nhiên liệu**: Xăng\n   - **Địa chỉ**: Phường Thạch Thang, Quận Hải Châu\n   - **Đánh giá**: 5.0 ⭐ (3 chuyến)\n   - **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi\n   - **Hình ảnh**: ![HYUNDAI ELANTRA 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_elantra_2019/p/g/2025/07/21/12/1Xy5LAw31pGxtkhaWA7paw.jpg)\n   - **Link đặt xe**: [Xem xe HYUNDAI ELANTRA 2019](https://www.mioto.vn/car/hyundai-elantra-2019/KH7HM8?carSearchIndex=5)\n\n6. **TOYOTA COROLLA ALTIS 2019**\n   - **Mã xe (car_id)**: `K5DRPZ?carSearchIndex=7`\n   - **Giá sau giảm**: 926.000 VNĐ (Giá gốc: 976.000 VNĐ)\n   - **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Xăng\n   - **Địa chỉ**: Phường Vĩnh Trung, Quận Thanh Khê\n   - **Đánh giá**: Chưa có chuyến\n   - **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi\n   - **Hình ảnh**: ![TOYOTA COROLLA ALTIS 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_corolla_altis_2019/p/g/2025/01/19/16/tsW9jEnn4n-meyssHwzC1Q.jpg)\n   - **Link đặt xe**: [Xem xe TOYOTA COROLLA ALTIS 2019](https://www.mioto.vn/car/toyota-corolla-altis-2019/K5DRPZ?carSearchIndex=7)\n\n7. **FORD ECOSPORT 2019**\n   - **Mã xe (car_id)**: `KJFDSI?carSearchIndex=8`\n   - **Giá thuê**: 859.000 VNĐ\n   - **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Xăng\n   - **Địa chỉ**: Phường Thạc Gián, Quận Thanh Khê\n   - **Đánh giá**: 5.0 ⭐ (2 chuyến)\n   - **Dịch vụ**: Miễn thế chấp\n   - **Hình ảnh**: ![FORD ECOSPORT 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/ford_ecosport_2019/p/g/2026/04/31/11/uk-wrlprRZwbPYPwk0Vtqg.jpg)\n   - **Link đặt xe**: [Xem xe FORD ECOSPORT 2019](https://www.mioto.vn/car/ford-ecosport-2019/KJFDSI?carSearchIndex=8)\n\n8. **OMODA C5 FLAGSHIP TURBO 2025**\n   - **Mã xe (car_id)**: `KEWV8K?carSearchIndex=9`\n   - **Giá thuê**: 1.033.000 VNĐ\n   - **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Xăng\n   - **Địa chỉ**: Phường Tam Thuận, Quận Thanh Khê\n   - **Đánh giá**: 5.0 ⭐ (18 chuyến)\n   - **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi\n   - **Hình ảnh**: ![OMODA C5 FLAGSHIP TURBO 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/omoda_c5_flagship_turbo_2025/p/g/2026/02/19/00/pdXGyAJ-x5tNaMFNO4lJvg.jpg)\n   - **Link đặt xe**: [Xem xe OMODA C5 FLAGSHIP TURBO 2025](https://www.mioto.vn/car/omoda-c5-flagship-turbo-2025/KEWV8K?carSearchIndex=9)\n\n9. **KIA SONET LUXURY 2025**\n   - **Mã xe (car_id)**: `KHJ7WU?carSearchIndex=10`\n   - **Giá thuê**: 1.091.000 VNĐ\n   - **Hộp số**: Số tự động | **Số chỗ**: 5 chỗ | **Nhiên liệu**: Xăng\n   - **Địa chỉ**: Phường Hòa Thuận Đông, Quận Hải Châu\n   - **Đánh giá**: 4.5 ⭐ (4 chuyến)\n   - **Dịch vụ**: Giao xe tận nơi\n   - **Hình ảnh**: ![KIA SONET LUXURY 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_sonet_luxury_2025/p/g/2025/05/17/17/FZL7tO1deDDhjRoT6_YMvA.jpg)\n   - **Link đặt xe**: [Xem xe KIA SONET LUXURY 2025](https://www.mioto.vn/car/kia-sonet-luxury-2025/KHJ7WU?carSearchIndex=10)",
+      "summarize_forced": false,
+      "scored": false,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "car_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 4
+    },
+    {
+      "turn": 2,
+      "user_message": "Với xe đầu tiên trong kết quả, gọi tool xem chi tiết xe đó.",
+      "answer": "Dưới đây là thông tin chi tiết về xe **KIA K3 PREMIUM 2022** (Mã xe: `KH2I33?carSearchIndex=1`):\n\n![KIA K3 PREMIUM 2022](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/aLnosfUPTrVBdFnHLEuT_A.jpg)\n\n- **Tên xe:** KIA K3 PREMIUM 2022\n- **Mã xe (car_id):** `KH2I33?carSearchIndex=1`\n- **Giá thuê:** 1.101.000 VNĐ / ngày (Giá gốc: 1.201.000 VNĐ, giảm 10%)\n- **Đánh giá & Số chuyến:** 4.6 ⭐ (71 chuyến)\n- **Địa chỉ:** Phường Tam Thuận, Quận Thanh Khê, Đà Nẵng\n- **Thông số kỹ thuật:**\n  - Hộp số: Số tự động\n  - Số chỗ: 4 chỗ\n  - Nhiên liệu: Xăng\n  - Mức tiêu hao nhiên liệu: 10L/100km\n- **Dịch vụ & Ưu đãi:** Miễn thế chấp, Giao xe tận nơi\n- **Giấy tờ yêu cầu:** GPLX (đối chiếu) & CCCD (đối chiếu qua VNeID)\n- **Tài sản thế chấp:** Không yêu cầu tiền mặt hoặc xe máy thế chấp\n- **Phụ phí quy định:**\n  - Phí vượt giới hạn: 5.000đ/km (nếu di chuyển quá 300km/ngày)\n  - Phí quá giờ: 80.000đ/giờ (trễ quá 5 giờ tính thêm 1 ngày thuê)\n  - Phí vệ sinh: 80.000đ\n  - Phí khử mùi: 400.000đ\n- **Link đặt xe:** [Xem xe KIA K3 PREMIUM 2022 trên Mioto](https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1)",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "car_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 8
+    }
+  ],
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "car"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToCarAssistant",
+        "args": {
+          "request": "Xem chi tiết xe đầu tiên có car_id là KH2I33?carSearchIndex=1"
+        },
+        "timestamp": "2026-09-10T14:09:14.981421+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "car_assistant",
+      "memory_recall_car",
+      "car_chat",
+      "search_cars_tool",
+      "car_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize",
+      "memory_recall_global",
+      "primary_assistant",
+      "car_assistant",
+      "memory_recall_car",
+      "car_chat",
+      "get_car_details_tool",
+      "car_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "car": {
+      "candidate_pool_ids": [
+        "m_car_automatic"
+      ],
+      "applicability": {
+        "m_car_automatic": "uncertain"
+      },
+      "applicability_reasons": {
+        "m_car_automatic": "reconciled: The preference for automatic transmission is relevant when evaluating car details, but cannot be passed as a tool argument for getting details of a specific car. (llm: The preference for automatic transmission is relevant when evaluating car details, but cannot be passed as a tool argument for getting details of a specific car.; rule: default uncertain (no specific tool-field rule matched))"
+      },
+      "final_context_ids": [
+        "m_car_automatic"
+      ],
+      "applied_constraints": [
+        "(soft) [8a93bb10-a067-50a4-9602-6a3a91713d95] Thích xe số tự động"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "car",
+      "name": "search_cars_tool",
+      "arguments": {
+        "end_ms": "2026-10-12 10:00",
+        "address": "Đà Nẵng",
+        "start_ms": "2026-10-10 10:00",
+        "user_needs": "Tìm xe thuê tại Đà Nẵng số tự động"
+      },
+      "timestamp": "2026-09-10T14:09:14.981421+00:00",
+      "raw_result": {
+        "search_id": "ac7d03d4-a734-4ca5-8535-f1f9dd68aa77",
+        "domain": "car",
+        "displayed_item_ids": [
+          "KH2I33?carSearchIndex=1",
+          "KEFFUA?carSearchIndex=2",
+          "KFETZB?carSearchIndex=3",
+          "KGPB5R?carSearchIndex=4",
+          "KH7HM8?carSearchIndex=5",
+          "K5DRPZ?carSearchIndex=7",
+          "KJFDSI?carSearchIndex=8",
+          "KEWV8K?carSearchIndex=9",
+          "KHJ7WU?carSearchIndex=10"
+        ],
+        "labels": [],
+        "total_results": 9
+      },
+      "normalized_result": {
+        "search_id": "ac7d03d4-a734-4ca5-8535-f1f9dd68aa77",
+        "request_id": "req_car_d89f9a25",
+        "domain": "car",
+        "total_results": 9,
+        "items": [
+          {
+            "Link": "https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1",
+            "name": "KIA K3 PREMIUM 2022",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg",
+            "price": "1.151K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg",
+            "Rating": "4.6",
+            "car_id": "KH2I33?carSearchIndex=1",
+            "rating": "4.6",
+            "Tên xe": "KIA K3 PREMIUM 2022",
+            "address": "Phường Tam Thuận, Quận Thanh Khê",
+            "item_id": "KH2I33?carSearchIndex=1",
+            "Giá gốc": "1.201K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Tam Thuận, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "71 chuyến",
+            "Giá sau giảm": "1.151K",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/honda-city-rs-2025/KEFFUA?carSearchIndex=2",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/honda-city-rs-2025/KEFFUA?carSearchIndex=2",
+            "name": "HONDA CITY RS 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_city_rs_2025/p/g/2026/02/08/16/5xu4tkTw8SfcxjP4LDi9SQ.jpg",
+            "price": "1.085K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_city_rs_2025/p/g/2026/02/08/16/5xu4tkTw8SfcxjP4LDi9SQ.jpg",
+            "Rating": "5.0",
+            "car_id": "KEFFUA?carSearchIndex=2",
+            "rating": "5.0",
+            "Tên xe": "HONDA CITY RS 2025",
+            "address": "Phường Chính Gián, Quận Thanh Khê",
+            "item_id": "KEFFUA?carSearchIndex=2",
+            "Giá gốc": "1.135K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "9 chuyến",
+            "Giá sau giảm": "1.085K",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/hyundai-elantra-2018/KFETZB?carSearchIndex=3",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/hyundai-elantra-2018/KFETZB?carSearchIndex=3",
+            "name": "HYUNDAI ELANTRA 2018",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_elantra_2018/p/g/2024/05/07/09/PHUtiS-dEy2LlFFIUvU3Kg.jpg",
+            "price": "754K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_elantra_2018/p/g/2024/05/07/09/PHUtiS-dEy2LlFFIUvU3Kg.jpg",
+            "Rating": "5.0",
+            "car_id": "KFETZB?carSearchIndex=3",
+            "rating": "5.0",
+            "Tên xe": "HYUNDAI ELANTRA 2018",
+            "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "item_id": "KFETZB?carSearchIndex=3",
+            "Giá gốc": "804K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "69 chuyến",
+            "Giá sau giảm": "754K",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/honda-civic-rs-2018/KGPB5R?carSearchIndex=4",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/honda-civic-rs-2018/KGPB5R?carSearchIndex=4",
+            "name": "HONDA CIVIC RS 2018",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_civic_rs_2018/p/g/2026/06/10/15/2OhsHHOWayKczAiM0DCohg.jpg",
+            "price": "867K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_civic_rs_2018/p/g/2026/06/10/15/2OhsHHOWayKczAiM0DCohg.jpg",
+            "Rating": "4.6",
+            "car_id": "KGPB5R?carSearchIndex=4",
+            "rating": "4.6",
+            "Tên xe": "HONDA CIVIC RS 2018",
+            "address": "Phường Thạch Thang, Quận Hải Châu",
+            "item_id": "KGPB5R?carSearchIndex=4",
+            "Giá gốc": "917K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Thạch Thang, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "9 chuyến",
+            "Giá sau giảm": "867K",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/hyundai-elantra-2019/KH7HM8?carSearchIndex=5",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/hyundai-elantra-2019/KH7HM8?carSearchIndex=5",
+            "name": "HYUNDAI ELANTRA 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_elantra_2019/p/g/2025/07/21/12/1Xy5LAw31pGxtkhaWA7paw.jpg",
+            "price": "852K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_elantra_2019/p/g/2025/07/21/12/1Xy5LAw31pGxtkhaWA7paw.jpg",
+            "Rating": "5.0",
+            "car_id": "KH7HM8?carSearchIndex=5",
+            "rating": "5.0",
+            "Tên xe": "HYUNDAI ELANTRA 2019",
+            "address": "Phường Thạch Thang, Quận Hải Châu",
+            "item_id": "KH7HM8?carSearchIndex=5",
+            "Giá gốc": "902K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Thạch Thang, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "3 chuyến",
+            "Giá sau giảm": "852K",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/kia-k3-2015/KIHT3G?carSearchIndex=6",
+            "Tags": "Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/kia-k3-2015/KIHT3G?carSearchIndex=6",
+            "name": "KIA K3 2015",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_2015/p/g/2026/02/28/12/Y0r62L8o8pQ50oFNoAgJPw.jpg",
+            "price": "581K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_2015/p/g/2026/02/28/12/Y0r62L8o8pQ50oFNoAgJPw.jpg",
+            "Rating": "5.0",
+            "car_id": "KIHT3G?carSearchIndex=6",
+            "rating": "5.0",
+            "Tên xe": "KIA K3 2015",
+            "address": "Phường Phước Ninh, Quận Hải Châu",
+            "item_id": "KIHT3G?carSearchIndex=6",
+            "Giá gốc": "631K",
+            "Hộp số": "Số sàn",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Phước Ninh, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "2 chuyến",
+            "Giá sau giảm": "581K",
+            "position": null,
+            "api_position": 6,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/toyota-corolla-altis-2019/K5DRPZ?carSearchIndex=7",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/toyota-corolla-altis-2019/K5DRPZ?carSearchIndex=7",
+            "name": "TOYOTA COROLLA ALTIS 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_corolla_altis_2019/p/g/2025/01/19/16/tsW9jEnn4n-meyssHwzC1Q.jpg",
+            "price": "926K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_corolla_altis_2019/p/g/2025/01/19/16/tsW9jEnn4n-meyssHwzC1Q.jpg",
+            "Rating": "Chưa có chuyến",
+            "car_id": "K5DRPZ?carSearchIndex=7",
+            "rating": "Chưa có chuyến",
+            "Tên xe": "TOYOTA COROLLA ALTIS 2019",
+            "address": "Phường Vĩnh Trung, Quận Thanh Khê",
+            "item_id": "K5DRPZ?carSearchIndex=7",
+            "Giá gốc": "976K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Vĩnh Trung, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "",
+            "Giá sau giảm": "926K",
+            "position": 6,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/ford-ecosport-2019/KJFDSI?carSearchIndex=8",
+            "Tags": "Miễn thế chấp",
+            "link": "https://www.mioto.vn/car/ford-ecosport-2019/KJFDSI?carSearchIndex=8",
+            "name": "FORD ECOSPORT 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/ford_ecosport_2019/p/g/2026/04/31/11/uk-wrlprRZwbPYPwk0Vtqg.jpg",
+            "price": "Không có",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/ford_ecosport_2019/p/g/2026/04/31/11/uk-wrlprRZwbPYPwk0Vtqg.jpg",
+            "Rating": "5.0",
+            "car_id": "KJFDSI?carSearchIndex=8",
+            "rating": "5.0",
+            "Tên xe": "FORD ECOSPORT 2019",
+            "address": "Phường Thạc Gián, Quận Thanh Khê",
+            "item_id": "KJFDSI?carSearchIndex=8",
+            "Giá gốc": "859K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Thạc Gián, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "2 chuyến",
+            "Giá sau giảm": "Không có",
+            "position": 7,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/omoda-c5-flagship-turbo-2025/KEWV8K?carSearchIndex=9",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/omoda-c5-flagship-turbo-2025/KEWV8K?carSearchIndex=9",
+            "name": "OMODA C5 FLAGSHIP TURBO 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/omoda_c5_flagship_turbo_2025/p/g/2026/02/19/00/pdXGyAJ-x5tNaMFNO4lJvg.jpg",
+            "price": "Không có",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/omoda_c5_flagship_turbo_2025/p/g/2026/02/19/00/pdXGyAJ-x5tNaMFNO4lJvg.jpg",
+            "Rating": "5.0",
+            "car_id": "KEWV8K?carSearchIndex=9",
+            "rating": "5.0",
+            "Tên xe": "OMODA C5 FLAGSHIP TURBO 2025",
+            "address": "Phường Tam Thuận, Quận Thanh Khê",
+            "item_id": "KEWV8K?carSearchIndex=9",
+            "Giá gốc": "1.033K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Tam Thuận, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "18 chuyến",
+            "Giá sau giảm": "Không có",
+            "position": 8,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/kia-sonet-luxury-2025/KHJ7WU?carSearchIndex=10",
+            "Tags": "Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/kia-sonet-luxury-2025/KHJ7WU?carSearchIndex=10",
+            "name": "KIA SONET LUXURY 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_sonet_luxury_2025/p/g/2025/05/17/17/FZL7tO1deDDhjRoT6_YMvA.jpg",
+            "price": "Không có",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_sonet_luxury_2025/p/g/2025/05/17/17/FZL7tO1deDDhjRoT6_YMvA.jpg",
+            "Rating": "4.5",
+            "car_id": "KHJ7WU?carSearchIndex=10",
+            "rating": "4.5",
+            "Tên xe": "KIA SONET LUXURY 2025",
+            "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "item_id": "KHJ7WU?carSearchIndex=10",
+            "Giá gốc": "1.091K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "4 chuyến",
+            "Giá sau giảm": "Không có",
+            "position": 9,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "KH2I33?carSearchIndex=1",
+          "KEFFUA?carSearchIndex=2",
+          "KFETZB?carSearchIndex=3",
+          "KGPB5R?carSearchIndex=4",
+          "KH7HM8?carSearchIndex=5",
+          "K5DRPZ?carSearchIndex=7",
+          "KJFDSI?carSearchIndex=8",
+          "KEWV8K?carSearchIndex=9",
+          "KHJ7WU?carSearchIndex=10"
+        ],
+        "items": [
+          {
+            "Link": "https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1",
+            "name": "KIA K3 PREMIUM 2022",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg",
+            "price": "1.151K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg",
+            "Rating": "4.6",
+            "car_id": "KH2I33?carSearchIndex=1",
+            "rating": "4.6",
+            "Tên xe": "KIA K3 PREMIUM 2022",
+            "address": "Phường Tam Thuận, Quận Thanh Khê",
+            "item_id": "KH2I33?carSearchIndex=1",
+            "Giá gốc": "1.201K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Tam Thuận, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "71 chuyến",
+            "Giá sau giảm": "1.151K",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/honda-city-rs-2025/KEFFUA?carSearchIndex=2",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/honda-city-rs-2025/KEFFUA?carSearchIndex=2",
+            "name": "HONDA CITY RS 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_city_rs_2025/p/g/2026/02/08/16/5xu4tkTw8SfcxjP4LDi9SQ.jpg",
+            "price": "1.085K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_city_rs_2025/p/g/2026/02/08/16/5xu4tkTw8SfcxjP4LDi9SQ.jpg",
+            "Rating": "5.0",
+            "car_id": "KEFFUA?carSearchIndex=2",
+            "rating": "5.0",
+            "Tên xe": "HONDA CITY RS 2025",
+            "address": "Phường Chính Gián, Quận Thanh Khê",
+            "item_id": "KEFFUA?carSearchIndex=2",
+            "Giá gốc": "1.135K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "9 chuyến",
+            "Giá sau giảm": "1.085K",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/hyundai-elantra-2018/KFETZB?carSearchIndex=3",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/hyundai-elantra-2018/KFETZB?carSearchIndex=3",
+            "name": "HYUNDAI ELANTRA 2018",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_elantra_2018/p/g/2024/05/07/09/PHUtiS-dEy2LlFFIUvU3Kg.jpg",
+            "price": "754K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_elantra_2018/p/g/2024/05/07/09/PHUtiS-dEy2LlFFIUvU3Kg.jpg",
+            "Rating": "5.0",
+            "car_id": "KFETZB?carSearchIndex=3",
+            "rating": "5.0",
+            "Tên xe": "HYUNDAI ELANTRA 2018",
+            "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "item_id": "KFETZB?carSearchIndex=3",
+            "Giá gốc": "804K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "69 chuyến",
+            "Giá sau giảm": "754K",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/honda-civic-rs-2018/KGPB5R?carSearchIndex=4",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/honda-civic-rs-2018/KGPB5R?carSearchIndex=4",
+            "name": "HONDA CIVIC RS 2018",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_civic_rs_2018/p/g/2026/06/10/15/2OhsHHOWayKczAiM0DCohg.jpg",
+            "price": "867K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_civic_rs_2018/p/g/2026/06/10/15/2OhsHHOWayKczAiM0DCohg.jpg",
+            "Rating": "4.6",
+            "car_id": "KGPB5R?carSearchIndex=4",
+            "rating": "4.6",
+            "Tên xe": "HONDA CIVIC RS 2018",
+            "address": "Phường Thạch Thang, Quận Hải Châu",
+            "item_id": "KGPB5R?carSearchIndex=4",
+            "Giá gốc": "917K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Thạch Thang, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "9 chuyến",
+            "Giá sau giảm": "867K",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/hyundai-elantra-2019/KH7HM8?carSearchIndex=5",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/hyundai-elantra-2019/KH7HM8?carSearchIndex=5",
+            "name": "HYUNDAI ELANTRA 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_elantra_2019/p/g/2025/07/21/12/1Xy5LAw31pGxtkhaWA7paw.jpg",
+            "price": "852K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/hyundai_elantra_2019/p/g/2025/07/21/12/1Xy5LAw31pGxtkhaWA7paw.jpg",
+            "Rating": "5.0",
+            "car_id": "KH7HM8?carSearchIndex=5",
+            "rating": "5.0",
+            "Tên xe": "HYUNDAI ELANTRA 2019",
+            "address": "Phường Thạch Thang, Quận Hải Châu",
+            "item_id": "KH7HM8?carSearchIndex=5",
+            "Giá gốc": "902K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Thạch Thang, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "3 chuyến",
+            "Giá sau giảm": "852K",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/toyota-corolla-altis-2019/K5DRPZ?carSearchIndex=7",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/toyota-corolla-altis-2019/K5DRPZ?carSearchIndex=7",
+            "name": "TOYOTA COROLLA ALTIS 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_corolla_altis_2019/p/g/2025/01/19/16/tsW9jEnn4n-meyssHwzC1Q.jpg",
+            "price": "926K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_corolla_altis_2019/p/g/2025/01/19/16/tsW9jEnn4n-meyssHwzC1Q.jpg",
+            "Rating": "Chưa có chuyến",
+            "car_id": "K5DRPZ?carSearchIndex=7",
+            "rating": "Chưa có chuyến",
+            "Tên xe": "TOYOTA COROLLA ALTIS 2019",
+            "address": "Phường Vĩnh Trung, Quận Thanh Khê",
+            "item_id": "K5DRPZ?carSearchIndex=7",
+            "Giá gốc": "976K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Vĩnh Trung, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "",
+            "Giá sau giảm": "926K",
+            "position": 6,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/ford-ecosport-2019/KJFDSI?carSearchIndex=8",
+            "Tags": "Miễn thế chấp",
+            "link": "https://www.mioto.vn/car/ford-ecosport-2019/KJFDSI?carSearchIndex=8",
+            "name": "FORD ECOSPORT 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/ford_ecosport_2019/p/g/2026/04/31/11/uk-wrlprRZwbPYPwk0Vtqg.jpg",
+            "price": "Không có",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/ford_ecosport_2019/p/g/2026/04/31/11/uk-wrlprRZwbPYPwk0Vtqg.jpg",
+            "Rating": "5.0",
+            "car_id": "KJFDSI?carSearchIndex=8",
+            "rating": "5.0",
+            "Tên xe": "FORD ECOSPORT 2019",
+            "address": "Phường Thạc Gián, Quận Thanh Khê",
+            "item_id": "KJFDSI?carSearchIndex=8",
+            "Giá gốc": "859K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Thạc Gián, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "2 chuyến",
+            "Giá sau giảm": "Không có",
+            "position": 7,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/omoda-c5-flagship-turbo-2025/KEWV8K?carSearchIndex=9",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/omoda-c5-flagship-turbo-2025/KEWV8K?carSearchIndex=9",
+            "name": "OMODA C5 FLAGSHIP TURBO 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/omoda_c5_flagship_turbo_2025/p/g/2026/02/19/00/pdXGyAJ-x5tNaMFNO4lJvg.jpg",
+            "price": "Không có",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/omoda_c5_flagship_turbo_2025/p/g/2026/02/19/00/pdXGyAJ-x5tNaMFNO4lJvg.jpg",
+            "Rating": "5.0",
+            "car_id": "KEWV8K?carSearchIndex=9",
+            "rating": "5.0",
+            "Tên xe": "OMODA C5 FLAGSHIP TURBO 2025",
+            "address": "Phường Tam Thuận, Quận Thanh Khê",
+            "item_id": "KEWV8K?carSearchIndex=9",
+            "Giá gốc": "1.033K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Tam Thuận, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "18 chuyến",
+            "Giá sau giảm": "Không có",
+            "position": 8,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/kia-sonet-luxury-2025/KHJ7WU?carSearchIndex=10",
+            "Tags": "Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/kia-sonet-luxury-2025/KHJ7WU?carSearchIndex=10",
+            "name": "KIA SONET LUXURY 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_sonet_luxury_2025/p/g/2025/05/17/17/FZL7tO1deDDhjRoT6_YMvA.jpg",
+            "price": "Không có",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_sonet_luxury_2025/p/g/2025/05/17/17/FZL7tO1deDDhjRoT6_YMvA.jpg",
+            "Rating": "4.5",
+            "car_id": "KHJ7WU?carSearchIndex=10",
+            "rating": "4.5",
+            "Tên xe": "KIA SONET LUXURY 2025",
+            "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "item_id": "KHJ7WU?carSearchIndex=10",
+            "Giá gốc": "1.091K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Hòa Thuận Đông, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "4 chuyến",
+            "Giá sau giảm": "Không có",
+            "position": 9,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "car",
+      "name": "search_cars_tool",
+      "arguments": {
+        "end_ms": "2026-10-12 10:00",
+        "user_needs": "Tìm xe thuê tại Đà Nẵng số tự động",
+        "start_ms": "2026-10-10 10:00",
+        "address": "Đà Nẵng"
+      },
+      "timestamp": "2026-09-10T14:09:14.988513+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 6
+    },
+    {
+      "domain": "car",
+      "name": "get_car_details_tool",
+      "arguments": {
+        "car_name": "KIA K3 PREMIUM 2022",
+        "car_id": "KH2I33?carSearchIndex=1"
+      },
+      "timestamp": "2026-09-10T14:09:14.989914+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 16
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "car",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là chi tiết xe **KIA K3 PREMIUM 2022** (Mã xe: `KH2I33?carSearchIndex=1`):\\n\\n![KIA K3 PREMIUM 2022](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/aLnosfUPTrVBdFnHLEuT_A.jpg)\\n\\n* **Tên xe:** KIA K3 PREMIUM 2022\\n* **Mã xe (car_id):** `KH2I33?carSearchIndex=1`\\n* **Giá thuê:** 1.201K -10% 1.101K /ngày\\n* **Đánh giá & Số chuyến:** 4.6 ⭐ (71 chuyến)\\n* **Địa chỉ:** Phường Tam Thuận, Quận Thanh Khê\\n* **Đặc điểm:**\\n  * Truyền động: Số tự động\\n  * Số chỗ: 4 chỗ\\n  * Nhiên liệu: Xăng\\n  * Mức tiêu hao: 10L/100km\\n* **Thẻ / Tags:** Miễn thế chấp, Giao xe tận nơi\\n* **Giấy tờ thuê xe:** GPLX (đối chiếu) & CCCD (đối chiếu VNeID) (Chọn 1 trong 2 hình thức)\\n* **Tài sản thế chấp:** Không yêu cầu khách thuê thế chấp Tiền mặt hoặc Xe máy\\n* **Phụ phí:**\\n  * Phí vượt giới hạn: 5.000đ /km (nếu di chuyển quá 300km/ngày)\\n  * Phí quá giờ: 80.000đ /giờ (trễ quá 5 giờ tính thêm 1 ngày thuê)\\n  * Phí vệ sinh: 80.000đ\\n  * Phí khử mùi: 400.000đ\\n* **Mô tả:** KIA K3 2022 PREMIUM\\n* **Link:** [Xem xe trên Mioto](https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1)', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "(soft) [8a93bb10-a067-50a4-9602-6a3a91713d95] Thích xe số tự động"
+      ],
+      "domain_action": "general"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "car"
+    ]
+  },
+  "final_answer": "Dưới đây là thông tin chi tiết về xe **KIA K3 PREMIUM 2022** (Mã xe: `KH2I33?carSearchIndex=1`):\n\n![KIA K3 PREMIUM 2022](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/aLnosfUPTrVBdFnHLEuT_A.jpg)\n\n- **Tên xe:** KIA K3 PREMIUM 2022\n- **Mã xe (car_id):** `KH2I33?carSearchIndex=1`\n- **Giá thuê:** 1.101.000 VNĐ / ngày (Giá gốc: 1.201.000 VNĐ, giảm 10%)\n- **Đánh giá & Số chuyến:** 4.6 ⭐ (71 chuyến)\n- **Địa chỉ:** Phường Tam Thuận, Quận Thanh Khê, Đà Nẵng\n- **Thông số kỹ thuật:**\n  - Hộp số: Số tự động\n  - Số chỗ: 4 chỗ\n  - Nhiên liệu: Xăng\n  - Mức tiêu hao nhiên liệu: 10L/100km\n- **Dịch vụ & Ưu đãi:** Miễn thế chấp, Giao xe tận nơi\n- **Giấy tờ yêu cầu:** GPLX (đối chiếu) & CCCD (đối chiếu qua VNeID)\n- **Tài sản thế chấp:** Không yêu cầu tiền mặt hoặc xe máy thế chấp\n- **Phụ phí quy định:**\n  - Phí vượt giới hạn: 5.000đ/km (nếu di chuyển quá 300km/ngày)\n  - Phí quá giờ: 80.000đ/giờ (trễ quá 5 giờ tính thêm 1 ngày thuê)\n  - Phí vệ sinh: 80.000đ\n  - Phí khử mùi: 400.000đ\n- **Link đặt xe:** [Xem xe KIA K3 PREMIUM 2022 trên Mioto](https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1)",
+  "stm": {
+    "summary": null,
+    "message_count": 8,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "453424fb-c3be-42d5-a2e8-6806dd661e8b",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "audits": [],
+    "seeded_status": {
+      "m_car_automatic": {
+        "status": "active",
+        "memory_id": "8a93bb10-a067-50a4-9602-6a3a91713d95",
+        "memory_text": "Thích xe số tự động",
+        "supersedes_memory_id": null
+      },
+      "m_car_other_user": {
+        "status": "active",
+        "memory_id": "73efb939-2365-5da9-ac18-3783ca242711",
+        "memory_text": "Memory user khác — thích xe số sàn",
+        "supersedes_memory_id": null
+      },
+      "m_car_superseded": {
+        "status": "superseded",
+        "memory_id": "4a9d7b3e-1892-578e-84b8-972644e67655",
+        "memory_text": "Preference cũ — chỉ thuê xe 4 chỗ",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "453424fb-c3be-42d5-a2e8-6806dd661e8b",
+      "status": "skipped",
+      "error_summary": null,
+      "created_at": "2026-09-10T21:09:09.342234+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "car"
+        ],
+        "actual": [
+          "car"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "SKIP",
+      "detail": "no expected_applicability",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "car_assistant",
+          "memory_recall_car",
+          "car_chat",
+          "search_cars_tool",
+          "search_cars_tool",
+          "car_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize",
+          "memory_recall_global",
+          "primary_assistant",
+          "car_assistant",
+          "memory_recall_car",
+          "car_chat",
+          "get_car_details_tool",
+          "get_car_details_tool",
+          "car_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "car_assistant",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "car_assistant",
+      "graph": "primary",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "memory_recall_car",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_car_automatic"
+        ],
+        "applicability": {
+          "m_car_automatic": "apply"
+        },
+        "applicability_reasons": {
+          "m_car_automatic": "reconciled: transmission maps to user_needs on search_cars (llm: The stored preference for automatic transmission (xe số tự động) maps to a tool argument for car search and is not contradicted by the current user request.; rule: transmission maps to user_needs on search_cars)"
+        },
+        "applied_to_context": [
+          "m_car_automatic"
+        ]
+      }
+    },
+    {
+      "seq": 5,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "search_cars_tool",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [
+        {
+          "name": "search_cars_tool",
+          "arguments": {
+            "end_ms": "2026-10-12 10:00",
+            "user_needs": "Tìm xe thuê tại Đà Nẵng số tự động",
+            "start_ms": "2026-10-10 10:00",
+            "address": "Đà Nẵng"
+          }
+        }
+      ],
+      "parent_chat_node": "car_chat"
+    },
+    {
+      "seq": 7,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 8,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 9,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 11,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 12,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 13,
+      "node": "car_assistant",
+      "graph": "primary",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 14,
+      "node": "memory_recall_car",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_car_automatic"
+        ],
+        "applicability": {
+          "m_car_automatic": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_car_automatic": "reconciled: The preference for automatic transmission is relevant when evaluating car details, but cannot be passed as a tool argument for getting details of a specific car. (llm: The preference for automatic transmission is relevant when evaluating car details, but cannot be passed as a tool argument for getting details of a specific car.; rule: default uncertain (no specific tool-field rule matched))"
+        },
+        "applied_to_context": [
+          "m_car_automatic"
+        ]
+      }
+    },
+    {
+      "seq": 15,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 16,
+      "node": "get_car_details_tool",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [
+        {
+          "name": "get_car_details_tool",
+          "arguments": {
+            "car_name": "KIA K3 PREMIUM 2022",
+            "car_id": "KH2I33?carSearchIndex=1"
+          }
+        }
+      ],
+      "parent_chat_node": "car_chat"
+    },
+    {
+      "seq": 17,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 18,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 19,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 20,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

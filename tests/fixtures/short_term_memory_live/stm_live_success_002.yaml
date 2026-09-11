@@ -1,0 +1,13 @@
+id: stm_live_success_002
+split: development
+scenario: Task success search hotel Nha Trang
+metrics:
+- success
+messages:
+- Tìm khách sạn Nha Trang, check-in 15/11/2026, ở 2 đêm, 3 người, ngân sách dưới 3
+  triệu.
+constraints:
+  destination: Nha Trang
+  check_in: '2026-11-15'
+  check_out: '2026-11-17'
+success_domain: hotel

@@ -4,6 +4,21 @@ import json
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
+# Result Store uses "tour" for excursion search tools; branch domain is "excursion".
+_VISIBLE_RESULT_DOMAIN_ALIASES: dict[str, set[str]] = {
+    "excursion": {"excursion", "tour"},
+    "tour": {"excursion", "tour"},
+}
+
+
+def _visible_result_matches_branch(entry_domain: str | None, branch_domain: str) -> bool:
+    if not entry_domain:
+        return True
+    if entry_domain == branch_domain:
+        return True
+    aliases = _VISIBLE_RESULT_DOMAIN_ALIASES.get(branch_domain, {branch_domain})
+    return entry_domain in aliases
+
 
 @dataclass
 class DomainBranchResult:
@@ -50,7 +65,7 @@ def build_domain_branch_result(
     for entry in (visible_results or {}).values():
         if not isinstance(entry, dict):
             continue
-        if entry.get("domain") and entry.get("domain") != domain:
+        if not _visible_result_matches_branch(entry.get("domain"), domain):
             continue
         options.append(
             {

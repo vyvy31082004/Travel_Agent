@@ -1,0 +1,73 @@
+id: e2e_write_excursion_supersede_001
+scenario: "Excursion large_group seeded; từ giờ ưu tiên nhóm nhỏ + search Hội An; SUPERSEDE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_large_group
+      text: "Ưu tiên tour nhóm lớn"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích tour văn hóa"
+      domain: excursion
+      category: excursion_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ — tránh tour ngoài trời"
+      domain: excursion
+      category: excursion_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Từ giờ, khi chọn tour tôi ưu tiên nhóm nhỏ. Tìm hoạt động ở Hội An cho 2 người vào chiều 12/10."
+
+expected_trace:
+  expected_route: [excursion]
+  expected_context:
+    excursion:
+      must_include: []
+      must_exclude: [m_other_user, m_superseded]
+      expected_applicability:
+        m_large_group: overridden
+  expected_tools:
+    - name: search_attractions_tool
+      required_arguments: [location, date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - excursion_assistant
+    - memory_recall_excursion
+    - excursion_chat
+    - searchLocation
+    - searchAttractions
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "hoạt động Hội An chiều 12/10 cho 2 người"
+    - "chỉ gọi option nhóm nhỏ khi tool có metadata xác nhận"
+  tradeoff_rule:
+    - "Không áp large_group seeded; nếu tool không có group size, nêu giới hạn dữ liệu"
+  forbidden_claims:
+    - "Viện dẫn ưu tiên nhóm lớn như constraint hiện tại"
+    - "Điểm/giờ/giá không có trong tool result"
+
+expected_finalize:
+  action: SUPERSEDE
+  memories:
+    - domain: excursion
+      category: excursion_preference
+      text_contains: ["nhóm nhỏ"]
+      supersedes_fixture_id: m_large_group

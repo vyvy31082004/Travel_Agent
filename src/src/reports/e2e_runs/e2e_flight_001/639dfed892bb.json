@@ -1,0 +1,1409 @@
+{
+  "metadata": {
+    "case_id": "e2e_flight_001",
+    "run_id": "639dfed892bb",
+    "started_at": "2026-09-02T13:35:58.708814+00:00",
+    "finished_at": "2026-09-02T13:37:01.901693+00:00",
+    "user_id": "e2e-e2e_flight_001:user_a",
+    "thread_id": "e2e-e2e_flight_001-639dfed892bb",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v1",
+    "git_commit": "33651113742b805502b902653208662372e2be36",
+    "fixture_to_uuid": {
+      "m_economy": "231790c3-3bcc-55cd-be08-81f0492c2ea0",
+      "m_direct": "269b86d9-e499-5b31-bead-577c0f0bfd28",
+      "m_departure": "ac67b978-9d3d-5dc5-8606-7897a9c5cba6",
+      "m_other_user": "4c1f20f5-68bc-57be-b855-44a901b7a540",
+      "m_superseded": "7cffe2c6-e3fa-546e-8d90-796f7bcc70a9"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Bay ra Hà Nội sáng thứ Hai nhé."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-02",
+      "next_monday": "2026-09-07"
+    }
+  },
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "flight"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToFlightAssistant",
+        "args": {
+          "request": "Tìm chuyến bay đến Hà Nội (HAN) vào sáng thứ Hai, ngày 07/09/2026."
+        },
+        "timestamp": "2026-09-02T13:37:01.901693+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "flight_assistant",
+      "join_results",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "flight": {
+      "candidate_pool_ids": [
+        "m_departure",
+        "m_direct",
+        "m_economy"
+      ],
+      "applicability": {
+        "m_departure": "apply",
+        "m_direct": "apply",
+        "m_economy": "apply"
+      },
+      "applicability_reasons": {
+        "m_departure": "Origin preference (SGN) maps directly to the origin parameter in flight search.",
+        "m_direct": "Direct flight preference maps directly to direct flight filter/parameter in flight search.",
+        "m_economy": "Economy class preference maps directly to cabin class parameter in flight search."
+      },
+      "final_context_ids": [
+        "m_departure",
+        "m_direct",
+        "m_economy"
+      ],
+      "applied_constraints": [
+        "[ac67b978-9d3d-5dc5-8606-7897a9c5cba6] Thường bay từ TP.HCM (SGN)",
+        "[269b86d9-e499-5b31-bead-577c0f0bfd28] Ưu tiên bay thẳng, tránh nối chuyến",
+        "[231790c3-3bcc-55cd-be08-81f0492c2ea0] Thường bay hạng phổ thông (economy) khi đi du lịch"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "flight",
+      "name": "search_one_way_flights_tool",
+      "arguments": {
+        "stops": "1",
+        "origin": "SGN",
+        "cabin_class": "economy",
+        "destination": "HAN",
+        "departure_date": "2026-09-07",
+        "time_tolerance_minutes": 240,
+        "preferred_departure_time": "08:00"
+      },
+      "timestamp": "2026-09-02T13:37:01.901693+00:00",
+      "raw_result": {
+        "search_id": "4334a472-d772-4abd-88b1-d2bd4bb61f78",
+        "domain": "flight",
+        "displayed_item_ids": [
+          "FL-F7F18F",
+          "FL-AD3597",
+          "FL-9015AC",
+          "FL-1CD221",
+          "FL-435F46",
+          "FL-7E3897",
+          "FL-A3542E",
+          "FL-7EB905",
+          "FL-FCC142",
+          "FL-BA9F84"
+        ],
+        "labels": [],
+        "total_results": 10
+      },
+      "normalized_result": {
+        "search_id": "4334a472-d772-4abd-88b1-d2bd4bb61f78",
+        "request_id": "req_flight_61d08ade",
+        "domain": "flight",
+        "total_results": 10,
+        "items": [
+          {
+            "price": 1131301,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-F7F18F",
+            "Offer_ID": "FL-F7F18F",
+            "currency": "VND",
+            "offer_id": "FL-F7F18F",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "12:40",
+                "flight_number": "198",
+                "departure_date": "2026-09-07",
+                "departure_time": "10:30",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1131301,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "12:40",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdWV1NqRTVPQm9MQ0tXR1JSQUFHZ05XVGtRNEhIRHpJUT09IiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWSiIsIjQiOiIxOTgiLCI1IjoiMjAyNi0wOS0wNyIsIjYiOiIyMDI2LTA5LTA3In1dLCJ0eSI6Ik9ORV9XQVkifQ==",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "10:30",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "price": 1131301,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-AD3597",
+            "Offer_ID": "FL-AD3597",
+            "currency": "VND",
+            "offer_id": "FL-AD3597",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "13:30",
+                "flight_number": "134",
+                "departure_date": "2026-09-07",
+                "departure_time": "11:20",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1131301,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "13:30",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdWV1NqRXpOQm9MQ0tXR1JSQUFHZ05XVGtRNEhIRHpJUT09IiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWSiIsIjQiOiIxMzQiLCI1IjoiMjAyNi0wOS0wNyIsIjYiOiIyMDI2LTA5LTA3In1dLCJ0eSI6Ik9ORV9XQVkifQ==",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "11:20",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "price": 1131301,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-9015AC",
+            "Offer_ID": "FL-9015AC",
+            "currency": "VND",
+            "offer_id": "FL-9015AC",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "09:05",
+                "flight_number": "122",
+                "departure_date": "2026-09-07",
+                "departure_time": "06:55",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1131301,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "09:05",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdWV1NqRXlNaG9MQ0tXR1JSQUFHZ05XVGtRNEhIRHpJUT09IiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWSiIsIjQiOiIxMjIiLCI1IjoiMjAyNi0wOS0wNyIsIjYiOiIyMDI2LTA5LTA3In1dLCJ0eSI6Ik9ORV9XQVkifQ==",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "06:55",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "price": 1234221,
+            "stops": null,
+            "airline": [
+              "Vietravel Airlines"
+            ],
+            "baggage": null,
+            "item_id": "FL-1CD221",
+            "Offer_ID": "FL-1CD221",
+            "currency": "VND",
+            "offer_id": "FL-1CD221",
+            "segments": [
+              {
+                "flight_ID": 112277,
+                "seat_width": null,
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VU",
+                "airline_name": "Vietravel Airlines",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "07:45",
+                "flight_number": "750",
+                "departure_date": "2026-09-07",
+                "departure_time": "05:35",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1234221,
+            "airline_code": "VU",
+            "airline_name": [
+              "Vietravel Airlines"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "07:45",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdWV1ZUYzFNQm9MQ0sycVN4QUFHZ05XVGtRNEhIRCtKQT09IiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWVSIsIjQiOiI3NTAiLCI1IjoiMjAyNi0wOS0wNyIsIjYiOiIyMDI2LTA5LTA3In1dLCJ0eSI6Ik9ORV9XQVkifQ==",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "05:35",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "price": 1234221,
+            "stops": null,
+            "airline": [
+              "Vietravel Airlines"
+            ],
+            "baggage": null,
+            "item_id": "FL-435F46",
+            "Offer_ID": "FL-435F46",
+            "currency": "VND",
+            "offer_id": "FL-435F46",
+            "segments": [
+              {
+                "flight_ID": 120750,
+                "seat_width": null,
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VU",
+                "airline_name": "Vietravel Airlines",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "09:10",
+                "flight_number": "774",
+                "departure_date": "2026-09-07",
+                "departure_time": "07:00",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1234221,
+            "airline_code": "VU",
+            "airline_name": [
+              "Vietravel Airlines"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "09:10",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdWV1ZUYzNOQm9MQ0sycVN4QUFHZ05XVGtRNEhIRCtKQT09IiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWVSIsIjQiOiI3NzQiLCI1IjoiMjAyNi0wOS0wNyIsIjYiOiIyMDI2LTA5LTA3In1dLCJ0eSI6Ik9ORV9XQVkifQ==",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "07:00",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "price": 1542781,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-7E3897",
+            "Offer_ID": "FL-7E3897",
+            "currency": "VND",
+            "offer_id": "FL-7E3897",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "07:10",
+                "flight_number": "120",
+                "departure_date": "2026-09-07",
+                "departure_time": "05:00",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1542781,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "07:10",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdWV1NqRXlNQm9MQ1AyVVhoQUFHZ05XVGtRNEhIQ2RMZz09IiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWSiIsIjQiOiIxMjAiLCI1IjoiMjAyNi0wOS0wNyIsIjYiOiIyMDI2LTA5LTA3In1dLCJ0eSI6Ik9ORV9XQVkifQ==",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "05:00",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "price": 1542781,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-A3542E",
+            "Offer_ID": "FL-A3542E",
+            "currency": "VND",
+            "offer_id": "FL-A3542E",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "08:15",
+                "flight_number": "124",
+                "departure_date": "2026-09-07",
+                "departure_time": "06:05",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1542781,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "08:15",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdWV1NqRXlOQm9MQ1AyVVhoQUFHZ05XVGtRNEhIQ2RMZz09IiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWSiIsIjQiOiIxMjQiLCI1IjoiMjAyNi0wOS0wNyIsIjYiOiIyMDI2LTA5LTA3In1dLCJ0eSI6Ik9ORV9XQVkifQ==",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "06:05",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "price": 1542781,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-7EB905",
+            "Offer_ID": "FL-7EB905",
+            "currency": "VND",
+            "offer_id": "FL-7EB905",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "09:40",
+                "flight_number": "126",
+                "departure_date": "2026-09-07",
+                "departure_time": "07:30",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1542781,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "09:40",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdWV1NqRXlOaG9MQ1AyVVhoQUFHZ05XVGtRNEhIQ2RMZz09IiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWSiIsIjQiOiIxMjYiLCI1IjoiMjAyNi0wOS0wNyIsIjYiOiIyMDI2LTA5LTA3In1dLCJ0eSI6Ik9ORV9XQVkifQ==",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "07:30",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "price": 1542781,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-FCC142",
+            "Offer_ID": "FL-FCC142",
+            "currency": "VND",
+            "offer_id": "FL-FCC142",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "10:50",
+                "flight_number": "130",
+                "departure_date": "2026-09-07",
+                "departure_time": "08:40",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1542781,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "10:50",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdWV1NqRXpNQm9MQ1AyVVhoQUFHZ05XVGtRNEhIQ2RMZz09IiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWSiIsIjQiOiIxMzAiLCI1IjoiMjAyNi0wOS0wNyIsIjYiOiIyMDI2LTA5LTA3In1dLCJ0eSI6Ik9ORV9XQVkifQ==",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "08:40",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "price": 1672381,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-BA9F84",
+            "Offer_ID": "FL-BA9F84",
+            "currency": "VND",
+            "offer_id": "FL-BA9F84",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "14:10",
+                "flight_number": "136",
+                "departure_date": "2026-09-07",
+                "departure_time": "12:00",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1672381,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "14:10",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdWV1NqRXpOaG9MQ0wySlpoQUFHZ05XVGtRNEhIQ09NZz09IiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWSiIsIjQiOiIxMzYiLCI1IjoiMjAyNi0wOS0wNyIsIjYiOiIyMDI2LTA5LTA3In1dLCJ0eSI6Ik9ORV9XQVkifQ==",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "12:00",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          },
+          {
+            "price": 1801981,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-C91AA7",
+            "Offer_ID": "FL-C91AA7",
+            "currency": "VND",
+            "offer_id": "FL-C91AA7",
+            "segments": [
+              {
+                "flight_ID": 113377,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A320",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "11:50",
+                "flight_number": "128",
+                "departure_date": "2026-09-07",
+                "departure_time": "09:40",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1801981,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "11:50",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdWV1NqRXlPQm9MQ1AzOWJSQUFHZ05XVGtRNEhIRC9OUT09IiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWSiIsIjQiOiIxMjgiLCI1IjoiMjAyNi0wOS0wNyIsIjYiOiIyMDI2LTA5LTA3In1dLCJ0eSI6Ik9ORV9XQVkifQ==",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "09:40",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": null,
+            "api_position": 11,
+            "eligible": false
+          },
+          {
+            "price": 2118181,
+            "stops": null,
+            "airline": [
+              "Vietnam Airlines"
+            ],
+            "baggage": null,
+            "item_id": "FL-950AB1",
+            "Offer_ID": "FL-950AB1",
+            "currency": "VND",
+            "offer_id": "FL-950AB1",
+            "segments": [
+              {
+                "flight_ID": 133328,
+                "seat_width": "79 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VN",
+                "airline_name": "Vietnam Airlines",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "07:10",
+                "flight_number": "6002",
+                "departure_date": "2026-09-07",
+                "departure_time": "05:00",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 2118181,
+            "airline_code": "VN",
+            "airline_name": [
+              "Vietnam Airlines"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "07:10",
+            "detail_token": "eyJ0IjoiQ2pSSVprSnRUQzEzUVhweWRWbEJSMDltWTJkQ1J5MHRMUzB0TFMwdExTMHRiM2xoT1VGQlFVRkJSM0ZaU214SlNsUkNVRTlCRWdaV1RqWXdNRElhREFpbHBJRUJFQUFhQTFaT1JEZ2NjTHcvIiwiZCI6IlNHTiIsImEiOiJIQU4iLCJkZCI6IjIwMjYtMDktMDciLCJhZCI6IjIwMjYtMDktMDciLCJiIjpbeyIxIjoiU0dOIiwiMiI6IkhBTiIsIjMiOiJWTiIsIjQiOiI2MDAyIiwiNSI6IjIwMjYtMDktMDciLCI2IjoiMjAyNi0wOS0wNyJ9XSwidHkiOiJPTkVfV0FZIn0=",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "05:00",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": null,
+            "api_position": 12,
+            "eligible": false
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "FL-F7F18F",
+          "FL-AD3597",
+          "FL-9015AC",
+          "FL-1CD221",
+          "FL-435F46",
+          "FL-7E3897",
+          "FL-A3542E",
+          "FL-7EB905",
+          "FL-FCC142",
+          "FL-BA9F84"
+        ],
+        "items": [
+          {
+            "price": 1131301,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-F7F18F",
+            "Offer_ID": "FL-F7F18F",
+            "currency": "VND",
+            "offer_id": "FL-F7F18F",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "12:40",
+                "flight_number": "198",
+                "departure_date": "2026-09-07",
+                "departure_time": "10:30",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1131301,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "12:40",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "10:30",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "price": 1131301,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-AD3597",
+            "Offer_ID": "FL-AD3597",
+            "currency": "VND",
+            "offer_id": "FL-AD3597",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "13:30",
+                "flight_number": "134",
+                "departure_date": "2026-09-07",
+                "departure_time": "11:20",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1131301,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "13:30",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "11:20",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "price": 1131301,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-9015AC",
+            "Offer_ID": "FL-9015AC",
+            "currency": "VND",
+            "offer_id": "FL-9015AC",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "09:05",
+                "flight_number": "122",
+                "departure_date": "2026-09-07",
+                "departure_time": "06:55",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1131301,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "09:05",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "06:55",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "price": 1234221,
+            "stops": null,
+            "airline": [
+              "Vietravel Airlines"
+            ],
+            "baggage": null,
+            "item_id": "FL-1CD221",
+            "Offer_ID": "FL-1CD221",
+            "currency": "VND",
+            "offer_id": "FL-1CD221",
+            "segments": [
+              {
+                "flight_ID": 112277,
+                "seat_width": null,
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VU",
+                "airline_name": "Vietravel Airlines",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "07:45",
+                "flight_number": "750",
+                "departure_date": "2026-09-07",
+                "departure_time": "05:35",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1234221,
+            "airline_code": "VU",
+            "airline_name": [
+              "Vietravel Airlines"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "07:45",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "05:35",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "price": 1234221,
+            "stops": null,
+            "airline": [
+              "Vietravel Airlines"
+            ],
+            "baggage": null,
+            "item_id": "FL-435F46",
+            "Offer_ID": "FL-435F46",
+            "currency": "VND",
+            "offer_id": "FL-435F46",
+            "segments": [
+              {
+                "flight_ID": 120750,
+                "seat_width": null,
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VU",
+                "airline_name": "Vietravel Airlines",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "09:10",
+                "flight_number": "774",
+                "departure_date": "2026-09-07",
+                "departure_time": "07:00",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1234221,
+            "airline_code": "VU",
+            "airline_name": [
+              "Vietravel Airlines"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "09:10",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "07:00",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "price": 1542781,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-7E3897",
+            "Offer_ID": "FL-7E3897",
+            "currency": "VND",
+            "offer_id": "FL-7E3897",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "07:10",
+                "flight_number": "120",
+                "departure_date": "2026-09-07",
+                "departure_time": "05:00",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1542781,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "07:10",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "05:00",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "price": 1542781,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-A3542E",
+            "Offer_ID": "FL-A3542E",
+            "currency": "VND",
+            "offer_id": "FL-A3542E",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "08:15",
+                "flight_number": "124",
+                "departure_date": "2026-09-07",
+                "departure_time": "06:05",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1542781,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "08:15",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "06:05",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "price": 1542781,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-7EB905",
+            "Offer_ID": "FL-7EB905",
+            "currency": "VND",
+            "offer_id": "FL-7EB905",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "09:40",
+                "flight_number": "126",
+                "departure_date": "2026-09-07",
+                "departure_time": "07:30",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1542781,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "09:40",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "07:30",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "price": 1542781,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-FCC142",
+            "Offer_ID": "FL-FCC142",
+            "currency": "VND",
+            "offer_id": "FL-FCC142",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "10:50",
+                "flight_number": "130",
+                "departure_date": "2026-09-07",
+                "departure_time": "08:40",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1542781,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "10:50",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "08:40",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "price": 1672381,
+            "stops": null,
+            "airline": [
+              "Vietjet"
+            ],
+            "baggage": null,
+            "item_id": "FL-BA9F84",
+            "Offer_ID": "FL-BA9F84",
+            "currency": "VND",
+            "offer_id": "FL-BA9F84",
+            "segments": [
+              {
+                "flight_ID": 111300,
+                "seat_width": "71 xentimét",
+                "cabin_class": 1,
+                "aircraftName": "Airbus A321",
+                "airline_code": "VJ",
+                "airline_name": "Vietjet",
+                "arrival_date": "2026-09-07",
+                "arrival_time": "14:10",
+                "flight_number": "136",
+                "departure_date": "2026-09-07",
+                "departure_time": "12:00",
+                "duration_minutes": 130,
+                "arrival_airport_code": "HAN",
+                "arrival_airport_name": "Cảng hàng không Quốc tế Nội Bài",
+                "departure_airport_code": "SGN",
+                "departure_airport_name": "Cảng hàng không quốc tế Tân Sơn Nhất"
+              }
+            ],
+            "refundable": null,
+            "cabin_class": null,
+            "total_price": 1672381,
+            "airline_code": "VJ",
+            "airline_name": [
+              "Vietjet"
+            ],
+            "arrival_date": "2026-09-07",
+            "arrival_time": "14:10",
+            "flight_number": null,
+            "departure_date": "2026-09-07",
+            "departure_time": "12:00",
+            "arrival_airport": "HAN",
+            "inbound_options": null,
+            "duration_minutes": 130,
+            "departure_airport": "SGN",
+            "arrival_airport_code": "HAN",
+            "departure_airport_code": "SGN",
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "flight",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là các chuyến bay thẳng từ TP.HCM (SGN) đến Hà Nội (HAN) vào sáng thứ Hai, ngày 07/09/2026 (hạng phổ thông):\\n\\n* **Offer_ID:** FL-F7F18F\\n  * **Giá:** 1.131.301 VND\\n  * **Hãng hàng không:** Vietjet (VJ)\\n  * **Số điểm dừng:** 0 (Bay thẳng)\\n  * **Thời gian bay:** 2 giờ 10 phút\\n  * **Khởi hành:** 10:30, ngày 07/09/2026 từ sân bay SGN\\n  * **Đến nơi:** 12:40, ngày 07/09/2026 tại sân bay HAN\\n\\n* **Offer_ID:** FL-AD3597\\n  * **Giá:** 1.131.301 VND\\n  * **Hãng hàng không:** Vietjet (VJ)\\n  * **Số điểm dừng:** 0 (Bay thẳng)\\n  * **Thời gian bay:** 2 giờ 10 phút\\n  * **Khởi hành:** 11:20, ngày 07/09/2026 từ sân bay SGN\\n  * **Đến nơi:** 13:30, ngày 07/09/2026 tại sân bay HAN\\n\\n* **Offer_ID:** FL-9015AC\\n  * **Giá:** 1.131.301 VND\\n  * **Hãng hàng không:** Vietjet (VJ)\\n  * **Số điểm dừng:** 0 (Bay thẳng)\\n  * **Thời gian bay:** 2 giờ 10 phút\\n  * **Khởi hành:** 06:55, ngày 07/09/2026 từ sân bay SGN\\n  * **Đến nơi:** 09:05, ngày 07/09/2026 tại sân bay HAN\\n\\n* **Offer_ID:** FL-1CD221\\n  * **Giá:** 1.234.221 VND\\n  * **Hãng hàng không:** Vietravel Airlines (VU)\\n  * **Số điểm dừng:** 0 (Bay thẳng)\\n  * **Thời gian bay:** 2 giờ 10 phút\\n  * **Khởi hành:** 05:35, ngày 07/09/2026 từ sân bay SGN\\n  * **Đến nơi:** 07:45, ngày 07/09/2026 tại sân bay HAN\\n\\n* **Offer_ID:** FL-435F46\\n  * **Giá:** 1.234.221 VND\\n  * **Hãng hàng không:** Vietravel Airlines (VU)\\n  * **Số điểm dừng:** 0 (Bay thẳng)\\n  * **Thời gian bay:** 2 giờ 10 phút\\n  * **Khởi hành:** 07:00, ngày 07/09/2026 từ sân bay SGN\\n  * **Đến nơi:** 09:10, ngày 07/09/2026 tại sân bay HAN\\n\\n* **Offer_ID:** FL-7E3897\\n  * **Giá:** 1.542.781 VND\\n  * **Hãng hàng không:** Vietjet (VJ)\\n  * **Số điểm dừng:** 0 (Bay thẳng)\\n  * **Thời gian bay:** 2 giờ 10 phút\\n  * **Khởi hành:** 05:00, ngày 07/09/2026 từ sân bay SGN\\n  * **Đến nơi:** 07:10, ngày 07/09/2026 tại sân bay HAN\\n\\n* **Offer_ID:** FL-A3542E\\n  * **Giá:** 1.542.781 VND\\n  * **Hãng hàng không:** Vietjet (VJ)\\n  * **Số điểm dừng:** 0 (Bay thẳng)\\n  * **Thời gian bay:** 2 giờ 10 phút\\n  * **Khởi hành:** 06:05, ngày 07/09/2026 từ sân bay SGN\\n  * **Đến nơi:** 08:15, ngày 07/09/2026 tại sân bay HAN\\n\\n* **Offer_ID:** FL-7EB905\\n  * **Giá:** 1.542.781 VND\\n  * **Hãng hàng không:** Vietjet (VJ)\\n  * **Số điểm dừng:** 0 (Bay thẳng)\\n  * **Thời gian bay:** 2 giờ 10 phút\\n  * **Khởi hành:** 07:30, ngày 07/09/2026 từ sân bay SGN\\n  * **Đến nơi:** 09:40, ngày 07/09/2026 tại sân bay HAN\\n\\n* **Offer_ID:** FL-FCC142\\n  * **Giá:** 1.542.781 VND\\n  * **Hãng hàng không:** Vietjet (VJ)\\n  * **Số điểm dừng:** 0 (Bay thẳng)\\n  * **Thời gian bay:** 2 giờ 10 phút\\n  * **Khởi hành:** 08:40, ngày 07/09/2026 từ sân bay SGN\\n  * **Đến nơi:** 10:50, ngày 07/09/2026 tại sân bay HAN\\n\\n* **Offer_ID:** FL-BA9F84\\n  * **Giá:** 1.672.381 VND\\n  * **Hãng hàng không:** Vietjet (VJ)\\n  * **Số điểm dừng:** 0 (Bay thẳng)\\n  * **Thời gian bay:** 2 giờ 10 phút\\n  * **Khởi hành:** 12:00, ngày 07/09/2026 từ sân bay SGN\\n  * **Đến nơi:** 14:10, ngày 07/09/2026 tại sân bay HAN', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "[ac67b978-9d3d-5dc5-8606-7897a9c5cba6] Thường bay từ TP.HCM (SGN)",
+        "[269b86d9-e499-5b31-bead-577c0f0bfd28] Ưu tiên bay thẳng, tránh nối chuyến",
+        "[231790c3-3bcc-55cd-be08-81f0492c2ea0] Thường bay hạng phổ thông (economy) khi đi du lịch"
+      ],
+      "domain_action": "search_one_way"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "flight"
+    ]
+  },
+  "final_answer": "Dưới đây là các chuyến bay thẳng từ TP.HCM (SGN) đến Hà Nội (HAN) vào sáng thứ Hai, ngày 07/09/2026 (hạng phổ thông):\n\n1. **Mã chuyến bay (Offer ID):** `FL-F7F18F`\n   - **Hãng hàng không:** Vietjet (VJ)\n   - **Giá vé:** 1.131.301 VND\n   - **Loại chuyến bay:** Bay thẳng (0 điểm dừng), thời gian bay 2 giờ 10 phút\n   - **Khởi hành:** 10:30, ngày 07/09/2026 từ SGN\n   - **Đến nơi:** 12:40, ngày 07/09/2026 tại HAN\n\n2. **Mã chuyến bay (Offer ID):** `FL-AD3597`\n   - **Hãng hàng không:** Vietjet (VJ)\n   - **Giá vé:** 1.131.301 VND\n   - **Loại chuyến bay:** Bay thẳng (0 điểm dừng), thời gian bay 2 giờ 10 phút\n   - **Khởi hành:** 11:20, ngày 07/09/2026 từ SGN\n   - **Đến nơi:** 13:30, ngày 07/09/2026 tại HAN\n\n3. **Mã chuyến bay (Offer ID):** `FL-9015AC`\n   - **Hãng hàng không:** Vietjet (VJ)\n   - **Giá vé:** 1.131.301 VND\n   - **Loại chuyến bay:** Bay thẳng (0 điểm dừng), thời gian bay 2 giờ 10 phút\n   - **Khởi hành:** 06:55, ngày 07/09/2026 từ SGN\n   - **Đến nơi:** 09:05, ngày 07/09/2026 tại HAN\n\n4. **Mã chuyến bay (Offer ID):** `FL-1CD221`\n   - **Hãng hàng không:** Vietravel Airlines (VU)\n   - **Giá vé:** 1.234.221 VND\n   - **Loại chuyến bay:** Bay thẳng (0 điểm dừng), thời gian bay 2 giờ 10 phút\n   - **Khởi hành:** 05:35, ngày 07/09/2026 từ SGN\n   - **Đến nơi:** 07:45, ngày 07/09/2026 tại HAN\n\n5. **Mã chuyến bay (Offer ID):** `FL-435F46`\n   - **Hãng hàng không:** Vietravel Airlines (VU)\n   - **Giá vé:** 1.234.221 VND\n   - **Loại chuyến bay:** Bay thẳng (0 điểm dừng), thời gian bay 2 giờ 10 phút\n   - **Khởi hành:** 07:00, ngày 07/09/2026 từ SGN\n   - **Đến nơi:** 09:10, ngày 07/09/2026 tại HAN\n\n6. **Mã chuyến bay (Offer ID):** `FL-7E3897`\n   - **Hãng hàng không:** Vietjet (VJ)\n   - **Giá vé:** 1.542.781 VND\n   - **Loại chuyến bay:** Bay thẳng (0 điểm dừng), thời gian bay 2 giờ 10 phút\n   - **Khởi hành:** 05:00, ngày 07/09/2026 từ SGN\n   - **Đến nơi:** 07:10, ngày 07/09/2026 tại HAN\n\n7. **Mã chuyến bay (Offer ID):** `FL-A3542E`\n   - **Hãng hàng không:** Vietjet (VJ)\n   - **Giá vé:** 1.542.781 VND\n   - **Loại chuyến bay:** Bay thẳng (0 điểm dừng), thời gian bay 2 giờ 10 phút\n   - **Khởi hành:** 06:05, ngày 07/09/2026 từ SGN\n   - **Đến nơi:** 08:15, ngày 07/09/2026 tại HAN\n\n8. **Mã chuyến bay (Offer ID):** `FL-7EB905`\n   - **Hãng hàng không:** Vietjet (VJ)\n   - **Giá vé:** 1.542.781 VND\n   - **Loại chuyến bay:** Bay thẳng (0 điểm dừng), thời gian bay 2 giờ 10 phút\n   - **Khởi hành:** 07:30, ngày 07/09/2026 từ SGN\n   - **Đến nơi:** 09:40, ngày 07/09/2026 tại HAN\n\n9. **Mã chuyến bay (Offer ID):** `FL-FCC142`\n   - **Hãng hàng không:** Vietjet (VJ)\n   - **Giá vé:** 1.542.781 VND\n   - **Loại chuyến bay:** Bay thẳng (0 điểm dừng), thời gian bay 2 giờ 10 phút\n   - **Khởi hành:** 08:40, ngày 07/09/2026 từ SGN\n   - **Đến nơi:** 10:50, ngày 07/09/2026 tại HAN\n\n10. **Mã chuyến bay (Offer ID):** `FL-BA9F84`\n    - **Hãng hàng không:** Vietjet (VJ)\n    - **Giá vé:** 1.672.381 VND\n    - **Loại chuyến bay:** Bay thẳng (0 điểm dừng), thời gian bay 2 giờ 10 phút\n    - **Khởi hành:** 12:00, ngày 07/09/2026 từ SGN\n    - **Đến nơi:** 14:10, ngày 07/09/2026 tại HAN\n\nNếu bạn cần hỗ trợ giữ chỗ hoặc đặt vé cho chuyến bay nào, vui lòng cho mình biết nhé!",
+  "stm": {
+    "summary": null,
+    "message_count": 4
+  },
+  "finalize": {
+    "memory_job_id": "f927821c-9b8a-4d2e-a6ac-858bc03babc4",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "memory_job": {
+      "job_id": "f927821c-9b8a-4d2e-a6ac-858bc03babc4",
+      "status": "pending",
+      "error_summary": "0",
+      "created_at": "2026-09-02T20:37:00.054921+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "flight"
+        ],
+        "actual": [
+          "flight"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  }
+}

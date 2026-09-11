@@ -1,0 +1,12 @@
+id: stm_live_success_003
+split: development
+scenario: Task success search hotel Huế
+metrics:
+- success
+messages:
+- Tìm khách sạn Huế, check-in 16/11/2026, ở 2 đêm, 2 người, ngân sách dưới 3 triệu.
+constraints:
+  destination: Huế
+  check_in: '2026-11-16'
+  check_out: '2026-11-18'
+success_domain: hotel

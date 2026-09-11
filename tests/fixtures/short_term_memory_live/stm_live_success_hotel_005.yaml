@@ -1,0 +1,15 @@
+id: stm_live_success_hotel_005
+split: development
+scenario: Search hotel Phú Quốc với ngày/ngân sách
+metrics:
+- success
+messages:
+- Mình muốn khách sạn ở Phú Quốc.
+- Check-in 14/10/2026, check-out 16/10/2026, 2 người, ngân sách khoảng 3 triệu một
+  đêm.
+- Tìm khách sạn giúp mình.
+constraints:
+  destination: Phú Quốc
+  check_in: '2026-10-14'
+  check_out: '2026-10-16'
+success_domain: hotel

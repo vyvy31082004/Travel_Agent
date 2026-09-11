@@ -131,12 +131,25 @@ async def build_flight_graph(
             if user_id and thread_id and request_id and request_id in merged_visible:
                 ref = merged_visible[request_id]
                 try:
-                    items = await repo.load_items(
-                        search_id=ref["search_id"],
-                        item_ids=ref.get("displayed_item_ids") or [],
+                    search_id = str(ref["search_id"])
+                    if await repo.has_display_decisions(
+                        search_id=search_id,
                         user_id=user_id,
                         thread_id=thread_id,
-                    )
+                    ):
+                        items = await repo.load_displayed_items(
+                            search_id=search_id,
+                            user_id=user_id,
+                            thread_id=thread_id,
+                            include_detail_token=True,
+                        )
+                    else:
+                        items = await repo.load_items(
+                            search_id=search_id,
+                            item_ids=ref.get("displayed_item_ids") or [],
+                            user_id=user_id,
+                            thread_id=thread_id,
+                        )
                     token_map = {
                         str(item["item_id"]): str(item["detail_token"])
                         for item in items

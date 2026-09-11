@@ -1,0 +1,72 @@
+id: e2e_flight_001
+scenario: "Áp dụng economy + direct flight + departure SGN khi tìm chuyến bay"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_economy
+      text: "Thường bay hạng phổ thông (economy) khi đi du lịch"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_direct
+      text: "Ưu tiên bay thẳng, tránh nối chuyến"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_departure
+      text: "Thường bay từ TP.HCM (SGN)"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích business class"
+      domain: flight
+      category: flight_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ — chỉ bay Vietnam Airlines"
+      domain: flight
+      category: flight_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Bay ra Hà Nội sáng thứ Hai nhé."
+
+expected_trace:
+  expected_route: [flight]
+  expected_context:
+    flight:
+      must_include: [m_economy, m_direct, m_departure]
+      must_exclude: [m_other_user, m_superseded]
+  expected_tools:
+    - name: search_one_way_flights_tool
+      required_arguments: [origin, destination, departure_date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - flight_assistant
+    - join_results
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "tìm từ SGN"
+    - "economy / phổ thông"
+    - "ưu tiên bay thẳng"
+  tradeoff_rule:
+    - "Nếu không có bay thẳng, nêu rõ và đưa phương án nối chuyến"
+  forbidden_claims:
+    - "Giá/hãng/chuyến không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

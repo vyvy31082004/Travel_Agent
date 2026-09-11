@@ -1,0 +1,14 @@
+id: stm_live_success_change_004
+split: development
+scenario: Đổi ý destination sang Hội An rồi search
+metrics:
+- success
+messages:
+- Ban đầu mình nghĩ đi Nha Trang, check-in 12/10/2026, 2 người.
+- Thôi đổi sang Hội An giúp mình, vẫn 2 người, check-in 13/10/2026 check-out 15/10/2026.
+- Tìm khách sạn theo lịch mới.
+constraints:
+  destination: Hội An
+  check_in: '2026-10-13'
+  check_out: '2026-10-15'
+success_domain: hotel

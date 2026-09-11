@@ -1,0 +1,191 @@
+id: e2e_trip_plan_001
+scenario: "Trip plan Đà Nẵng 3N2Đ — 4 domain song song + isolation memory cross-domain"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_flight_economy
+      text: "Thường bay hạng phổ thông (economy) khi đi du lịch"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_flight_morning
+      text: "Ưu tiên bay buổi sáng"
+      domain: flight
+      category: flight_preference
+      status: active
+    - id: m_flight_other_user
+      text: "Memory user khác — thích business class"
+      domain: flight
+      category: flight_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_flight_superseded
+      text: "Preference cũ — chỉ bay Vietnam Airlines"
+      domain: flight
+      category: flight_preference
+      status: superseded
+      expect_in_context: false
+    - id: m_hotel_quiet
+      text: "Thích khách sạn yên tĩnh"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_hotel_budget
+      text: "Ngân sách hotel thường 2–3 triệu/đêm"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_hotel_other_user
+      text: "Memory user khác — thích resort cao cấp"
+      domain: hotel
+      category: hotel_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_hotel_superseded
+      text: "Preference cũ — thích hostel"
+      domain: hotel
+      category: hotel_preference
+      status: superseded
+      expect_in_context: false
+    - id: m_car_automatic
+      text: "Thích xe số tự động"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_car_5seats
+      text: "Cần xe tối thiểu 5 chỗ"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_car_other_user
+      text: "Memory user khác — thích xe số sàn"
+      domain: car
+      category: car_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_car_superseded
+      text: "Preference cũ — chỉ thuê xe 4 chỗ"
+      domain: car
+      category: car_preference
+      status: superseded
+      expect_in_context: false
+    - id: m_excursion_outdoor
+      text: "Thích hoạt động ngoài trời khi đi chơi"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_excursion_small_group
+      text: "Ưu tiên tour riêng hoặc nhóm nhỏ"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_excursion_other_user
+      text: "Memory user khác — thích tour văn hóa"
+      domain: excursion
+      category: excursion_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_excursion_superseded
+      text: "Preference cũ — chỉ đi biển"
+      domain: excursion
+      category: excursion_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Lên kế hoạch 3 ngày 2 đêm Đà Nẵng từ TP.HCM: bay đi SGN→DAD ngày 10/10/2026, bay về DAD→SGN ngày 12/10/2026, check-in 10/10/2026, check-out 12/10/2026, 2 người lớn, ưu tiên yên tĩnh."
+
+expected_trace:
+  expected_route: [flight, hotel, excursion, car]
+  expected_context:
+    flight:
+      must_include: [m_flight_economy, m_flight_morning]
+      must_exclude:
+        - m_flight_other_user
+        - m_flight_superseded
+        - m_hotel_quiet
+        - m_hotel_budget
+        - m_car_automatic
+        - m_car_5seats
+        - m_excursion_outdoor
+        - m_excursion_small_group
+    hotel:
+      must_include: [m_hotel_quiet, m_hotel_budget]
+      must_exclude:
+        - m_hotel_other_user
+        - m_hotel_superseded
+        - m_flight_economy
+        - m_flight_morning
+        - m_car_automatic
+        - m_car_5seats
+        - m_excursion_outdoor
+        - m_excursion_small_group
+    car:
+      must_include: [m_car_automatic, m_car_5seats]
+      must_exclude:
+        - m_car_other_user
+        - m_car_superseded
+        - m_flight_economy
+        - m_flight_morning
+        - m_hotel_quiet
+        - m_hotel_budget
+        - m_excursion_outdoor
+        - m_excursion_small_group
+    excursion:
+      must_include: [m_excursion_outdoor, m_excursion_small_group]
+      must_exclude:
+        - m_excursion_other_user
+        - m_excursion_superseded
+        - m_flight_economy
+        - m_flight_morning
+        - m_hotel_quiet
+        - m_hotel_budget
+        - m_car_automatic
+        - m_car_5seats
+  expected_tools:
+    - name: search_round_trip_flights_tool
+      required_arguments: [origin, destination, departure_date]
+    - name: search_hotels_tool
+      required_arguments: [destination]
+    - name: search_attractions_tool
+      required_arguments: [location]
+    - name: search_cars_tool
+      required_arguments: [location, pickup_date, return_date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - flight_assistant
+    - hotel_assistant
+    - excursion_assistant
+    - car_assistant
+    - join_results
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "flight: economy + ưu tiên bay buổi sáng"
+    - "hotel: budget 2–3 triệu + yên tĩnh"
+    - "car: số tự động + tối thiểu 5 chỗ"
+    - "excursion: ngoài trời + nhóm nhỏ/riêng"
+    - "final answer nhóm đúng 4 phần: Chuyến bay / Khách sạn / Lịch trình-Hoạt động / Thuê xe"
+  tradeoff_rule:
+    - "Cho phép car/hotel dùng ngày/địa điểm từ kết quả flight như state nghiệp vụ"
+    - "Nếu không thỏa điều kiện, nêu rõ theo từng domain"
+  forbidden_claims:
+    - "dùng preference domain này để chọn option domain khác"
+    - "Giá/chuyến/phòng/xe/tour không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+    - "Bịa ID hoặc giá ngoài displayed_item_ids / branch data"
+
+expected_finalize:
+  action: NO_STORE

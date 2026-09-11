@@ -11,9 +11,11 @@ from langchain_core.runnables import RunnableConfig
 from memory.embeddings import MemoryEmbeddingService
 from memory.applicability import (
     ApplicabilityJudge,
+    LlmApplicabilityJudge,
     build_applicability_judge,
     format_applied_context,
     partition_judgments,
+    reconcile_judgments,
 )
 from memory.task_router import ActionInferrer, build_action_inferrer
 from memory.long_term import (
@@ -202,6 +204,17 @@ class MemoryService:
                 domain_state=state,
                 candidates=candidates,
             )
+            # Reconcile whenever the active judge is LLM-backed, even if the
+            # caller did not pass llm= (eval injects LlmApplicabilityJudge).
+            if llm is not None or isinstance(judge, LlmApplicabilityJudge):
+                judgments = await reconcile_judgments(
+                    candidates,
+                    judgments,
+                    user_query=text,
+                    domain=domain_value,
+                    domain_action=action,
+                    domain_state=state,
+                )
         else:
             from memory.applicability import ApplicabilityJudgment, ApplicabilityLabel
 

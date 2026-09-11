@@ -294,10 +294,17 @@ async def evaluate_retrieval_file(
     apply_total = 0
     precision_hit = 0
     precision_den = 0
+    allowed_precision_hit = 0
     uncertain_in_final = 0
+    uncertain_hit = 0
+    uncertain_total = 0
     final_total = 0
     overridden_leak_num = 0
     overridden_leak_den = 0
+    irrelevant_leak_num = 0
+    irrelevant_leak_den = 0
+    context_case_pass_num = 0
+    context_case_total = 0
 
     wrong_user_context = 0
     wrong_domain_context = 0
@@ -426,15 +433,32 @@ async def evaluate_retrieval_file(
             for mid, label in expected_applicability.items()
             if label == "overridden"
         }
+        gold_irrelevant = {
+            mid
+            for mid, label in expected_applicability.items()
+            if label == "irrelevant"
+        }
 
         apply_hit += len(gold_apply & final_ids)
         apply_total += len(gold_apply)
         precision_hit += len(gold_apply & final_ids)
         precision_den += len(final_ids)
+        allowed_precision_hit += len((gold_apply | gold_uncertain) & final_ids)
         uncertain_in_final += len(gold_uncertain & final_ids)
+        uncertain_hit += len(gold_uncertain & final_ids)
+        uncertain_total += len(gold_uncertain)
         final_total += len(final_ids)
         overridden_leak_num += len(gold_overridden & final_ids)
         overridden_leak_den += len(gold_overridden)
+        irrelevant_leak_num += len(gold_irrelevant & final_ids)
+        irrelevant_leak_den += len(gold_irrelevant)
+        context_ok = (
+            gold_apply <= final_ids
+            and not (gold_overridden & final_ids)
+            and not (gold_irrelevant & final_ids)
+        )
+        context_case_pass_num += int(context_ok)
+        context_case_total += 1
 
         wu, wd, ina = _pool_leakage(final_ids, repo, user_id=user_id, domain=domain)
         wrong_user_context += wu
@@ -471,6 +495,8 @@ async def evaluate_retrieval_file(
                 "final_context_ids": sorted(final_ids),
                 "judge_labels": predicted_by_id,
                 "overridden_leaked": sorted(gold_overridden & final_ids),
+                "irrelevant_leaked": sorted(gold_irrelevant & final_ids),
+                "context_ok": context_ok,
                 "presented_ok": presented_ok,
             }
         )
@@ -483,9 +509,19 @@ async def evaluate_retrieval_file(
         ),
         "inactive_candidate_leakage": _ratio(inactive_candidate, candidate_total),
         "context_recall": _ratio(apply_hit, apply_total),
+        "allowed_context_precision": _ratio(
+            allowed_precision_hit, precision_den
+        ),
+        "uncertain_recall": _ratio(uncertain_hit, uncertain_total),
+        "irrelevant_leakage_rate": _ratio(
+            irrelevant_leak_num, irrelevant_leak_den
+        ),
         "context_precision": _ratio(precision_hit, precision_den),
         "uncertain_context_rate": _ratio(uncertain_in_final, final_total),
         "overridden_leakage_rate": _ratio(overridden_leak_num, overridden_leak_den),
+        "context_case_pass_rate": _ratio(
+            context_case_pass_num, context_case_total
+        ),
         "applicability_macro_f1": _macro_f1(confusion),
         "cross_user_context_leakage": _ratio(wrong_user_context, final_total),
         "cross_domain_context_leakage": _ratio(wrong_domain_context, final_total),

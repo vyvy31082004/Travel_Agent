@@ -1,0 +1,15 @@
+id: stm_live_success_hotel_001
+split: development
+scenario: Search hotel Đà Nẵng với ngày/ngân sách
+metrics:
+- success
+messages:
+- Mình muốn khách sạn ở Đà Nẵng.
+- Check-in 10/10/2026, check-out 12/10/2026, 1 người, ngân sách khoảng 1 triệu một
+  đêm.
+- Tìm khách sạn giúp mình.
+constraints:
+  destination: Đà Nẵng
+  check_in: '2026-10-10'
+  check_out: '2026-10-12'
+success_domain: hotel

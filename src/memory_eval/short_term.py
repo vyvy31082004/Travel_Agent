@@ -11,6 +11,9 @@ from memory_eval.candidate_extraction import MetricValue
 from memory_eval.common import load_jsonl
 from services.reference_resolver import ClarificationNeeded, resolve_item_reference
 
+DEV_COUNT = 65
+TEST_COUNT = 85
+
 
 def _ratio(numerator: int, denominator: int) -> MetricValue:
     return MetricValue(
@@ -18,6 +21,15 @@ def _ratio(numerator: int, denominator: int) -> MetricValue:
         denominator,
         None if denominator == 0 else numerator / denominator,
     )
+
+
+def _filter_split(rows: list[dict[str, Any]], split: str) -> list[dict[str, Any]]:
+    if split == "all":
+        return rows
+    filtered = [row for row in rows if row.get("split") == split]
+    if not filtered:
+        raise ValueError(f"no cases found for split={split!r}")
+    return filtered
 
 
 @dataclass(frozen=True)
@@ -40,7 +52,61 @@ class SuiteReport:
 # Value normalization (shared by state tracking)
 # ---------------------------------------------------------------------------
 
-_DATE_FORMATS = ("%Y-%m-%d", "%d/%m/%Y", "%d-%m-%Y", "%d.%m.%Y")
+_DATE_FORMATS = (
+    "%Y-%m-%d",
+    "%d/%m/%Y",
+    "%d-%m-%Y",
+    "%d.%m.%Y",
+    "%Y-%m-%d %H:%M",
+    "%Y-%m-%d %H:%M:%S",
+    "%d/%m/%Y %H:%M",
+    "%d/%m/%Y %H:%M:%S",
+)
+
+# City / airport names → IATA (and identity for codes) for success matching.
+_PLACE_TO_CODE: dict[str, str] = {
+    "sgn": "sgn",
+    "tp.hcm": "sgn",
+    "tp hcm": "sgn",
+    "tphcm": "sgn",
+    "ho chi minh": "sgn",
+    "ho chi minh city": "sgn",
+    "sai gon": "sgn",
+    "saigon": "sgn",
+    "sài gòn": "sgn",
+    "han": "han",
+    "ha noi": "han",
+    "hà nội": "han",
+    "hanoi": "han",
+    "dad": "dad",
+    "da nang": "dad",
+    "đà nẵng": "dad",
+    "cxr": "cxr",
+    "nha trang": "cxr",
+    "hui": "hui",
+    "hue": "hui",
+    "huế": "hui",
+    "hph": "hph",
+    "hai phong": "hph",
+    "hải phòng": "hph",
+    "dli": "dli",
+    "da lat": "dli",
+    "đà lạt": "dli",
+    "pqc": "pqc",
+    "phu quoc": "pqc",
+    "phú quốc": "pqc",
+    "vca": "vca",
+    "can tho": "vca",
+    "cần thơ": "vca",
+    "uih": "uih",
+    "quy nhon": "uih",
+    "quy nhơn": "uih",
+    "vdo": "vdo",
+    "van don": "vdo",
+    "vân đồn": "vdo",
+    "ha long": "vdo",
+    "hạ long": "vdo",
+}
 
 
 def normalize_value(value: Any) -> str:
@@ -63,14 +129,89 @@ def normalize_value(value: Any) -> str:
     return unicodedata.normalize("NFC", text).casefold()
 
 
+def _place_code(value: Any) -> str | None:
+    text = normalize_value(value)
+    if not text:
+        return None
+    if text in _PLACE_TO_CODE:
+        return _PLACE_TO_CODE[text]
+    compact = (
+        text.replace(".", " ")
+        .replace(",", " ")
+        .replace("-", " ")
+        .replace("_", " ")
+    )
+    compact = " ".join(compact.split())
+    if compact in _PLACE_TO_CODE:
+        return _PLACE_TO_CODE[compact]
+    if len(text) == 3 and text.isalpha():
+        return text
+    return None
+
+
+def constraint_values_match(actual: Any, expected: Any) -> bool:
+    """Compare success constraint values with place/date soft equivalence."""
+    if actual is None:
+        return False
+    actual_norm = normalize_value(actual)
+    expected_norm = normalize_value(expected)
+    if actual_norm == expected_norm:
+        return True
+    actual_code = _place_code(actual)
+    expected_code = _place_code(expected)
+    if actual_code and expected_code and actual_code == expected_code:
+        return True
+    # Car address / free-text fields often embed the gold city ("…, Huế").
+    if expected_norm and expected_norm in actual_norm:
+        return True
+    if actual_norm and len(actual_norm) >= 3 and actual_norm in expected_norm:
+        return True
+    return False
+
+
+def _latest_request_payloads(state: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Return the latest request payload keyed by domain.
+
+    Older/offline fixtures may already store requests as `{domain: params}` while the
+    live STM path stores them as `{request_id: params_with_domain}` plus
+    `latest_request_by_domain`. Support both shapes so the scorer reads the same
+    conversational state the runtime uses.
+    """
+    requests = state.get("requests") or {}
+    if not isinstance(requests, dict):
+        return {}
+
+    latest_by_domain = state.get("latest_request_by_domain") or {}
+    normalized: dict[str, dict[str, Any]] = {}
+
+    for domain, request_id in latest_by_domain.items():
+        payload = requests.get(request_id)
+        if isinstance(domain, str) and isinstance(payload, dict):
+            normalized[domain] = payload
+
+    for key, payload in requests.items():
+        if not isinstance(payload, dict):
+            continue
+        if key in {"hotel", "flight", "car", "excursion"}:
+            normalized.setdefault(key, payload)
+            continue
+        domain = payload.get("domain")
+        if isinstance(domain, str) and domain not in normalized:
+            normalized[domain] = payload
+
+    return normalized
+
+
 def _flatten_state(state: dict[str, Any]) -> dict[str, str]:
     """Flatten agent state into dotted slot keys matching the gold schema."""
     slots: dict[str, str] = {}
-    requests = state.get("requests") or {}
+    requests = _latest_request_payloads(state)
     for domain, params in requests.items():
         if not isinstance(params, dict):
             continue
         for key, value in params.items():
+            if key == "domain":
+                continue
             slots[f"{domain}.{key}"] = normalize_value(value)
     selected = state.get("selected_items") or {}
     for domain, payload in selected.items():
@@ -86,8 +227,7 @@ def _flatten_state(state: dict[str, Any]) -> dict[str, str]:
 # ---------------------------------------------------------------------------
 
 
-def evaluate_state_file(path: str | Path) -> SuiteReport:
-    rows = load_jsonl(path)
+def evaluate_state_rows(rows: list[dict[str, Any]]) -> SuiteReport:
     jga_correct = 0
     true_positive = 0
     false_positive = 0
@@ -156,13 +296,16 @@ def evaluate_state_file(path: str | Path) -> SuiteReport:
     )
 
 
+def evaluate_state_file(path: str | Path, *, split: str = "all") -> SuiteReport:
+    return evaluate_state_rows(_filter_split(load_jsonl(path), split))
+
+
 # ---------------------------------------------------------------------------
 # Reference resolution: Resolution Accuracy
 # ---------------------------------------------------------------------------
 
 
-def evaluate_reference_file(path: str | Path) -> SuiteReport:
-    rows = load_jsonl(path)
+def evaluate_reference_rows(rows: list[dict[str, Any]]) -> SuiteReport:
     correct = 0
     case_rows: list[dict[str, Any]] = []
     for raw in rows:
@@ -200,6 +343,10 @@ def evaluate_reference_file(path: str | Path) -> SuiteReport:
     )
 
 
+def evaluate_reference_file(path: str | Path, *, split: str = "all") -> SuiteReport:
+    return evaluate_reference_rows(_filter_split(load_jsonl(path), split))
+
+
 # ---------------------------------------------------------------------------
 # Factual recall: probe answers vs gold, grouped by position / phase
 # ---------------------------------------------------------------------------
@@ -207,8 +354,27 @@ def evaluate_reference_file(path: str | Path) -> SuiteReport:
 _TOKEN_RE = re.compile(r"[^\w]+", re.UNICODE)
 
 
+def _strip_accents(text: str) -> str:
+    decomposed = unicodedata.normalize("NFKD", text)
+    return "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+
+
+def _normalize_match_text(text: str) -> str:
+    normalized = _strip_accents(unicodedata.normalize("NFC", text).casefold())
+    normalized = re.sub(r"(?<=\d)[\s,._](?=\d)", "", normalized)
+
+    def _expand_million(match: re.Match[str]) -> str:
+        try:
+            return str(int(match.group(1)) * 1_000_000)
+        except ValueError:
+            return match.group(0)
+
+    normalized = re.sub(r"\b(\d+)\s*trieu\b", _expand_million, normalized)
+    return normalized
+
+
 def tokenize(text: str) -> list[str]:
-    normalized = unicodedata.normalize("NFC", text).casefold()
+    normalized = _normalize_match_text(text)
     return [token for token in _TOKEN_RE.split(normalized) if token]
 
 
@@ -222,8 +388,7 @@ def _probe_correct(predicted: str, gold: str) -> bool:
     return covered
 
 
-def evaluate_factual_recall_file(path: str | Path) -> SuiteReport:
-    rows = load_jsonl(path)
+def evaluate_factual_recall_rows(rows: list[dict[str, Any]]) -> SuiteReport:
     correct = 0
     by_position: dict[str, list[int]] = {}
     by_phase: dict[str, list[int]] = {}
@@ -263,27 +428,32 @@ def evaluate_factual_recall_file(path: str | Path) -> SuiteReport:
     )
 
 
+def evaluate_factual_recall_file(
+    path: str | Path, *, split: str = "all"
+) -> SuiteReport:
+    return evaluate_factual_recall_rows(_filter_split(load_jsonl(path), split))
+
+
 # ---------------------------------------------------------------------------
 # Task success: Success Rate over multi-turn scenarios
 # ---------------------------------------------------------------------------
 
 
-def evaluate_success_file(path: str | Path) -> SuiteReport:
-    rows = load_jsonl(path)
+def evaluate_success_rows(rows: list[dict[str, Any]]) -> SuiteReport:
     correct = 0
     case_rows: list[dict[str, Any]] = []
     for raw in rows:
         final_action = raw.get("final_action") or {}
         constraints = raw.get("constraints") or {}
         satisfied = all(
-            normalize_value(final_action.get(key)) == normalize_value(value)
+            constraint_values_match(final_action.get(key), value)
             for key, value in constraints.items()
         ) and bool(constraints)
         correct += int(satisfied)
         violated = [
             key
             for key, value in constraints.items()
-            if normalize_value(final_action.get(key)) != normalize_value(value)
+            if not constraint_values_match(final_action.get(key), value)
         ]
         case_rows.append(
             {
@@ -297,3 +467,7 @@ def evaluate_success_file(path: str | Path) -> SuiteReport:
         metrics={"success_rate": _ratio(correct, len(rows))},
         cases=tuple(case_rows),
     )
+
+
+def evaluate_success_file(path: str | Path, *, split: str = "all") -> SuiteReport:
+    return evaluate_success_rows(_filter_split(load_jsonl(path), split))

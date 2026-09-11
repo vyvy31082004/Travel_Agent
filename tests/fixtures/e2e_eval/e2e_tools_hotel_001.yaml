@@ -1,0 +1,73 @@
+id: e2e_tools_hotel_001
+scenario: "4 turns phủ hotel search rồi lần lượt room/reviews/facility+policy; NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_hotel_quiet
+      text: "Thích khách sạn yên tĩnh"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_hotel_other_user
+      text: "Memory user khác — thích resort cao cấp"
+      domain: hotel
+      category: hotel_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_hotel_superseded
+      text: "Preference cũ đã superseded — thích hostel"
+      domain: hotel
+      category: hotel_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  force_summarize_penultimate: false
+  messages:
+    - "Tìm khách sạn ở Đà Nẵng check-in 10/10 check-out 12/10, 2 người lớn."
+    - "Với khách sạn đầu tiên trong kết quả, gọi tool xem danh sách phòng cho 10/10–12/10."
+    - "Gọi tool xem review của khách sạn đó."
+    - "Gọi tool xem tiện nghi và chính sách của khách sạn đó."
+
+expected_trace:
+  expected_route: [hotel]
+  expected_context:
+    hotel:
+      must_include: [m_hotel_quiet]
+      must_exclude: [m_hotel_other_user, m_hotel_superseded]
+  expected_tools:
+    - name: search_hotels_tool
+      required_arguments: [destination]
+    - name: get_hotel_room_list_tool
+      required_arguments: [hotel_id, check_in, check_out]
+    - name: get_hotel_reviews_tool
+      required_arguments: [hotel_id]
+    - name: get_hotel_facility_tool
+      required_arguments: [hotel_id]
+    - name: get_hotel_policy_tool
+      required_arguments: [hotel_id]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - hotel_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "trace chứa đủ 5 hotel tools: search + room list + reviews + facility + policy"
+    - "ngày giữ 10/10–12/10 khi tool có date args"
+    - "final answer phản ánh kết quả tool, không bịa giá/phòng"
+  tradeoff_rule:
+    - "Nếu thiếu hotel_id để gọi detail, nêu rõ cần search trước"
+  forbidden_claims:
+    - "Giá/phòng không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

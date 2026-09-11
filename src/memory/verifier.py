@@ -10,7 +10,11 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import BaseModel, Field
 
-from memory.consolidation import MemoryTransition, TransitionAction
+from memory.consolidation import (
+    MemoryTransition,
+    TransitionAction,
+    strip_turn_scoped_clauses,
+)
 from memory.long_term import MemoryStatus, TravelMemory
 from settings import Settings
 
@@ -21,10 +25,43 @@ Score a proposed local memory transition z_t = (chunk, M_old, actions, M_new).
 
 Return scores in [0, 1] with short reasons.
 
+The payload may include sibling_candidates: other memory candidates from the same
+finalize job that are proposed alongside this candidate (atomic split of one
+user utterance into multiple memories). Treat THIS candidate + sibling_candidates
+as one collective write set for coverage.
+
+Each memory in M_old / M_new includes status. For action=supersede, M_new correctly
+keeps the replaced memory with status=superseded and adds the candidate as active.
+That is successful replacement — do NOT penalize preservation for seeing the old
+text still listed when its status is superseded. Only penalize if a contradicted
+old preference remains status=active, or if valid unrelated memories were deleted /
+distorted / over-generalized / merged with lost conditions.
+
+Turn-scoped clauses (required — hard rule for coverage):
+- Clauses with markers such as "lần này", "chuyến này", "riêng lần này",
+  "cho chuyến này", "hôm nay", "bữa nay", "sáng nay", "chiều nay", "tối nay",
+  "ngày mai" are trip/turn-scoped, NOT durable preferences.
+- Do NOT require coverage of turn-scoped clauses. Do NOT lower coverage because a
+  candidate omits a turn-scoped hotel/flight/budget/date fact.
+- Mixed-scope utterances (durable + turn-scoped): only the durable clause(s) must
+  be covered. Example: "Từ giờ tôi ưu tiên khách sạn yên tĩnh. Lần này dưới 1 triệu."
+  — covering "yên tĩnh" alone is full coverage; the budget sentence is ignored.
+- The chunk may already have turn-scoped clauses stripped; still apply this rule
+  if any remain.
+
 Dimensions:
-- coverage: durable user facts/preferences in the chunk are preserved across the complete candidate_batch. LangMem intentionally emits one atomic fact per memory, so do not require each individual candidate to repeat facts represented by sibling candidates in the same batch.
+- coverage: durable user facts/preferences in the chunk are collectively preserved
+  across THIS candidate AND sibling_candidates. A candidate may cover only part of
+  the chunk when siblings cover the remainder. Penalize coverage only if a durable
+  fact is missing from BOTH this candidate AND all siblings. Ignore turn-scoped
+  clauses entirely when scoring coverage.
 - preservation: valid old memories are not incorrectly deleted, distorted, over-generalized, or merged with lost conditions (e.g. business vs leisure, family vs solo).
-- faithfulness: the individual candidate being evaluated is supported by the user's own evidence in the chunk or by valid M_old. Tool/API search results alone are not user preferences.
+  Correct supersede (old status=superseded + new active preference) preserves history
+  and should score high.
+- faithfulness: new/changed memory is supported by the user's own evidence in the chunk or by valid M_old. Tool/API search results alone are not user preferences.
+  An atomic split that states only one supported attribute (with other attributes in
+  sibling_candidates) is faithful — do not treat omitted sibling attributes as
+  over-generalization.
 
 Be conservative. If evidence is missing or the candidate looks like tool output, lower faithfulness sharply."""
 
@@ -85,15 +122,21 @@ class MemoryVerifierContext:
     chunk: Sequence[dict[str, Any]] = ()
     old_memories: Sequence[TravelMemory] = ()
     new_memories: Sequence[TravelMemory] = ()
+    sibling_candidates: Sequence[TravelMemory] = ()
+    # Compatibility for callers created before the sibling-candidate API rename.
     candidate_batch: Sequence[TravelMemory] = ()
+
+    @property
+    def verification_siblings(self) -> Sequence[TravelMemory]:
+        return self.sibling_candidates or self.candidate_batch
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "chunk": [dict(message) for message in self.chunk],
             "M_old": [memory.to_record() for memory in self.old_memories],
             "M_new": [memory.to_record() for memory in self.new_memories],
-            "candidate_batch": [
-                memory.to_record() for memory in self.candidate_batch
+            "sibling_candidates": [
+                memory.to_record() for memory in self.verification_siblings
             ],
         }
 
@@ -327,8 +370,9 @@ class TrustMemInspiredMemoryVerifier:
             "reasons": list(transition.reasons),
             "existing_memory_id": transition.existing_memory_id,
             "candidate": _compact_memory(transition.candidate),
-            "candidate_batch": [
-                _compact_memory(memory) for memory in context.candidate_batch[:20]
+            "sibling_candidates": [
+                _compact_memory(memory)
+                for memory in context.verification_siblings[:20]
             ],
             "chunk": _compact_chunk(context.chunk),
             "M_old": [_compact_memory(memory) for memory in context.old_memories[:20]],
@@ -356,10 +400,12 @@ class TrustMemInspiredMemoryVerifier:
         context = context or MemoryVerifierContext()
         chunk_text = _chunk_text(context.chunk)
         candidate_text = _candidate_text(transition)
-        coverage_text = _candidate_batch_text(context, transition)
+        collective_text = _collective_candidate_text(
+            candidate_text, context.verification_siblings
+        )
         old_text = "\n".join(m.memory_text for m in context.old_memories)
 
-        coverage_score, coverage_reason = _score_coverage(chunk_text, coverage_text)
+        coverage_score, coverage_reason = _score_coverage(chunk_text, collective_text)
         preservation_score, preservation_reason = _score_preservation(
             transition, old_text, candidate_text
         )
@@ -462,6 +508,7 @@ def _compact_memory(memory: TravelMemory | None) -> dict[str, Any] | None:
     return {
         "memory_id": memory.memory_id,
         "memory_text": memory.memory_text,
+        "status": str(memory.status),
         "category": str(memory.category),
         "condition": memory.condition,
         "evidence_text": (memory.evidence_text or "")[:500],
@@ -471,10 +518,13 @@ def _compact_memory(memory: TravelMemory | None) -> dict[str, Any] | None:
 def _compact_chunk(chunk: Sequence[dict[str, Any]]) -> list[dict[str, str]]:
     compact: list[dict[str, str]] = []
     for message in list(chunk)[-12:]:
+        content = strip_turn_scoped_clauses(str(message.get("content") or ""))
+        if not content:
+            continue
         compact.append(
             {
                 "type": str(message.get("type") or message.get("role") or ""),
-                "content": str(message.get("content") or "")[:1000],
+                "content": content[:1000],
             }
         )
     return compact
@@ -487,7 +537,12 @@ async def _maybe_await(value: Any) -> Any:
 
 
 def _chunk_text(chunk: Sequence[dict[str, Any]]) -> str:
-    return "\n".join(str(message.get("content") or "") for message in chunk).lower()
+    parts: list[str] = []
+    for message in chunk:
+        content = strip_turn_scoped_clauses(str(message.get("content") or ""))
+        if content:
+            parts.append(content)
+    return "\n".join(parts).lower()
 
 
 def _candidate_text(transition: MemoryTransition) -> str:
@@ -499,20 +554,21 @@ def _candidate_text(transition: MemoryTransition) -> str:
     return "\n".join(parts).lower()
 
 
-def _candidate_batch_text(
-    context: MemoryVerifierContext,
-    transition: MemoryTransition,
-) -> str:
-    memories = list(context.candidate_batch)
-    if not memories and transition.candidate is not None:
-        memories = [transition.candidate]
-    parts: list[str] = []
-    for memory in memories:
-        parts.append(memory.memory_text)
-        if memory.condition:
-            parts.append(memory.condition)
+def _memory_text(memory: TravelMemory) -> str:
+    parts = [memory.memory_text]
+    if memory.condition:
+        parts.append(memory.condition)
     return "\n".join(parts).lower()
 
+
+def _collective_candidate_text(
+    candidate_text: str,
+    siblings: Sequence[TravelMemory],
+) -> str:
+    parts = [candidate_text]
+    for sibling in siblings:
+        parts.append(_memory_text(sibling))
+    return "\n".join(part for part in parts if part.strip())
 
 def _score_coverage(chunk_text: str, candidate_text: str) -> tuple[float, str]:
     required_groups = [

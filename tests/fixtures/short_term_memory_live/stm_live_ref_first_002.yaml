@@ -1,0 +1,22 @@
+id: stm_live_ref_first_002
+split: development
+scenario: Resolve position=1 flight
+metrics:
+- reference
+messages:
+- Cho mình xem lại danh sách kết quả vừa rồi.
+reference:
+  args:
+    position: 1
+  gold:
+    item_id: flight_1
+  seed_visible_state:
+    visible_results:
+      req-flight-2:
+        domain: flight
+        search_id: s-2
+        displayed_item_ids:
+        - flight_1
+        - flight_2
+        - flight_3
+    active_request_id: req-flight-2

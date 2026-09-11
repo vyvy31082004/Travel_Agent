@@ -34,6 +34,8 @@ _pyc_dump.txt
 src/memory_eval/
 src/memory_eval_cli.py
 src/notebooks/
+src/reports/
+src/src/reports/
 src/extraction_*.txt
 reports/
 plan.pdf

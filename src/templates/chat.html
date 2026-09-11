@@ -71,7 +71,8 @@
         height: 100vh;
         flex-direction: column;
         gap: 18px;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
         padding: 24px 18px 22px;
         background: rgba(255, 253, 248, 0.88);
         border-right: 1px solid rgba(31, 95, 69, 0.1);
@@ -84,6 +85,7 @@
         align-items: center;
         gap: 12px;
         padding: 4px 6px 10px;
+        flex-shrink: 0;
       }
 
       .brand-mark {
@@ -136,14 +138,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 9px;
+        gap: 7px;
         width: 100%;
-        padding: 13px 15px;
+        flex-shrink: 0;
+        padding: 9px 12px;
         border-radius: 999px;
         background: var(--green);
         color: #fffdf8;
+        font-size: 13px;
         font-weight: 700;
-        box-shadow: 0 14px 28px rgba(31, 95, 69, 0.2);
+        white-space: nowrap;
+        box-shadow: 0 10px 22px rgba(31, 95, 69, 0.18);
       }
 
       .new-chat-button:hover,
@@ -158,10 +163,12 @@
         min-height: 0;
         flex-direction: column;
         gap: 9px;
+        flex-shrink: 0;
       }
 
       .sidebar-section.history-section {
-        flex: 1 1 auto;
+        flex: 1 1 120px;
+        min-height: 120px;
       }
 
       .section-label {
@@ -171,6 +178,7 @@
         letter-spacing: 0.08em;
         text-transform: uppercase;
         padding: 0 8px;
+        flex-shrink: 0;
       }
 
       .nav-item,
@@ -180,6 +188,7 @@
         align-items: center;
         gap: 10px;
         width: 100%;
+        flex-shrink: 0;
         padding: 10px 11px;
         border: 1px solid transparent;
         border-radius: 15px;
@@ -210,7 +219,10 @@
       .nav-text strong,
       .history-item strong {
         display: block;
+        overflow: hidden;
         font-size: 14px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       .nav-text,
@@ -240,7 +252,8 @@
       }
 
       .sidebar-spacer {
-        flex: 1;
+        flex: 0 0 auto;
+        min-height: 0;
       }
 
       .account-card {
@@ -762,16 +775,7 @@
 
         <section class="sidebar-section history-section" aria-label="Lịch sử gần đây">
           <div class="section-label">Lịch sử gần đây</div>
-          <div id="history-list" class="history-list">
-            <button class="history-item" type="button" data-prompt="Tìm khách sạn ở Đà Nẵng rating từ 9.0">
-              <span class="nav-icon" aria-hidden="true">↺</span>
-              <span><strong>Đà Nẵng cuối tuần</strong><span>Khách sạn gần biển</span></span>
-            </button>
-            <button class="history-item" type="button" data-prompt="Gợi ý tour một ngày ở Hà Nội">
-              <span class="nav-icon" aria-hidden="true">↺</span>
-              <span><strong>Tour Hà Nội</strong><span>Ẩm thực và phố cổ</span></span>
-            </button>
-          </div>
+          <div id="history-list" class="history-list"></div>
         </section>
 
         <div class="sidebar-spacer"></div>
@@ -878,6 +882,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
     <script>
       const messagesEl = document.getElementById('messages');
       const formEl = document.getElementById('chat-form');
@@ -889,16 +894,30 @@
       const mobileBackdropEl = document.getElementById('mobile-backdrop');
 
       let threadId = null;
-      const authenticatedUserId = {{ (current_user.user_id if current_user else '') | tojson }};
-      let anonymousUserId = authenticatedUserId ? null : (localStorage.getItem('viettrip_user_id') || null);
+      // Identity is resolved server-side (session cookie or a server-issued
+      // anonymous cookie). The client no longer sends or stores a user_id.
+      const isAuthenticated = {{ 'true' if current_user else 'false' }};
 
-      function renderMarkdown(text) {
-        if (window.marked && typeof window.marked.parse === 'function') {
-          return window.marked.parse(text || '');
-        }
+      function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text || '';
         return div.innerHTML;
+      }
+
+      function renderMarkdown(text) {
+        // Never insert model/tool/user-derived HTML without sanitizing first.
+        // If the sanitizer is unavailable, fail closed to escaped plain text
+        // rather than raw innerHTML.
+        if (!window.DOMPurify || typeof window.DOMPurify.sanitize !== 'function') {
+          return escapeHtml(text);
+        }
+        let rawHtml;
+        if (window.marked && typeof window.marked.parse === 'function') {
+          rawHtml = window.marked.parse(text || '');
+        } else {
+          rawHtml = escapeHtml(text);
+        }
+        return window.DOMPurify.sanitize(rawHtml, { USE_PROFILES: { html: true } });
       }
 
       function appendMessage(text, sender, options = {}) {
@@ -935,25 +954,61 @@
         document.body.classList.remove('sidebar-open');
       }
 
-      function saveRecentPrompt(text) {
-        const current = JSON.parse(localStorage.getItem('viettrip_recent_prompts') || '[]');
-        const next = [text, ...current.filter((item) => item !== text)].slice(0, 5);
-        localStorage.setItem('viettrip_recent_prompts', JSON.stringify(next));
-        renderRecentPrompts();
-      }
-
-      function renderRecentPrompts() {
-        const recent = JSON.parse(localStorage.getItem('viettrip_recent_prompts') || '[]');
-        if (!recent.length) return;
+      function renderConversationList(conversations) {
         historyListEl.innerHTML = '';
-        recent.forEach((prompt) => {
+        if (!conversations || !conversations.length) return;
+        conversations.forEach((conv) => {
           const button = document.createElement('button');
           button.className = 'history-item';
           button.type = 'button';
-          button.innerHTML = '<span class="nav-icon" aria-hidden="true">↺</span><span><strong>' + prompt.slice(0, 28) + (prompt.length > 28 ? '…' : '') + '</strong><span>Tiếp tục cuộc trò chuyện</span></span>';
-          button.addEventListener('click', () => setPrompt(prompt));
+          const icon = document.createElement('span');
+          icon.className = 'nav-icon';
+          icon.setAttribute('aria-hidden', 'true');
+          icon.textContent = '↺';
+          const wrap = document.createElement('span');
+          const titleText = conv.title || conv.preview || 'Cuộc trò chuyện';
+          const title = document.createElement('strong');
+          // Server-derived text — assign via textContent, never innerHTML.
+          title.textContent = titleText.slice(0, 28) + (titleText.length > 28 ? '…' : '');
+          const subtitle = document.createElement('span');
+          subtitle.textContent = 'Tiếp tục cuộc trò chuyện';
+          wrap.appendChild(title);
+          wrap.appendChild(subtitle);
+          button.appendChild(icon);
+          button.appendChild(wrap);
+          button.addEventListener('click', () => openConversation(conv.thread_id));
           historyListEl.appendChild(button);
         });
+      }
+
+      async function loadConversationList() {
+        if (!isAuthenticated) return;
+        try {
+          const res = await fetch('/conversations', { credentials: 'same-origin' });
+          if (!res.ok) return;
+          renderConversationList(await res.json());
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      async function openConversation(id) {
+        if (!isAuthenticated || !id) return;
+        try {
+          const res = await fetch('/conversations/' + encodeURIComponent(id), {
+            credentials: 'same-origin',
+          });
+          if (!res.ok) return;
+          const data = await res.json();
+          threadId = data.thread_id;
+          messagesEl.innerHTML = '';
+          (data.messages || []).forEach((m) => {
+            appendMessage(m.content, m.role === 'user' ? 'user' : 'ai');
+          });
+          document.body.classList.remove('sidebar-open');
+        } catch (err) {
+          console.error(err);
+        }
       }
 
       document.querySelectorAll('[data-prompt]').forEach((button) => {
@@ -987,7 +1042,6 @@
         if (!text) return;
 
         appendMessage(text, 'user');
-        saveRecentPrompt(text);
         inputEl.value = '';
         autosizeInput();
         inputEl.focus();
@@ -998,7 +1052,8 @@
           const res = await fetch('/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ msg: text, thread_id: threadId, user_id: anonymousUserId }),
+            credentials: 'same-origin',
+            body: JSON.stringify({ msg: text, thread_id: threadId }),
           });
 
           if (!res.ok) {
@@ -1006,13 +1061,14 @@
           }
 
           const data = await res.json();
+          const wasNewThread = !threadId;
           threadId = data.thread_id;
-          if (!authenticatedUserId) {
-            anonymousUserId = data.user_id;
-            if (anonymousUserId) localStorage.setItem('viettrip_user_id', anonymousUserId);
-          }
           loadingRow.remove();
           appendMessage(data.response, 'ai');
+          // Refresh the sidebar so a new conversation appears / moves to top.
+          if (wasNewThread) {
+            loadConversationList();
+          }
         } catch (err) {
           console.error(err);
           loadingRow.remove();
@@ -1022,7 +1078,7 @@
         }
       });
 
-      renderRecentPrompts();
+      loadConversationList();
       autosizeInput();
     </script>
   </body>

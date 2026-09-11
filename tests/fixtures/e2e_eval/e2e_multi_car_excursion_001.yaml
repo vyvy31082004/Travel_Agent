@@ -1,0 +1,98 @@
+id: e2e_multi_car_excursion_001
+scenario: "Car automatic+tránh xe lớn và excursion nhóm nhỏ+chiều — không cross-attribute"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_car_automatic
+      text: "Thích xe số tự động"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_car_no_large
+      text: "Tránh xe cỡ lớn / SUV quá to"
+      domain: car
+      category: car_preference
+      status: active
+    - id: m_car_other_user
+      text: "Memory user khác — thích xe số sàn"
+      domain: car
+      category: car_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_car_superseded
+      text: "Preference cũ — chỉ thuê xe 4 chỗ"
+      domain: car
+      category: car_preference
+      status: superseded
+      expect_in_context: false
+    - id: m_excursion_small_group
+      text: "Ưu tiên tour nhóm nhỏ"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_excursion_afternoon
+      text: "Ưu tiên tour buổi chiều"
+      domain: excursion
+      category: excursion_preference
+      status: active
+    - id: m_excursion_other_user
+      text: "Memory user khác — thích tour văn hóa"
+      domain: excursion
+      category: excursion_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_excursion_superseded
+      text: "Preference cũ — chỉ đi biển"
+      domain: excursion
+      category: excursion_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Ở Đà Nẵng ngày 10/10, thuê xe và tìm tour Bà Nà buổi chiều."
+
+expected_trace:
+  expected_route: [car, excursion]
+  expected_context:
+    car:
+      must_include: [m_car_automatic, m_car_no_large]
+      must_exclude: [m_car_other_user, m_car_superseded, m_excursion_small_group, m_excursion_afternoon]
+    excursion:
+      must_include: [m_excursion_small_group, m_excursion_afternoon]
+      must_exclude: [m_excursion_other_user, m_excursion_superseded, m_car_automatic, m_car_no_large]
+  expected_tools:
+    - name: search_cars_tool
+      required_arguments: [location, pickup_date, return_date]
+    - name: search_attractions_tool
+      required_arguments: [location, date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - car_assistant
+    - excursion_assistant
+    - join_results
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "car: số tự động, tránh xe quá lớn"
+    - "excursion: tour Bà Nà buổi chiều, ưu tiên nhóm nhỏ"
+    - "final answer nhóm đúng 2 phần thuê xe / tour"
+  tradeoff_rule:
+    - "Nếu không thỏa điều kiện, nêu rõ theo từng domain"
+  forbidden_claims:
+    - "dùng automatic để mô tả tour"
+    - "dùng small_group để chọn xe"
+    - "Giá/xe/tour không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

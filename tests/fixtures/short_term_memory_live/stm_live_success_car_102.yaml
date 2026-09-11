@@ -1,0 +1,11 @@
+id: stm_live_success_car_102
+split: test
+scenario: Thuê xe đón sân bay về Sa Pa
+metrics:
+- success
+messages:
+- Cần thuê xe đón tại sân bay, trả tại Sa Pa, ngày 16/10/2026, 4 chỗ.
+constraints:
+  dropoff: Sa Pa
+  date: '2026-10-16'
+success_domain: car

@@ -1,0 +1,59 @@
+id: e2e_write_flight_reject_001
+scenario: "Lần này ghế cửa sổ trên chuyến SGN–HAN 10/10 (turn-scoped); NO_STORE — không lưu LTM"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_other_user
+      text: "Memory user khác — thích business class"
+      domain: flight
+      category: flight_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ — chỉ bay Vietnam Airlines"
+      domain: flight
+      category: flight_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Lần này tôi muốn ghế cửa sổ ở chuyến bay TP.HCM đến Hà Nội 10/10."
+
+expected_trace:
+  expected_route: [flight]
+  expected_context:
+    flight:
+      must_include: []
+      must_exclude: [m_other_user, m_superseded]
+  expected_tools:
+    - name: search_one_way_flights_tool
+      required_arguments: [origin, destination, departure_date]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - flight_assistant
+    - memory_recall_flight
+    - flight_chat
+    - search_one_way_flights_tool
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "TP.HCM–Hà Nội ngày 10/10 từ query"
+  tradeoff_rule:
+    - "Ghế cửa sổ chỉ áp dụng chuyến này nếu tool hỗ trợ — không lưu như preference bền"
+  forbidden_claims:
+    - "Giá/hãng/chuyến không có trong tool result"
+    - "Viện dẫn ghế cửa sổ như long-term memory đã lưu"
+
+expected_finalize:
+  action: NO_STORE

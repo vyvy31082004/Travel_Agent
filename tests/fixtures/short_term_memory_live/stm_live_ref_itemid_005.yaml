@@ -1,0 +1,23 @@
+id: stm_live_ref_itemid_005
+split: development
+scenario: Resolve direct item_id hotel_1
+metrics:
+- reference
+messages:
+- Chọn đúng mã hotel_1 giúp mình.
+reference:
+  args:
+    domain: hotel
+    item_id: hotel_1
+  gold:
+    item_id: hotel_1
+  seed_visible_state:
+    visible_results:
+      req-hotel-5:
+        domain: hotel
+        search_id: s-5
+        displayed_item_ids:
+        - hotel_1
+        - hotel_2
+        - hotel_3
+    active_request_id: req-hotel-5

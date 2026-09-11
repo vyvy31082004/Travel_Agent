@@ -82,15 +82,41 @@ Language (required):
 - Keep the user's key phrases (e.g. "bay thẳng", "bữa sáng", "gần biển", "yên tĩnh",
   "boutique", "đừng hỏi lại").
 
+Turn-scoped requests (required — hard rule, outranks Multi-fact coverage):
+- Check this section FIRST. A clause scoped to the current trip, turn, or day is
+  never a memory, however confident or specific it sounds.
+- Scope markers: "lần này", "chuyến này", "riêng lần này", "cho chuyến này",
+  "hôm nay", "bữa nay", "sáng nay", "chiều nay", "tối nay", "ngày mai".
+- These are NOT hedges. Apply the rule even when the clause states an exact
+  budget, cabin, transmission, group size, or date.
+- Example: "Lần này tìm khách sạn ở Đà Nẵng 10–12/10, dưới 1 triệu/đêm." => return [].
+- Example: "Chuyến này tôi bay business class." => return [].
+- Mixed scopes: emit memories only for the durable clause.
+  "Từ giờ tôi ưu tiên khách sạn yên tĩnh. Lần này dưới 1 triệu/đêm."
+  => exactly 1 memory ("ưu tiên khách sạn yên tĩnh"); the budget yields nothing.
+
+Evidence (required — hard rule):
+- evidence_text must be the single clause that states the fact, not the whole
+  message, so a durable clause is never backed by a turn-scoped one.
+
 Multi-fact coverage (required — hard rule):
-- Count every durable preference in the user message; emit that many memories (1 fact = 1 memory).
-- "boutique gần biển, yên tĩnh" => exactly 3 memories covering boutique, gần biển, yên tĩnh.
-- "số tự động, rộng rãi, có tài xế" => exactly 3 memories; never only the first fact.
+- Count only the durable preferences left after the Turn-scoped and
+  Do-not-extract sections; emit that many memories (1 fact = 1 memory).
+- Split rule: for the head noun (xe / khách sạn / tour / chuyến bay), emit one
+  memory per independent search filter; stacked modifiers without commas still
+  split (do not merge into one compound). Before returning, re-check that every
+  constraint word appears in exactly one memory.
+- Example: "boutique gần biển, yên tĩnh" => exactly 3 memories covering boutique, gần biển, yên tĩnh.
+- Example: "số tự động, rộng rãi, có tài xế" => exactly 3 memories; never only the first fact.
 - Omitting any durable fact is a failure.
+
 
 Conditions (required — hard rule):
 - If the user says "khi đi công tác" / "khi đi gia đình", you MUST set condition to that phrase
   AND keep it visible in memory_text (e.g. "Thích business khi đi công tác").
+- Dual scopes in one utterance => one memory per scope (never merge into one compound):
+  "business khi đi công tác và economy khi đi du lịch" => 2 memories;
+  "resort khi nghỉ dưỡng và hostel khi backpacking" => 2 memories.
 - Forbidden: "Thích business class" / "Thích economy class" / "Thích resort yên tĩnh"
   without the matching condition when the user stated one.
 
@@ -110,7 +136,8 @@ Do not extract:
 - ambiguous/hedged claims ("có thể", "chưa chắc", "maybe", "nếu tiện", "nếu được", "có lẽ", "hình như")
 - sensitive data (passport, card, CVV, password)
 
-Return no memory if evidence is ambiguous, sensitive, or not grounded in user text.\
+Return no memory if evidence is turn-scoped, ambiguous, sensitive, or not grounded
+in user text.\
 """
 
 
@@ -184,18 +211,42 @@ class LangMemCandidateExtractor:
         if not langmem_messages:
             return []
 
-        existing_dicts = [
-            {
-                "memory_id": m.memory_id,
-                "memory_text": m.memory_text,
-                "category": str(m.category),
-                "domain": str(m.domain),
-            }
-            for m in existing_active
-        ]
+        existing_payload: list[tuple[str, LangMemTravelMemory]] = []
+        for memory in existing_active:
+            memory_id = str(memory.memory_id or "").strip()
+            if not memory_id:
+                continue
+            try:
+                existing_payload.append(
+                    (
+                        memory_id,
+                        LangMemTravelMemory(
+                            memory_text=memory.memory_text,
+                            category=memory.category,
+                            domain=memory.domain,
+                            condition=memory.condition,
+                            evidence_text=memory.evidence_text,
+                        ),
+                    )
+                )
+            except (TypeError, ValueError, ValidationError):
+                continue
 
         manager = self._manager_instance()
-        raw = await manager.ainvoke({"messages": langmem_messages, "existing": existing_dicts})
+        # LangMem's extractor is a Pregel graph without a checkpointer. When this
+        # runs inside a parent graph turn with durability="sync" (E2E / sync
+        # finalize), the inherited RunnableConfig ContextVar makes LangGraph
+        # await a missing `_put_checkpoint_fut` and crash. Clear parent config
+        # so extract is isolated from the turn's durability mode.
+        from langchain_core.runnables.config import var_child_runnable_config
+
+        token = var_child_runnable_config.set(None)
+        try:
+            raw = await manager.ainvoke(
+                {"messages": langmem_messages, "existing": existing_payload}
+            )
+        finally:
+            var_child_runnable_config.reset(token)
         return normalize_langmem_outputs(
             raw,
             user_id=user_id,
@@ -346,6 +397,11 @@ def validate_memory_candidate(candidate: TravelMemory) -> RuleResult:
         reasons.append("appears to be tool/API output rather than user evidence")
     if _is_ambiguous(lowered):
         reasons.append("evidence is ambiguous")
+    if _is_turn_scoped_candidate(
+        evidence_text=candidate.evidence_text,
+        memory_text=candidate.memory_text,
+    ):
+        reasons.append("evidence is scoped to the current turn")
     return RuleResult(ok=not reasons, reasons=reasons)
 
 
@@ -566,9 +622,75 @@ _AMBIGUOUS_MARKERS = (
     "e rằng",
 )
 
+# Confident but trip/turn-scoped wording: valid for this search, never durable.
+_TURN_SCOPED_MARKERS = (
+    "lần này",
+    "chuyến này",
+    "riêng lần này",
+    "cho chuyến này",
+    "bữa nay",
+    "hôm nay",
+    "sáng nay",
+    "chiều nay",
+    "tối nay",
+    "ngày mai",
+)
+
 
 def _is_ambiguous(lowered: str) -> bool:
     return any(token in lowered for token in _AMBIGUOUS_MARKERS)
+
+
+def _is_turn_scoped(text: str) -> bool:
+    lowered = " ".join(str(text).lower().split())
+    return any(marker in lowered for marker in _TURN_SCOPED_MARKERS)
+
+
+def _split_clauses(text: str) -> list[str]:
+    import re
+
+    return [part.strip() for part in re.split(r"[.;!?\n]+", str(text)) if part.strip()]
+
+
+def strip_turn_scoped_clauses(text: str) -> str:
+    """Drop clauses scoped to the current turn/trip; keep durable remainder.
+
+    Used by TrustMem coverage so turn-scoped facts (\"lần này\", \"chuyến này\", …)
+    are not treated as durable preferences that must be covered by a candidate.
+    Returns empty string when every clause is turn-scoped.
+    """
+    clauses = _split_clauses(text)
+    if not clauses:
+        return " ".join(str(text).split()).strip()
+    kept = [clause for clause in clauses if not _is_turn_scoped(clause)]
+    return " ".join(kept).strip()
+
+
+def _is_turn_scoped_candidate(*, evidence_text: str, memory_text: str) -> bool:
+    """Reject candidates backed only by a clause scoped to the current turn.
+
+    One message can mix scopes ("Từ giờ … . Lần này …"), so the memory is matched
+    back to the clause that supports it instead of scanning the whole evidence.
+    """
+    if _is_turn_scoped(memory_text):
+        return True
+
+    clauses = _split_clauses(evidence_text)
+    scoped = [clause for clause in clauses if _is_turn_scoped(clause)]
+    if not scoped:
+        return False
+    if len(scoped) == len(clauses):
+        return True
+
+    memory_tokens = set(_normalize_statement(memory_text).split())
+    if not memory_tokens:
+        return False
+    overlap = {
+        clause: len(memory_tokens & set(_normalize_statement(clause).split()))
+        for clause in clauses
+    }
+    best = max(clauses, key=lambda clause: overlap[clause])
+    return overlap[best] > 0 and _is_turn_scoped(best)
 
 
 def _grounded_in_user_text(

@@ -6,19 +6,35 @@ from typing import Any
 
 REPORTS_DIR = Path(__file__).resolve().parents[2] / "reports"
 
-METRIC_LABELS: dict[str, str] = {
+QUALITY_METRIC_LABELS: dict[str, str] = {
     "candidate_pool_completeness": "SQL candidate pool completeness",
+    "context_recall": "Apply recall",
+    "allowed_context_precision": "Allowed context precision",
+    "uncertain_recall": "Uncertain recall",
+    "irrelevant_leakage_rate": "Irrelevant leakage",
+    "overridden_leakage_rate": "Overridden leakage",
+    "context_case_pass_rate": "Context case pass rate",
+    "applicability_macro_f1": "Applicability macro-F1",
+}
+
+ISOLATION_METRIC_LABELS: dict[str, str] = {
     "cross_user_candidate_leakage": "Cross-user candidate leakage",
     "cross_domain_candidate_leakage": "Cross-domain candidate leakage",
     "inactive_candidate_leakage": "Inactive candidate leakage",
-    "context_recall": "Context recall (apply)",
-    "context_precision": "Context precision",
-    "uncertain_context_rate": "Uncertain in final context",
-    "overridden_leakage_rate": "Overridden leakage",
-    "applicability_macro_f1": "Applicability macro-F1",
     "cross_user_context_leakage": "Cross-user context leakage",
     "cross_domain_context_leakage": "Cross-domain context leakage",
     "inactive_context_leakage": "Inactive context leakage",
+}
+
+DIAGNOSTIC_METRIC_LABELS: dict[str, str] = {
+    "context_precision": "Apply-only share in final context (diagnostic)",
+    "uncertain_context_rate": "Uncertain share in final context (diagnostic)",
+}
+
+METRIC_LABELS: dict[str, str] = {
+    **QUALITY_METRIC_LABELS,
+    **ISOLATION_METRIC_LABELS,
+    **DIAGNOSTIC_METRIC_LABELS,
 }
 
 
@@ -55,15 +71,17 @@ def render_retrieval_report_markdown(payload: dict[str, Any]) -> str:
                 "> Use `--applicability-judge llm` for production-like Gemini judging.",
             ]
         )
-    lines.extend(["", "## Metrics", "", "| Metric | Value |", "|--------|-------|"])
-    for key, label in METRIC_LABELS.items():
-        metric = metrics.get(key) or {}
-        value = metric.get("value")
-        if value is None:
-            display = "n/a"
-        else:
-            display = f"{value:.4f}"
-        lines.append(f"| {label} | {display} |")
+    def append_metric_section(title: str, labels: dict[str, str]) -> None:
+        lines.extend(["", f"## {title}", "", "| Metric | Value |", "|--------|-------|"])
+        for key, label in labels.items():
+            metric = metrics.get(key) or {}
+            value = metric.get("value")
+            display = "n/a" if value is None else f"{value:.4f}"
+            lines.append(f"| {label} | {display} |")
+
+    append_metric_section("Quality metrics", QUALITY_METRIC_LABELS)
+    append_metric_section("Isolation metrics", ISOLATION_METRIC_LABELS)
+    append_metric_section("Context composition diagnostics", DIAGNOSTIC_METRIC_LABELS)
     lines.append("")
     return "\n".join(lines)
 

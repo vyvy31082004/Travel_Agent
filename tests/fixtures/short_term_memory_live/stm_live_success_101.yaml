@@ -1,0 +1,12 @@
+id: stm_live_success_101
+split: test
+scenario: Task success search hotel Đà Lạt
+metrics:
+- success
+messages:
+- Tìm khách sạn Đà Lạt, check-in 19/11/2026, ở 2 đêm, 3 người, ngân sách dưới 3 triệu.
+constraints:
+  destination: Đà Lạt
+  check_in: '2026-11-19'
+  check_out: '2026-11-21'
+success_domain: hotel

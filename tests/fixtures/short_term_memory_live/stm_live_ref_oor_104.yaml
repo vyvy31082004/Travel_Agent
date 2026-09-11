@@ -1,0 +1,23 @@
+id: stm_live_ref_oor_104
+split: test
+scenario: Out-of-range position → clarification
+metrics:
+- reference
+messages:
+- Chọn giúp mình cái thứ 9 đi.
+reference:
+  args:
+    domain: hotel
+    position: 9
+  gold:
+    clarification: true
+  seed_visible_state:
+    visible_results:
+      req-hotel-104:
+        domain: hotel
+        search_id: s-104
+        displayed_item_ids:
+        - hotel_1
+        - hotel_2
+        - hotel_3
+    active_request_id: req-hotel-104

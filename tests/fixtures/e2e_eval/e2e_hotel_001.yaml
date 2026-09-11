@@ -1,0 +1,72 @@
+id: e2e_hotel_001
+scenario: "Áp dụng budget + quiet + near beach preference khi tìm hotel"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_budget
+      text: "Ngân sách hotel thường 1–2 triệu/đêm"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_quiet
+      text: "Thích khách sạn yên tĩnh"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_beach
+      text: "Thích khách sạn gần biển"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích resort cao cấp"
+      domain: hotel
+      category: hotel_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ đã superseded — thích hostel"
+      domain: hotel
+      category: hotel_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Tìm khách sạn ở Phú Quốc cho tôi."
+
+expected_trace:
+  expected_route: [hotel]
+  expected_context:
+    hotel:
+      must_include: [m_budget, m_quiet, m_beach]
+      must_exclude: [m_other_user, m_superseded]
+  expected_tools:
+    - name: search_hotels_tool
+      required_arguments: [destination]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - hotel_assistant
+    - join_results
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "ưu tiên budget 1–2 triệu/đêm"
+    - "ưu tiên yên tĩnh"
+    - "gần biển nếu tool có evidence"
+  tradeoff_rule:
+    - "Nếu không có lựa chọn thỏa toàn bộ điều kiện, phải nêu rõ điều kiện nào chưa thỏa"
+  forbidden_claims:
+    - "Giá/đặc điểm không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE

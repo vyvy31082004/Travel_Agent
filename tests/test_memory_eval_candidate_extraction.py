@@ -325,7 +325,7 @@ def test_no_store_leak_counts_as_fp_in_aggregate_precision():
     )
     leak_b = _case(
         "leak_b",
-        messages=[{"type": "human", "content": "Chỉ chuyến này thôi"}],
+        messages=[{"type": "human", "content": "Tìm vé Hà Nội Đà Nẵng"}],
         gold_memories=(),
         expected_store=False,
     )
@@ -343,7 +343,7 @@ def test_no_store_leak_counts_as_fp_in_aggregate_precision():
                 _mem("Thích KS Đà Nẵng", evidence="Tìm KS Đà Nẵng")
             ],
             "leak_b": [
-                _mem("Chỉ chuyến này thôi", evidence="Chỉ chuyến này thôi")
+                _mem("Thích bay Hà Nội Đà Nẵng", evidence="Tìm vé Hà Nội Đà Nẵng")
             ],
         }
     )

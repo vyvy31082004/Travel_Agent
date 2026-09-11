@@ -112,12 +112,13 @@ async def inject_visible_result_context(
             )
         else:
             try:
+                include_token = str(resolved.domain or "") == "flight"
                 item = await repo.load_item(
                     search_id=resolved.search_id,
                     item_id=resolved.item_id,
                     user_id=user_id,
                     thread_id=thread_id,
-                    include_detail_token=False,
+                    include_detail_token=include_token,
                 )
             except Exception as exc:
                 extra_messages.append(
@@ -161,12 +162,25 @@ async def inject_visible_result_context(
     item_ids = list(visible.get("displayed_item_ids") or [])
     if search_id and item_ids:
         try:
-            items = await repo.load_items(
+            if await repo.has_display_decisions(
                 search_id=str(search_id),
-                item_ids=item_ids,
                 user_id=user_id,
                 thread_id=thread_id,
-            )
+            ):
+                items = await repo.load_displayed_items(
+                    search_id=str(search_id),
+                    user_id=user_id,
+                    thread_id=thread_id,
+                    include_detail_token=False,
+                )
+                item_ids = [str(item.get("item_id")) for item in items if item.get("item_id")]
+            else:
+                items = await repo.load_items(
+                    search_id=str(search_id),
+                    item_ids=item_ids,
+                    user_id=user_id,
+                    thread_id=thread_id,
+                )
             # Strip detail tokens from temporary prompt context.
             safe_items = []
             for item in items:
@@ -292,8 +306,12 @@ async def invoke_domain_llm_with_temp_payloads(
         messages = [
             SystemMessage(
                 content=(
-                    "Soft-priority domain memory hints (uncertain applicability). "
-                    "Use only as ranking guidance; do not treat as hard filters.\n"
+                    "Soft-priority domain memory (uncertain applicability — no direct API field). "
+                    "After tool results return:\n"
+                    "- FILTER or rank when the preference CAN be verified from tool payload fields.\n"
+                    "- When the preference CANNOT be verified (e.g. quiet, crowd level), do NOT invent "
+                    "attributes; state a clear trade-off if you keep items that may not match.\n"
+                    "- Do not silently ignore these preferences.\n"
                     f"{domain_soft_memory_context}"
                 )
             ),

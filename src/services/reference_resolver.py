@@ -3,6 +3,26 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Optional
 
+_VISIBLE_DOMAIN_ALIASES: dict[str, set[str]] = {
+    "hotel": {"hotel"},
+    "car": {"car"},
+    "flight": {"flight"},
+    "tour": {"tour", "excursion"},
+    "excursion": {"tour", "excursion"},
+}
+
+
+def _domain_matches(visible_domain: str | None, domain: str | None) -> bool:
+    if not domain:
+        return True
+    value = str(visible_domain or "").strip().lower()
+    if not value:
+        return True
+    hint = str(domain).strip().lower()
+    if value == hint:
+        return True
+    return value in _VISIBLE_DOMAIN_ALIASES.get(hint, {hint})
+
 
 @dataclass(frozen=True)
 class ResolvedReference:
@@ -47,7 +67,7 @@ def resolve_item_reference(
     else:
         for req_id, visible in visible_results.items():
             visible_domain = visible.get("domain")
-            if domain and visible_domain and visible_domain != domain:
+            if domain and not _domain_matches(visible_domain, domain):
                 continue
             candidates.append(_candidate(req_id, visible))
 
@@ -69,7 +89,7 @@ def resolve_item_reference(
     if len(candidates) > 1 and not request_id:
         # If domain uniquely selects one, keep it; otherwise clarify.
         if domain:
-            domain_matches = [c for c in candidates if c.get("domain") == domain]
+            domain_matches = [c for c in candidates if _domain_matches(c.get("domain"), domain)]
             if len(domain_matches) == 1:
                 candidates = domain_matches
             elif len(domain_matches) > 1:

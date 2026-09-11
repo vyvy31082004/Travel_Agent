@@ -1,0 +1,23 @@
+id: stm_live_ref_oor_109
+split: test
+scenario: Out-of-range position → clarification
+metrics:
+- reference
+messages:
+- Chọn giúp mình cái thứ 9 đi.
+reference:
+  args:
+    domain: flight
+    position: 9
+  gold:
+    clarification: true
+  seed_visible_state:
+    visible_results:
+      req-flight-109:
+        domain: flight
+        search_id: s-109
+        displayed_item_ids:
+        - flight_1
+        - flight_2
+        - flight_3
+    active_request_id: req-flight-109

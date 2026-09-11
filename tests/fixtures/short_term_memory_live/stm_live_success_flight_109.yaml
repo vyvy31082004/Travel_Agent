@@ -1,0 +1,12 @@
+id: stm_live_success_flight_109
+split: test
+scenario: Search flight TP.HCM → Hội An
+metrics:
+- success
+messages:
+- Tìm vé máy bay từ TP.HCM đi Hội An ngày 23/10/2026 cho 2 người.
+constraints:
+  origin: TP.HCM
+  destination: Hội An
+  date: '2026-10-23'
+success_domain: flight

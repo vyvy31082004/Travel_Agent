@@ -1,0 +1,12 @@
+id: stm_live_success_102
+split: test
+scenario: Task success search hotel Sa Pa
+metrics:
+- success
+messages:
+- Tìm khách sạn Sa Pa, check-in 20/11/2026, ở 2 đêm, 2 người, ngân sách dưới 3 triệu.
+constraints:
+  destination: Sa Pa
+  check_in: '2026-11-20'
+  check_out: '2026-11-22'
+success_domain: hotel

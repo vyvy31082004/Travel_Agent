@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any
 from uuid import uuid4
 
-from sqlalchemy import DateTime, ForeignKey, Integer, Text, UniqueConstraint, func
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, Text, UniqueConstraint, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -86,6 +86,11 @@ class SearchResultItem(Base):
             "position",
             name="uq_search_result_items_position",
         ),
+        UniqueConstraint(
+            "search_id",
+            "api_position",
+            name="uq_search_result_items_api_position",
+        ),
     )
 
     search_id: Mapped[Any] = mapped_column(
@@ -94,7 +99,9 @@ class SearchResultItem(Base):
         primary_key=True,
     )
     item_id: Mapped[str] = mapped_column(Text, primary_key=True)
-    position: Mapped[int] = mapped_column(Integer, nullable=False)
+    api_position: Mapped[int] = mapped_column(Integer, nullable=False)
+    position: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    eligible: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     payload: Mapped[dict] = mapped_column(JSONB, nullable=False)
 
     search_run: Mapped["SearchRun"] = relationship(

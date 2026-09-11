@@ -1,0 +1,79 @@
+id: e2e_summary_hotel_001
+scenario: "T1–T2 rồi summarize_conversation; T3 search hotel từ summary (Đà Nẵng 10–12/10, 2 người, 1–2 triệu); LTM quiet + tránh đoàn; NO_STORE"
+
+seed:
+  user_id: user_a
+  long_term_memories:
+    - id: m_quiet
+      text: "Thích khách sạn yên tĩnh"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_avoid_groups
+      text: "Tránh khách sạn đông đoàn tour lớn"
+      domain: hotel
+      category: hotel_preference
+      status: active
+    - id: m_other_user
+      text: "Memory user khác — thích resort cao cấp"
+      domain: hotel
+      category: hotel_preference
+      user_id: user_b
+      status: active
+      expect_in_context: false
+    - id: m_superseded
+      text: "Preference cũ đã superseded — thích hostel"
+      domain: hotel
+      category: hotel_preference
+      status: superseded
+      expect_in_context: false
+  thread_state:
+    messages: []
+    summary: null
+
+input:
+  messages:
+    - "Mình đang lên kế hoạch đi Đà Nẵng thôi, chưa cần tìm khách sạn."
+    - "Ở từ 10 đến 12/10, 2 người, ngân sách 1–2 triệu một đêm."
+    - "Tìm khách sạn luôn đi."
+
+expected_trace:
+  expected_route: [hotel]
+  expected_context:
+    hotel:
+      must_include: [m_quiet, m_avoid_groups]
+      must_exclude: [m_other_user, m_superseded]
+      expected_applicability:
+        m_quiet: uncertain
+        m_avoid_groups: uncertain
+  expected_tools:
+    - name: search_hotels_tool
+      required_arguments: [destination, check_in, check_out]
+  expected_node_sequence_contains:
+    - memory_recall_global
+    - primary_assistant
+    - summarize_conversation
+    - memory_finalize
+    - memory_recall_global
+    - primary_assistant
+    - hotel_assistant
+    - memory_recall_hotel
+    - hotel_chat
+    - search_hotels_tool
+    - join_results
+    - primary_assistant
+    - memory_finalize
+
+expected_answer_rubric:
+  answerability: ANSWERABLE
+  required_constraints:
+    - "search/answer giữ Đà Nẵng, 10–12/10, 2 người, 1–2 triệu/đêm từ summary"
+    - "ưu tiên yên tĩnh và tránh đoàn đông nếu tool có evidence"
+  tradeoff_rule:
+    - "Nếu thiếu lựa chọn, nêu điều kiện nào chưa thỏa"
+  forbidden_claims:
+    - "Giá/đặc điểm không có trong tool result"
+    - "Viện dẫn preference không tồn tại hoặc inactive"
+
+expected_finalize:
+  action: NO_STORE
