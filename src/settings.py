@@ -63,8 +63,6 @@ class Settings:
     long_term_memory_sync_finalize: bool = False
     long_term_memory_recall_limit: int = 5
     long_term_memory_worker_retry_limit: int = 3
-    long_term_memory_worker_poll_interval_seconds: float = 2.0
-    long_term_memory_worker_error_backoff_seconds: float = 5.0
     long_term_memory_text_search_limit: int = 50
     long_term_memory_embedding_model: str = "models/gemini-embedding-001"
     long_term_memory_vector_dims: int = 3072
@@ -134,14 +132,6 @@ class Settings:
             raise ValueError(
                 "LONG_TERM_MEMORY_TRANSITION_BATCH_SIZE must be greater than zero"
             )
-        if self.long_term_memory_worker_poll_interval_seconds <= 0:
-            raise ValueError(
-                "LONG_TERM_MEMORY_WORKER_POLL_INTERVAL_SECONDS must be greater than zero"
-            )
-        if self.long_term_memory_worker_error_backoff_seconds <= 0:
-            raise ValueError(
-                "LONG_TERM_MEMORY_WORKER_ERROR_BACKOFF_SECONDS must be greater than zero"
-            )
         for name, value in {
             "LONG_TERM_MEMORY_TRUSTMEM_COVERAGE_THRESHOLD": self.long_term_memory_trustmem_coverage_threshold,
             "LONG_TERM_MEMORY_TRUSTMEM_PRESERVATION_THRESHOLD": self.long_term_memory_trustmem_preservation_threshold,
@@ -179,12 +169,6 @@ def get_settings() -> Settings:
         ),
         long_term_memory_worker_retry_limit=_positive_int(
             "LONG_TERM_MEMORY_WORKER_RETRY_LIMIT", 3
-        ),
-        long_term_memory_worker_poll_interval_seconds=_float_env(
-            "LONG_TERM_MEMORY_WORKER_POLL_INTERVAL_SECONDS", 2.0
-        ),
-        long_term_memory_worker_error_backoff_seconds=_float_env(
-            "LONG_TERM_MEMORY_WORKER_ERROR_BACKOFF_SECONDS", 5.0
         ),
         long_term_memory_text_search_limit=_positive_int(
             "LONG_TERM_MEMORY_TEXT_SEARCH_LIMIT", 50
