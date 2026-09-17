@@ -57,7 +57,8 @@ _KEYWORD_RULES: dict[str, list[tuple[re.Pattern[str], str]]] = {
         (re.compile(r"khứ hồi|round.?trip|bay về", re.I), FlightAction.SEARCH_ROUND_TRIP.value),
         (
             re.compile(
-                r"tìm chuyến|tìm vé|search flight|chuyến bay|bay đi|bay từ|một chiều|one.?way",
+                r"tìm chuyến|tìm vé|search flight|chuyến bay|bay đi|bay từ|bay ra|"
+                r"bay sang|một chiều|one.?way",
                 re.I,
             ),
             FlightAction.SEARCH_ONE_WAY.value,

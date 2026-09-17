@@ -1,0 +1,1362 @@
+{
+  "metadata": {
+    "case_id": "e2e_multi_car_excursion_001",
+    "run_id": "b60138f0c755",
+    "started_at": "2026-09-15T13:13:03.061889+00:00",
+    "finished_at": "2026-09-15T13:15:18.977944+00:00",
+    "user_id": "e2e-e2e_multi_car_excursion_001:user_a",
+    "thread_id": "e2e-e2e_multi_car_excursion_001-b60138f0c755",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v3",
+    "git_commit": "755b3b07c76da1819e6628eaf6311754fa27cbd1",
+    "fixture_to_uuid": {
+      "m_car_automatic": "421b2841-4c5f-581c-98d1-8844427af8fc",
+      "m_car_no_large": "7ac7122f-114b-5a11-ba6f-02c47ce499b5",
+      "m_car_other_user": "b79a01c1-9414-5bbc-a25d-4ad212d75d28",
+      "m_car_superseded": "a2f30787-ff92-5d36-8764-47e79cf78245",
+      "m_excursion_small_group": "4ba60a25-4628-5ea1-aad9-d970639a557c",
+      "m_excursion_afternoon": "6550614d-80ac-5d6f-a7b0-832ada2563f1",
+      "m_excursion_other_user": "8594ba93-6793-5b1f-8bf9-6dc693b1c916",
+      "m_excursion_superseded": "a29987e5-92fb-5c0b-b067-b686aaed8e21"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Ở Đà Nẵng ngày 10/10, thuê xe và tìm tour Bà Nà buổi chiều."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-15"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Ở Đà Nẵng ngày 10/10, thuê xe và tìm tour Bà Nà buổi chiều.",
+      "answer": "Dưới đây là thông tin chi tiết về các lựa chọn thuê xe và tour/hoạt động tham quan tại Đà Nẵng ngày 10/10/2026:\n\n---\n\n### 1. Dịch vụ Thuê xe tự lái (Xe số tự động, cỡ nhỏ/vừa)\n\n* **KIA K3 PREMIUM 2022**\n  * **Mã xe (car_id)**: `KH2I33`\n  * **Giá sau giảm**: 1.101.000 VND/ngày *(Giá gốc: 1.201.000 VND)*\n  * **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Xăng\n  * **Địa chỉ**: Phường Tam Thuận, Quận Thanh Khê, Đà Nẵng\n  * **Đánh giá**: 4.6 ⭐ (71 chuyến)\n  * **Đặc điểm**: Miễn thế chấp, Giao xe tận nơi\n  * ![KIA K3 PREMIUM 2022](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg)\n  * [Xem chi tiết và đặt xe](https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1)\n\n* **MITSUBISHI ATTRAGE 2019**\n  * **Mã xe (car_id)**: `KGRJCX`\n  * **Giá sau giảm**: 463.000 VND/ngày *(Giá gốc: 563.000 VND)*\n  * **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Xăng\n  * **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê, Đà Nẵng\n  * **Đánh giá**: 5.0 ⭐ (300+ chuyến)\n  * **Đặc điểm**: Miễn thế chấp, Giao xe tận nơi\n  * ![MITSUBISHI ATTRAGE 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg)\n  * [Xem chi tiết và đặt xe](https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=3)\n\n* **HONDA HRV G 2023**\n  * **Mã xe (car_id)**: `KFH2K9`\n  * **Giá gốc**: 1.019.000 VND/ngày\n  * **Hộp số**: Số tự động | **Số chỗ**: 5 chỗ | **Nhiên liệu**: Xăng\n  * **Địa chỉ**: Phường Thạc Gián, Quận Thanh Khê, Đà Nẵng\n  * **Đánh giá**: 5.0 ⭐ (23 chuyến)\n  * **Đặc điểm**: Miễn thế chấp, Giao xe tận nơi\n  * ![HONDA HRV G 2023](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg)\n  * [Xem chi tiết và đặt xe](https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8)\n\n* **VINFAST VF3 2025**\n  * **Mã xe (car_id)**: `KHJ7ZD`\n  * **Giá sau giảm**: 519.000 VND/ngày *(Giá gốc: 568.000 VND)*\n  * **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Điện\n  * **Địa chỉ**: Phường Tam Thuận, Quận Thanh Khê, Đà Nẵng\n  * **Đánh giá**: 5.0 ⭐ (74 chuyến)\n  * **Đặc điểm**: Miễn thế chấp, Giao xe tận nơi\n  * ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2026/02/19/16/38oT4voQzpj13w0cNJFFZg.jpg)\n  * [Xem chi tiết và đặt xe](https://www.mioto.vn/car/vinfast-vf3-2025/KHJ7ZD?carSearchIndex=9)\n\n* **VINFAST VF3 2025**\n  * **Mã xe (car_id)**: `KJ89JC`\n  * **Giá sau giảm**: 524.000 VND/ngày *(Giá gốc: 574.000 VND)*\n  * **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Điện\n  * **Địa chỉ**: Phường Hòa Khê, Quận Thanh Khê, Đà Nẵng\n  * **Đánh giá**: 5.0 ⭐ (100+ chuyến)\n  * **Đặc điểm**: Miễn thế chấp, Giao xe tận nơi\n  * ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg)\n  * [Xem chi tiết và đặt xe](https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=10)\n\n---\n\n### 2. Tour & Hoạt động tham quan\n\n1. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times** *(Đặc biệt phù hợp cho yêu cầu thời gian linh hoạt/buổi chiều)*\n   - **Mã hoạt động (external_attraction_id)**: `PRbeRPTXGXPd`\n   - **Mô tả**: Tour nhóm nhỏ tham quan Bà Nà Hills & Cầu Vàng, đưa đón tại trung tâm Đà Nẵng với giờ xuất phát linh hoạt (có khung giờ muộn).\n   - **Giá**: 1.284.755 VND/người\n   - **Đánh giá**: 4.4 ⭐ (310 đánh giá)\n   - ![Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\n\n2. **Du thuyền đêm trên sông Hàn**\n   - **Mã hoạt động (external_attraction_id)**: `PRa7fah7ikJw`\n   - **Mô tả**: Du thuyền ngắm cảnh thành phố Đà Nẵng về đêm.\n   - **Giá**: 118.342 VND/người\n   - ![Du thuyền đêm trên sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\n\n3. **Hoi An Basket Boat Ride in Water Coconut Forest**\n   - **Mã hoạt động (external_attraction_id)**: `PRNgBhNmHUwd`\n   - **Mô tả**: Trải nghiệm đi thuyền thúng tại rừng dừa Cẩm Thanh, Hội An.\n   - **Giá**: 315.600 VND/người\n   - ![Hoi An Basket Boat Ride in Water Coconut Forest](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\n\n4. **Tour Bà Nà Hills trọn ngày với bữa trưa buffet**\n   - **Mã hoạt động (external_attraction_id)**: `PRdCygydpY9o`\n   - **Mô tả**: Đi cáp treo, tham quan Cầu Vàng, Làng Pháp, Công viên Fantasy Park kèm buffet trưa.\n   - **Giá**: 1.709.500 VND/người\n   - ![Tour Bà Nà Hills trọn ngày với bữa trưa buffet](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=)\n\n5. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\n   - **Mã hoạt động (external_attraction_id)**: `PRFhLYK7act7`\n   - **Mô tả**: Tour nhóm nhỏ buổi chiều/hoàng hôn ngắm cảnh Ngũ Hành Sơn, Động Âm Phủ và Bán đảo Sơn Trà.\n   - **Giá**: 578.600 VND/người\n   - ![Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\n\n6. **Hoi An Cooking Class (Local Market, Basket Boat, Fishing & Cooking)**\n   - **Mã hoạt động (external_attraction_id)**: `PRVwSAVvgpO5`\n   - **Mô tả**: Lớp học nấu ăn kết hợp tham quan chợ địa phương và đi thuyền thúng (Có ca buổi chiều: 14:00 - 18:30).\n   - **Giá**: 762.700 VND/người\n   - ![Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=)\n\n7. **Hoi An Memories Show & Hoi An Impression Theme Park Ticket**\n   - **Mã hoạt động (external_attraction_id)**: `PRWX9rush6bp`\n   - **Mô tả**: Vé xem show diễn Ký Ức Hội An và tham quan Công viên Ấn Tượng Hội An.\n   - **Giá**: 631.200 VND/người\n   - ![Hoi An Memories Show & Hoi An Impression Theme Park Ticket](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=)\n\n8. **Lớp hướng dẫn làm lồng đèn**\n   - **Mã hoạt động (external_attraction_id)**: `PRPC0NRRR1QM`\n   - **Mô tả**: Workshop tự tay làm đèn lồng thủ công truyền thống.\n   - **Giá**: 259.154 VND/người\n   - ![Lớp hướng dẫn làm lồng đèn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=)\n\n9. **Hoai River Boat Trip by Night with Release Lantern**\n   - **Mã hoạt động (external_attraction_id)**: `PRfykNA7eqX0`\n   - **Mô tả**: Đi thuyền trên sông Hoài buổi tối và thả đèn hoa đăng.\n   - **Giá**: 236.700 VND/người\n   - ![Hoai River Boat Trip by Night with Release Lantern](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\n\n10. **Morning Small group to Marble Mountains - Am Phu Cave - Monkey Mountain**\n    - **Mã hoạt động (external_attraction_id)**: `PR3zAoTOqY8c`\n    - **Mô tả**: Tour nhóm nhỏ buổi sáng tham quan Ngũ Hành Sơn, Động Âm Phủ và Bán đảo Sơn Trà.\n    - **Giá**: 578.600 VND/người\n    - ![Morning Small group to Marble Mountains - Am Phu Cave - Monkey Mountain](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240046068.jpg?k=2dc0b7f9d0cfd9265ba2e3812f8e8534ba47044c82ce2a6e7a4f19a88196aa5d&o=)\n\n---\n\nBạn vui lòng cho biết mã xe hoặc mã hoạt động (`external_attraction_id`) bạn muốn lựa chọn để tôi hỗ trợ các bước tiếp theo nhé!",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "car_assistant",
+        "excursion_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 5
+    }
+  ],
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "car",
+      "excursion"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToCarAssistant",
+        "args": {
+          "request": "Thuê xe tại Đà Nẵng ngày 10/10/2026"
+        },
+        "timestamp": "2026-09-15T13:15:18.976940+00:00"
+      },
+      {
+        "name": "ToExcursionAssistant",
+        "args": {
+          "request": "Tìm tour Bà Nà buổi chiều ở Đà Nẵng ngày 10/10/2026"
+        },
+        "timestamp": "2026-09-15T13:15:18.976940+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "car_assistant",
+      "excursion_assistant",
+      "memory_recall_car",
+      "car_chat",
+      "search_cars_tool",
+      "memory_recall_excursion",
+      "excursion_chat",
+      "search_attractions_tool",
+      "excursion_chat",
+      "fetch_attraction_details_tool",
+      "car_chat",
+      "excursion_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "car": {
+      "candidate_pool_ids": [
+        "m_car_no_large",
+        "m_car_automatic"
+      ],
+      "applicability": {
+        "m_car_no_large": "uncertain",
+        "m_car_automatic": "uncertain"
+      },
+      "applicability_reasons": {
+        "m_car_no_large": "reconciled: Avoiding large SUVs/vehicles is a soft preference without a direct hard tool filter argument for car search. (llm: Avoiding large SUVs/vehicles is a soft preference without a direct hard tool filter argument for car search.; rule: default uncertain (no specific tool-field rule matched))",
+        "m_car_automatic": "reconciled: transmission soft via Hộp số (not a Mioto cateId / search_cars tool field) (llm: Automatic transmission preference does not map to a car search cateId tool field and can only be used for soft-ranking.; rule: transmission soft via Hộp số (not a Mioto cateId / search_cars tool field))"
+      },
+      "final_context_ids": [
+        "m_car_no_large",
+        "m_car_automatic"
+      ],
+      "applied_constraints": [
+        "(soft) [7ac7122f-114b-5a11-ba6f-02c47ce499b5] Tránh xe cỡ lớn / SUV quá to",
+        "(soft) [421b2841-4c5f-581c-98d1-8844427af8fc] Thích xe số tự động"
+      ]
+    },
+    "excursion": {
+      "candidate_pool_ids": [
+        "m_excursion_afternoon",
+        "m_excursion_small_group"
+      ],
+      "applicability": {
+        "m_excursion_afternoon": "uncertain",
+        "m_excursion_small_group": "uncertain"
+      },
+      "applicability_reasons": {
+        "m_excursion_afternoon": "reconciled: Time-of-day preference (afternoon tour) may be used for soft-ranking tour options, but there is no direct tool field for tour time of day in search_attractions. (llm: Time-of-day preference (afternoon tour) may be used for soft-ranking tour options, but there is no direct tool field for tour time of day in search_attractions.; rule: default uncertain (no specific tool-field rule matched))",
+        "m_excursion_small_group": "reconciled: group-size soft until tool has group-size signal (llm: Small group tour preference is relevant for soft-ranking results, but excursion search_attractions has no dedicated group-size filter argument.; rule: group-size soft until tool has group-size signal)"
+      },
+      "final_context_ids": [
+        "m_excursion_afternoon",
+        "m_excursion_small_group"
+      ],
+      "applied_constraints": [
+        "(soft) [6550614d-80ac-5d6f-a7b0-832ada2563f1] Ưu tiên tour buổi chiều",
+        "(soft) [4ba60a25-4628-5ea1-aad9-d970639a557c] Ưu tiên tour nhóm nhỏ"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "car",
+      "name": "search_cars_tool",
+      "arguments": {
+        "end_ms": "2026-10-10 20:00",
+        "address": "Đà Nẵng",
+        "start_ms": "2026-10-10 08:00",
+        "user_needs": "Thuê xe tự động nhỏ/vừa tại Đà Nẵng ngày 10/10/2026"
+      },
+      "timestamp": "2026-09-15T13:15:18.976940+00:00",
+      "raw_result": {
+        "search_id": "59ec464a-a8a1-4bb1-a8d8-3f2ea4399c4a",
+        "domain": "car",
+        "displayed_item_ids": [
+          "KH2I33",
+          "KGRJCX",
+          "KFH2K9",
+          "KHJ7ZD",
+          "KJ89JC"
+        ],
+        "labels": [],
+        "total_results": 5
+      },
+      "normalized_result": {
+        "search_id": "59ec464a-a8a1-4bb1-a8d8-3f2ea4399c4a",
+        "request_id": "req_car_508013c0",
+        "domain": "car",
+        "total_results": 5,
+        "items": [
+          {
+            "Link": "https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1",
+            "name": "KIA K3 PREMIUM 2022",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg",
+            "price": "1.101K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg",
+            "Rating": "4.6",
+            "car_id": "KH2I33",
+            "rating": "4.6",
+            "Tên xe": "KIA K3 PREMIUM 2022",
+            "address": "Phường Tam Thuận, Quận Thanh Khê",
+            "item_id": "KH2I33",
+            "Giá gốc": "1.201K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Tam Thuận, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "71 chuyến",
+            "Giá sau giảm": "1.101K",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2021/KJHL8A?carSearchIndex=2",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2021/KJHL8A?carSearchIndex=2",
+            "name": "MITSUBISHI XPANDER 2021",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2021/p/g/2024/04/14/17/l-Y_Ocgd5YlnmLTLgDoE9w.jpg",
+            "price": "727K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2021/p/g/2024/04/14/17/l-Y_Ocgd5YlnmLTLgDoE9w.jpg",
+            "Rating": "5.0",
+            "car_id": "KJHL8A",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI XPANDER 2021",
+            "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "item_id": "KJHL8A",
+            "Giá gốc": "847K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hòa Cường Bắc, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "100+ chuyến",
+            "Giá sau giảm": "727K",
+            "position": null,
+            "api_position": 2,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=3",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=3",
+            "name": "MITSUBISHI ATTRAGE 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg",
+            "price": "463K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg",
+            "Rating": "5.0",
+            "car_id": "KGRJCX",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI ATTRAGE 2019",
+            "address": "Phường Chính Gián, Quận Thanh Khê",
+            "item_id": "KGRJCX",
+            "Giá gốc": "563K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "300+ chuyến",
+            "Giá sau giảm": "463K",
+            "position": 2,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2024/KKAY84?carSearchIndex=4",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2024/KKAY84?carSearchIndex=4",
+            "name": "MITSUBISHI XPANDER 2024",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/06/25/18/Pm6MQtBIxnoXpUnmOciiLA.jpg",
+            "price": "741K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/06/25/18/Pm6MQtBIxnoXpUnmOciiLA.jpg",
+            "Rating": "4.6",
+            "car_id": "KKAY84",
+            "rating": "4.6",
+            "Tên xe": "MITSUBISHI XPANDER 2024",
+            "address": "Phường Chính Gián, Quận Thanh Khê",
+            "item_id": "KKAY84",
+            "Giá gốc": "861K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "22 chuyến",
+            "Giá sau giảm": "741K",
+            "position": null,
+            "api_position": 4,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2023/KEYMPW?carSearchIndex=5",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2023/KEYMPW?carSearchIndex=5",
+            "name": "MITSUBISHI XPANDER 2023",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2026/00/02/20/Ah3jG-Gj15cuIglWYRJbcw.jpg",
+            "price": "787K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2026/00/02/20/Ah3jG-Gj15cuIglWYRJbcw.jpg",
+            "Rating": "4.6",
+            "car_id": "KEYMPW",
+            "rating": "4.6",
+            "Tên xe": "MITSUBISHI XPANDER 2023",
+            "address": "Phường Chính Gián, Quận Thanh Khê",
+            "item_id": "KEYMPW",
+            "Giá gốc": "907K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "13 chuyến",
+            "Giá sau giảm": "787K",
+            "position": null,
+            "api_position": 5,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/toyota-veloz-cross-2024/KLTFUL?carSearchIndex=6",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/toyota-veloz-cross-2024/KLTFUL?carSearchIndex=6",
+            "name": "TOYOTA VELOZ CROSS 2024",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2024/p/g/2026/03/03/22/XN90IWHUOoCR6ezSjk8B4Q.jpg",
+            "price": "1.027K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2024/p/g/2026/03/03/22/XN90IWHUOoCR6ezSjk8B4Q.jpg",
+            "Rating": "4.6",
+            "car_id": "KLTFUL",
+            "rating": "4.6",
+            "Tên xe": "TOYOTA VELOZ CROSS 2024",
+            "address": "Phường Hải Châu II, Quận Hải Châu",
+            "item_id": "KLTFUL",
+            "Giá gốc": "1.147K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Hải Châu II, Quận Hải Châu",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "10 chuyến",
+            "Giá sau giảm": "1.027K",
+            "position": null,
+            "api_position": 6,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2019/K57AKP?carSearchIndex=7",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-xpander-2019/K57AKP?carSearchIndex=7",
+            "name": "MITSUBISHI XPANDER 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2019/p/g/2025/07/02/18/cs5L0ifbOeApKVUPxyUNfA.jpg",
+            "price": "684K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2019/p/g/2025/07/02/18/cs5L0ifbOeApKVUPxyUNfA.jpg",
+            "Rating": "3.4",
+            "car_id": "K57AKP",
+            "rating": "3.4",
+            "Tên xe": "MITSUBISHI XPANDER 2019",
+            "address": "Phường Chính Gián, Quận Thanh Khê",
+            "item_id": "K57AKP",
+            "Giá gốc": "804K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "7 chỗ",
+            "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "11 chuyến",
+            "Giá sau giảm": "684K",
+            "position": null,
+            "api_position": 7,
+            "eligible": false
+          },
+          {
+            "Link": "https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8",
+            "name": "HONDA HRV G 2023",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg",
+            "price": "Không có",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg",
+            "Rating": "5.0",
+            "car_id": "KFH2K9",
+            "rating": "5.0",
+            "Tên xe": "HONDA HRV G 2023",
+            "address": "Phường Thạc Gián, Quận Thanh Khê",
+            "item_id": "KFH2K9",
+            "Giá gốc": "1.019K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Thạc Gián, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "23 chuyến",
+            "Giá sau giảm": "Không có",
+            "position": 3,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KHJ7ZD?carSearchIndex=9",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KHJ7ZD?carSearchIndex=9",
+            "name": "VINFAST VF3 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2026/02/19/16/38oT4voQzpj13w0cNJFFZg.jpg",
+            "price": "519K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2026/02/19/16/38oT4voQzpj13w0cNJFFZg.jpg",
+            "Rating": "5.0",
+            "car_id": "KHJ7ZD",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF3 2025",
+            "address": "Phường Tam Thuận, Quận Thanh Khê",
+            "item_id": "KHJ7ZD",
+            "Giá gốc": "568K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Tam Thuận, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "74 chuyến",
+            "Giá sau giảm": "519K",
+            "position": 4,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=10",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=10",
+            "name": "VINFAST VF3 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg",
+            "price": "524K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg",
+            "Rating": "5.0",
+            "car_id": "KJ89JC",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF3 2025",
+            "address": "Phường Hòa Khê, Quận Thanh Khê",
+            "item_id": "KJ89JC",
+            "Giá gốc": "574K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hòa Khê, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "100+ chuyến",
+            "Giá sau giảm": "524K",
+            "position": 5,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 7,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "KH2I33",
+          "KGRJCX",
+          "KFH2K9",
+          "KHJ7ZD",
+          "KJ89JC"
+        ],
+        "items": [
+          {
+            "Link": "https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1",
+            "name": "KIA K3 PREMIUM 2022",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg",
+            "price": "1.101K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg",
+            "Rating": "4.6",
+            "car_id": "KH2I33",
+            "rating": "4.6",
+            "Tên xe": "KIA K3 PREMIUM 2022",
+            "address": "Phường Tam Thuận, Quận Thanh Khê",
+            "item_id": "KH2I33",
+            "Giá gốc": "1.201K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Tam Thuận, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "71 chuyến",
+            "Giá sau giảm": "1.101K",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=3",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=3",
+            "name": "MITSUBISHI ATTRAGE 2019",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg",
+            "price": "463K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg",
+            "Rating": "5.0",
+            "car_id": "KGRJCX",
+            "rating": "5.0",
+            "Tên xe": "MITSUBISHI ATTRAGE 2019",
+            "address": "Phường Chính Gián, Quận Thanh Khê",
+            "item_id": "KGRJCX",
+            "Giá gốc": "563K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "300+ chuyến",
+            "Giá sau giảm": "463K",
+            "position": 2,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8",
+            "name": "HONDA HRV G 2023",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg",
+            "price": "Không có",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg",
+            "Rating": "5.0",
+            "car_id": "KFH2K9",
+            "rating": "5.0",
+            "Tên xe": "HONDA HRV G 2023",
+            "address": "Phường Thạc Gián, Quận Thanh Khê",
+            "item_id": "KFH2K9",
+            "Giá gốc": "1.019K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "5 chỗ",
+            "Địa chỉ": "Phường Thạc Gián, Quận Thanh Khê",
+            "Nhiên liệu": "Xăng",
+            "Số chuyến": "23 chuyến",
+            "Giá sau giảm": "Không có",
+            "position": 3,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KHJ7ZD?carSearchIndex=9",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KHJ7ZD?carSearchIndex=9",
+            "name": "VINFAST VF3 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2026/02/19/16/38oT4voQzpj13w0cNJFFZg.jpg",
+            "price": "519K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2026/02/19/16/38oT4voQzpj13w0cNJFFZg.jpg",
+            "Rating": "5.0",
+            "car_id": "KHJ7ZD",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF3 2025",
+            "address": "Phường Tam Thuận, Quận Thanh Khê",
+            "item_id": "KHJ7ZD",
+            "Giá gốc": "568K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Tam Thuận, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "74 chuyến",
+            "Giá sau giảm": "519K",
+            "position": 4,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=10",
+            "Tags": "Miễn thế chấp, Giao xe tận nơi",
+            "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=10",
+            "name": "VINFAST VF3 2025",
+            "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg",
+            "price": "524K",
+            "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg",
+            "Rating": "5.0",
+            "car_id": "KJ89JC",
+            "rating": "5.0",
+            "Tên xe": "VINFAST VF3 2025",
+            "address": "Phường Hòa Khê, Quận Thanh Khê",
+            "item_id": "KJ89JC",
+            "Giá gốc": "574K",
+            "Hộp số": "Số tự động",
+            "Số chỗ": "4 chỗ",
+            "Địa chỉ": "Phường Hòa Khê, Quận Thanh Khê",
+            "Nhiên liệu": "Điện",
+            "Số chuyến": "100+ chuyến",
+            "Giá sau giảm": "524K",
+            "position": 5,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "tour",
+      "name": "search_attractions_tool",
+      "arguments": {
+        "end_date": "2026-10-10",
+        "location": "Da Nang",
+        "start_date": "2026-10-10",
+        "destination": "Da Nang"
+      },
+      "timestamp": "2026-09-15T13:15:18.977944+00:00",
+      "raw_result": {
+        "search_id": "1cf2f62f-d573-493d-bf86-058982d8e466",
+        "domain": "excursion",
+        "displayed_item_ids": [
+          "PRbeRPTXGXPd",
+          "PRa7fah7ikJw",
+          "PRNgBhNmHUwd",
+          "PRdCygydpY9o",
+          "PRFhLYK7act7",
+          "PRVwSAVvgpO5",
+          "PRWX9rush6bp",
+          "PRPC0NRRR1QM",
+          "PRfykNA7eqX0",
+          "PR3zAoTOqY8c"
+        ],
+        "labels": [],
+        "total_results": 10
+      },
+      "normalized_result": {
+        "search_id": "1cf2f62f-d573-493d-bf86-058982d8e466",
+        "request_id": "req_tour_2c26afdc",
+        "domain": "excursion",
+        "total_results": 10,
+        "items": [
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 118342,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Tour Bà Nà Hills trọn ngày với bữa trưa buffet",
+            "slug": "prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=",
+            "price": 1709500,
+            "rating": null,
+            "item_id": "PRdCygydpY9o",
+            "currency": "VND",
+            "description": "Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa",
+            "review_count": null,
+            "external_attraction_id": "PRdCygydpY9o",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)",
+            "slug": "prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=",
+            "price": 762700,
+            "rating": null,
+            "item_id": "PRVwSAVvgpO5",
+            "currency": "VND",
+            "description": "Morning tour: 8:30am to 1:00pm Afternoon tour: 2:00pm to 6:30pm You will be pick up by car by loc...",
+            "review_count": null,
+            "external_attraction_id": "PRVwSAVvgpO5",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Memories Show & Hoi An Impression Theme Park Ticket",
+            "slug": "prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=",
+            "price": 631200,
+            "rating": null,
+            "item_id": "PRWX9rush6bp",
+            "currency": "VND",
+            "description": "Located on the Hoi An Memories Land, the Hoi An Memories show is one of the outdoor performances ...",
+            "review_count": null,
+            "external_attraction_id": "PRWX9rush6bp",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "Lớp hướng dẫn làm lồng đèn",
+            "slug": "prpc0nrrr1qm-lantern-making-class",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=",
+            "price": 259154,
+            "rating": null,
+            "item_id": "PRPC0NRRR1QM",
+            "currency": "VND",
+            "description": "Workshop làm đèn lồng Việt Nam từ nhiều chất liệu",
+            "review_count": null,
+            "external_attraction_id": "PRPC0NRRR1QM",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "name": "Morning Small group to Marble Mountains - Am Phu Cave - Monkey Mountain",
+            "slug": "pr3zaotoqy8c-morning-small-group-to-marble-mountains-am-phu-cave-monkey-mountain",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240046068.jpg?k=2dc0b7f9d0cfd9265ba2e3812f8e8534ba47044c82ce2a6e7a4f19a88196aa5d&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PR3zAoTOqY8c",
+            "currency": "VND",
+            "description": "Exploring exotic scenes of Nature and Human \n\nMarble Mountain is well-known as the most beautiful...",
+            "review_count": null,
+            "external_attraction_id": "PR3zAoTOqY8c",
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 10,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "PRbeRPTXGXPd",
+          "PRa7fah7ikJw",
+          "PRNgBhNmHUwd",
+          "PRdCygydpY9o",
+          "PRFhLYK7act7",
+          "PRVwSAVvgpO5",
+          "PRWX9rush6bp",
+          "PRPC0NRRR1QM",
+          "PRfykNA7eqX0",
+          "PR3zAoTOqY8c"
+        ],
+        "items": [
+          {
+            "name": "Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times",
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=",
+            "price": 1284755,
+            "rating": null,
+            "item_id": "PRbeRPTXGXPd",
+            "currency": "VND",
+            "description": "- Complimentary pick-up and drop-off service for guests staying in Da Nang city centre.\n- Optiona...",
+            "review_count": null,
+            "external_attraction_id": "PRbeRPTXGXPd",
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Du thuyền đêm trên sông Hàn",
+            "slug": "pra7fah7ikjw-han-river-night-cruise",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=",
+            "price": 118342,
+            "rating": null,
+            "item_id": "PRa7fah7ikJw",
+            "currency": "VND",
+            "description": "Du thuyền ngắm cảnh thành phố về đêm",
+            "review_count": null,
+            "external_attraction_id": "PRa7fah7ikJw",
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Basket Boat Ride in Water Coconut Forest",
+            "slug": "prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=",
+            "price": 315600,
+            "rating": null,
+            "item_id": "PRNgBhNmHUwd",
+            "currency": "VND",
+            "description": "When Arriving in Hoi An ancient town .you cannot miss visiting the cam thanh water coconut Forest...",
+            "review_count": null,
+            "external_attraction_id": "PRNgBhNmHUwd",
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Tour Bà Nà Hills trọn ngày với bữa trưa buffet",
+            "slug": "prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=",
+            "price": 1709500,
+            "rating": null,
+            "item_id": "PRdCygydpY9o",
+            "currency": "VND",
+            "description": "Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa",
+            "review_count": null,
+            "external_attraction_id": "PRdCygydpY9o",
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour",
+            "slug": "prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PRFhLYK7act7",
+            "currency": "VND",
+            "description": "Come with us for the resonable price trip with small group 3 destinations as below: \n- Marble Mou...",
+            "review_count": null,
+            "external_attraction_id": "PRFhLYK7act7",
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)",
+            "slug": "prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=",
+            "price": 762700,
+            "rating": null,
+            "item_id": "PRVwSAVvgpO5",
+            "currency": "VND",
+            "description": "Morning tour: 8:30am to 1:00pm Afternoon tour: 2:00pm to 6:30pm You will be pick up by car by loc...",
+            "review_count": null,
+            "external_attraction_id": "PRVwSAVvgpO5",
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Hoi An Memories Show & Hoi An Impression Theme Park Ticket",
+            "slug": "prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=",
+            "price": 631200,
+            "rating": null,
+            "item_id": "PRWX9rush6bp",
+            "currency": "VND",
+            "description": "Located on the Hoi An Memories Land, the Hoi An Memories show is one of the outdoor performances ...",
+            "review_count": null,
+            "external_attraction_id": "PRWX9rush6bp",
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "Lớp hướng dẫn làm lồng đèn",
+            "slug": "prpc0nrrr1qm-lantern-making-class",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=",
+            "price": 259154,
+            "rating": null,
+            "item_id": "PRPC0NRRR1QM",
+            "currency": "VND",
+            "description": "Workshop làm đèn lồng Việt Nam từ nhiều chất liệu",
+            "review_count": null,
+            "external_attraction_id": "PRPC0NRRR1QM",
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Hoai River Boat Trip by Night with Release Lantern",
+            "slug": "prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern",
+            "image": "https://r-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=",
+            "price": 236700,
+            "rating": null,
+            "item_id": "PRfykNA7eqX0",
+            "currency": "VND",
+            "description": "Immerse yourself in Hoi An's extraordinary local culture on this trip by night boat. Travel throu...",
+            "review_count": null,
+            "external_attraction_id": "PRfykNA7eqX0",
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "name": "Morning Small group to Marble Mountains - Am Phu Cave - Monkey Mountain",
+            "slug": "pr3zaotoqy8c-morning-small-group-to-marble-mountains-am-phu-cave-monkey-mountain",
+            "image": "https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240046068.jpg?k=2dc0b7f9d0cfd9265ba2e3812f8e8534ba47044c82ce2a6e7a4f19a88196aa5d&o=",
+            "price": 578600,
+            "rating": null,
+            "item_id": "PR3zAoTOqY8c",
+            "currency": "VND",
+            "description": "Exploring exotic scenes of Nature and Human \n\nMarble Mountain is well-known as the most beautiful...",
+            "review_count": null,
+            "external_attraction_id": "PR3zAoTOqY8c",
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "car",
+      "name": "search_cars_tool",
+      "arguments": {
+        "start_ms": "2026-10-10 08:00",
+        "user_needs": "Thuê xe tự động nhỏ/vừa tại Đà Nẵng ngày 10/10/2026",
+        "address": "Đà Nẵng",
+        "end_ms": "2026-10-10 20:00"
+      },
+      "timestamp": "2026-09-15T13:15:18.977944+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 7
+    },
+    {
+      "domain": "tour",
+      "name": "search_attractions_tool",
+      "arguments": {
+        "location": "Da Nang",
+        "end_date": "2026-10-10",
+        "start_date": "2026-10-10"
+      },
+      "timestamp": "2026-09-15T13:15:18.977944+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 10
+    },
+    {
+      "domain": "excursion",
+      "name": "fetch_attraction_details_tool",
+      "arguments": {
+        "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group"
+      },
+      "timestamp": "2026-09-15T13:15:18.977944+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 12
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "car",
+      "summary": "[{'type': 'text', 'text': 'Danh sách xe tự động cỡ nhỏ/vừa tại Đà Nẵng ngày 10/10/2026 (đã lọc bỏ xe 7 chỗ cỡ lớn theo sở thích của bạn):\\n\\n* **KIA K3 PREMIUM 2022**\\n  * **car_id**: KH2I33\\n  * **Tên xe**: KIA K3 PREMIUM 2022\\n  * **Giá sau giảm**: 1.101K\\n  * **Giá gốc**: 1.201K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 4 chỗ\\n  * **Nhiên liệu**: Xăng\\n  * **Địa chỉ**: Phường Tam Thuận, Quận Thanh Khê\\n  * **Rating**: 4.6\\n  * **Số chuyến**: 71 chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![KIA K3 PREMIUM 2022](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg)\\n  * **Link**: https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1\\n\\n* **MITSUBISHI ATTRAGE 2019**\\n  * **car_id**: KGRJCX\\n  * **Tên xe**: MITSUBISHI ATTRAGE 2019\\n  * **Giá sau giảm**: 463K\\n  * **Giá gốc**: 563K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 4 chỗ\\n  * **Nhiên liệu**: Xăng\\n  * **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 300+ chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![MITSUBISHI ATTRAGE 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg)\\n  * **Link**: https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=3\\n\\n* **HONDA HRV G 2023**\\n  * **car_id**: KFH2K9\\n  * **Tên xe**: HONDA HRV G 2023\\n  * **Giá sau giảm**: Không có\\n  * **Giá gốc**: 1.019K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 5 chỗ\\n  * **Nhiên liệu**: Xăng\\n  * **Địa chỉ**: Phường Thạc Gián, Quận Thanh Khê\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 23 chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![HONDA HRV G 2023](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg)\\n  * **Link**: https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8\\n\\n* **VINFAST VF3 2025**\\n  * **car_id**: KHJ7ZD\\n  * **Tên xe**: VINFAST VF3 2025\\n  * **Giá sau giảm**: 519K\\n  * **Giá gốc**: 568K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 4 chỗ\\n  * **Nhiên liệu**: Điện\\n  * **Địa chỉ**: Phường Tam Thuận, Quận Thanh Khê\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 74 chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2026/02/19/16/38oT4voQzpj13w0cNJFFZg.jpg)\\n  * **Link**: https://www.mioto.vn/car/vinfast-vf3-2025/KHJ7ZD?carSearchIndex=9\\n\\n* **VINFAST VF3 2025**\\n  * **car_id**: KJ89JC\\n  * **Tên xe**: VINFAST VF3 2025\\n  * **Giá sau giảm**: 524K\\n  * **Giá gốc**: 574K\\n  * **Hộp số**: Số tự động\\n  * **Số chỗ**: 4 chỗ\\n  * **Nhiên liệu**: Điện\\n  * **Địa chỉ**: Phường Hòa Khê, Quận Thanh Khê\\n  * **Rating**: 5.0\\n  * **Số chuyến**: 100+ chuyến\\n  * **Tags**: Miễn thế chấp, Giao xe tận nơi\\n  * **Ảnh**: ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg)\\n  * **Link**: https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=10', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "(soft) [7ac7122f-114b-5a11-ba6f-02c47ce499b5] Tránh xe cỡ lớn / SUV quá to",
+        "(soft) [421b2841-4c5f-581c-98d1-8844427af8fc] Thích xe số tự động"
+      ],
+      "domain_action": "search_cars"
+    },
+    {
+      "domain": "excursion",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là các tour/hoạt động tham quan tại Đà Nẵng ngày 10/10/2026 thu thập được từ hệ thống, với lựa chọn hàng đầu cho tour Bà Nà nhóm nhỏ có thời gian xuất phát linh hoạt (phù hợp với ưu tiên đi buổi chiều/muộn và nhóm nhỏ của bạn):\\n\\n1. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times** *(Phù hợp nhất với yêu cầu tour Bà Nà nhóm nhỏ, giờ xuất phát linh hoạt)*\\n   - **external_attraction_id**: `PRbeRPTXGXPd`\\n   - **name**: Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times\\n   - **description**: Dịch vụ đưa đón tại trung tâm Đà Nẵng. Tour nhóm nhỏ với thời gian xuất phát linh hoạt (có lựa chọn xuất phát muộn 9:30 sáng cho chuyến đi thoải mái).\\n   - **price**: 1284755\\n   - **currency**: VND\\n   - **rating**: 4.4\\n   - **review_count**: 310\\n   - **image**: ![Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\\n   - **slug**: prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group\\n\\n2. **Du thuyền đêm trên sông Hàn**\\n   - **external_attraction_id**: `PRa7fah7ikJw`\\n   - **name**: Du thuyền đêm trên sông Hàn\\n   - **description**: Du thuyền ngắm cảnh thành phố về đêm.\\n   - **price**: 118342\\n   - **currency**: VND\\n   - **rating**: N/A\\n   - **review_count**: N/A\\n   - **image**: ![Du thuyền đêm trên sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\\n   - **slug**: pra7fah7ikjw-han-river-night-cruise\\n\\n3. **Hoi An Basket Boat Ride in Water Coconut Forest**\\n   - **external_attraction_id**: `PRNgBhNmHUwd`\\n   - **name**: Hoi An Basket Boat Ride in Water Coconut Forest\\n   - **description**: Tham quan rừng dừa Cẩm Thanh bằng thuyền thúng tại Hội An.\\n   - **price**: 315600\\n   - **currency**: VND\\n   - **rating**: N/A\\n   - **review_count**: N/A\\n   - **image**: ![Hoi An Basket Boat Ride in Water Coconut Forest](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\\n   - **slug**: prngbhnmhuwd-hoi-an-basket-boat-ride-in-water-coconut-forest\\n\\n4. **Tour Bà Nà Hills trọn ngày với bữa trưa buffet**\\n   - **external_attraction_id**: `PRdCygydpY9o`\\n   - **name**: Tour Bà Nà Hills trọn ngày với bữa trưa buffet\\n   - **description**: Đi cáp treo tham quan Cầu Vàng, các địa danh văn hóa và Công viên Fantasy Park với bữa trưa buffet.\\n   - **price**: 1709500\\n   - **currency**: VND\\n   - **rating**: N/A\\n   - **review_count**: N/A\\n   - **image**: ![Tour Bà Nà Hills trọn ngày với bữa trưa buffet](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=)\\n   - **slug**: prdcygydpy9o-full-day-tour-of-ba-na-hills-with-buffet-lunch\\n\\n5. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\\n   - **external_attraction_id**: `PRFhLYK7act7`\\n   - **name**: Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour\\n   - **description**: Tour nhóm nhỏ buổi chiều/hoàng hôn tham quan Ngũ Hành Sơn, Động Âm Phủ và Bán đảo Sơn Trà.\\n   - **price**: 578600\\n   - **currency**: VND\\n   - **rating**: N/A\\n   - **review_count**: N/A\\n   - **image**: ![Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\\n   - **slug**: prfhlyk7act7-marble-mountains-am-phu-cave-monkey-mountain-sunset-tour\\n\\n6. **Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)**\\n   - **external_attraction_id**: `PRVwSAVvgpO5`\\n   - **name**: Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)\\n   - **description**: Lớp học nấu ăn kết hợp đi chợ địa phương và đi thuyền thúng (Có ca buổi chiều: 14:00 - 18:30).\\n   - **price**: 762700\\n   - **currency**: VND\\n   - **rating**: N/A\\n   - **review_count**: N/A\\n   - **image**: ![Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=)\\n   - **slug**: prvwsavvgpo5-hoi-an-eco-cooking-classlocal-market-basket-boat-ridecrab-fishing-c\\n\\n7. **Hoi An Memories Show & Hoi An Impression Theme Park Ticket**\\n   - **external_attraction_id**: `PRWX9rush6bp`\\n   - **name**: Hoi An Memories Show & Hoi An Impression Theme Park Ticket\\n   - **description**: Vé xem show Ký ức Hội An và công viên Ấn Tượng Hội An.\\n   - **price**: 631200\\n   - **currency**: VND\\n   - **rating**: N/A\\n   - **review_count**: N/A\\n   - **image**: ![Hoi An Memories Show & Hoi An Impression Theme Park Ticket](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=)\\n   - **slug**: prwx9rush6bp-hoi-an-memories-show-hoi-an-impression-theme-park-ticket\\n\\n8. **Lớp hướng dẫn làm lồng đèn**\\n   - **external_attraction_id**: `PRPC0NRRR1QM`\\n   - **name**: Lớp hướng dẫn làm lồng đèn\\n   - **description**: Workshop làm đèn lồng Việt Nam từ nhiều chất liệu.\\n   - **price**: 259154\\n   - **currency**: VND\\n   - **rating**: N/A\\n   - **review_count**: N/A\\n   - **image**: ![Lớp hướng dẫn làm lồng đèn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=)\\n   - **slug**: prpc0nrrr1qm-lantern-making-class\\n\\n9. **Hoai River Boat Trip by Night with Release Lantern**\\n   - **external_attraction_id**: `PRfykNA7eqX0`\\n   - **name**: Hoai River Boat Trip by Night with Release Lantern\\n   - **description**: Đi thuyền trên sông Hoài ban đêm và thả đèn hoa đăng.\\n   - **price**: 236700\\n   - **currency**: VND\\n   - **rating**: N/A\\n   - **review_count**: N/A\\n   - **image**: ![Hoai River Boat Trip by Night with Release Lantern](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\\n   - **slug**: prfykna7eqx0-hoai-river-boat-trip-by-night-with-release-lantern\\n\\n10. **Morning Small group to Marble Mountains - Am Phu Cave - Monkey Mountain**\\n    - **external_attraction_id**: `PR3zAoTOqY8c`\\n    - **name**: Morning Small group to Marble Mountains - Am Phu Cave - Monkey Mountain\\n    - **description**: Tour nhóm nhỏ buổi sáng tham quan Ngũ Hành Sơn, Động Âm Phủ và Bán đảo Sơn Trà.\\n    - **price**: 578600\\n    - **currency**: VND\\n    - **rating**: N/A\\n    - **review_count**: N/A\\n    - **image**: ![Morning Small group to Marble Mountains - Am Phu Cave - Monkey Mountain](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240046068.jpg?k=2dc0b7f9d0cfd9265ba2e3812f8e8534ba47044c82ce2a6e7a4f19a88196aa5d&o=)\\n    - **slug**: pr3zaotoqy8c-morning-small-group-to-marble-mountains-am-phu-cave-monkey-mountain\\n\\nBạn có thể cung cấp `external_attraction_id` (ví dụ: `PRbeRPTXGXPd`) để tiến hành đặt tour.', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "(soft) [6550614d-80ac-5d6f-a7b0-832ada2563f1] Ưu tiên tour buổi chiều",
+        "(soft) [4ba60a25-4628-5ea1-aad9-d970639a557c] Ưu tiên tour nhóm nhỏ"
+      ],
+      "domain_action": "search_attractions"
+    }
+  ],
+  "join": {
+    "branch_count": 2,
+    "merged_domains": [
+      "car",
+      "excursion"
+    ]
+  },
+  "final_answer": "Dưới đây là thông tin chi tiết về các lựa chọn thuê xe và tour/hoạt động tham quan tại Đà Nẵng ngày 10/10/2026:\n\n---\n\n### 1. Dịch vụ Thuê xe tự lái (Xe số tự động, cỡ nhỏ/vừa)\n\n* **KIA K3 PREMIUM 2022**\n  * **Mã xe (car_id)**: `KH2I33`\n  * **Giá sau giảm**: 1.101.000 VND/ngày *(Giá gốc: 1.201.000 VND)*\n  * **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Xăng\n  * **Địa chỉ**: Phường Tam Thuận, Quận Thanh Khê, Đà Nẵng\n  * **Đánh giá**: 4.6 ⭐ (71 chuyến)\n  * **Đặc điểm**: Miễn thế chấp, Giao xe tận nơi\n  * ![KIA K3 PREMIUM 2022](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg)\n  * [Xem chi tiết và đặt xe](https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1)\n\n* **MITSUBISHI ATTRAGE 2019**\n  * **Mã xe (car_id)**: `KGRJCX`\n  * **Giá sau giảm**: 463.000 VND/ngày *(Giá gốc: 563.000 VND)*\n  * **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Xăng\n  * **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê, Đà Nẵng\n  * **Đánh giá**: 5.0 ⭐ (300+ chuyến)\n  * **Đặc điểm**: Miễn thế chấp, Giao xe tận nơi\n  * ![MITSUBISHI ATTRAGE 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg)\n  * [Xem chi tiết và đặt xe](https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=3)\n\n* **HONDA HRV G 2023**\n  * **Mã xe (car_id)**: `KFH2K9`\n  * **Giá gốc**: 1.019.000 VND/ngày\n  * **Hộp số**: Số tự động | **Số chỗ**: 5 chỗ | **Nhiên liệu**: Xăng\n  * **Địa chỉ**: Phường Thạc Gián, Quận Thanh Khê, Đà Nẵng\n  * **Đánh giá**: 5.0 ⭐ (23 chuyến)\n  * **Đặc điểm**: Miễn thế chấp, Giao xe tận nơi\n  * ![HONDA HRV G 2023](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg)\n  * [Xem chi tiết và đặt xe](https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8)\n\n* **VINFAST VF3 2025**\n  * **Mã xe (car_id)**: `KHJ7ZD`\n  * **Giá sau giảm**: 519.000 VND/ngày *(Giá gốc: 568.000 VND)*\n  * **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Điện\n  * **Địa chỉ**: Phường Tam Thuận, Quận Thanh Khê, Đà Nẵng\n  * **Đánh giá**: 5.0 ⭐ (74 chuyến)\n  * **Đặc điểm**: Miễn thế chấp, Giao xe tận nơi\n  * ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2026/02/19/16/38oT4voQzpj13w0cNJFFZg.jpg)\n  * [Xem chi tiết và đặt xe](https://www.mioto.vn/car/vinfast-vf3-2025/KHJ7ZD?carSearchIndex=9)\n\n* **VINFAST VF3 2025**\n  * **Mã xe (car_id)**: `KJ89JC`\n  * **Giá sau giảm**: 524.000 VND/ngày *(Giá gốc: 574.000 VND)*\n  * **Hộp số**: Số tự động | **Số chỗ**: 4 chỗ | **Nhiên liệu**: Điện\n  * **Địa chỉ**: Phường Hòa Khê, Quận Thanh Khê, Đà Nẵng\n  * **Đánh giá**: 5.0 ⭐ (100+ chuyến)\n  * **Đặc điểm**: Miễn thế chấp, Giao xe tận nơi\n  * ![VINFAST VF3 2025](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg)\n  * [Xem chi tiết và đặt xe](https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=10)\n\n---\n\n### 2. Tour & Hoạt động tham quan\n\n1. **Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times** *(Đặc biệt phù hợp cho yêu cầu thời gian linh hoạt/buổi chiều)*\n   - **Mã hoạt động (external_attraction_id)**: `PRbeRPTXGXPd`\n   - **Mô tả**: Tour nhóm nhỏ tham quan Bà Nà Hills & Cầu Vàng, đưa đón tại trung tâm Đà Nẵng với giờ xuất phát linh hoạt (có khung giờ muộn).\n   - **Giá**: 1.284.755 VND/người\n   - **Đánh giá**: 4.4 ⭐ (310 đánh giá)\n   - ![Ba Na Hills - Golden Bridge Full-Day Tour | Flexible Start Times](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/319740831.jpg?k=46938503c63de4937ced77f9b23dbf413353a3baf8e07de9b942645c275cb679&o=)\n\n2. **Du thuyền đêm trên sông Hàn**\n   - **Mã hoạt động (external_attraction_id)**: `PRa7fah7ikJw`\n   - **Mô tả**: Du thuyền ngắm cảnh thành phố Đà Nẵng về đêm.\n   - **Giá**: 118.342 VND/người\n   - ![Du thuyền đêm trên sông Hàn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/725061942.jpg?k=49049f10d771394c1558db0a6a6ba861597694da82eab4520f02e595d7df7707&o=)\n\n3. **Hoi An Basket Boat Ride in Water Coconut Forest**\n   - **Mã hoạt động (external_attraction_id)**: `PRNgBhNmHUwd`\n   - **Mô tả**: Trải nghiệm đi thuyền thúng tại rừng dừa Cẩm Thanh, Hội An.\n   - **Giá**: 315.600 VND/người\n   - ![Hoi An Basket Boat Ride in Water Coconut Forest](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/371714327.jpg?k=6043e54fa8433adc3014961ecb5833f4b3262b3545e265e7d8be3cca73ab59ca&o=)\n\n4. **Tour Bà Nà Hills trọn ngày với bữa trưa buffet**\n   - **Mã hoạt động (external_attraction_id)**: `PRdCygydpY9o`\n   - **Mô tả**: Đi cáp treo, tham quan Cầu Vàng, Làng Pháp, Công viên Fantasy Park kèm buffet trưa.\n   - **Giá**: 1.709.500 VND/người\n   - ![Tour Bà Nà Hills trọn ngày với bữa trưa buffet](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/130104902.jpg?k=8c85cf8238572ef0bbca2d846a9070b2c9844ec7e16f5ca01089cd1fa45cd265&o=)\n\n5. **Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour**\n   - **Mã hoạt động (external_attraction_id)**: `PRFhLYK7act7`\n   - **Mô tả**: Tour nhóm nhỏ buổi chiều/hoàng hôn ngắm cảnh Ngũ Hành Sơn, Động Âm Phủ và Bán đảo Sơn Trà.\n   - **Giá**: 578.600 VND/người\n   - ![Marble Mountains - Am Phu Cave - Monkey Mountain Sunset tour](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240043925.jpg?k=2c91a25d054f6dd4e3c7b768b642298d13ce84050b6b859764c2e13342d66623&o=)\n\n6. **Hoi An Cooking Class (Local Market, Basket Boat, Fishing & Cooking)**\n   - **Mã hoạt động (external_attraction_id)**: `PRVwSAVvgpO5`\n   - **Mô tả**: Lớp học nấu ăn kết hợp tham quan chợ địa phương và đi thuyền thúng (Có ca buổi chiều: 14:00 - 18:30).\n   - **Giá**: 762.700 VND/người\n   - ![Hoi An Cooking Class(Local Market, Basket Boat,Fishing &Cooking)](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/734798578.jpg?k=ffb228f0837bdbcc884fce385201d361f519dd43284bcae4c713a01c2c37e81c&o=)\n\n7. **Hoi An Memories Show & Hoi An Impression Theme Park Ticket**\n   - **Mã hoạt động (external_attraction_id)**: `PRWX9rush6bp`\n   - **Mô tả**: Vé xem show diễn Ký Ức Hội An và tham quan Công viên Ấn Tượng Hội An.\n   - **Giá**: 631.200 VND/người\n   - ![Hoi An Memories Show & Hoi An Impression Theme Park Ticket](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/289913237.jpg?k=ec09d858542beb3e28c3983a18b9d67eb39968c535c2359d637d1a920aae491a&o=)\n\n8. **Lớp hướng dẫn làm lồng đèn**\n   - **Mã hoạt động (external_attraction_id)**: `PRPC0NRRR1QM`\n   - **Mô tả**: Workshop tự tay làm đèn lồng thủ công truyền thống.\n   - **Giá**: 259.154 VND/người\n   - ![Lớp hướng dẫn làm lồng đèn](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/182532747.jpg?k=a70d076a351ad06e0fc052dcc59547ab390515178f58ab1775717f6915f3927f&o=)\n\n9. **Hoai River Boat Trip by Night with Release Lantern**\n   - **Mã hoạt động (external_attraction_id)**: `PRfykNA7eqX0`\n   - **Mô tả**: Đi thuyền trên sông Hoài buổi tối và thả đèn hoa đăng.\n   - **Giá**: 236.700 VND/người\n   - ![Hoai River Boat Trip by Night with Release Lantern](https://r-xx.bstatic.com/xdata/images/xphoto/300x320/286333262.jpg?k=300d29eea4d1db2914d3034f1d015c93559121944a78566c081ddd2f5aa3388e&o=)\n\n10. **Morning Small group to Marble Mountains - Am Phu Cave - Monkey Mountain**\n    - **Mã hoạt động (external_attraction_id)**: `PR3zAoTOqY8c`\n    - **Mô tả**: Tour nhóm nhỏ buổi sáng tham quan Ngũ Hành Sơn, Động Âm Phủ và Bán đảo Sơn Trà.\n    - **Giá**: 578.600 VND/người\n    - ![Morning Small group to Marble Mountains - Am Phu Cave - Monkey Mountain](https://q-xx.bstatic.com/xdata/images/xphoto/300x320/240046068.jpg?k=2dc0b7f9d0cfd9265ba2e3812f8e8534ba47044c82ce2a6e7a4f19a88196aa5d&o=)\n\n---\n\nBạn vui lòng cho biết mã xe hoặc mã hoạt động (`external_attraction_id`) bạn muốn lựa chọn để tôi hỗ trợ các bước tiếp theo nhé!",
+  "stm": {
+    "summary": null,
+    "message_count": 5,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "15226d1f-1818-405b-bedc-a0af0256cd41",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "audits": [],
+    "seeded_status": {
+      "m_car_automatic": {
+        "status": "active",
+        "memory_id": "421b2841-4c5f-581c-98d1-8844427af8fc",
+        "memory_text": "Thích xe số tự động",
+        "supersedes_memory_id": null
+      },
+      "m_car_no_large": {
+        "status": "active",
+        "memory_id": "7ac7122f-114b-5a11-ba6f-02c47ce499b5",
+        "memory_text": "Tránh xe cỡ lớn / SUV quá to",
+        "supersedes_memory_id": null
+      },
+      "m_car_other_user": {
+        "status": "active",
+        "memory_id": "b79a01c1-9414-5bbc-a25d-4ad212d75d28",
+        "memory_text": "Memory user khác — thích xe số sàn",
+        "supersedes_memory_id": null
+      },
+      "m_car_superseded": {
+        "status": "superseded",
+        "memory_id": "a2f30787-ff92-5d36-8764-47e79cf78245",
+        "memory_text": "Preference cũ — chỉ thuê xe 4 chỗ",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_small_group": {
+        "status": "active",
+        "memory_id": "4ba60a25-4628-5ea1-aad9-d970639a557c",
+        "memory_text": "Ưu tiên tour nhóm nhỏ",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_afternoon": {
+        "status": "active",
+        "memory_id": "6550614d-80ac-5d6f-a7b0-832ada2563f1",
+        "memory_text": "Ưu tiên tour buổi chiều",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_other_user": {
+        "status": "active",
+        "memory_id": "8594ba93-6793-5b1f-8bf9-6dc693b1c916",
+        "memory_text": "Memory user khác — thích tour văn hóa",
+        "supersedes_memory_id": null
+      },
+      "m_excursion_superseded": {
+        "status": "superseded",
+        "memory_id": "a29987e5-92fb-5c0b-b067-b686aaed8e21",
+        "memory_text": "Preference cũ — chỉ đi biển",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "15226d1f-1818-405b-bedc-a0af0256cd41",
+      "status": "skipped",
+      "error_summary": null,
+      "created_at": "2026-09-15T20:15:09.896457+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "car",
+          "excursion"
+        ],
+        "actual": [
+          "car",
+          "excursion"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "SKIP",
+      "detail": "no expected_applicability",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "car_assistant",
+          "excursion_assistant",
+          "memory_recall_car",
+          "car_chat",
+          "search_cars_tool",
+          "search_cars_tool",
+          "memory_recall_excursion",
+          "excursion_chat",
+          "search_attractions_tool",
+          "search_attractions_tool",
+          "searchLocation",
+          "searchAttractions",
+          "excursion_chat",
+          "fetch_attraction_details_tool",
+          "fetch_attraction_details_tool",
+          "car_chat",
+          "excursion_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "car_assistant",
+          "excursion_assistant",
+          "join_results",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "PASS",
+      "detail": "join integrity satisfied",
+      "evidence": {
+        "merged_domains": [
+          "car",
+          "excursion"
+        ]
+      }
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "car_assistant",
+      "graph": "primary",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "excursion_assistant",
+      "graph": "primary",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 5,
+      "node": "memory_recall_car",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_car_no_large",
+          "m_car_automatic"
+        ],
+        "applicability": {
+          "m_car_no_large": "uncertain",
+          "m_car_automatic": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_car_no_large": "reconciled: Avoiding large SUVs/vehicles is a soft preference without a direct hard tool filter argument for car search. (llm: Avoiding large SUVs/vehicles is a soft preference without a direct hard tool filter argument for car search.; rule: default uncertain (no specific tool-field rule matched))",
+          "m_car_automatic": "reconciled: transmission soft via Hộp số (not a Mioto cateId / search_cars tool field) (llm: Automatic transmission preference does not map to a car search cateId tool field and can only be used for soft-ranking.; rule: transmission soft via Hộp số (not a Mioto cateId / search_cars tool field))"
+        },
+        "applied_to_context": [
+          "m_car_no_large",
+          "m_car_automatic"
+        ]
+      }
+    },
+    {
+      "seq": 6,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 7,
+      "node": "search_cars_tool",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": [
+        {
+          "name": "search_cars_tool",
+          "arguments": {
+            "start_ms": "2026-10-10 08:00",
+            "user_needs": "Thuê xe tự động nhỏ/vừa tại Đà Nẵng ngày 10/10/2026",
+            "address": "Đà Nẵng",
+            "end_ms": "2026-10-10 20:00"
+          }
+        }
+      ],
+      "parent_chat_node": "car_chat"
+    },
+    {
+      "seq": 8,
+      "node": "memory_recall_excursion",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_excursion_afternoon",
+          "m_excursion_small_group"
+        ],
+        "applicability": {
+          "m_excursion_afternoon": "uncertain",
+          "m_excursion_small_group": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_excursion_afternoon": "reconciled: Time-of-day preference (afternoon tour) may be used for soft-ranking tour options, but there is no direct tool field for tour time of day in search_attractions. (llm: Time-of-day preference (afternoon tour) may be used for soft-ranking tour options, but there is no direct tool field for tour time of day in search_attractions.; rule: default uncertain (no specific tool-field rule matched))",
+          "m_excursion_small_group": "reconciled: group-size soft until tool has group-size signal (llm: Small group tour preference is relevant for soft-ranking results, but excursion search_attractions has no dedicated group-size filter argument.; rule: group-size soft until tool has group-size signal)"
+        },
+        "applied_to_context": [
+          "m_excursion_afternoon",
+          "m_excursion_small_group"
+        ]
+      }
+    },
+    {
+      "seq": 9,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "search_attractions_tool",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [
+        {
+          "name": "search_attractions_tool",
+          "arguments": {
+            "location": "Da Nang",
+            "end_date": "2026-10-10",
+            "start_date": "2026-10-10"
+          },
+          "sub_steps": [
+            "searchLocation",
+            "searchAttractions"
+          ]
+        }
+      ],
+      "parent_chat_node": "excursion_chat"
+    },
+    {
+      "seq": 11,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 12,
+      "node": "fetch_attraction_details_tool",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": [
+        {
+          "name": "fetch_attraction_details_tool",
+          "arguments": {
+            "slug": "prberptxgxpd-ba-na-hills-and-golden-bridge-full-day-tour-with-small-group"
+          }
+        }
+      ],
+      "parent_chat_node": "excursion_chat"
+    },
+    {
+      "seq": 13,
+      "node": "car_chat",
+      "graph": "car_assistant",
+      "domain": "car",
+      "tools": []
+    },
+    {
+      "seq": 14,
+      "node": "excursion_chat",
+      "graph": "excursion_assistant",
+      "domain": "excursion",
+      "tools": []
+    },
+    {
+      "seq": 15,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 16,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 17,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

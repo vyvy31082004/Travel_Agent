@@ -1,5 +1,5 @@
 id: e2e_multi_flight_car_001
-scenario: "Flight economy+sáng và car automatic+5 chỗ — không leak flight pref sang car"
+scenario: "Flight economy+sáng và car xe điện (hard)+5 chỗ (soft) — không leak flight pref sang car"
 
 seed:
   user_id: user_a
@@ -27,8 +27,8 @@ seed:
       category: flight_preference
       status: superseded
       expect_in_context: false
-    - id: m_car_automatic
-      text: "Thích xe số tự động"
+    - id: m_car_electric
+      text: "Thích xe điện"
       domain: car
       category: car_preference
       status: active
@@ -63,9 +63,9 @@ expected_trace:
   expected_context:
     flight:
       must_include: [m_flight_economy, m_flight_morning]
-      must_exclude: [m_flight_other_user, m_flight_superseded, m_car_automatic, m_car_5seats]
+      must_exclude: [m_flight_other_user, m_flight_superseded, m_car_electric, m_car_5seats]
     car:
-      must_include: [m_car_automatic, m_car_5seats]
+      must_include: [m_car_electric, m_car_5seats]
       must_exclude: [m_car_other_user, m_car_superseded, m_flight_economy, m_flight_morning]
   expected_tools:
     - name: search_one_way_flights_tool
@@ -84,7 +84,7 @@ expected_answer_rubric:
   answerability: ANSWERABLE
   required_constraints:
     - "flight: economy + ưu tiên bay buổi sáng"
-    - "car: số tự động + tối thiểu 5 chỗ"
+    - "car: xe điện (hard via user_needs/cateId) + tối thiểu 5 chỗ (soft)"
     - "final answer nhóm đúng 2 phần flight / thuê xe"
   tradeoff_rule:
     - "Cho phép car dùng arrival_airport/ngày từ kết quả flight như state nghiệp vụ"

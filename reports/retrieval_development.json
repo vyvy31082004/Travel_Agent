@@ -9,63 +9,83 @@
     "suite": "retrieval",
     "metrics": {
       "candidate_pool_completeness": {
-        "numerator": 93,
-        "denominator": 93,
+        "numerator": 101,
+        "denominator": 101,
         "value": 1.0
       },
       "cross_user_candidate_leakage": {
         "numerator": 0,
-        "denominator": 93,
+        "denominator": 101,
         "value": 0.0
       },
       "cross_domain_candidate_leakage": {
         "numerator": 0,
-        "denominator": 93,
+        "denominator": 101,
         "value": 0.0
       },
       "inactive_candidate_leakage": {
         "numerator": 0,
-        "denominator": 93,
+        "denominator": 101,
         "value": 0.0
       },
       "context_recall": {
-        "numerator": 57,
-        "denominator": 57,
+        "numerator": 38,
+        "denominator": 38,
         "value": 1.0
       },
+      "allowed_context_precision": {
+        "numerator": 78,
+        "denominator": 78,
+        "value": 1.0
+      },
+      "uncertain_recall": {
+        "numerator": 40,
+        "denominator": 40,
+        "value": 1.0
+      },
+      "irrelevant_leakage_rate": {
+        "numerator": 0,
+        "denominator": 15,
+        "value": 0.0
+      },
       "context_precision": {
-        "numerator": 57,
-        "denominator": 68,
-        "value": 0.8382352941176471
+        "numerator": 38,
+        "denominator": 78,
+        "value": 0.48717948717948717
       },
       "uncertain_context_rate": {
-        "numerator": 10,
-        "denominator": 68,
-        "value": 0.14705882352941177
+        "numerator": 40,
+        "denominator": 78,
+        "value": 0.5128205128205128
       },
       "overridden_leakage_rate": {
         "numerator": 0,
         "denominator": 8,
         "value": 0.0
       },
+      "context_case_pass_rate": {
+        "numerator": 65,
+        "denominator": 65,
+        "value": 1.0
+      },
       "applicability_macro_f1": {
-        "numerator": 927,
+        "numerator": 974,
         "denominator": 1000,
-        "value": 0.9270833333333333
+        "value": 0.9742063492063492
       },
       "cross_user_context_leakage": {
         "numerator": 0,
-        "denominator": 68,
+        "denominator": 78,
         "value": 0.0
       },
       "cross_domain_context_leakage": {
         "numerator": 0,
-        "denominator": 68,
+        "denominator": 78,
         "value": 0.0
       },
       "inactive_context_leakage": {
         "numerator": 0,
-        "denominator": 68,
+        "denominator": 78,
         "value": 0.0
       }
     },
@@ -95,11 +115,13 @@
         ],
         "judge_labels": {
           "scope_same_dev_00-h1": "apply",
-          "scope_same_dev_00-h2": "apply",
-          "scope_same_dev_00-h3": "apply",
-          "scope_same_dev_00-h4": "apply"
+          "scope_same_dev_00-h2": "uncertain",
+          "scope_same_dev_00-h3": "uncertain",
+          "scope_same_dev_00-h4": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -127,11 +149,47 @@
         ],
         "judge_labels": {
           "scope_same_dev_01-h1": "apply",
-          "scope_same_dev_01-h2": "apply",
-          "scope_same_dev_01-h3": "apply",
-          "scope_same_dev_01-h4": "apply"
+          "scope_same_dev_01-h2": "uncertain",
+          "scope_same_dev_01-h3": "uncertain",
+          "scope_same_dev_01-h4": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_same_user_same_domain_dev_02",
+        "scenario_type": "scope_same_user_same_domain",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_same_dev_02-h1",
+          "scope_same_dev_02-h2",
+          "scope_same_dev_02-h3",
+          "scope_same_dev_02-h4"
+        ],
+        "expected_pool": [
+          "scope_same_dev_02-h1",
+          "scope_same_dev_02-h2",
+          "scope_same_dev_02-h3",
+          "scope_same_dev_02-h4"
+        ],
+        "final_context_ids": [
+          "scope_same_dev_02-h1",
+          "scope_same_dev_02-h2",
+          "scope_same_dev_02-h3",
+          "scope_same_dev_02-h4"
+        ],
+        "judge_labels": {
+          "scope_same_dev_02-h1": "apply",
+          "scope_same_dev_02-h2": "uncertain",
+          "scope_same_dev_02-h3": "uncertain",
+          "scope_same_dev_02-h4": "uncertain"
+        },
+        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -152,6 +210,8 @@
           "scope_xuser_dev_00-a1": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -172,6 +232,8 @@
           "scope_xuser_dev_01-a1": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -189,9 +251,11 @@
           "scope_xdom_dev_00-h"
         ],
         "judge_labels": {
-          "scope_xdom_dev_00-h": "apply"
+          "scope_xdom_dev_00-h": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -212,6 +276,30 @@
           "scope_xdom_dev_01-f": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_cross_domain_dev_02",
+        "scenario_type": "scope_cross_domain",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "scope_xdom_dev_02-c"
+        ],
+        "expected_pool": [
+          "scope_xdom_dev_02-c"
+        ],
+        "final_context_ids": [
+          "scope_xdom_dev_02-c"
+        ],
+        "judge_labels": {
+          "scope_xdom_dev_02-c": "apply"
+        },
+        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -232,6 +320,8 @@
           "scope_inact_dev_00-active": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -252,6 +342,8 @@
           "scope_inact_dev_01-active": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -272,6 +364,8 @@
           "scope_global_dev_00-h1": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -292,6 +386,8 @@
           "scope_global_dev_01-h1": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -304,6 +400,8 @@
         "final_context_ids": [],
         "judge_labels": {},
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -316,6 +414,22 @@
         "final_context_ids": [],
         "judge_labels": {},
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
+        "presented_ok": true
+      },
+      {
+        "case_id": "scope_empty_pool_dev_02",
+        "scenario_type": "scope_empty_pool",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [],
+        "expected_pool": [],
+        "final_context_ids": [],
+        "judge_labels": {},
+        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -339,13 +453,40 @@
           "act_h_search_dev_00-budget": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_hotel_search_dev_01",
+        "scenario_type": "action_contrast_hotel_search",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_h_search_dev_01-bathtub",
+          "act_h_search_dev_01-budget"
+        ],
+        "expected_pool": [
+          "act_h_search_dev_01-bathtub",
+          "act_h_search_dev_01-budget"
+        ],
+        "final_context_ids": [
+          "act_h_search_dev_01-budget"
+        ],
+        "judge_labels": {
+          "act_h_search_dev_01-bathtub": "irrelevant",
+          "act_h_search_dev_01-budget": "apply"
+        },
+        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "action_contrast_hotel_details_dev_00",
         "scenario_type": "action_contrast_hotel_details",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "act_h_det_dev_00-bathtub",
           "act_h_det_dev_00-budget"
@@ -360,9 +501,37 @@
         ],
         "judge_labels": {
           "act_h_det_dev_00-bathtub": "uncertain",
-          "act_h_det_dev_00-budget": "apply"
+          "act_h_det_dev_00-budget": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_hotel_details_dev_01",
+        "scenario_type": "action_contrast_hotel_details",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_h_det_dev_01-bathtub",
+          "act_h_det_dev_01-budget"
+        ],
+        "expected_pool": [
+          "act_h_det_dev_01-bathtub",
+          "act_h_det_dev_01-budget"
+        ],
+        "final_context_ids": [
+          "act_h_det_dev_01-bathtub",
+          "act_h_det_dev_01-budget"
+        ],
+        "judge_labels": {
+          "act_h_det_dev_01-bathtub": "uncertain",
+          "act_h_det_dev_01-budget": "uncertain"
+        },
+        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -384,9 +553,11 @@
         ],
         "judge_labels": {
           "act_h_sel_dev_00-bathtub": "apply",
-          "act_h_sel_dev_00-budget": "apply"
+          "act_h_sel_dev_00-budget": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -408,9 +579,11 @@
         ],
         "judge_labels": {
           "act_h_sel_dev_01-bathtub": "apply",
-          "act_h_sel_dev_01-budget": "apply"
+          "act_h_sel_dev_01-budget": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -432,6 +605,31 @@
           "act_h_rev_dev_00-budget": "irrelevant"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_hotel_reviews_dev_01",
+        "scenario_type": "action_contrast_hotel_reviews",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_h_rev_dev_01-bathtub",
+          "act_h_rev_dev_01-budget"
+        ],
+        "expected_pool": [
+          "act_h_rev_dev_01-bathtub",
+          "act_h_rev_dev_01-budget"
+        ],
+        "final_context_ids": [],
+        "judge_labels": {
+          "act_h_rev_dev_01-bathtub": "irrelevant",
+          "act_h_rev_dev_01-budget": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -455,6 +653,8 @@
           "act_f_search_dev_00-seat": "irrelevant"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -478,6 +678,8 @@
           "act_f_search_dev_01-seat": "irrelevant"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -498,10 +700,38 @@
           "act_f_cmp_dev_00-seat"
         ],
         "judge_labels": {
-          "act_f_cmp_dev_00-direct": "apply",
+          "act_f_cmp_dev_00-direct": "uncertain",
           "act_f_cmp_dev_00-seat": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_flight_compare_dev_01",
+        "scenario_type": "action_contrast_flight_compare",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_f_cmp_dev_01-direct",
+          "act_f_cmp_dev_01-seat"
+        ],
+        "expected_pool": [
+          "act_f_cmp_dev_01-direct",
+          "act_f_cmp_dev_01-seat"
+        ],
+        "final_context_ids": [
+          "act_f_cmp_dev_01-direct",
+          "act_f_cmp_dev_01-seat"
+        ],
+        "judge_labels": {
+          "act_f_cmp_dev_01-direct": "uncertain",
+          "act_f_cmp_dev_01-seat": "uncertain"
+        },
+        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -511,20 +741,23 @@
         "action_ok": true,
         "actual_pool": [
           "act_c_search_dev_00-7seat",
-          "act_c_search_dev_00-auto"
+          "act_c_search_dev_00-electric"
         ],
         "expected_pool": [
           "act_c_search_dev_00-7seat",
-          "act_c_search_dev_00-auto"
+          "act_c_search_dev_00-electric"
         ],
         "final_context_ids": [
-          "act_c_search_dev_00-auto"
+          "act_c_search_dev_00-7seat",
+          "act_c_search_dev_00-electric"
         ],
         "judge_labels": {
-          "act_c_search_dev_00-auto": "apply",
-          "act_c_search_dev_00-7seat": "irrelevant"
+          "act_c_search_dev_00-electric": "apply",
+          "act_c_search_dev_00-7seat": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -534,20 +767,23 @@
         "action_ok": true,
         "actual_pool": [
           "act_c_search_dev_01-7seat",
-          "act_c_search_dev_01-auto"
+          "act_c_search_dev_01-electric"
         ],
         "expected_pool": [
           "act_c_search_dev_01-7seat",
-          "act_c_search_dev_01-auto"
+          "act_c_search_dev_01-electric"
         ],
         "final_context_ids": [
-          "act_c_search_dev_01-auto"
+          "act_c_search_dev_01-7seat",
+          "act_c_search_dev_01-electric"
         ],
         "judge_labels": {
-          "act_c_search_dev_01-auto": "apply",
-          "act_c_search_dev_01-7seat": "irrelevant"
+          "act_c_search_dev_01-electric": "apply",
+          "act_c_search_dev_01-7seat": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -569,9 +805,37 @@
         ],
         "judge_labels": {
           "act_c_sel_dev_00-auto": "uncertain",
-          "act_c_sel_dev_00-7seat": "apply"
+          "act_c_sel_dev_00-7seat": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_car_select_dev_01",
+        "scenario_type": "action_contrast_car_select",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_c_sel_dev_01-7seat",
+          "act_c_sel_dev_01-auto"
+        ],
+        "expected_pool": [
+          "act_c_sel_dev_01-7seat",
+          "act_c_sel_dev_01-auto"
+        ],
+        "final_context_ids": [
+          "act_c_sel_dev_01-7seat",
+          "act_c_sel_dev_01-auto"
+        ],
+        "judge_labels": {
+          "act_c_sel_dev_01-auto": "uncertain",
+          "act_c_sel_dev_01-7seat": "uncertain"
+        },
+        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -592,10 +856,12 @@
           "act_e_search_dev_00-culture"
         ],
         "judge_labels": {
-          "act_e_search_dev_00-culture": "apply",
+          "act_e_search_dev_00-culture": "uncertain",
           "act_e_search_dev_00-beach": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -616,10 +882,12 @@
           "act_e_search_dev_01-culture"
         ],
         "judge_labels": {
-          "act_e_search_dev_01-culture": "apply",
+          "act_e_search_dev_01-culture": "uncertain",
           "act_e_search_dev_01-beach": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -636,14 +904,40 @@
           "act_e_det_dev_00-culture"
         ],
         "final_context_ids": [
-          "act_e_det_dev_00-beach",
           "act_e_det_dev_00-culture"
         ],
         "judge_labels": {
           "act_e_det_dev_00-culture": "uncertain",
-          "act_e_det_dev_00-beach": "uncertain"
+          "act_e_det_dev_00-beach": "irrelevant"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
+        "presented_ok": true
+      },
+      {
+        "case_id": "action_contrast_excursion_details_dev_01",
+        "scenario_type": "action_contrast_excursion_details",
+        "sql_pool_ok": true,
+        "action_ok": true,
+        "actual_pool": [
+          "act_e_det_dev_01-beach",
+          "act_e_det_dev_01-culture"
+        ],
+        "expected_pool": [
+          "act_e_det_dev_01-beach",
+          "act_e_det_dev_01-culture"
+        ],
+        "final_context_ids": [
+          "act_e_det_dev_01-culture"
+        ],
+        "judge_labels": {
+          "act_e_det_dev_01-culture": "uncertain",
+          "act_e_det_dev_01-beach": "irrelevant"
+        },
+        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -667,6 +961,8 @@
           "ovr_f_time_dev_00-direct": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -690,6 +986,8 @@
           "ovr_f_time_dev_01-direct": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -710,9 +1008,11 @@
         ],
         "judge_labels": {
           "ovr_h_budget_dev_00-old": "overridden",
-          "ovr_h_budget_dev_00-quiet": "apply"
+          "ovr_h_budget_dev_00-quiet": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -733,16 +1033,18 @@
         ],
         "judge_labels": {
           "ovr_h_budget_dev_01-old": "overridden",
-          "ovr_h_budget_dev_01-quiet": "apply"
+          "ovr_h_budget_dev_01-quiet": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "override_hotel_location_uncertain_dev_00",
         "scenario_type": "override_hotel_location_uncertain",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "ovr_h_loc_dev_00-beach",
           "ovr_h_loc_dev_00-budget"
@@ -752,20 +1054,23 @@
           "ovr_h_loc_dev_00-budget"
         ],
         "final_context_ids": [
+          "ovr_h_loc_dev_00-beach",
           "ovr_h_loc_dev_00-budget"
         ],
         "judge_labels": {
-          "ovr_h_loc_dev_00-beach": "irrelevant",
+          "ovr_h_loc_dev_00-beach": "uncertain",
           "ovr_h_loc_dev_00-budget": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "override_hotel_location_uncertain_dev_01",
         "scenario_type": "override_hotel_location_uncertain",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "ovr_h_loc_dev_01-beach",
           "ovr_h_loc_dev_01-budget"
@@ -775,13 +1080,16 @@
           "ovr_h_loc_dev_01-budget"
         ],
         "final_context_ids": [
+          "ovr_h_loc_dev_01-beach",
           "ovr_h_loc_dev_01-budget"
         ],
         "judge_labels": {
-          "ovr_h_loc_dev_01-beach": "irrelevant",
+          "ovr_h_loc_dev_01-beach": "uncertain",
           "ovr_h_loc_dev_01-budget": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -805,6 +1113,8 @@
           "ovr_c_trans_dev_00-wide": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -828,13 +1138,15 @@
           "ovr_c_trans_dev_01-wide": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "override_flight_departure_dev_00",
         "scenario_type": "override_flight_departure",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "ovr_f_dep_dev_00-direct",
           "ovr_f_dep_dev_00-sgn"
@@ -851,13 +1163,15 @@
           "ovr_f_dep_dev_00-direct": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "override_flight_departure_dev_01",
         "scenario_type": "override_flight_departure",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "ovr_f_dep_dev_01-direct",
           "ovr_f_dep_dev_01-sgn"
@@ -874,13 +1188,15 @@
           "ovr_f_dep_dev_01-direct": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "soft_hotel_quiet_uncertain_dev_00",
         "scenario_type": "soft_hotel_quiet_uncertain",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "soft_h_quiet_dev_00-quiet"
         ],
@@ -891,16 +1207,18 @@
           "soft_h_quiet_dev_00-quiet"
         ],
         "judge_labels": {
-          "soft_h_quiet_dev_00-quiet": "apply"
+          "soft_h_quiet_dev_00-quiet": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "soft_hotel_quiet_uncertain_dev_01",
         "scenario_type": "soft_hotel_quiet_uncertain",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "soft_h_quiet_dev_01-quiet"
         ],
@@ -911,36 +1229,18 @@
           "soft_h_quiet_dev_01-quiet"
         ],
         "judge_labels": {
-          "soft_h_quiet_dev_01-quiet": "apply"
+          "soft_h_quiet_dev_01-quiet": "uncertain"
         },
         "overridden_leaked": [],
-        "presented_ok": true
-      },
-      {
-        "case_id": "soft_hotel_quiet_uncertain_dev_02",
-        "scenario_type": "soft_hotel_quiet_uncertain",
-        "sql_pool_ok": true,
-        "action_ok": false,
-        "actual_pool": [
-          "soft_h_quiet_dev_02-quiet"
-        ],
-        "expected_pool": [
-          "soft_h_quiet_dev_02-quiet"
-        ],
-        "final_context_ids": [
-          "soft_h_quiet_dev_02-quiet"
-        ],
-        "judge_labels": {
-          "soft_h_quiet_dev_02-quiet": "apply"
-        },
-        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "soft_hotel_avoid_groups_uncertain_dev_00",
         "scenario_type": "soft_hotel_avoid_groups_uncertain",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "soft_h_grp_dev_00-group"
         ],
@@ -954,13 +1254,15 @@
           "soft_h_grp_dev_00-group": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "soft_hotel_avoid_groups_uncertain_dev_01",
         "scenario_type": "soft_hotel_avoid_groups_uncertain",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "soft_h_grp_dev_01-group"
         ],
@@ -974,33 +1276,15 @@
           "soft_h_grp_dev_01-group": "uncertain"
         },
         "overridden_leaked": [],
-        "presented_ok": true
-      },
-      {
-        "case_id": "soft_hotel_avoid_groups_uncertain_dev_02",
-        "scenario_type": "soft_hotel_avoid_groups_uncertain",
-        "sql_pool_ok": true,
-        "action_ok": false,
-        "actual_pool": [
-          "soft_h_grp_dev_02-group"
-        ],
-        "expected_pool": [
-          "soft_h_grp_dev_02-group"
-        ],
-        "final_context_ids": [
-          "soft_h_grp_dev_02-group"
-        ],
-        "judge_labels": {
-          "soft_h_grp_dev_02-group": "uncertain"
-        },
-        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "soft_hotel_bathtub_uncertain_dev_00",
         "scenario_type": "soft_hotel_bathtub_uncertain",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "soft_h_bath_dev_00-bath"
         ],
@@ -1012,13 +1296,15 @@
           "soft_h_bath_dev_00-bath": "irrelevant"
         },
         "overridden_leaked": [],
-        "presented_ok": false
+        "irrelevant_leaked": [],
+        "context_ok": true,
+        "presented_ok": true
       },
       {
         "case_id": "soft_hotel_bathtub_uncertain_dev_01",
         "scenario_type": "soft_hotel_bathtub_uncertain",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "soft_h_bath_dev_01-bath"
         ],
@@ -1030,31 +1316,15 @@
           "soft_h_bath_dev_01-bath": "irrelevant"
         },
         "overridden_leaked": [],
-        "presented_ok": false
-      },
-      {
-        "case_id": "soft_hotel_bathtub_uncertain_dev_02",
-        "scenario_type": "soft_hotel_bathtub_uncertain",
-        "sql_pool_ok": true,
-        "action_ok": false,
-        "actual_pool": [
-          "soft_h_bath_dev_02-bath"
-        ],
-        "expected_pool": [
-          "soft_h_bath_dev_02-bath"
-        ],
-        "final_context_ids": [],
-        "judge_labels": {
-          "soft_h_bath_dev_02-bath": "irrelevant"
-        },
-        "overridden_leaked": [],
-        "presented_ok": false
+        "irrelevant_leaked": [],
+        "context_ok": true,
+        "presented_ok": true
       },
       {
         "case_id": "soft_flight_direct_apply_dev_00",
         "scenario_type": "soft_flight_direct_apply",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "soft_f_dir_dev_00-direct"
         ],
@@ -1068,13 +1338,15 @@
           "soft_f_dir_dev_00-direct": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "soft_flight_direct_apply_dev_01",
         "scenario_type": "soft_flight_direct_apply",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "soft_f_dir_dev_01-direct"
         ],
@@ -1088,26 +1360,8 @@
           "soft_f_dir_dev_01-direct": "apply"
         },
         "overridden_leaked": [],
-        "presented_ok": true
-      },
-      {
-        "case_id": "soft_flight_direct_apply_dev_02",
-        "scenario_type": "soft_flight_direct_apply",
-        "sql_pool_ok": true,
-        "action_ok": false,
-        "actual_pool": [
-          "soft_f_dir_dev_02-direct"
-        ],
-        "expected_pool": [
-          "soft_f_dir_dev_02-direct"
-        ],
-        "final_context_ids": [
-          "soft_f_dir_dev_02-direct"
-        ],
-        "judge_labels": {
-          "soft_f_dir_dev_02-direct": "apply"
-        },
-        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -1128,6 +1382,8 @@
           "soft_f_cheap_dev_00-cheap": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -1146,13 +1402,15 @@
           "soft_f_cheap_dev_01-cheap": "irrelevant"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "state_hotel_bathtub_apply_with_selection_dev_00",
         "scenario_type": "state_hotel_bathtub_apply_with_selection",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "state_h_bath_y_dev_00-bath"
         ],
@@ -1166,13 +1424,15 @@
           "state_h_bath_y_dev_00-bath": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "state_hotel_bathtub_apply_with_selection_dev_01",
         "scenario_type": "state_hotel_bathtub_apply_with_selection",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "state_h_bath_y_dev_01-bath"
         ],
@@ -1186,13 +1446,15 @@
           "state_h_bath_y_dev_01-bath": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "state_hotel_bathtub_apply_with_selection_dev_02",
         "scenario_type": "state_hotel_bathtub_apply_with_selection",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "state_h_bath_y_dev_02-bath"
         ],
@@ -1206,26 +1468,8 @@
           "state_h_bath_y_dev_02-bath": "apply"
         },
         "overridden_leaked": [],
-        "presented_ok": true
-      },
-      {
-        "case_id": "state_hotel_bathtub_apply_with_selection_dev_03",
-        "scenario_type": "state_hotel_bathtub_apply_with_selection",
-        "sql_pool_ok": true,
-        "action_ok": false,
-        "actual_pool": [
-          "state_h_bath_y_dev_03-bath"
-        ],
-        "expected_pool": [
-          "state_h_bath_y_dev_03-bath"
-        ],
-        "final_context_ids": [
-          "state_h_bath_y_dev_03-bath"
-        ],
-        "judge_labels": {
-          "state_h_bath_y_dev_03-bath": "apply"
-        },
-        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -1244,6 +1488,8 @@
           "state_h_bath_n_dev_00-bath": "irrelevant"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -1262,49 +1508,15 @@
           "state_h_bath_n_dev_01-bath": "irrelevant"
         },
         "overridden_leaked": [],
-        "presented_ok": true
-      },
-      {
-        "case_id": "state_hotel_bathtub_irrelevant_without_selection_dev_02",
-        "scenario_type": "state_hotel_bathtub_irrelevant_without_selection",
-        "sql_pool_ok": true,
-        "action_ok": true,
-        "actual_pool": [
-          "state_h_bath_n_dev_02-bath"
-        ],
-        "expected_pool": [
-          "state_h_bath_n_dev_02-bath"
-        ],
-        "final_context_ids": [],
-        "judge_labels": {
-          "state_h_bath_n_dev_02-bath": "irrelevant"
-        },
-        "overridden_leaked": [],
-        "presented_ok": true
-      },
-      {
-        "case_id": "state_hotel_bathtub_irrelevant_without_selection_dev_03",
-        "scenario_type": "state_hotel_bathtub_irrelevant_without_selection",
-        "sql_pool_ok": true,
-        "action_ok": true,
-        "actual_pool": [
-          "state_h_bath_n_dev_03-bath"
-        ],
-        "expected_pool": [
-          "state_h_bath_n_dev_03-bath"
-        ],
-        "final_context_ids": [],
-        "judge_labels": {
-          "state_h_bath_n_dev_03-bath": "irrelevant"
-        },
-        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "state_flight_seat_with_shortlist_dev_00",
         "scenario_type": "state_flight_seat_with_shortlist",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "state_f_seat_dev_00-seat"
         ],
@@ -1318,13 +1530,15 @@
           "state_f_seat_dev_00-seat": "apply"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
         "case_id": "state_flight_seat_with_shortlist_dev_01",
         "scenario_type": "state_flight_seat_with_shortlist",
         "sql_pool_ok": true,
-        "action_ok": false,
+        "action_ok": true,
         "actual_pool": [
           "state_f_seat_dev_01-seat"
         ],
@@ -1338,46 +1552,8 @@
           "state_f_seat_dev_01-seat": "apply"
         },
         "overridden_leaked": [],
-        "presented_ok": true
-      },
-      {
-        "case_id": "state_flight_seat_with_shortlist_dev_02",
-        "scenario_type": "state_flight_seat_with_shortlist",
-        "sql_pool_ok": true,
-        "action_ok": false,
-        "actual_pool": [
-          "state_f_seat_dev_02-seat"
-        ],
-        "expected_pool": [
-          "state_f_seat_dev_02-seat"
-        ],
-        "final_context_ids": [
-          "state_f_seat_dev_02-seat"
-        ],
-        "judge_labels": {
-          "state_f_seat_dev_02-seat": "apply"
-        },
-        "overridden_leaked": [],
-        "presented_ok": true
-      },
-      {
-        "case_id": "state_flight_seat_with_shortlist_dev_03",
-        "scenario_type": "state_flight_seat_with_shortlist",
-        "sql_pool_ok": true,
-        "action_ok": false,
-        "actual_pool": [
-          "state_f_seat_dev_03-seat"
-        ],
-        "expected_pool": [
-          "state_f_seat_dev_03-seat"
-        ],
-        "final_context_ids": [
-          "state_f_seat_dev_03-seat"
-        ],
-        "judge_labels": {
-          "state_f_seat_dev_03-seat": "apply"
-        },
-        "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -1395,9 +1571,11 @@
           "state_c_cap_dev_00-7seat"
         ],
         "judge_labels": {
-          "state_c_cap_dev_00-7seat": "apply"
+          "state_c_cap_dev_00-7seat": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -1415,9 +1593,11 @@
           "state_c_cap_dev_01-7seat"
         ],
         "judge_labels": {
-          "state_c_cap_dev_01-7seat": "apply"
+          "state_c_cap_dev_01-7seat": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       },
       {
@@ -1435,9 +1615,11 @@
           "state_c_cap_dev_02-7seat"
         ],
         "judge_labels": {
-          "state_c_cap_dev_02-7seat": "apply"
+          "state_c_cap_dev_02-7seat": "uncertain"
         },
         "overridden_leaked": [],
+        "irrelevant_leaked": [],
+        "context_ok": true,
         "presented_ok": true
       }
     ]

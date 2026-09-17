@@ -1,0 +1,28 @@
+case_id,run_id,scenario,trace_integrity,task_success,answer_faithfulness,answer_relevance,memory_grounded_accuracy,unanswerable,preference_compliance,hallucinated_memory,notes
+e2e_car_001,6d5d8abfecd6,"Áp dụng automatic + 7 seats + avoid surcharge khi thuê xe",PASS,,,,,,,,
+e2e_excursion_001,8f3e242b3aef,"Áp dụng nature + avoid crowded + response language vi khi gợi ý điểm tham quan",PASS,,,,,,,,
+e2e_flight_001,685440560efc,"Áp dụng economy + direct flight + departure SGN khi tìm chuyến bay",PASS,,,,,,,,
+e2e_global_profile_name_001,ac1b4d5372f8,"Seed preferred_name chị Lan; search hotel Đà Nẵng — name APPLY ở final responder, IRRELEVANT với hotel tool",PASS,,,,,,,,
+e2e_hotel_001,dacb05ec3a3f,"Áp dụng budget + quiet + near beach preference khi tìm hotel",PASS,,,,,,,,
+e2e_multi_car_excursion_001,51059a61f7a7,"Car automatic+tránh xe lớn và excursion nhóm nhỏ+chiều — không cross-attribute",PASS,,,,,,,,
+e2e_multi_excursion_hotel_001,0a13af687fde,"Excursion nhóm nhỏ+tránh đông và hotel budget+gần phố cổ — không cross-attribute",PASS,,,,,,,,
+e2e_multi_flight_car_001,a0a52c118002,"Flight economy+sáng và car automatic+5 chỗ — không leak flight pref sang car",PASS,,,,,,,,
+e2e_multi_hotel_flight_001,aff22e19b907,"Flight economy+nonstop và hotel budget+quiet — không leak cross-domain",PASS,,,,,,,,
+e2e_override_car_001,904be31ea3d3,"Lần này override hộp số seeded (automatic → số sàn); NO_STORE",PASS,,,,,,,,
+e2e_override_excursion_001,8e4f7bd74d75,"Lần này override ngân sách tour seeded (<300k → 700k/người); NO_STORE",PASS,,,,,,,,
+e2e_override_flight_001,24c55dbbfb4f,"Chuyến này override hạng bay seeded (economy → business class); NO_STORE",PASS,,,,,,,,
+e2e_override_hotel_001,815e205ecf30,"Lần này override ngân sách hotel seeded (2–3 triệu → dưới 1 triệu/đêm); NO_STORE",PASS,,,,,,,,
+e2e_summary_car_001,0ba7e93e7f1e,"T1–T2 rồi summarize_conversation; T3 search car từ summary (Đà Nẵng, sân bay→trung tâm, 10–12/10) + 4 người; LTM automatic + 5 chỗ; NO_STORE",PASS,,,,,,,,
+e2e_summary_excursion_001,e125739ed326,"T1–T2 rồi summarize_conversation; T3 search excursion từ summary (Hội An 12/10, 2 người, không 11/10) + buổi chiều; LTM nhóm nhỏ + afternoon; NO_STORE",PASS,,,,,,,,
+e2e_summary_flight_001,0a2dd12af8b8,"T1–T2 rồi summarize_conversation; T3 search flight từ summary (SGN–HAN 12/10, 1 người, không ký gửi) + buổi sáng; LTM economy + nonstop; NO_STORE",PASS,,,,,,,,
+e2e_summary_hotel_001,151d46bd86e0,"T1–T2 rồi summarize_conversation; T3 search hotel từ summary (Đà Nẵng 10–12/10, 2 người, 1–2 triệu) conflict LTM dưới 1 triệu + gần biển; NO_STORE",PASS,,,,,,,,
+e2e_tools_car_001,c65b17e07e62,"2 turns phủ car search rồi get_car_details; NO_STORE",PASS,,,,,,,,
+e2e_tools_excursion_001,7fb9d2631110,"3 turns phủ attraction search rồi details rồi reviews; NO_STORE",PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,"PASS overall; mild JP review paraphrase embellishment noted"
+e2e_tools_flight_001,73abc67cd559,"3 turns phủ flight one-way rồi round-trip rồi book; NO_STORE",PASS,,,,,,,,
+e2e_tools_hotel_001,7181f237730a,"4 turns phủ hotel search rồi lần lượt room/reviews/facility+policy; NO_STORE",PASS,,,,,,,,
+e2e_trip_plan_001,b43784a8ab55,"Trip plan Đà Nẵng 3N2Đ — 4 domain song song + isolation memory cross-domain",PASS,,,,,,,,
+e2e_write_car_insert_001,bec64ed43a63,"Không có car memory; từ giờ ưu tiên xe 5 chỗ số tự động + search Đà Nẵng; hai INSERT",PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,"PASS; disclosed no 5-seat; 2 INSERT"
+e2e_write_excursion_supersede_001,da1b728811de,"Excursion large_group seeded; từ giờ ưu tiên nhóm nhỏ + search Hội An; SUPERSEDE",PASS,,,,,,,,
+e2e_write_flight_reject_001,6ad14f32a8e4,"Lần này ghế cửa sổ trên chuyến SGN–HAN 10/10 (turn-scoped); NO_STORE — không lưu LTM",PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,"PASS; turn-scoped window seat; NO_STORE"
+e2e_write_global_name_001,d020a6302bf8,"Chưa có profile name; nhớ tên Quỳnh Anh + search hotel Đà Nẵng; INSERT profile_fact, tên không vào tool",PASS,,,,,,,,
+e2e_write_hotel_001,a6c754814c50,"Từ giờ restated quiet hotel preference (trùng seed) + search Đà Nẵng; NOOP duplicate_active_memory",PASS,,,,,,,,

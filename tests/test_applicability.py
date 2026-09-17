@@ -83,6 +83,8 @@ def test_infer_actions_for_natural_vietnamese_phrasing():
         ),
         ("Chọn giúp tôi phòng phù hợp nhất", "hotel", {}, "select_room"),
         ("Tìm vé SGN đi Hà Nội", "flight", {}, "search_one_way"),
+        ("Bay ra Hà Nội sáng thứ Hai nhé.", "flight", {}, "search_one_way"),
+        ("Bay sang Đà Nẵng ngày mai", "flight", {}, "search_one_way"),
         (
             "Chọn chuyến bay phù hợp nhất trong danh sách",
             "flight",
@@ -159,11 +161,23 @@ def test_hotel_phu_quoc_quiet_and_beach_uncertain():
 
 
 def test_car_danang_capacity_uncertain_without_seats_tool_arg():
-    """Seat capacity is soft on search_cars — no dedicated seats tool arg."""
+    """Only Mioto cateId aliases APPLY via user_needs; transmission/seats soft."""
     memories = [
         _memory(
             "m_automatic",
             "Thích xe số tự động",
+            domain=MemoryDomain.CAR,
+            category=MemoryCategory.CAR_PREFERENCE,
+        ),
+        _memory(
+            "m_electric",
+            "Thích xe điện",
+            domain=MemoryDomain.CAR,
+            category=MemoryCategory.CAR_PREFERENCE,
+        ),
+        _memory(
+            "m_family",
+            "Đi chơi với gia đình",
             domain=MemoryDomain.CAR,
             category=MemoryCategory.CAR_PREFERENCE,
         ),
@@ -191,7 +205,9 @@ def test_car_danang_capacity_uncertain_without_seats_tool_arg():
         )
     )
     by_id = {item.memory_id: item.label for item in judgments}
-    assert by_id["m_automatic"] == ApplicabilityLabel.APPLY
+    assert by_id["m_automatic"] == ApplicabilityLabel.UNCERTAIN
+    assert by_id["m_electric"] == ApplicabilityLabel.APPLY
+    assert by_id["m_family"] == ApplicabilityLabel.APPLY
     assert by_id["m_seats"] == ApplicabilityLabel.UNCERTAIN
     assert by_id["m_surcharge"] == ApplicabilityLabel.UNCERTAIN
 
@@ -373,6 +389,48 @@ def test_flight_monday_hn_tool_mapped_prefs_apply():
     assert by_id["m_departure"] == ApplicabilityLabel.APPLY
 
 
+def test_flight_bay_ra_inferred_action_makes_tool_prefs_hard_apply():
+    """e2e_flight_001 query must infer search_one_way so prefs stay hard apply."""
+    query = "Bay ra Hà Nội sáng thứ Hai nhé."
+    action = infer_domain_action_heuristic(user_query=query, domain="flight")
+    assert action == "search_one_way"
+
+    memories = [
+        _memory(
+            "m_economy",
+            "Thường bay hạng phổ thông (economy) khi đi du lịch",
+            domain=MemoryDomain.FLIGHT,
+            category=MemoryCategory.FLIGHT_PREFERENCE,
+        ),
+        _memory(
+            "m_direct",
+            "Ưu tiên bay thẳng, tránh nối chuyến",
+            domain=MemoryDomain.FLIGHT,
+            category=MemoryCategory.FLIGHT_PREFERENCE,
+        ),
+        _memory(
+            "m_departure",
+            "Thường bay từ TP.HCM (SGN)",
+            domain=MemoryDomain.FLIGHT,
+            category=MemoryCategory.FLIGHT_PREFERENCE,
+        ),
+    ]
+    judge = RuleBasedApplicabilityJudge()
+    judgments = _run(
+        judge.judge_batch(
+            user_query=query,
+            domain="flight",
+            domain_action=action,
+            domain_state={},
+            candidates=memories,
+        )
+    )
+    by_id = {item.memory_id: item.label for item in judgments}
+    assert by_id["m_economy"] == ApplicabilityLabel.APPLY
+    assert by_id["m_direct"] == ApplicabilityLabel.APPLY
+    assert by_id["m_departure"] == ApplicabilityLabel.APPLY
+
+
 def test_excursion_danang_nature_uncertain_crowd_uncertain():
     memories = [
         _memory(
@@ -401,6 +459,39 @@ def test_excursion_danang_nature_uncertain_crowd_uncertain():
     by_id = {item.memory_id: item.label for item in judgments}
     assert by_id["m_nature"] == ApplicabilityLabel.UNCERTAIN
     assert by_id["m_crowded"] == ApplicabilityLabel.UNCERTAIN
+
+
+def test_excursion_small_group_uncertain_without_tool_arg():
+    """Group-size has no search_attractions tool field → soft/uncertain."""
+    memories = [
+        _memory(
+            "m_small_group",
+            "Ưu tiên tour nhóm nhỏ",
+            domain=MemoryDomain.EXCURSION,
+            category=MemoryCategory.EXCURSION_PREFERENCE,
+        ),
+        _memory(
+            "m_afternoon",
+            "Ưu tiên tour buổi chiều",
+            domain=MemoryDomain.EXCURSION,
+            category=MemoryCategory.EXCURSION_PREFERENCE,
+        ),
+    ]
+    judge = RuleBasedApplicabilityJudge()
+    judgments = _run(
+        judge.judge_batch(
+            user_query="Ở Đà Nẵng ngày 10/10, tìm tour Bà Nà buổi chiều.",
+            domain="excursion",
+            domain_action="search_attractions",
+            domain_state={},
+            candidates=memories,
+        )
+    )
+    by_id = {item.memory_id: item.label for item in judgments}
+    reasons = {item.memory_id: item.reason for item in judgments}
+    assert by_id["m_small_group"] == ApplicabilityLabel.UNCERTAIN
+    assert by_id["m_afternoon"] == ApplicabilityLabel.UNCERTAIN
+    assert reasons["m_small_group"] == "group-size soft until tool has group-size signal"
 
 
 def test_override_flight_business_class():
@@ -816,6 +907,7 @@ def test_llm_prompt_encodes_tool_field_rubric():
     assert "no quiet tool field" in prompt
     assert "seat capacity (5/7 chỗ) → uncertain" in prompt
     assert "nature/beach/culture tour-type prefs → uncertain" in prompt
+    assert "small/large group-size → uncertain" in prompt
     assert "get_hotel_details + bathtub/budget → uncertain" in prompt
     assert "apply as a ranking constraint" not in prompt
     assert "7-seat applies only when the current" not in prompt

@@ -1,16 +1,16 @@
 id: e2e_summary_hotel_001
-scenario: "T1–T2 rồi summarize_conversation; T3 search hotel từ summary (Đà Nẵng 10–12/10, 2 người, 1–2 triệu); LTM quiet + tránh đoàn; NO_STORE"
+scenario: "T1–T2 rồi summarize_conversation; T3 search hotel từ summary (Đà Nẵng 10–12/10, 2 người, 1–2 triệu) conflict LTM dưới 1 triệu + gần biển; NO_STORE"
 
 seed:
   user_id: user_a
   long_term_memories:
-    - id: m_quiet
-      text: "Thích khách sạn yên tĩnh"
+    - id: m_beach
+      text: "Thích khách sạn gần biển"
       domain: hotel
       category: hotel_preference
       status: active
-    - id: m_avoid_groups
-      text: "Tránh khách sạn đông đoàn tour lớn"
+    - id: m_budget
+      text: "Ngân sách hotel thường dưới 1 triệu/đêm"
       domain: hotel
       category: hotel_preference
       status: active
@@ -41,11 +41,11 @@ expected_trace:
   expected_route: [hotel]
   expected_context:
     hotel:
-      must_include: [m_quiet, m_avoid_groups]
+      must_include: [m_beach]
       must_exclude: [m_other_user, m_superseded]
       expected_applicability:
-        m_quiet: uncertain
-        m_avoid_groups: uncertain
+        m_beach: uncertain
+        m_budget: overridden
   expected_tools:
     - name: search_hotels_tool
       required_arguments: [destination, check_in, check_out]
@@ -68,10 +68,11 @@ expected_answer_rubric:
   answerability: ANSWERABLE
   required_constraints:
     - "search/answer giữ Đà Nẵng, 10–12/10, 2 người, 1–2 triệu/đêm từ summary"
-    - "ưu tiên yên tĩnh và tránh đoàn đông nếu tool có evidence"
+    - "ưu tiên gần biển nếu tool có evidence"
   tradeoff_rule:
-    - "Nếu thiếu lựa chọn, nêu điều kiện nào chưa thỏa"
+    - "Conflict ngân sách: ưu tiên 1–2 triệu của turn/summary hiện tại; không ép xuống dưới 1 triệu seeded"
   forbidden_claims:
+    - "Viện dẫn ngân sách dưới 1 triệu seeded như constraint hiện tại"
     - "Giá/đặc điểm không có trong tool result"
     - "Viện dẫn preference không tồn tại hoặc inactive"
 

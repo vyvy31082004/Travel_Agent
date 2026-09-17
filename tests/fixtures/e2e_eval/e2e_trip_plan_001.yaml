@@ -27,8 +27,8 @@ seed:
       category: flight_preference
       status: superseded
       expect_in_context: false
-    - id: m_hotel_quiet
-      text: "Thích khách sạn yên tĩnh"
+    - id: m_hotel_city_center
+      text: "Thích khách sạn ở trung tâm thành phố"
       domain: hotel
       category: hotel_preference
       status: active
@@ -73,18 +73,13 @@ seed:
       category: car_preference
       status: superseded
       expect_in_context: false
-    - id: m_excursion_outdoor
-      text: "Thích hoạt động ngoài trời khi đi chơi"
-      domain: excursion
-      category: excursion_preference
-      status: active
-    - id: m_excursion_small_group
-      text: "Ưu tiên tour riêng hoặc nhóm nhỏ"
+    - id: m_excursion_vietnamese_tradition
+      text: "Thích tour trải nghiệm truyền thống Việt Nam"
       domain: excursion
       category: excursion_preference
       status: active
     - id: m_excursion_other_user
-      text: "Memory user khác — thích tour văn hóa"
+      text: "Memory user khác — thích tour mạo hiểm"
       domain: excursion
       category: excursion_preference
       user_id: user_b
@@ -102,7 +97,7 @@ seed:
 
 input:
   messages:
-    - "Lên kế hoạch 3 ngày 2 đêm Đà Nẵng từ TP.HCM: bay đi SGN→DAD ngày 10/10/2026, bay về DAD→SGN ngày 12/10/2026, check-in 10/10/2026, check-out 12/10/2026, 2 người lớn, ưu tiên yên tĩnh."
+    - "Lên kế hoạch 3 ngày 2 đêm Đà Nẵng từ TP.HCM: bay đi SGN→DAD ngày 10/10/2026, bay về DAD→SGN ngày 12/10/2026, check-in 10/10/2026, check-out 12/10/2026, 2 người lớn."
 
 expected_trace:
   expected_route: [flight, hotel, excursion, car]
@@ -112,14 +107,13 @@ expected_trace:
       must_exclude:
         - m_flight_other_user
         - m_flight_superseded
-        - m_hotel_quiet
+        - m_hotel_city_center
         - m_hotel_budget
         - m_car_automatic
         - m_car_5seats
-        - m_excursion_outdoor
-        - m_excursion_small_group
+        - m_excursion_vietnamese_tradition
     hotel:
-      must_include: [m_hotel_quiet, m_hotel_budget]
+      must_include: [m_hotel_city_center, m_hotel_budget]
       must_exclude:
         - m_hotel_other_user
         - m_hotel_superseded
@@ -127,8 +121,7 @@ expected_trace:
         - m_flight_morning
         - m_car_automatic
         - m_car_5seats
-        - m_excursion_outdoor
-        - m_excursion_small_group
+        - m_excursion_vietnamese_tradition
     car:
       must_include: [m_car_automatic, m_car_5seats]
       must_exclude:
@@ -136,18 +129,17 @@ expected_trace:
         - m_car_superseded
         - m_flight_economy
         - m_flight_morning
-        - m_hotel_quiet
+        - m_hotel_city_center
         - m_hotel_budget
-        - m_excursion_outdoor
-        - m_excursion_small_group
+        - m_excursion_vietnamese_tradition
     excursion:
-      must_include: [m_excursion_outdoor, m_excursion_small_group]
+      must_include: [m_excursion_vietnamese_tradition]
       must_exclude:
         - m_excursion_other_user
         - m_excursion_superseded
         - m_flight_economy
         - m_flight_morning
-        - m_hotel_quiet
+        - m_hotel_city_center
         - m_hotel_budget
         - m_car_automatic
         - m_car_5seats
@@ -174,9 +166,9 @@ expected_answer_rubric:
   answerability: ANSWERABLE
   required_constraints:
     - "flight: economy + ưu tiên bay buổi sáng"
-    - "hotel: budget 2–3 triệu + yên tĩnh"
+    - "hotel: budget 2–3 triệu + ưu tiên ở trung tâm thành phố"
     - "car: số tự động + tối thiểu 5 chỗ"
-    - "excursion: ngoài trời + nhóm nhỏ/riêng"
+    - "excursion: ưu tiên tour trải nghiệm truyền thống Việt Nam"
     - "final answer nhóm đúng 4 phần: Chuyến bay / Khách sạn / Lịch trình-Hoạt động / Thuê xe"
   tradeoff_rule:
     - "Cho phép car/hotel dùng ngày/địa điểm từ kết quả flight như state nghiệp vụ"

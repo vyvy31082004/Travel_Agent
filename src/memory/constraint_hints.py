@@ -5,6 +5,7 @@ from typing import Sequence
 
 from memory.applicability import ApplicabilityJudgment, ApplicabilityLabel
 from memory.long_term import TravelMemory
+from utils.api_client_car import map_car_need_to_category_id
 
 _BUDGET_RANGE_RE = re.compile(
     r"(\d+)\s*[–\-]\s*(\d+)\s*triệu",
@@ -73,14 +74,13 @@ def derive_turn_constraints(
             ):
                 add("prefer_direct=true")
         elif domain == "car":
-            if label == ApplicabilityLabel.APPLY and (
-                "tự động" in text or "automatic" in text
-            ):
-                add("transmission=automatic")
-            if label == ApplicabilityLabel.APPLY and (
-                "7 chỗ" in text or "bảy chỗ" in text or "tối thiểu 7" in text
-            ):
-                add("min_seats=7")
+            if label == ApplicabilityLabel.APPLY:
+                cate_id = map_car_need_to_category_id(
+                    memory.memory_text or "",
+                    allow_fuzzy=False,
+                )
+                if cate_id is not None:
+                    add(f"cateId={cate_id}")
         elif domain == "excursion":
             if label == ApplicabilityLabel.APPLY and any(
                 token in text for token in ("thiên nhiên", "nature")

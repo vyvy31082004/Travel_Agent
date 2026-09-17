@@ -87,7 +87,7 @@ class Settings:
     long_term_memory_transition_confidence_threshold: float = 0.85
     long_term_memory_transition_batch_size: int = 10
     long_term_memory_domain_candidate_limit: int = 50
-    long_term_memory_action_inference_enabled: bool = False
+    long_term_memory_action_inference_enabled: bool = True
     long_term_memory_applicability_judge_enabled: bool = True
     long_term_memory_applicability_batch_size: int = 10
 
@@ -253,7 +253,7 @@ def get_settings() -> Settings:
             "LONG_TERM_MEMORY_DOMAIN_CANDIDATE_LIMIT", 50
         ),
         long_term_memory_action_inference_enabled=_bool_env(
-            "LONG_TERM_MEMORY_ACTION_INFERENCE_ENABLED", False
+            "LONG_TERM_MEMORY_ACTION_INFERENCE_ENABLED", True
         ),
         long_term_memory_applicability_judge_enabled=_bool_env(
             "LONG_TERM_MEMORY_APPLICABILITY_JUDGE_ENABLED", True

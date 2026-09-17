@@ -41,11 +41,20 @@ Turn-scoped clauses (required — hard rule for coverage):
 - Clauses with markers such as "lần này", "chuyến này", "riêng lần này",
   "cho chuyến này", "hôm nay", "bữa nay", "sáng nay", "chiều nay", "tối nay",
   "ngày mai" are trip/turn-scoped, NOT durable preferences.
-- Do NOT require coverage of turn-scoped clauses. Do NOT lower coverage because a
-  candidate omits a turn-scoped hotel/flight/budget/date fact.
+- Trip/session intent markers such as "đang tính", "tính thuê", "tính đặt",
+  "tính bay", "tạm thời", "chưa cần tìm", "chưa cần đặt", "nhận xe", "trả xe"
+  are also temporary logistics — NOT durable preferences.
+- Occupancy for this booking ("tôi đi 4 người", "cho 2 người", "đoàn 4 người",
+  "xe cho 4 người") is trip logistics, NOT a durable preference. Do NOT treat it
+  as a replacement for a seat-capacity memory such as "Cần xe 5 chỗ".
+- Do NOT require coverage of turn-scoped or trip-intent clauses. Do NOT lower
+  coverage because a candidate omits a turn-scoped hotel/flight/budget/date fact.
 - Mixed-scope utterances (durable + turn-scoped): only the durable clause(s) must
   be covered. Example: "Từ giờ tôi ưu tiên khách sạn yên tĩnh. Lần này dưới 1 triệu."
   — covering "yên tĩnh" alone is full coverage; the budget sentence is ignored.
+- Example: "Mình đang tính thuê xe ở Đà Nẵng, chưa cần tìm xe." has NO durable
+  preference to cover — coverage should not demand a destination-planning memory.
+- Example: "Tìm xe luôn, tôi đi 4 người." has NO durable preference to cover.
 - The chunk may already have turn-scoped clauses stripped; still apply this rule
   if any remain.
 
@@ -54,7 +63,7 @@ Dimensions:
   across THIS candidate AND sibling_candidates. A candidate may cover only part of
   the chunk when siblings cover the remainder. Penalize coverage only if a durable
   fact is missing from BOTH this candidate AND all siblings. Ignore turn-scoped
-  clauses entirely when scoring coverage.
+  and trip-intent clauses entirely when scoring coverage.
 - preservation: valid old memories are not incorrectly deleted, distorted, over-generalized, or merged with lost conditions (e.g. business vs leisure, family vs solo).
   Correct supersede (old status=superseded + new active preference) preserves history
   and should score high.
@@ -62,6 +71,9 @@ Dimensions:
   An atomic split that states only one supported attribute (with other attributes in
   sibling_candidates) is faithful — do not treat omitted sibling attributes as
   over-generalization.
+  Faithfulness MUST fail when the candidate is trip/session intent or logistics
+  (e.g. "đang tính thuê xe ở Đà Nẵng", pickup/return dates, "tôi đi 4 người")
+  rather than a reusable preference.
 
 Be conservative. If evidence is missing or the candidate looks like tool output, lower faithfulness sharply."""
 
@@ -610,6 +622,8 @@ def _score_faithfulness(
     candidate_text: str,
     transition: MemoryTransition,
 ) -> tuple[float, str]:
+    from memory.consolidation import _is_turn_scoped
+
     tool_markers = ["search_id", "total_results", "displayed_item_ids", "item_id"]
     station_tokens = ["ga", "station", "train"]
     user_confirmation = [
@@ -624,6 +638,11 @@ def _score_faithfulness(
     evidence = transition.candidate.evidence_text.lower() if transition.candidate else ""
     if any(marker in evidence for marker in tool_markers):
         return 0.1, "candidate evidence is tool/API output, not user evidence"
+    if _is_turn_scoped(candidate_text) or (evidence and _is_turn_scoped(evidence)):
+        return (
+            0.15,
+            "candidate is trip/session intent or turn-scoped logistics, not a durable preference",
+        )
     if (
         any(marker in chunk_text for marker in tool_markers)
         and any(token in candidate_text for token in station_tokens)

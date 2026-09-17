@@ -1,0 +1,648 @@
+# E2E Review — e2e_summary_car_001
+
+## Scenario
+T1–T2 rồi summarize_conversation; T3 search car từ summary (Đà Nẵng, sân bay→trung tâm, 10–12/10) + 4 người; LTM automatic + 5 chỗ; NO_STORE
+
+## Conversation (one chat turn at a time)
+
+### Turn 1
+**User:** Mình đang tính thuê xe ở Đà Nẵng, chưa cần tìm xe.
+
+**Assistant:** Dạ, mình đã ghi nhận thông tin anh/chị đang có kế hoạch thuê xe tại Đà Nẵng. 
+
+Anh/chị cứ thoải mái lên lịch trình nhé! Khi nào cần tìm xe, anh/chị chỉ cần cho mình biết thêm một số thông tin như:
+- Thời gian/ngày thuê và trả xe
+- Loại xe (4 chỗ, 7 chỗ, xe tự lái hay có tài xế...)
+- Chi phí dự kiến hoặc các yêu cầu riêng khác (nếu có)
+
+Bất cứ lúc nào sẵn sàng tìm kiếm hay đặt xe, anh/chị cứ nhắn mình nhé!
+
+### Turn 2 (force summarize)
+**User:** Nhận xe sân bay ngày 10/10, trả ở trung tâm ngày 12/10.
+
+**Assistant:** Dạ, mình đã luôn các chi tiết thuê xe của anh/chị:
+- **Địa điểm nhận xe:** Sân bay Đà Nẵng (10/10)
+- **Địa điểm trả xe:** Trung tâm Đà Nẵng (12/10)
+
+Khi nào anh/chị sẵn sàng tìm xe hoặc cần hỗ trợ gì thêm, cứ nhắn "Tìm xe giúp mình" hoặc "Gợi ý xe" là mình sẽ hỗ trợ ngay nhé!
+
+### Turn 3 (scored)
+**User:** Tìm xe luôn, tôi đi 4 người.
+
+**Assistant:** Dưới đây là danh sách các lựa chọn xe tự động phù hợp tại Đà Nẵng cho chuyến đi của đoàn 4 người từ ngày **10/10/2026** đến **12/10/2026**:
+
+---
+
+### 1. KIA K3 PREMIUM 2022
+* **Mã xe (car_id)**: `KH2I33`
+* **Giá thuê**: **1.150.000 VNĐ/ngày** *(Giá gốc: 1.183.000 VNĐ)*
+* **Thông số**: Số tự động | 4 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 4.6 ⭐ (71 chuyến)
+* **Địa chỉ**: Phường Tam Thuận, Quận Thanh Khê
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![KIA K3 PREMIUM 2022](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1)
+
+---
+
+### 2. MITSUBISHI ATTRAGE 2019
+* **Mã xe (car_id)**: `KGRJCX`
+* **Giá thuê**: **523.000 VNĐ/ngày** *(Giá gốc: 556.000 VNĐ)*
+* **Thông số**: Số tự động | 4 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 5.0 ⭐ (300+ chuyến)
+* **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![MITSUBISHI ATTRAGE 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=2)
+
+---
+
+### 3. MITSUBISHI XPANDER 2024
+* **Mã xe (car_id)**: `KKAY84`
+* **Giá thuê**: **836.000 VNĐ/ngày** *(Giá gốc: 876.000 VNĐ)*
+* **Thông số**: Số tự động | 7 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 4.6 ⭐ (22 chuyến)
+* **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![MITSUBISHI XPANDER 2024](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/06/25/18/Pm6MQtBIxnoXpUnmOciiLA.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/mitsubishi-xpander-2024/KKAY84?carSearchIndex=3)
+
+---
+
+### 4. MITSUBISHI XPANDER 2023
+* **Mã xe (car_id)**: `KEYMPW`
+* **Giá thuê**: **867.000 VNĐ/ngày** *(Giá gốc: 907.000 VNĐ)*
+* **Thông số**: Số tự động | 7 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 4.6 ⭐ (13 chuyến)
+* **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![MITSUBISHI XPANDER 2023](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2026/00/02/20/Ah3jG-Gj15cuIglWYRJbcw.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/mitsubishi-xpander-2023/KEYMPW?carSearchIndex=4)
+
+---
+
+### 5. TOYOTA VELOZ CROSS 2024
+* **Mã xe (car_id)**: `KLTFUL`
+* **Giá thuê**: **1.107.000 VNĐ/ngày** *(Giá gốc: 1.147.000 VNĐ)*
+* **Thông số**: Số tự động | 7 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 4.6 ⭐ (10 chuyến)
+* **Địa chỉ**: Phường Hải Châu II, Quận Hải Châu
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![TOYOTA VELOZ CROSS 2024](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2024/p/g/2026/03/03/22/XN90IWHUOoCR6ezSjk8B4Q.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/toyota-veloz-cross-2024/KLTFUL?carSearchIndex=5)
+
+---
+
+### 6. HONDA HRV G 2023
+* **Mã xe (car_id)**: `KFH2K9`
+* **Giá thuê**: **1.019.000 VNĐ/ngày**
+* **Thông số**: Số tự động | 5 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 5.0 ⭐ (23 chuyến)
+* **Địa chỉ**: Phường Thạc Gián, Quận Thanh Khê
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![HONDA HRV G 2023](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8)
+
+---
+
+Bạn muốn tiến hành đặt chiếc xe nào trong số các lựa chọn trên, hoặc cần hỗ trợ thêm thông tin gì khác không?
+
+## Final answer
+Dưới đây là danh sách các lựa chọn xe tự động phù hợp tại Đà Nẵng cho chuyến đi của đoàn 4 người từ ngày **10/10/2026** đến **12/10/2026**:
+
+---
+
+### 1. KIA K3 PREMIUM 2022
+* **Mã xe (car_id)**: `KH2I33`
+* **Giá thuê**: **1.150.000 VNĐ/ngày** *(Giá gốc: 1.183.000 VNĐ)*
+* **Thông số**: Số tự động | 4 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 4.6 ⭐ (71 chuyến)
+* **Địa chỉ**: Phường Tam Thuận, Quận Thanh Khê
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![KIA K3 PREMIUM 2022](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1)
+
+---
+
+### 2. MITSUBISHI ATTRAGE 2019
+* **Mã xe (car_id)**: `KGRJCX`
+* **Giá thuê**: **523.000 VNĐ/ngày** *(Giá gốc: 556.000 VNĐ)*
+* **Thông số**: Số tự động | 4 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 5.0 ⭐ (300+ chuyến)
+* **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![MITSUBISHI ATTRAGE 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=2)
+
+---
+
+### 3. MITSUBISHI XPANDER 2024
+* **Mã xe (car_id)**: `KKAY84`
+* **Giá thuê**: **836.000 VNĐ/ngày** *(Giá gốc: 876.000 VNĐ)*
+* **Thông số**: Số tự động | 7 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 4.6 ⭐ (22 chuyến)
+* **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![MITSUBISHI XPANDER 2024](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/06/25/18/Pm6MQtBIxnoXpUnmOciiLA.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/mitsubishi-xpander-2024/KKAY84?carSearchIndex=3)
+
+---
+
+### 4. MITSUBISHI XPANDER 2023
+* **Mã xe (car_id)**: `KEYMPW`
+* **Giá thuê**: **867.000 VNĐ/ngày** *(Giá gốc: 907.000 VNĐ)*
+* **Thông số**: Số tự động | 7 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 4.6 ⭐ (13 chuyến)
+* **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![MITSUBISHI XPANDER 2023](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2026/00/02/20/Ah3jG-Gj15cuIglWYRJbcw.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/mitsubishi-xpander-2023/KEYMPW?carSearchIndex=4)
+
+---
+
+### 5. TOYOTA VELOZ CROSS 2024
+* **Mã xe (car_id)**: `KLTFUL`
+* **Giá thuê**: **1.107.000 VNĐ/ngày** *(Giá gốc: 1.147.000 VNĐ)*
+* **Thông số**: Số tự động | 7 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 4.6 ⭐ (10 chuyến)
+* **Địa chỉ**: Phường Hải Châu II, Quận Hải Châu
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![TOYOTA VELOZ CROSS 2024](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2024/p/g/2026/03/03/22/XN90IWHUOoCR6ezSjk8B4Q.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/toyota-veloz-cross-2024/KLTFUL?carSearchIndex=5)
+
+---
+
+### 6. HONDA HRV G 2023
+* **Mã xe (car_id)**: `KFH2K9`
+* **Giá thuê**: **1.019.000 VNĐ/ngày**
+* **Thông số**: Số tự động | 5 chỗ | Nhiên liệu: Xăng
+* **Đánh giá**: 5.0 ⭐ (23 chuyến)
+* **Địa chỉ**: Phường Thạc Gián, Quận Thanh Khê
+* **Dịch vụ**: Miễn thế chấp, Giao xe tận nơi
+* **Hình ảnh**:  
+  ![HONDA HRV G 2023](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg)
+* **Chi tiết & Đặt xe**: [Xem tại Mioto](https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8)
+
+---
+
+Bạn muốn tiến hành đặt chiếc xe nào trong số các lựa chọn trên, hoặc cần hỗ trợ thêm thông tin gì khác không?
+
+## Conversation summary (STM)
+**Bản tóm tắt cập nhật:**
+
+- **Nhu cầu:** Kế hoạch thuê xe tại Đà Nẵng (chưa tìm xe cụ thể).
+- **Địa điểm & Thời gian nhận xe:** Sân bay Đà Nẵng, ngày 10/10.
+- **Địa điểm & Thời gian trả xe:** Trung tâm Đà Nẵng, ngày 12/10.
+
+- **message_count:** 4
+- **summarized_after_turn:** 2
+
+## Auto scores (informational)
+- - **routing_accuracy**: PASS — delegated domains match
+- - **tool_call_correctness**: PASS — all expected tools called with required arguments
+- - **context_recall_precision**: PASS — context recall/precision satisfied
+- - **applicability_correctness**: PASS — applicability labels match
+- - **cross_user_inactive_leakage**: PASS — no cross-user/inactive leakage detected
+- - **finalize_correctness**: PASS — no new long-term memories stored
+- - **execution_path**: PASS — execution path satisfied
+- - **join_integrity**: SKIP — single-domain route
+- - **trace_integrity**: PASS — all auto checkpoints passed or skipped
+
+## Evidence bundle
+
+### Postgres run metadata
+```json
+{
+  "postgres_persist": false,
+  "teardown": true,
+  "fresh_seed": true,
+  "user_id": "e2e-e2e_summary_car_001:user_a",
+  "thread_id": "e2e-e2e_summary_car_001-c42fa96fa6ad"
+}
+```
+
+### Active memories (fixture ids)
+```json
+{
+  "m_automatic": "4577739e-7309-5e22-a020-a2defc239e48",
+  "m_seats": "a64158b7-a646-5e3b-9284-95af05d446e7",
+  "m_other_user": "d7a478de-f28c-5cf7-bde9-5051f4963e86",
+  "m_superseded": "3759030f-acad-5603-9dbb-fbd4623d9398"
+}
+```
+
+### Global recall
+```json
+{
+  "memory_context": "",
+  "recalled_memory_ids": [],
+  "recalled_fixture_ids": []
+}
+```
+
+### Domain recall
+### car
+| fixture_id | label | reason | in_context |
+|---|---|---|---|
+| m_seats | uncertain | reconciled: seat capacity soft until results expose Số chỗ (no seats tool arg) (llm: Seat capacity (5 chỗ) is not a direct cateId filter for search_cars, so it is treated as an uncertain preference for soft ranking.; rule: seat capacity soft until results expose Số chỗ (no seats tool arg)) | yes |
+| m_automatic | uncertain | reconciled: transmission soft via Hộp số (not a Mioto cateId / search_cars tool field) (llm: Automatic transmission preference does not map to a strict cateId tool argument for search_cars and is used for soft filtering/ranking.; rule: transmission soft via Hộp số (not a Mioto cateId / search_cars tool field)) | yes |
+
+**Derived constraints:**
+- (soft) [a64158b7-a646-5e3b-9284-95af05d446e7] Cần xe 5 chỗ
+- (soft) [4577739e-7309-5e22-a020-a2defc239e48] Thích xe số tự động
+
+### Execution path
+| seq | node | graph | domain | tools |
+|---|---|---|---|---|
+| 1 | memory_recall_global | primary |  |  |
+| 2 | primary_assistant | primary |  |  |
+| 3 | memory_finalize | primary |  |  |
+| 4 | memory_recall_global | primary |  |  |
+| 5 | primary_assistant | primary |  |  |
+| 6 | summarize_conversation | primary |  |  |
+| 7 | memory_finalize | primary |  |  |
+| 8 | memory_recall_global | primary |  |  |
+| 9 | primary_assistant | primary |  |  |
+| 10 | car_assistant | primary | car |  |
+| 11 | memory_recall_car | car_assistant | car |  |
+| 12 | car_chat | car_assistant | car |  |
+| 13 | search_cars_tool | car_assistant | car | search_cars_tool |
+| 14 | car_chat | car_assistant | car |  |
+| 15 | join_results | primary |  |  |
+| 16 | primary_assistant | primary |  |  |
+| 17 | memory_finalize | primary |  |  |
+
+### Join
+```json
+{
+  "branch_count": 1,
+  "merged_domains": [
+    "car"
+  ]
+}
+```
+
+### Sub-agents
+### car
+- **summary:** [{'type': 'text', 'text': 'Dưới đây là danh sách các xe tự động tại Đà Nẵng phù hợp cho chuyến đi từ 10/10/2026 đến 12/10/2026:\n\n* **HONDA HRV G 2023**\n  - **car_id**: KFH2K9\n  - **Giá sau giảm**: Không có\n  - **Giá gốc**: 1.019K\n  - **Hộp số**: Số tự động\n  - **Số chỗ**: 5 chỗ\n  - **Nhiên liệu**: Xăng\n  - **Địa chỉ**: Phường Thạc Gián, Quận Thanh Khê\n  - **Rating**: 5.0\n  - **Số chuyến**: 23 chuyến\n  - **Tags**: Miễn thế chấp, Giao xe tận nơi\n  - **Ảnh**: ![HONDA HRV G 2023](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg)\n  - **Link**: https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8\n\n* **KIA K3 PREMIUM 2022**\n  - **car_id**: KH2I33\n  - **Giá sau giảm**: 1.150K\n  - **Giá gốc**: 1.183K\n  - **Hộp số**: Số tự động\n  - **Số chỗ**: 4 chỗ\n  - **Nhiên liệu**: Xăng\n  - **Địa chỉ**: Phường Tam Thuận, Quận Thanh Khê\n  - **Rating**: 4.6\n  - **Số chuyến**: 71 chuyến\n  - **Tags**: Miễn thế chấp, Giao xe tận nơi\n  - **Ảnh**: ![KIA K3 PREMIUM 2022](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg)\n  - **Link**: https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1\n\n* **MITSUBISHI ATTRAGE 2019**\n  - **car_id**: KGRJCX\n  - **Giá sau giảm**: 523K\n  - **Giá gốc**: 556K\n  - **Hộp số**: Số tự động\n  - **Số chỗ**: 4 chỗ\n  - **Nhiên liệu**: Xăng\n  - **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê\n  - **Rating**: 5.0\n  - **Số chuyến**: 300+ chuyến\n  - **Tags**: Miễn thế chấp, Giao xe tận nơi\n  - **Ảnh**: ![MITSUBISHI ATTRAGE 2019](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg)\n  - **Link**: https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=2\n\n* **MITSUBISHI XPANDER 2024**\n  - **car_id**: KKAY84\n  - **Giá sau giảm**: 836K\n  - **Giá gốc**: 876K\n  - **Hộp số**: Số tự động\n  - **Số chỗ**: 7 chỗ\n  - **Nhiên liệu**: Xăng\n  - **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê\n  - **Rating**: 4.6\n  - **Số chuyến**: 22 chuyến\n  - **Tags**: Miễn thế chấp, Giao xe tận nơi\n  - **Ảnh**: ![MITSUBISHI XPANDER 2024](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/06/25/18/Pm6MQtBIxnoXpUnmOciiLA.jpg)\n  - **Link**: https://www.mioto.vn/car/mitsubishi-xpander-2024/KKAY84?carSearchIndex=3\n\n* **MITSUBISHI XPANDER 2023**\n  - **car_id**: KEYMPW\n  - **Giá sau giảm**: 867K\n  - **Giá gốc**: 907K\n  - **Hộp số**: Số tự động\n  - **Số chỗ**: 7 chỗ\n  - **Nhiên liệu**: Xăng\n  - **Địa chỉ**: Phường Chính Gián, Quận Thanh Khê\n  - **Rating**: 4.6\n  - **Số chuyến**: 13 chuyến\n  - **Tags**: Miễn thế chấp, Giao xe tận nơi\n  - **Ảnh**: ![MITSUBISHI XPANDER 2023](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2026/00/02/20/Ah3jG-Gj15cuIglWYRJbcw.jpg)\n  - **Link**: https://www.mioto.vn/car/mitsubishi-xpander-2023/KEYMPW?carSearchIndex=4\n\n* **TOYOTA VELOZ CROSS 2024**\n  - **car_id**: KLTFUL\n  - **Giá sau giảm**: 1.107K\n  - **Giá gốc**: 1.147K\n  - **Hộp số**: Số tự động\n  - **Số chỗ**: 7 chỗ\n  - **Nhiên liệu**: Xăng\n  - **Địa chỉ**: Phường Hải Châu II, Quận Hải Châu\n  - **Rating**: 4.6\n  - **Số chuyến**: 10 chuyến\n  - **Tags**: Miễn thế chấp, Giao xe tận nơi\n  - **Ảnh**: ![TOYOTA VELOZ CROSS 2024](https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2024/p/g/2026/03/03/22/XN90IWHUOoCR6ezSjk8B4Q.jpg)\n  - **Link**: https://www.mioto.vn/car/toyota-veloz-cross-2024/KLTFUL?carSearchIndex=5', 'extras': {'signature': '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'}}]
+- **domain_action:** search_cars
+- **applied_constraints:**
+- (soft) [a64158b7-a646-5e3b-9284-95af05d446e7] Cần xe 5 chỗ
+- (soft) [4577739e-7309-5e22-a020-a2defc239e48] Thích xe số tự động
+- **warnings:**
+- (none)
+
+### Tool snapshots
+### search_cars_tool
+```json
+{
+  "search_id": "6533c829-ff6c-45b0-a7d1-d258d9470d2a",
+  "request_id": "req_car_c90ebc6d",
+  "domain": "car",
+  "total_results": 6,
+  "items": [
+    {
+      "Link": "https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1",
+      "Tags": "Miễn thế chấp, Giao xe tận nơi",
+      "link": "https://www.mioto.vn/car/kia-k3-premium-2022/KH2I33?carSearchIndex=1",
+      "name": "KIA K3 PREMIUM 2022",
+      "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg",
+      "price": "1.150K",
+      "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/kia_k3_premium_2022/p/g/2026/06/13/16/kYifMXBrqq6q6Mx1e7v5MQ.jpg",
+      "Rating": "4.6",
+      "car_id": "KH2I33",
+      "rating": "4.6",
+      "Tên xe": "KIA K3 PREMIUM 2022",
+      "address": "Phường Tam Thuận, Quận Thanh Khê",
+      "item_id": "KH2I33",
+      "Giá gốc": "1.183K",
+      "Hộp số": "Số tự động",
+      "Số chỗ": "4 chỗ",
+      "Địa chỉ": "Phường Tam Thuận, Quận Thanh Khê",
+      "Nhiên liệu": "Xăng",
+      "Số chuyến": "71 chuyến",
+      "Giá sau giảm": "1.150K",
+      "position": 1,
+      "api_position": 1,
+      "eligible": true
+    },
+    {
+      "Link": "https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=2",
+      "Tags": "Miễn thế chấp, Giao xe tận nơi",
+      "link": "https://www.mioto.vn/car/mitsubishi-attrage-2019/KGRJCX?carSearchIndex=2",
+      "name": "MITSUBISHI ATTRAGE 2019",
+      "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg",
+      "price": "523K",
+      "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_attrage_2019/p/g/2021/08/16/15/ZNlbqvEi-5ZKRVf6TNY8Ew.jpg",
+      "Rating": "5.0",
+      "car_id": "KGRJCX",
+      "rating": "5.0",
+      "Tên xe": "MITSUBISHI ATTRAGE 2019",
+      "address": "Phường Chính Gián, Quận Thanh Khê",
+      "item_id": "KGRJCX",
+      "Giá gốc": "556K",
+      "Hộp số": "Số tự động",
+      "Số chỗ": "4 chỗ",
+      "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+      "Nhiên liệu": "Xăng",
+      "Số chuyến": "300+ chuyến",
+      "Giá sau giảm": "523K",
+      "position": 2,
+      "api_position": 2,
+      "eligible": true
+    },
+    {
+      "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2024/KKAY84?carSearchIndex=3",
+      "Tags": "Miễn thế chấp, Giao xe tận nơi",
+      "link": "https://www.mioto.vn/car/mitsubishi-xpander-2024/KKAY84?carSearchIndex=3",
+      "name": "MITSUBISHI XPANDER 2024",
+      "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/06/25/18/Pm6MQtBIxnoXpUnmOciiLA.jpg",
+      "price": "836K",
+      "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2024/p/g/2025/06/25/18/Pm6MQtBIxnoXpUnmOciiLA.jpg",
+      "Rating": "4.6",
+      "car_id": "KKAY84",
+      "rating": "4.6",
+      "Tên xe": "MITSUBISHI XPANDER 2024",
+      "address": "Phường Chính Gián, Quận Thanh Khê",
+      "item_id": "KKAY84",
+      "Giá gốc": "876K",
+      "Hộp số": "Số tự động",
+      "Số chỗ": "7 chỗ",
+      "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+      "Nhiên liệu": "Xăng",
+      "Số chuyến": "22 chuyến",
+      "Giá sau giảm": "836K",
+      "position": 3,
+      "api_position": 3,
+      "eligible": true
+    },
+    {
+      "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2023/KEYMPW?carSearchIndex=4",
+      "Tags": "Miễn thế chấp, Giao xe tận nơi",
+      "link": "https://www.mioto.vn/car/mitsubishi-xpander-2023/KEYMPW?carSearchIndex=4",
+      "name": "MITSUBISHI XPANDER 2023",
+      "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2026/00/02/20/Ah3jG-Gj15cuIglWYRJbcw.jpg",
+      "price": "867K",
+      "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2023/p/g/2026/00/02/20/Ah3jG-Gj15cuIglWYRJbcw.jpg",
+      "Rating": "4.6",
+      "car_id": "KEYMPW",
+      "rating": "4.6",
+      "Tên xe": "MITSUBISHI XPANDER 2023",
+      "address": "Phường Chính Gián, Quận Thanh Khê",
+      "item_id": "KEYMPW",
+      "Giá gốc": "907K",
+      "Hộp số": "Số tự động",
+      "Số chỗ": "7 chỗ",
+      "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+      "Nhiên liệu": "Xăng",
+      "Số chuyến": "13 chuyến",
+      "Giá sau giảm": "867K",
+      "position": 4,
+      "api_position": 4,
+      "eligible": true
+    },
+    {
+      "Link": "https://www.mioto.vn/car/toyota-veloz-cross-2024/KLTFUL?carSearchIndex=5",
+      "Tags": "Miễn thế chấp, Giao xe tận nơi",
+      "link": "https://www.mioto.vn/car/toyota-veloz-cross-2024/KLTFUL?carSearchIndex=5",
+      "name": "TOYOTA VELOZ CROSS 2024",
+      "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2024/p/g/2026/03/03/22/XN90IWHUOoCR6ezSjk8B4Q.jpg",
+      "price": "1.107K",
+      "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/toyota_veloz_cross_2024/p/g/2026/03/03/22/XN90IWHUOoCR6ezSjk8B4Q.jpg",
+      "Rating": "4.6",
+      "car_id": "KLTFUL",
+      "rating": "4.6",
+      "Tên xe": "TOYOTA VELOZ CROSS 2024",
+      "address": "Phường Hải Châu II, Quận Hải Châu",
+      "item_id": "KLTFUL",
+      "Giá gốc": "1.147K",
+      "Hộp số": "Số tự động",
+      "Số chỗ": "7 chỗ",
+      "Địa chỉ": "Phường Hải Châu II, Quận Hải Châu",
+      "Nhiên liệu": "Xăng",
+      "Số chuyến": "10 chuyến",
+      "Giá sau giảm": "1.107K",
+      "position": 5,
+      "api_position": 5,
+      "eligible": true
+    },
+    {
+      "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2019/K57AKP?carSearchIndex=6",
+      "Tags": "Miễn thế chấp, Giao xe tận nơi",
+      "link": "https://www.mioto.vn/car/mitsubishi-xpander-2019/K57AKP?carSearchIndex=6",
+      "name": "MITSUBISHI XPANDER 2019",
+      "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2019/p/g/2025/07/02/18/cs5L0ifbOeApKVUPxyUNfA.jpg",
+      "price": "798K",
+      "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2019/p/g/2025/07/02/18/cs5L0ifbOeApKVUPxyUNfA.jpg",
+      "Rating": "3.4",
+      "car_id": "K57AKP",
+      "rating": "3.4",
+      "Tên xe": "MITSUBISHI XPANDER 2019",
+      "address": "Phường Chính Gián, Quận Thanh Khê",
+      "item_id": "K57AKP",
+      "Giá gốc": "838K",
+      "Hộp số": "Số tự động",
+      "Số chỗ": "7 chỗ",
+      "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+      "Nhiên liệu": "Xăng",
+      "Số chuyến": "11 chuyến",
+      "Giá sau giảm": "798K",
+      "position": null,
+      "api_position": 6,
+      "eligible": false
+    },
+    {
+      "Link": "https://www.mioto.vn/car/mitsubishi-xpander-2020/KGTSC5?carSearchIndex=7",
+      "Tags": "Miễn thế chấp, Giao xe tận nơi",
+      "link": "https://www.mioto.vn/car/mitsubishi-xpander-2020/KGTSC5?carSearchIndex=7",
+      "name": "MITSUBISHI XPANDER 2020",
+      "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2025/11/03/12/nfXHJqcJeqOHVxvRLLFjAg.jpg",
+      "price": "953K",
+      "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/mitsubishi_xpander_2020/p/g/2025/11/03/12/nfXHJqcJeqOHVxvRLLFjAg.jpg",
+      "Rating": "4.0",
+      "car_id": "KGTSC5",
+      "rating": "4.0",
+      "Tên xe": "MITSUBISHI XPANDER 2020",
+      "address": "Phường Chính Gián, Quận Thanh Khê",
+      "item_id": "KGTSC5",
+      "Giá gốc": "993K",
+      "Hộp số": "Số tự động",
+      "Số chỗ": "7 chỗ",
+      "Địa chỉ": "Phường Chính Gián, Quận Thanh Khê",
+      "Nhiên liệu": "Xăng",
+      "Số chuyến": "1 chuyến",
+      "Giá sau giảm": "953K",
+      "position": null,
+      "api_position": 7,
+      "eligible": false
+    },
+    {
+      "Link": "https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8",
+      "Tags": "Miễn thế chấp, Giao xe tận nơi",
+      "link": "https://www.mioto.vn/car/honda-hrv-g-2023/KFH2K9?carSearchIndex=8",
+      "name": "HONDA HRV G 2023",
+      "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg",
+      "price": "Không có",
+      "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/honda_hrv_g_2023/p/g/2026/04/21/17/Oq1uvdHuaJl_e4Q1StourQ.jpg",
+      "Rating": "5.0",
+      "car_id": "KFH2K9",
+      "rating": "5.0",
+      "Tên xe": "HONDA HRV G 2023",
+      "address": "Phường Thạc Gián, Quận Thanh Khê",
+      "item_id": "KFH2K9",
+      "Giá gốc": "1.019K",
+      "Hộp số": "Số tự động",
+      "Số chỗ": "5 chỗ",
+      "Địa chỉ": "Phường Thạc Gián, Quận Thanh Khê",
+      "Nhiên liệu": "Xăng",
+      "Số chuyến": "23 chuyến",
+      "Giá sau giảm": "Không có",
+      "position": 6,
+      "api_position": 8,
+      "eligible": true
+    },
+    {
+      "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=9",
+      "Tags": "Miễn thế chấp, Giao xe tận nơi",
+      "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KJ89JC?carSearchIndex=9",
+      "name": "VINFAST VF3 2025",
+      "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg",
+      "price": "547K",
+      "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/07/02/10/2dVKy_z857L_vTSDPZG-1A.jpg",
+      "Rating": "5.0",
+      "car_id": "KJ89JC",
+      "rating": "5.0",
+      "Tên xe": "VINFAST VF3 2025",
+      "address": "Phường Hòa Khê, Quận Thanh Khê",
+      "item_id": "KJ89JC",
+      "Giá gốc": "574K",
+      "Hộp số": "Số tự động",
+      "Số chỗ": "4 chỗ",
+      "Địa chỉ": "Phường Hòa Khê, Quận Thanh Khê",
+      "Nhiên liệu": "Điện",
+      "Số chuyến": "100+ chuyến",
+      "Giá sau giảm": "547K",
+      "position": null,
+      "api_position": 9,
+      "eligible": false
+    },
+    {
+      "Link": "https://www.mioto.vn/car/vinfast-vf3-2025/KEVEP3?carSearchIndex=10",
+      "Tags": "Miễn thế chấp, Giao xe tận nơi",
+      "link": "https://www.mioto.vn/car/vinfast-vf3-2025/KEVEP3?carSearchIndex=10",
+      "name": "VINFAST VF3 2025",
+      "photo": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/06/24/08/y3JcD1sfPmmA10aPKHNH9A.jpg",
+      "price": "547K",
+      "Ảnh": "https://n1-pstg.mioto.vn/cho_thue_xe_o_to_tu_lai_thue_xe_du_lich_danang/vinfast_vf3_2025/p/g/2025/06/24/08/y3JcD1sfPmmA10aPKHNH9A.jpg",
+      "Rating": "5.0",
+      "car_id": "KEVEP3",
+      "rating": "5.0",
+      "Tên xe": "VINFAST VF3 2025",
+      "address": "Phường Thanh Khê Đông, Quận Thanh Khê",
+      "item_id": "KEVEP3",
+      "Giá gốc": "574K",
+      "Hộp số": "Số tự động",
+      "Số chỗ": "4 chỗ",
+      "Địa chỉ": "Phường Thanh Khê Đông, Quận Thanh Khê",
+      "Nhiên liệu": "Điện",
+      "Số chuyến": "100+ chuyến",
+      "Giá sau giảm": "547K",
+      "position": null,
+      "api_position": 10,
+      "eligible": false
+    }
+  ],
+  "labels": []
+}
+```
+### search_cars_tool
+```json
+{}
+```
+
+### Finalize
+```json
+{
+  "expected_action": "NO_STORE",
+  "memory_job": {
+    "job_id": "f24b6f0c-6238-488d-8c79-a0d1518491d0",
+    "status": "skipped",
+    "error_summary": null,
+    "created_at": "2026-09-15T21:37:48.062172+07:00"
+  },
+  "db_mutations": [],
+  "audits": [],
+  "seeded_status": {
+    "m_automatic": {
+      "status": "active",
+      "memory_id": "4577739e-7309-5e22-a020-a2defc239e48",
+      "memory_text": "Thích xe số tự động",
+      "supersedes_memory_id": null
+    },
+    "m_seats": {
+      "status": "active",
+      "memory_id": "a64158b7-a646-5e3b-9284-95af05d446e7",
+      "memory_text": "Cần xe 5 chỗ",
+      "supersedes_memory_id": null
+    },
+    "m_other_user": {
+      "status": "active",
+      "memory_id": "d7a478de-f28c-5cf7-bde9-5051f4963e86",
+      "memory_text": "Memory user khác — thích xe số sàn",
+      "supersedes_memory_id": null
+    },
+    "m_superseded": {
+      "status": "superseded",
+      "memory_id": "3759030f-acad-5603-9dbb-fbd4623d9398",
+      "memory_text": "Preference cũ — chỉ thuê xe 4 chỗ",
+      "supersedes_memory_id": null
+    }
+  }
+}
+```
+
+## Rubric checklist (human — official)
+Vy
+- [1] Task Success
+- [1] Answer Faithfulness
+- [1] Answer Relevance
+- [1] Memory-Grounded Answer Accuracy
+- [1] Unanswerable (ANSWERABLE)
+- [0] Preference Compliance
+- [1] Hallucinated Memory (none expected)
+
+Duy
+- [1] Task Success
+- [1] Answer Faithfulness
+- [1] Answer Relevance
+- [1] Memory-Grounded Answer Accuracy
+- [1] Unanswerable (ANSWERABLE)
+- [0] Preference Compliance
+- [1] Hallucinated Memory (none expected)
+
+### Required constraints
+- search/answer giữ Đà Nẵng, nhận sân bay, trả trung tâm, 10–12/10 từ summary
+- đi 4 người từ T3
+- ưu tiên xe tự động / 5 chỗ từ memory; không hỏi lại thông tin đã có
+
+### Trade-off rules
+- Nếu tool chỉ có một địa chỉ, ghi nhận sân bay; nêu nếu chưa lọc được điểm trả trung tâm
+
+### Forbidden claims
+- Giá/phụ phí không có trong tool result
+- Viện dẫn preference không tồn tại hoặc inactive
+
+## Notes
+___
+Duy — FAIL Preference: 4 người nhưng list mở đầu bằng xe 4 chỗ; thiếu nêu nhận sân bay/trả trung tâm theo trade-off.

@@ -44,7 +44,7 @@ expected_trace:
       must_include: [m_small_group, m_afternoon]
       must_exclude: [m_other_user, m_superseded]
       expected_applicability:
-        m_small_group: apply
+        m_small_group: uncertain
         m_afternoon: uncertain
   expected_tools:
     - name: search_attractions_tool
