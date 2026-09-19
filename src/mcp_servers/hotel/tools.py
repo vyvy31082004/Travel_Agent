@@ -30,9 +30,14 @@ def register_hotel_tools(mcp):
             limit: int = 10,
     ) -> list[dict]:
         """
-        Search hotels by location/name, dates, adults, children_age,price, price tier, price_min, price_max, and room quantity. 
+        Search hotels by location/name, dates, adults, children_age, price, price tier,
+        price_min, price_max, and room quantity.
+        PRICE (VND per night, NOT stay total):
+        - "1–2 triệu một đêm" -> price_min=1000000, price_max=2000000
+        - "giá cao nhất 2 triệu/đêm" -> price_max=2000000
+        - Use price_min/price_max for numeric budgets; prefer them over price_tier
         When calling search_hotels_tool, if user mentions ANY child age, you MUST pass children_age.
-        - This applies to ALL ages 0-18, including 16 and 17. Never omit children_age for teenagers.\n"
+        - This applies to ALL ages 0-18, including 16 and 17. Never omit children_age for teenagers.
         - "X người lớn" -> adults=X
         - "Y trẻ em Z tuổi" -> children_age="Z"  (one age per child, comma-separated string)
         - Multiple children: "1 trẻ 8 tháng và 1 trẻ 16 tuổi" -> children_age="0,16"
@@ -81,8 +86,9 @@ def register_hotel_tools(mcp):
         - "X người lớn" -> adults=X
         - "Y trẻ em Z tuổi" -> children_age="Z"
         - Multiple children: "1 trẻ 5 tuổi và 1 trẻ 16 tuổi" -> children_age="5,16"
-        PRICE:
-        - "giá cao nhất 2 triệu" -> price_max=2000000
+        PRICE (VND per night, NOT stay total):
+        - "giá cao nhất 2 triệu/đêm" -> price_max=2000000
+        - "7–8 triệu một đêm" -> price_min=7000000, price_max=8000000
         - Use price_max/price_min, NOT price_tier
         Example flow:
         1. search_hotels_tool(location="Nha Trang", ...)

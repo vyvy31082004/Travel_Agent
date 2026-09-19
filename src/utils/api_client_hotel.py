@@ -272,6 +272,61 @@ def _normalize_booking_hotel(raw_hotel: dict, nights: int) -> dict:
     }
 
 
+def _per_night_price(item: dict) -> float | None:
+    """Return VND per-night price from a normalized hotel/room item."""
+    for key in ("price_per_night", "price"):
+        value = item.get(key)
+        if value is not None:
+            return float(value)
+    return None
+
+
+def _filter_items_by_per_night_price(
+    items: list[dict],
+    *,
+    price: int | None = None,
+    price_min: int | None = None,
+    price_max: int | None = None,
+) -> list[dict]:
+    """
+    Filter hotels/rooms by per-night VND bounds.
+
+    Tool/agent contract: price / price_min / price_max are always per night
+    (e.g. user says "1–2 triệu một đêm"), never stay total.
+    """
+    if price is None and price_min is None and price_max is None:
+        return items
+
+    filtered: list[dict] = []
+    for item in items:
+        per_night = _per_night_price(item)
+        if per_night is None:
+            continue
+        if price is not None and per_night > float(price):
+            continue
+        if price_min is not None and per_night < float(price_min):
+            continue
+        if price_max is not None and per_night > float(price_max):
+            continue
+        filtered.append(item)
+    return filtered
+
+
+def _per_night_to_stay_total_bounds(
+    price_min: int | None,
+    price_max: int | None,
+    nights: int,
+) -> tuple[int | None, int | None]:
+    """
+    Booking searchHotels price_min/max are stay-total filters.
+    Convert agent per-night bounds before calling the upstream API.
+    """
+    n = max(int(nights or 1), 1)
+    api_min = int(price_min) * n if price_min is not None else None
+    api_max = int(price_max) * n if price_max is not None else None
+    return api_min, api_max
+
+
 def search_hotel_from_api(
     location: str | None = None,
     name: str | None = None,
@@ -298,6 +353,7 @@ def search_hotel_from_api(
     Lưu ý:
     - Nếu không truyền checkin_date/checkout_date, mặc định search ngày mai -> ngày kia.
     - external_hotel_id là ID từ Booking.com, không phải hotel_id trong DB nội bộ.
+    - price / price_min / price_max are VND **per night** (not stay total).
     """
 
     query = location or name
@@ -324,6 +380,11 @@ def search_hotel_from_api(
                 }
             ]
 
+        # Booking searchHotels price_* is stay-total; tool contract is per-night.
+        api_price_min, api_price_max = _per_night_to_stay_total_bounds(
+            price_min, price_max, nights
+        )
+
         data = _booking_get(
             "/hotels/searchHotels",
             {
@@ -335,8 +396,8 @@ def search_hotel_from_api(
                 "children_age": children_age,
                 "room_qty": room_qty,
                 "page_number": 1,
-                "price_min": price_min,
-                "price_max": price_max,
+                "price_min": api_price_min,
+                "price_max": api_price_max,
                 "languagecode": BOOKING_LANGUAGE_CODE,
                 "currency_code": BOOKING_CURRENCY_CODE,
             },
@@ -368,29 +429,12 @@ def search_hotel_from_api(
                 and float(hotel["rating"]) >= float(rating)
             ]
 
-        if price is not None:
-            hotels = [
-                hotel
-                for hotel in hotels
-                if hotel.get("total_price") is not None
-                and float(hotel["total_price"]) <= float(price)
-            ]
-
-        if price_min is not None:
-            hotels = [
-                hotel
-                for hotel in hotels
-                if hotel.get("total_price") is not None
-                and float(hotel["total_price"]) >= float(price_min)
-            ]
-        
-        if price_max is not None:
-            hotels = [
-                hotel
-                for hotel in hotels
-                if hotel.get("total_price") is not None
-                and float(hotel["total_price"]) <= float(price_max)
-            ]
+        hotels = _filter_items_by_per_night_price(
+            hotels,
+            price=price,
+            price_min=price_min,
+            price_max=price_max,
+        )
 
         # Lọc phân khúc giá
         normalized_tier = _normalize_price_tier(price_tier)
@@ -659,26 +703,12 @@ def get_hotel_room_list_from_api(
             if recommended:
                 rooms = recommended
 
-        if price is not None:
-            rooms = [
-                r for r in rooms
-                if r.get("total_price") is not None
-                and float(r["total_price"]) <= float(price)
-            ]
-
-        if price_min is not None:
-            rooms = [
-                r for r in rooms
-                if r.get("total_price") is not None
-                and float(r["total_price"]) >= float(price_min)
-            ]
-
-        if price_max is not None:
-            rooms = [
-                r for r in rooms
-                if r.get("total_price") is not None
-                and float(r["total_price"]) <= float(price_max)
-            ]
+        rooms = _filter_items_by_per_night_price(
+            rooms,
+            price=price,
+            price_min=price_min,
+            price_max=price_max,
+        )
 
         return rooms[:limit]
 

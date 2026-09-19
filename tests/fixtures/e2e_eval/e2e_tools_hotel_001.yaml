@@ -4,8 +4,8 @@ scenario: "4 turns phủ hotel search rồi lần lượt room/reviews/facility+
 seed:
   user_id: user_a
   long_term_memories:
-    - id: m_hotel_quiet
-      text: "Thích khách sạn yên tĩnh"
+    - id: m_hotel_beach
+      text: "Thích khách sạn gần biển"
       domain: hotel
       category: hotel_preference
       status: active
@@ -38,7 +38,7 @@ expected_trace:
   expected_route: [hotel]
   expected_context:
     hotel:
-      must_include: [m_hotel_quiet]
+      must_include: [m_hotel_beach]
       must_exclude: [m_hotel_other_user, m_hotel_superseded]
   expected_tools:
     - name: search_hotels_tool

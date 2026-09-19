@@ -73,28 +73,37 @@ def test_flight_origin_and_cabin_hints():
     assert "cabin_class=economy" in hints
 
 
-def test_car_seats_and_transmission_hints():
+def test_car_cate_id_hints_from_user_needs_aliases():
     memories = [
+        _memory("m_electric", "Thích xe điện", MemoryDomain.CAR),
+        _memory("m_family", "Đi chơi với gia đình", MemoryDomain.CAR),
         _memory("m_auto", "Thích xe số tự động", MemoryDomain.CAR),
-        _memory("m_seats", "Cần xe tối thiểu 7 chỗ", MemoryDomain.CAR),
     ]
     judgments = [
         ApplicabilityJudgment(
-            memory_id="m_auto",
+            memory_id="m_electric",
             label=ApplicabilityLabel.APPLY,
             confidence=0.9,
-            reason="auto applies",
+            reason="cateId applies",
         ),
         ApplicabilityJudgment(
-            memory_id="m_seats",
+            memory_id="m_family",
             label=ApplicabilityLabel.APPLY,
             confidence=0.9,
-            reason="seats apply",
+            reason="cateId applies",
+        ),
+        ApplicabilityJudgment(
+            memory_id="m_auto",
+            label=ApplicabilityLabel.UNCERTAIN,
+            confidence=0.9,
+            reason="transmission soft",
         ),
     ]
     hints = derive_turn_constraints(memories, judgments, domain="car")
-    assert "transmission=automatic" in hints
-    assert "min_seats=7" in hints
+    assert "cateId=4" in hints
+    assert "cateId=7" in hints
+    assert "transmission=automatic" not in hints
+    assert "min_seats=7" not in hints
 
 
 def test_merge_turn_constraints_dedupes():

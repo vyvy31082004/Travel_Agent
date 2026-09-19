@@ -228,14 +228,14 @@ def _scope_cross_domain(split: str, index: int) -> dict[str, Any]:
     store = [
         _mem(f"{prefix}-h", user_id=uid, text="thích yên tĩnh", domain="hotel"),
         _mem(f"{prefix}-f", user_id=uid, text="ưu tiên bay thẳng", domain="flight"),
-        _mem(f"{prefix}-c", user_id=uid, text="thích xe tự động", domain="car"),
+        _mem(f"{prefix}-c", user_id=uid, text="thích xe điện", domain="car"),
         _mem(f"{prefix}-e", user_id=uid, text="thích tour văn hóa", domain="excursion"),
     ]
     pool_id = f"{prefix}-{short}"
     queries = {
         "hotel": "Tìm khách sạn Hà Nội",
         "flight": "Tìm chuyến bay tối",
-        "car": "Thuê xe số tự động",
+        "car": "Thuê xe điện",
         "excursion": "Tìm tour tham quan",
     }
     actions = {
@@ -530,10 +530,10 @@ def _action_flight_compare(split: str, index: int) -> dict[str, Any]:
 def _action_car_search(split: str, index: int) -> dict[str, Any]:
     uid = f"user-a-{_suffix(split, index)}"
     prefix = f"act_c_search_{_suffix(split, index)}"
-    auto_id = f"{prefix}-auto"
+    electric_id = f"{prefix}-electric"
     seven_id = f"{prefix}-7seat"
     store = [
-        _mem(auto_id, user_id=uid, text="thích xe số tự động", domain="car"),
+        _mem(electric_id, user_id=uid, text="thích xe điện", domain="car"),
         _mem(seven_id, user_id=uid, text="thích xe 7 chỗ", domain="car"),
     ]
     return _case(
@@ -541,13 +541,16 @@ def _action_car_search(split: str, index: int) -> dict[str, Any]:
         split=split,
         scenario_type="action_contrast_car_search",
         user_id=uid,
-        user_query="Thuê xe số tự động ở Đà Nẵng",
+        user_query="Thuê xe điện ở Đà Nẵng",
         domain="car",
         memory_store=store,
-        expected_sql_pool=[auto_id, seven_id],
-        expected_applicability={auto_id: "apply", seven_id: "uncertain"},
+        expected_sql_pool=[electric_id, seven_id],
+        expected_applicability={electric_id: "apply", seven_id: "uncertain"},
         expected_action="search_cars",
-        rationale="Transmission maps via user_needs; seat capacity is soft (no seats tool arg).",
+        rationale=(
+            "EV preference maps to user_needs→Mioto cateId; "
+            "seat capacity is soft (no seats tool arg)."
+        ),
     )
 
 
@@ -570,9 +573,12 @@ def _action_car_select(split: str, index: int) -> dict[str, Any]:
         domain_state={"visible_results": {"r1": {"domain": "car", "search_id": "s1"}}},
         memory_store=store,
         expected_sql_pool=[auto_id, seven_id],
-        expected_applicability={auto_id: "uncertain", seven_id: "apply"},
+        expected_applicability={auto_id: "uncertain", seven_id: "uncertain"},
         expected_action="select_car",
-        rationale="7-seat applies at select_car for family of 6.",
+        rationale=(
+            "On select_car, transmission and seat capacity are both soft "
+            "(Hộp số / Số chỗ); neither is a hard tool field."
+        ),
     )
 
 
@@ -742,7 +748,10 @@ def _override_car_transmission(split: str, index: int) -> dict[str, Any]:
         expected_sql_pool=[auto_id, wide_id],
         expected_applicability={auto_id: "overridden", wide_id: "apply"},
         expected_action="search_cars",
-        rationale="Automatic preference overridden by manual-only request.",
+        rationale=(
+            "Automatic transmission preference overridden by manual-only request; "
+            "xe rộng rãi still maps to user_needs→Mioto cateId (family)."
+        ),
     )
 
 

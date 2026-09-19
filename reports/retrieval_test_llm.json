@@ -29,8 +29,8 @@
         "value": 0.0
       },
       "context_recall": {
-        "numerator": 56,
-        "denominator": 56,
+        "numerator": 54,
+        "denominator": 54,
         "value": 1.0
       },
       "allowed_context_precision": {
@@ -39,8 +39,8 @@
         "value": 1.0
       },
       "uncertain_recall": {
-        "numerator": 37,
-        "denominator": 37,
+        "numerator": 39,
+        "denominator": 39,
         "value": 1.0
       },
       "irrelevant_leakage_rate": {
@@ -49,14 +49,14 @@
         "value": 0.0
       },
       "context_precision": {
-        "numerator": 56,
+        "numerator": 54,
         "denominator": 93,
-        "value": 0.6021505376344086
+        "value": 0.5806451612903226
       },
       "uncertain_context_rate": {
-        "numerator": 37,
+        "numerator": 39,
         "denominator": 93,
-        "value": 0.3978494623655914
+        "value": 0.41935483870967744
       },
       "overridden_leakage_rate": {
         "numerator": 0,
@@ -69,9 +69,9 @@
         "value": 1.0
       },
       "applicability_macro_f1": {
-        "numerator": 940,
+        "numerator": 967,
         "denominator": 1000,
-        "value": 0.9401309117661869
+        "value": 0.9672734991286973
       },
       "cross_user_context_leakage": {
         "numerator": 0,
@@ -819,18 +819,18 @@
         "action_ok": true,
         "actual_pool": [
           "act_c_search_tes_00-7seat",
-          "act_c_search_tes_00-auto"
+          "act_c_search_tes_00-electric"
         ],
         "expected_pool": [
           "act_c_search_tes_00-7seat",
-          "act_c_search_tes_00-auto"
+          "act_c_search_tes_00-electric"
         ],
         "final_context_ids": [
           "act_c_search_tes_00-7seat",
-          "act_c_search_tes_00-auto"
+          "act_c_search_tes_00-electric"
         ],
         "judge_labels": {
-          "act_c_search_tes_00-auto": "apply",
+          "act_c_search_tes_00-electric": "apply",
           "act_c_search_tes_00-7seat": "uncertain"
         },
         "overridden_leaked": [],
@@ -845,18 +845,18 @@
         "action_ok": true,
         "actual_pool": [
           "act_c_search_tes_01-7seat",
-          "act_c_search_tes_01-auto"
+          "act_c_search_tes_01-electric"
         ],
         "expected_pool": [
           "act_c_search_tes_01-7seat",
-          "act_c_search_tes_01-auto"
+          "act_c_search_tes_01-electric"
         ],
         "final_context_ids": [
           "act_c_search_tes_01-7seat",
-          "act_c_search_tes_01-auto"
+          "act_c_search_tes_01-electric"
         ],
         "judge_labels": {
-          "act_c_search_tes_01-auto": "apply",
+          "act_c_search_tes_01-electric": "apply",
           "act_c_search_tes_01-7seat": "uncertain"
         },
         "overridden_leaked": [],
@@ -883,7 +883,7 @@
         ],
         "judge_labels": {
           "act_c_sel_tes_00-auto": "uncertain",
-          "act_c_sel_tes_00-7seat": "apply"
+          "act_c_sel_tes_00-7seat": "uncertain"
         },
         "overridden_leaked": [],
         "irrelevant_leaked": [],
@@ -909,7 +909,7 @@
         ],
         "judge_labels": {
           "act_c_sel_tes_01-auto": "uncertain",
-          "act_c_sel_tes_01-7seat": "apply"
+          "act_c_sel_tes_01-7seat": "uncertain"
         },
         "overridden_leaked": [],
         "irrelevant_leaked": [],
@@ -1389,7 +1389,7 @@
         ],
         "judge_labels": {
           "ovr_c_trans_tes_00-auto": "overridden",
-          "ovr_c_trans_tes_00-wide": "uncertain"
+          "ovr_c_trans_tes_00-wide": "apply"
         },
         "overridden_leaked": [],
         "irrelevant_leaked": [],
@@ -1414,7 +1414,7 @@
         ],
         "judge_labels": {
           "ovr_c_trans_tes_01-auto": "overridden",
-          "ovr_c_trans_tes_01-wide": "uncertain"
+          "ovr_c_trans_tes_01-wide": "apply"
         },
         "overridden_leaked": [],
         "irrelevant_leaked": [],
@@ -1439,7 +1439,7 @@
         ],
         "judge_labels": {
           "ovr_c_trans_tes_02-auto": "overridden",
-          "ovr_c_trans_tes_02-wide": "uncertain"
+          "ovr_c_trans_tes_02-wide": "apply"
         },
         "overridden_leaked": [],
         "irrelevant_leaked": [],
@@ -1464,7 +1464,7 @@
         ],
         "judge_labels": {
           "ovr_c_trans_tes_03-auto": "overridden",
-          "ovr_c_trans_tes_03-wide": "uncertain"
+          "ovr_c_trans_tes_03-wide": "apply"
         },
         "overridden_leaked": [],
         "irrelevant_leaked": [],
@@ -1489,7 +1489,7 @@
         ],
         "judge_labels": {
           "ovr_c_trans_tes_04-auto": "overridden",
-          "ovr_c_trans_tes_04-wide": "uncertain"
+          "ovr_c_trans_tes_04-wide": "apply"
         },
         "overridden_leaked": [],
         "irrelevant_leaked": [],

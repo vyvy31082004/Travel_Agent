@@ -10,6 +10,7 @@ from typing import Any, Protocol, Sequence
 from pydantic import BaseModel, Field
 
 from memory.long_term import TravelMemory, format_memory_for_prompt
+from utils.api_client_car import map_car_need_to_category_id
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,8 @@ DEFAULT_APPLICABILITY_BATCH_SIZE = 10
 LLM_OVERRIDE_CONFIDENCE = 0.7
 _DEFAULT_RULE_REASON = "default uncertain (no specific tool-field rule matched)"
 
-# Car capacity prefs that map to search_cars user_needs (4/5/7 chỗ, seater, ...).
+# Seat/capacity prefs soft-rank via result field Số chỗ — not a search_cars tool arg.
+# (user_needs only maps to Mioto cateId aliases in api_client_car.MIOTO_CATEGORY_ALIASES.)
 _CAR_SEAT_CAPACITY_RE = re.compile(
     r"("
     r"\d+\s*chỗ"
@@ -28,9 +30,26 @@ _CAR_SEAT_CAPACITY_RE = re.compile(
     re.IGNORECASE,
 )
 
+_CAR_TRANSMISSION_RE = re.compile(
+    r"("
+    r"số\s*tự\s*động|tự\s*động|tu\s*dong|automatic"
+    r"|số\s*sàn|so\s*san|manual(?:\s*transmission)?"
+    r")",
+    re.IGNORECASE,
+)
+
 
 def _is_car_seat_capacity_preference(text: str) -> bool:
     return bool(_CAR_SEAT_CAPACITY_RE.search(text or ""))
+
+
+def _is_car_transmission_preference(text: str) -> bool:
+    return bool(_CAR_TRANSMISSION_RE.search(text or ""))
+
+
+def _car_need_maps_to_cate_id(text: str) -> bool:
+    """True when memory text can become Mioto cateId via user_needs (strict alias)."""
+    return map_car_need_to_category_id(text or "", allow_fuzzy=False) is not None
 
 
 class ApplicabilityLabel(StrEnum):
@@ -130,7 +149,7 @@ def _query_specifies_origin(query: str) -> bool:
 
 # Tool-field rubric (search actions):
 # - APPLY: preference maps to a tool/API arg for this action and is not contradicted
-#   (hotel: price_min/max; car: user_needs transmission; flight: cabin/direct/origin)
+#   (hotel: price_min/max; car: user_needs→cateId aliases; flight: cabin/direct/origin)
 # - UNCERTAIN: may still matter for ranking/reading results but has no tool arg
 #   (hotel: quiet, beach; car: surcharge, seat capacity; excursion: crowd)
 # - IRRELEVANT: not usable for this action (hotel bathtub on search_hotels; flight seat before offers)
@@ -160,24 +179,26 @@ def build_applicability_llm_prompt(
         "memory 'Ưu tiên tour nhóm lớn').\n"
         "Labels:\n"
         "- apply: still-valid preference that maps to tool/API fields for this action "
-        "(hotel price_min/price_max; car user_needs transmission; flight cabin_class, "
-        "direct/nonstop, origin) and is not contradicted\n"
+        "(hotel price_min/price_max; car user_needs→Mioto cateId aliases only "
+        "[electric/hybrid/sport/new-driver/commute/family/camping/friends/luxury]; "
+        "flight cabin_class, direct/nonstop, origin) and is not contradicted\n"
         "- overridden: user request contradicts or replaces this memory "
         "(even if the topic is still relevant to search)\n"
         "- irrelevant: not usable for the current action "
         "(e.g. room bathtub amenity on hotel search_hotels; seat/window prefs before flight offers exist)\n"
         "- uncertain: may still matter when reading/ranking results but cannot be passed as a "
         "tool arg yet (e.g. hotel quiet/yên tĩnh, gần biển on search_hotels; excursion "
-        "nature/beach/culture tour-type prefs that are too general for location; car seat capacity "
-        "/ phụ phí without a dedicated seats or surcharge tool field; crowd avoidance without "
-        "crowd data)\n"
+        "nature/beach/culture tour-type prefs that are too general for location; car transmission "
+        "/ seat capacity / phụ phí — no dedicated tool fields; soft via Hộp số/Số chỗ; "
+        "crowd avoidance without crowd data)\n"
         "Do NOT choose apply just because the preference is 'about' the domain/search.\n"
         "Do NOT choose apply only because the preference could soft-rank results — "
         "if there is no matching tool/API field for this action, use uncertain or irrelevant.\n"
         "If relevant but contradicted → overridden, not apply.\n"
-        "Car seat capacity has no dedicated seats tool arg on search_cars → uncertain "
-        "(soft via result field Số chỗ / weak cateId alias). Hotel quiet/beach and excursion "
-        "nature/beach/culture tour-types are too general for concrete tool args → uncertain.\n"
+        "Car user_needs only maps to Mioto cateId aliases — transmission (số tự động/sàn) and "
+        "seat capacity are NOT cateId filters → uncertain (soft via Hộp số / Số chỗ). "
+        "Hotel quiet/beach and excursion nature/beach/culture tour-types are too general "
+        "for concrete tool args → uncertain.\n"
         "\nExamples (search actions):\n"
         "- hotel search_hotels + 'Ngân sách 1–2 triệu' + 'Tìm KS Phú Quốc' → apply\n"
         "- hotel search_hotels + 'Thích yên tĩnh' + 'Tìm KS Phú Quốc' → uncertain "
@@ -194,10 +215,12 @@ def build_applicability_llm_prompt(
         "- flight search_one_way + 'thường chọn rẻ nhất' + 'đúng giờ nhất' → uncertain "
         "(prioritizing schedule is not a hard cancellation of price preference)\n"
         "- flight search_one_way + 'thường chọn rẻ nhất' + 'không cần rẻ' → irrelevant\n"
-        "- car search_cars + automatic pref → apply; seat capacity (5/7 chỗ) → uncertain "
-        "(no seats tool arg; soft via Số chỗ in results); phụ phí avoidance → uncertain\n"
+        "- car search_cars + 'xe điện'/'gia đình'/'mới lái'/… cateId aliases → apply; "
+        "automatic/manual transmission → uncertain (soft via Hộp số); "
+        "seat capacity (5/7 chỗ) → uncertain (soft via Số chỗ); phụ phí → uncertain\n"
         "- excursion search_attractions + nature/beach/culture tour-type prefs → uncertain "
-        "(too general vs concrete location); avoid crowded → uncertain\n"
+        "(too general vs concrete location); avoid crowded → uncertain; "
+        "small/large group-size → uncertain (no group-size tool arg; soft-rank only)\n"
         "- excursion + memory 'Ưu tiên tour nhóm lớn' + query "
         "'Từ giờ ưu tiên nhóm nhỏ. Tìm tour Hội An' → overridden\n"
         f"Domain: {domain}\n"
@@ -344,25 +367,31 @@ class RuleBasedApplicabilityJudge:
                         label = ApplicabilityLabel.UNCERTAIN
                         reason = "seat preference may inform compare"
             elif domain == "car" and domain_action == "search_cars":
-                if "tự động" in text or "automatic" in text:
-                    label = ApplicabilityLabel.APPLY
-                    reason = "transmission maps to user_needs on search_cars"
+                if _is_car_transmission_preference(text):
+                    label = ApplicabilityLabel.UNCERTAIN
+                    reason = (
+                        "transmission soft via Hộp số "
+                        "(not a Mioto cateId / search_cars tool field)"
+                    )
                 elif _is_car_seat_capacity_preference(text):
                     label = ApplicabilityLabel.UNCERTAIN
                     reason = "seat capacity soft until results expose Số chỗ (no seats tool arg)"
                 elif "phụ phí" in text or "surcharge" in text:
                     label = ApplicabilityLabel.UNCERTAIN
                     reason = "surcharge avoidance soft until tool payload has breakdown"
+                elif _car_need_maps_to_cate_id(text):
+                    label = ApplicabilityLabel.APPLY
+                    reason = "preference maps to user_needs→Mioto cateId on search_cars"
             elif domain == "car" and domain_action == "select_car":
-                if "tự động" in text and any(
-                    token in query for token in ("gia đình", "6 người", "7 chỗ")
-                ):
+                if _is_car_transmission_preference(text):
                     label = ApplicabilityLabel.UNCERTAIN
-                    reason = "transmission uncertain when capacity dominates"
-                if _is_car_seat_capacity_preference(text):
-                    if any(token in query for token in ("gia đình", "6 người")):
-                        label = ApplicabilityLabel.APPLY
-                        reason = "seat capacity applies for family capacity"
+                    reason = "transmission soft when selecting from shortlist (Hộp số)"
+                elif _is_car_seat_capacity_preference(text):
+                    label = ApplicabilityLabel.UNCERTAIN
+                    reason = "seat capacity soft via Số chỗ on shortlist (never a hard tool field)"
+                elif _car_need_maps_to_cate_id(text):
+                    label = ApplicabilityLabel.UNCERTAIN
+                    reason = "cateId preference already applied at search; soft on select"
             elif domain == "excursion" and domain_action == "search_attractions":
                 memory_large = any(
                     token in text for token in ("nhóm lớn", "large group", "đoàn lớn")
@@ -413,8 +442,8 @@ class RuleBasedApplicabilityJudge:
                     label = ApplicabilityLabel.UNCERTAIN
                     reason = "beach tour soft preference at search"
                 elif memory_large or memory_small:
-                    label = ApplicabilityLabel.APPLY
-                    reason = "group-size preference applies to attraction search"
+                    label = ApplicabilityLabel.UNCERTAIN
+                    reason = "group-size soft until tool has group-size signal"
             elif domain == "excursion" and domain_action == "get_details":
                 if "biển" in text or "beach" in text:
                     label = ApplicabilityLabel.IRRELEVANT

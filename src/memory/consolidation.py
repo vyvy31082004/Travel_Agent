@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Any, Protocol, Sequence
@@ -95,13 +96,36 @@ Turn-scoped requests (required — hard rule, outranks Multi-fact coverage):
   "Từ giờ tôi ưu tiên khách sạn yên tĩnh. Lần này dưới 1 triệu/đêm."
   => exactly 1 memory ("ưu tiên khách sạn yên tĩnh"); the budget yields nothing.
 
+Trip / session intent & logistics (required — hard rule, never LTM):
+- A clause about the CURRENT or UPCOMING trip plan is temporary (STM/summary only).
+  Do NOT emit a memory for it, even if it names a city or car/hotel/flight domain.
+- Temporary intent markers: "đang tính", "tính thuê", "tính đặt", "tính bay",
+  "tạm thời", "chưa cần tìm", "chưa cần đặt", "sau đó tìm", "khi nào … tìm".
+- Temporary logistics patterns: pickup/return or check-in/out for this booking
+  ("nhận xe …", "trả xe …", "trả ở …", "bay ngày …", "ở [địa điểm] ngày …")
+  when framed as this trip's plan, not a lasting preference.
+- Occupancy / party size for THIS search is STM logistics, never LTM.
+  "tôi đi 4 người", "cho 2 người", "đoàn 4 người", "xe cho 4 người" => [].
+  Do NOT confuse with a durable vehicle-size preference ("thích xe 5 chỗ",
+  "cần xe 7 chỗ"). Party size must not replace a seat-capacity memory.
+- If the ONLY content is destination + planning ("đang tính/tính thuê/đi …"), return [].
+- Example: "Mình đang tính thuê xe ở Đà Nẵng, chưa cần tìm xe." => []
+- Example: "Nhận xe sân bay ngày 10/10, trả ở trung tâm ngày 12/10." => []
+- Example: "Tìm xe luôn, tôi đi 4 người." => []
+- Example: "Mình đang tính bay từ TP.HCM ra Hà Nội, chưa cần tìm vé." => []
+- Mixed: "Tôi thích xe số tự động. Đang tính thuê xe ở Đà Nẵng."
+  => exactly 1 memory ("thích xe số tự động"); drop the Đà Nẵng planning clause.
+- Decision test: reusable on a FUTURE unrelated trip? If no => do not extract.
+  Only "where/when/how many people for this booking"? If yes => do not extract.
+
 Evidence (required — hard rule):
 - evidence_text must be the single clause that states the fact, not the whole
   message, so a durable clause is never backed by a turn-scoped one.
 
 Multi-fact coverage (required — hard rule):
-- Count only the durable preferences left after the Turn-scoped and
-  Do-not-extract sections; emit that many memories (1 fact = 1 memory).
+- Count only the durable preferences left after the Turn-scoped,
+  Trip/session intent, and Do-not-extract sections; emit that many memories
+  (1 fact = 1 memory).
 - Split rule: for the head noun (xe / khách sạn / tour / chuyến bay), emit one
   memory per independent search filter; stacked modifiers without commas still
   split (do not merge into one compound). Before returning, re-check that every
@@ -131,13 +155,14 @@ Category / domain (required):
 
 Do not extract:
 - temporary tool/API search results, prices, or one-off trip logistics
+- trip/session planning ("đang tính thuê/bay/đặt …", destination+dates for this booking)
 - assistant suggestions the user has not confirmed
 - claims without a clear user message as evidence
 - ambiguous/hedged claims ("có thể", "chưa chắc", "maybe", "nếu tiện", "nếu được", "có lẽ", "hình như")
 - sensitive data (passport, card, CVV, password)
 
-Return no memory if evidence is turn-scoped, ambiguous, sensitive, or not grounded
-in user text.\
+Return no memory if evidence is turn-scoped, trip/session intent, ambiguous, sensitive,
+or not grounded in user text.\
 """
 
 
@@ -401,7 +426,7 @@ def validate_memory_candidate(candidate: TravelMemory) -> RuleResult:
         evidence_text=candidate.evidence_text,
         memory_text=candidate.memory_text,
     ):
-        reasons.append("evidence is scoped to the current turn")
+        reasons.append("evidence is scoped to the current turn or trip")
     return RuleResult(ok=not reasons, reasons=reasons)
 
 
@@ -636,14 +661,56 @@ _TURN_SCOPED_MARKERS = (
     "ngày mai",
 )
 
+# Current-trip planning / session intent — STM only, never travel_preferences LTM.
+_TRIP_INTENT_MARKERS = (
+    "đang tính",
+    "tính thuê",
+    "tính đặt",
+    "tính bay",
+    "tính đi",
+    "tạm thời",
+    "chưa cần tìm",
+    "chưa cần đặt",
+    "sau đó tìm",
+    "nhận xe",
+    "trả xe",
+    "trả ở",
+)
+
+# Occupancy for this search ("đi 4 người") is STM; "xe 5 chỗ" is a vehicle pref.
+_PARTY_SIZE_RE = re.compile(
+    r"(?:"
+    r"đi\s+\d+\s*người|"
+    r"cho\s+\d+\s*người|"
+    r"đoàn\s+\d+\s*người|"
+    r"\d+\s*người\s+lớn|"
+    r"xe\s+cho\s+\d+\s*người|"
+    r"for\s+\d+\s+(?:people|passengers)|"
+    r"\d+\s+passengers"
+    r")",
+    re.IGNORECASE,
+)
+
 
 def _is_ambiguous(lowered: str) -> bool:
     return any(token in lowered for token in _AMBIGUOUS_MARKERS)
 
 
+def _is_party_size_logistics(text: str) -> bool:
+    """True for this-trip occupant count, not a durable N-chỗ vehicle preference."""
+    lowered = " ".join(str(text).lower().split())
+    if any(marker in lowered for marker in _DURABLE_MARKERS):
+        return False
+    return bool(_PARTY_SIZE_RE.search(lowered))
+
+
 def _is_turn_scoped(text: str) -> bool:
     lowered = " ".join(str(text).lower().split())
-    return any(marker in lowered for marker in _TURN_SCOPED_MARKERS)
+    if any(marker in lowered for marker in _TURN_SCOPED_MARKERS):
+        return True
+    if any(marker in lowered for marker in _TRIP_INTENT_MARKERS):
+        return True
+    return _is_party_size_logistics(lowered)
 
 
 def _split_clauses(text: str) -> list[str]:

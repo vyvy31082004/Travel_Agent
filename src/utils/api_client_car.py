@@ -252,7 +252,9 @@ def _find_coordinates(data: dict | list) -> dict | None:
 def _extract_car_id(link: str) -> str:
     if not link:
         return ""
-    return link.rstrip("/").split("/")[-1]
+    # Mioto list links often append ?carSearchIndex=N — keep only the path id.
+    path = link.split("?", 1)[0].split("#", 1)[0]
+    return path.rstrip("/").split("/")[-1]
 
 
 def _normalize_mioto_car(raw_car: dict) -> dict:
@@ -300,7 +302,11 @@ def text_similarity(a: str, b: str) -> float:
     return SequenceMatcher(None, a, b).ratio()
 
 
-def map_car_need_to_category_id(car_need: str | int | None) -> int | None:
+def map_car_need_to_category_id(
+    car_need: str | int | None,
+    *,
+    allow_fuzzy: bool = True,
+) -> int | None:
     """
     Map nhu cầu thuê xe sang cateId của Mioto.
 
@@ -309,6 +315,9 @@ def map_car_need_to_category_id(car_need: str | int | None) -> int | None:
     - "xe tiết kiệm xăng" -> 2
     - "đi chơi với gia đình" -> 7
     - "người mới lái" -> 15
+
+    allow_fuzzy=False: chỉ match khi alias nằm trong câu (dùng cho hard APPLY
+    applicability — tránh false positive kiểu "yên tĩnh" ~ sport).
     """
 
     if car_need is None:
@@ -404,8 +413,6 @@ def map_car_need_to_category_id(car_need: str | int | None) -> int | None:
         "co tre em",
         "xe rộng",
         "xe rong",
-        "xe 7 chỗ",
-        "xe 7 cho",
     ],
 
     10: [
@@ -468,6 +475,9 @@ def map_car_need_to_category_id(car_need: str | int | None) -> int | None:
             if alias_norm in query:
                 return cate_id
 
+            if not allow_fuzzy:
+                continue
+
             # Match gần nghĩa / gần chữ
             score = text_similarity(query, alias_norm)
 
@@ -481,7 +491,7 @@ def map_car_need_to_category_id(car_need: str | int | None) -> int | None:
                 best_score = score
                 best_id = cate_id
 
-    if best_score >= 0.55:
+    if allow_fuzzy and best_score >= 0.55:
         return best_id
 
     return None
@@ -593,8 +603,8 @@ def search_cars_from_api(
     return cars
 
 
-def search_car_details(car_name:str , car_id: str) -> dict:
-    clean_car_id = str(car_id).strip().strip("/")
+def search_car_details(car_name: str, car_id: str) -> dict:
+    clean_car_id = _extract_car_id(str(car_id).strip()) or str(car_id).strip().strip("/")
     slug = normalize_text(car_name).replace(" ", "-")
     url = f"https://www.mioto.vn/car/{slug}/{clean_car_id}"
     detail = crawl_car_details(url, headless=True)

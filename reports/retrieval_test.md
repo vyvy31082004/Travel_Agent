@@ -20,7 +20,7 @@
 | Irrelevant leakage | 0.0000 |
 | Overridden leakage | 0.0000 |
 | Context case pass rate | 1.0000 |
-| Applicability macro-F1 | 0.9510 |
+| Applicability macro-F1 | 0.9782 |
 
 ## Isolation metrics
 
@@ -37,5 +37,5 @@
 
 | Metric | Value |
 |--------|-------|
-| Apply-only share in final context (diagnostic) | 0.6022 |
-| Uncertain share in final context (diagnostic) | 0.3978 |
+| Apply-only share in final context (diagnostic) | 0.5806 |
+| Uncertain share in final context (diagnostic) | 0.4194 |

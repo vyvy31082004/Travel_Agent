@@ -212,14 +212,14 @@ def _car_case() -> DomainFlowCase:
         delegation_tool="ToCarAssistant",
         assistant_node="car_assistant",
         # Query contradicts the stored budget so it is OVERRIDDEN (excluded from
-        # context) per the tool-field rubric; transmission still APPLIES.
-        user_query="Thuê xe số tự động, ngân sách dưới 1 triệu ở Đà Nẵng",
-        delegated_request="Thuê xe số tự động ngân sách dưới 1 triệu Đà Nẵng",
+        # context) per the tool-field rubric; cateId-mappable user_needs APPLIES.
+        user_query="Thuê xe điện, ngân sách dưới 1 triệu ở Đà Nẵng",
+        delegated_request="Thuê xe điện ngân sách dưới 1 triệu Đà Nẵng",
         expected_action="search_cars",
         memories=(
             _pref(
                 memory_id=apply_id,
-                text="thích xe số tự động",
+                text="thích xe điện",
                 domain=MemoryDomain.CAR,
                 category=MemoryCategory.CAR_PREFERENCE,
             ),
@@ -233,7 +233,7 @@ def _car_case() -> DomainFlowCase:
         ),
         apply_ids=frozenset({apply_id}),
         exclude_ids=frozenset({exclude_id}),
-        apply_snippet="tự động",
+        apply_snippet="xe điện",
         exclude_snippet="2 triệu",
         noise_domain="excursion",
         conflict_constraints=("ngân sách dưới 1 triệu",),
@@ -250,7 +250,8 @@ def _excursion_case() -> DomainFlowCase:
         delegation_tool="ToExcursionAssistant",
         assistant_node="excursion_assistant",
         # Query "nhóm nhỏ" contradicts the stored "nhóm lớn" preference so it is
-        # OVERRIDDEN (excluded); group-size that matches the query APPLIES.
+        # OVERRIDDEN (excluded); matching group-size is UNCERTAIN (soft) — no
+        # group-size tool arg on search_attractions. apply_ids still recalled.
         user_query="Tìm tour nhóm nhỏ ở Đà Nẵng",
         delegated_request="Tìm tour nhóm nhỏ Đà Nẵng",
         expected_action="search_attractions",

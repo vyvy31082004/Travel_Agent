@@ -1,0 +1,1421 @@
+{
+  "metadata": {
+    "case_id": "e2e_tools_hotel_001",
+    "run_id": "4173bf9e0a52",
+    "started_at": "2026-09-16T00:05:10.701996+00:00",
+    "finished_at": "2026-09-16T00:09:11.857041+00:00",
+    "user_id": "e2e-e2e_tools_hotel_001:user_a",
+    "thread_id": "e2e-e2e_tools_hotel_001-4173bf9e0a52",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v3",
+    "git_commit": "755b3b07c76da1819e6628eaf6311754fa27cbd1",
+    "fixture_to_uuid": {
+      "m_hotel_beach": "d3df3af2-8d2a-5873-b79f-a1af0aca664e",
+      "m_hotel_other_user": "32a9a8e6-da40-5f92-8f2c-f35b85755490",
+      "m_hotel_superseded": "f49f182e-f4c4-57a2-8f74-b17b464fd403"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Tìm khách sạn ở Đà Nẵng check-in 10/10 check-out 12/10, 2 người lớn.",
+      "Với khách sạn đầu tiên trong kết quả, gọi tool xem danh sách phòng cho 10/10–12/10.",
+      "Gọi tool xem review của khách sạn đó.",
+      "Gọi tool xem tiện nghi và chính sách của khách sạn đó."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-16"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Tìm khách sạn ở Đà Nẵng check-in 10/10 check-out 12/10, 2 người lớn.",
+      "answer": "Dưới đây là danh sách các khách sạn và căn hộ tại **Đà Nẵng** cho thời gian lưu trú từ **10/10/2026 đến 12/10/2026** (2 đêm, 2 người lớn), đã ưu tiên lọc theo chỗ nghỉ gần/giáp biển:\n\n1. **BRIO Urbano Apartment** (ID: `14762177`)\n   * **Địa điểm:** Cách trung tâm 3.4 km, cách biển 0.8 km\n   * **Đánh giá:** 8.8 / 10 (Tuyệt vời - 66 đánh giá)\n   * **Giá:** 591.300 VND/đêm (Tổng hiện tại: 1.182.600 VND cho 2 đêm, đã bao gồm thuế & phí)\n   * **Loại phòng:** Căn hộ nguyên căn (32 m²) – 1 giường, 1 phòng ngủ, 1 phòng tắm\n\n2. **My Khe Ocean View Apartment** (ID: `17219106`)\n   * **Địa điểm:** Cách trung tâm 3.4 km, giáp biển\n   * **Đánh giá:** 10 / 10 (Xuất sắc - 2 đánh giá)\n   * **Giá:** 1.282.500 VND/đêm (Tổng hiện tại: 2.565.000 VND cho 2 đêm, đã bao gồm thuế & phí)\n   * **Đặc điểm:** Hủy miễn phí, không cần thanh toán trước\n   * **Loại phòng:** Căn hộ nguyên căn (68 m²) – 2 giường, 2 phòng ngủ, 2 phòng tắm\n\n3. **Hyatt Regency Danang Resort and Spa** (ID: `345059`)\n   * **Hạng sao:** 5 sao\n   * **Địa điểm:** Cách trung tâm 7.8 km, giáp biển\n   * **Đánh giá:** 8.7 / 10 (Tuyệt vời - 1.470 đánh giá)\n   * **Giá:** 3.700.000 VND/đêm (Tổng: 7.400.000 VND + 991.600 VND thuế & phí)\n   * **Loại phòng:** 1 phòng khách sạn (2 giường)\n\n4. **DAO NGOC Hotel and Apartment Da Nang** (ID: `16998071`)\n   * **Hạng sao:** 3 sao\n   * **Địa điểm:** Cách trung tâm 3.4 km, cách biển 0.8 km\n   * **Đánh giá:** 10 / 10 (Xuất sắc - 9 đánh giá)\n   * **Giá:** 563.333 VND/đêm (Tổng hiện tại: 1.126.666 VND cho 2 đêm, đã bao gồm thuế & phí)\n   * **Đặc điểm:** Hủy miễn phí, không cần thanh toán trước\n   * **Loại phòng:** Studio nguyên căn (18 m²) – 1 giường, 1 phòng ngủ, 1 phòng tắm\n\n5. **Hilton Garden Inn Da Nang** (ID: `9498109`)\n   * **Hạng sao:** 4 sao\n   * **Địa điểm:** Cách trung tâm 3.2 km, giáp biển\n   * **Đánh giá:** 8.7 / 10 (Tuyệt vời - 842 đánh giá)\n   * **Giá:** 1.831.410 VND/đêm (Tổng: 3.662.820 VND cho 2 đêm, đã bao gồm thuế & phí)\n   * **Loại phòng:** 1 phòng khách sạn (1 giường)\n\n6. **Eleva Apartment** (ID: `13971136`)\n   * **Địa điểm:** Cách trung tâm 3.2 km, giáp biển\n   * **Đánh giá:** 7.9 / 10 (Tốt - 102 đánh giá)\n   * **Giá:** 676.800 VND/đêm (Tổng hiện tại: 1.353.600 VND cho 2 đêm, đã bao gồm thuế & phí)\n   * **Loại phòng:** Studio nguyên căn (30 m²) – 1 giường, 1 phòng ngủ, 1 phòng tắm\n\n7. **M Hotel Danang** (ID: `11496834`)\n   * **Hạng sao:** 5 sao\n   * **Địa điểm:** Cách trung tâm 3.6 km, giáp biển\n   * **Đánh giá:** 9.3 / 10 (Tuyệt hảo - 3.206 đánh giá)\n   * **Giá:** 3.109.913 VND/đêm (Tổng: 6.219.826 VND cho 2 đêm, đã bao gồm thuế & phí, bao bữa sáng)\n   * **Đặc điểm:** Hủy miễn phí\n\n8. **Phu My Hai Hotel** (ID: `11440047`)\n   * **Hạng sao:** 2 sao\n   * **Địa điểm:** Vịnh Đà Nẵng, cách trung tâm 1.9 km, giáp biển\n   * **Đánh giá:** 8.7 / 10 (Tuyệt vời - 51 đánh giá)\n   * **Giá:** 396.000 VND/đêm (Tổng: 792.000 VND cho 2 đêm, đã bao gồm thuế & phí)\n   * **Đặc điểm:** Hủy miễn phí, không cần thanh toán trước\n\n9. **Lumina Star Hotel** (ID: `15777609`)\n   * **Hạng sao:** 3 sao\n   * **Địa điểm:** Cách trung tâm 2.5 km, cách biển 0.5 km\n   * **Đánh giá:** 7.7 / 10 (Tốt - 158 đánh giá)\n   * **Giá:** 405.000 VND/đêm (Tổng hiện tại: 810.000 VND cho 2 đêm, đã bao gồm thuế & phí)\n   * **Đặc điểm:** Hủy miễn phí, không cần thanh toán trước\n\nNếu bạn muốn biết thêm chi tiết hoặc tiến hành đặt phòng nào, xin vui lòng cho tôi biết!",
+      "summarize_forced": false,
+      "scored": false,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "hotel_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 4
+    },
+    {
+      "turn": 2,
+      "user_message": "Với khách sạn đầu tiên trong kết quả, gọi tool xem danh sách phòng cho 10/10–12/10.",
+      "answer": "Dưới đây là danh sách các loại phòng hiện có tại **BRIO Urbano Apartment** (ID: `14762177`) cho thời gian từ **10/10/2026 đến 12/10/2026** (2 đêm, 2 người lớn):\n\n1. **Căn hộ Tiêu chuẩn** (Room ID: `1476217703`)\n   * **Giá 1.182.600 VND** / 2 đêm (Không hoàn tiền, không bao gồm bữa sáng)\n   * **Giá 1.314.000 VND** / 2 đêm (Hủy miễn phí trước 09/10/2026, không bao gồm bữa sáng)\n\n2. **Căn hộ Superior 1 Phòng ngủ có Ban công** (Room ID: `1476217702`)\n   * **Giá 1.263.600 VND** / 2 đêm (Không hoàn tiền, không bao gồm bữa sáng)\n   * **Giá 1.404.000 VND** / 2 đêm (Hủy miễn phí trước 09/10/2026, không bao gồm bữa sáng)\n\n3. **Căn Hộ 1 Phòng Ngủ Có Ban Công** (Room ID: `1476217701` / `1476217706`)\n   * **Giá 1.296.000 VND** / 2 đêm (Không hoàn tiền, không bao gồm bữa sáng)\n   * **Giá 1.440.000 VND** / 2 đêm (Hủy miễn phí trước 09/10/2026, không bao gồm bữa sáng)\n\n4. **Căn hộ Tiêu chuẩn** (Room ID: `1476217708`)\n   * **Giá 1.368.000 VND** / 2 đêm (Hủy miễn phí trước 09/10/2026, không bao gồm bữa sáng)\n\n5. **Căn Hộ Áp Mái** (Room ID: `1476217705`)\n   * **Giá 1.944.000 VND** / 2 đêm (Không hoàn tiền, không bao gồm bữa sáng)\n   * **Giá 2.160.000 VND** / 2 đêm (Hủy miễn phí trước 09/10/2026, không bao gồm bữa sáng)\n\nNếu bạn muốn chọn loại phòng nào để tiếp tục đặt hoặc cần thêm hỗ trợ khác, hãy báo cho tôi nhé!",
+      "summarize_forced": false,
+      "scored": false,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "hotel_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 8
+    },
+    {
+      "turn": 3,
+      "user_message": "Gọi tool xem review của khách sạn đó.",
+      "answer": "Dưới đây là tổng hợp đánh giá chi tiết của khách hàng về **BRIO Urbano Apartment** (ID: `14762177`):\n\n* **Đánh giá tổng quan:** Căn hộ mới, sạch sẽ, vị trí thuận tiện gần nhiều quán ăn/cà phê và cách biển khoảng 10–15 phút đi bộ. Giường ngủ và gối được nhiều khách khen ngợi là rất êm ái.\n\n* **Ưu điểm nổi bật:**\n  * **Vị trí:** Rất tiện lợi tại Đà Nẵng, dễ dàng di chuyển đến bãi biển cũng như trung tâm thành phố.\n  * **Tiện nghi:** Căn hộ hiện đại, trang bị đầy đủ bếp, tủ lạnh, máy giặt/sấy, điều hòa hoạt động tốt.\n  * **Không gian & Giường ngủ:** Giường êm, rèm cản sáng tốt, phòng đẹp và giống hoàn toàn hình ảnh quảng cáo.\n\n* **Nhược điểm & Lưu ý:**\n  * **Quy trình nhận phòng:** Nhận phòng tự động qua mã khóa điện tử, đôi khi cần đợi xác nhận từ nhân viên nếu bạn đến sớm.\n  * **Dịch vụ phòng:** Giấy vệ sinh và khăn tắm được dọn/thay theo tuần (đối với lưu trú dài ngày); không miễn phí nước uống đóng chai.\n  * **Tiếng ồn & Ánh sáng:** Một số thời điểm có tiếng ồn từ công trình xây dựng lân cận; ánh sáng gương nhà tắm hơi yếu.\n\nNếu bạn cần hỗ trợ đặt phòng hoặc xem thông tin khác, đừng ngần ngại cho tôi biết!",
+      "summarize_forced": false,
+      "scored": false,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "hotel_assistant",
+        "join_results",
+        "primary_assistant",
+        "summarize_conversation",
+        "memory_finalize"
+      ],
+      "message_count": 8
+    },
+    {
+      "turn": 4,
+      "user_message": "Gọi tool xem tiện nghi và chính sách của khách sạn đó.",
+      "answer": "Dưới đây là thông tin chi tiết về **tiện nghi** và **chính sách** của khách sạn **BRIO Urbano Apartment** (ID: `14762177`):\n\n---\n\n### **1. Tiện nghi khách sạn**\n* **Điểm nổi bật:** Phòng tắm riêng, Máy điều hòa, WiFi miễn phí, Nhà bếp riêng, TV màn hình phẳng, Máy giặt, Vòi sen, Thang máy.\n* **Phòng tắm & Vệ sinh:** Khăn tắm, Giấy vệ sinh, Phòng tắm riêng, Đồ vệ sinh cá nhân miễn phí, Máy sấy tóc, Vòi sen.\n* **Nhà bếp & Thiết bị:** Nhà bếp riêng, Dụng cụ nhà bếp, Ấm đun nước điện, Lò vi sóng, Tủ lạnh, Máy giặt.\n* **Giải trí & Kết nối:** TV màn hình phẳng, Dịch vụ Internet / Wi-Fi miễn phí.\n* **An ninh & Tiện ích chung:** Điều hòa nhiệt độ, Cấm hút thuốc toàn bộ khuôn viên, Phòng cách âm, Thang máy, Bảo vệ 24/7, Hệ thống CCTV, Bình chữa cháy, Thiết bị báo cháy.\n\n---\n\n### **2. Chính sách khách sạn**\n* **Trẻ em & Giường phụ:**\n  * Trẻ em ở mọi độ tuổi đều có thể lưu trú tại đây.\n  * Hiện không có sẵn nôi (cũi) hoặc giường phụ.\n  * Số lượng khách tối đa trong căn hộ: 4 người.\n* **Internet:** Wi-Fi khả dụng trong phòng và hoàn toàn miễn phí.\n* **Vật nuôi:** Không cho phép mang theo vật nuôi.\n\nNếu bạn cần hỗ trợ thêm thông tin hoặc muốn tiến hành đặt phòng, vui lòng cho tôi biết!",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "hotel_assistant",
+        "join_results",
+        "primary_assistant",
+        "summarize_conversation",
+        "memory_finalize"
+      ],
+      "message_count": 8
+    }
+  ],
+  "global_recall": {
+    "memory_context": "",
+    "recalled_memory_ids": [],
+    "recalled_fixture_ids": []
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "hotel"
+    ],
+    "delegation_tool_calls": [],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "hotel_assistant",
+      "memory_recall_hotel",
+      "hotel_chat",
+      "search_hotels_tool",
+      "hotel_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize",
+      "memory_recall_global",
+      "primary_assistant",
+      "memory_recall_hotel",
+      "hotel_chat",
+      "get_hotel_room_list_tool",
+      "hotel_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize",
+      "memory_recall_global",
+      "primary_assistant",
+      "memory_recall_hotel",
+      "hotel_chat",
+      "get_hotel_reviews_tool",
+      "hotel_chat",
+      "join_results",
+      "primary_assistant",
+      "summarize_conversation",
+      "memory_finalize",
+      "memory_recall_global",
+      "primary_assistant",
+      "hotel_assistant",
+      "memory_recall_hotel",
+      "hotel_chat",
+      "tools",
+      "hotel_chat",
+      "join_results",
+      "primary_assistant",
+      "summarize_conversation",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "hotel": {
+      "candidate_pool_ids": [
+        "m_hotel_beach"
+      ],
+      "applicability": {
+        "m_hotel_beach": "uncertain"
+      },
+      "applicability_reasons": {
+        "m_hotel_beach": "reconciled: The preference for hotels near the beach cannot be passed as a parameter to get_hotel_details, but it may be useful when reviewing the hotel's location and details. (llm: The preference for hotels near the beach cannot be passed as a parameter to get_hotel_details, but it may be useful when reviewing the hotel's location and details.; rule: default uncertain (no specific tool-field rule matched))"
+      },
+      "final_context_ids": [
+        "m_hotel_beach"
+      ],
+      "applied_constraints": [
+        "(soft) [d3df3af2-8d2a-5873-b79f-a1af0aca664e] Thích khách sạn gần biển"
+      ]
+    }
+  },
+  "tools": [
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "adults": 2,
+        "location": "Đà Nẵng",
+        "checkin_date": "2026-10-10",
+        "checkout_date": "2026-10-12",
+        "destination": "Đà Nẵng",
+        "check_in": "2026-10-10",
+        "check_out": "2026-10-12"
+      },
+      "timestamp": "2026-09-16T00:09:11.856041+00:00",
+      "raw_result": {
+        "search_id": "78d5c588-bab5-4fcc-ba62-543cf710e1ba",
+        "domain": "hotel",
+        "displayed_item_ids": [
+          "14762177",
+          "17219106",
+          "345059",
+          "16998071",
+          "9498109",
+          "13971136",
+          "11496834",
+          "11440047",
+          "15777609"
+        ],
+        "labels": [],
+        "total_results": 9
+      },
+      "normalized_result": {
+        "search_id": "78d5c588-bab5-4fcc-ba62-543cf710e1ba",
+        "request_id": "req_hotel_a8c2d748",
+        "domain": "hotel",
+        "total_results": 9,
+        "items": [
+          {
+            "name": "Mercure Danang French Village Bana Hills",
+            "star": 4,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/875068084.jpg?k=49384355b09fcf743d653fc7913f4024bb6f048c9d05ce07b518b65af14c1b27&o=",
+            "price": 3415572,
+            "rating": 7.9,
+            "address": null,
+            "item_id": "1395573",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "1395573",
+            "accessibilityLabel": [
+              "Mercure Danang French Village Bana Hills",
+              "4 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "7,9 Tốt 3942 đánh giá",
+              "24,9km từ trung tâm",
+              "Chứng chỉ bền vững",
+              "Bao bữa sáng",
+              "1 phòng khách sạn : 1 giường",
+              "6831144 VND",
+              "+915373 VND thuế và phí"
+            ],
+            "position": null,
+            "api_position": 1,
+            "eligible": false
+          },
+          {
+            "name": "BRIO Urbano Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/733805119.jpg?k=6b4ec3789a08ec24534f7942a7a53e050a4b06cc7906fbb8ab80474c52397e3b&o=",
+            "price": 591300,
+            "rating": 8.8,
+            "address": null,
+            "item_id": "14762177",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "14762177",
+            "accessibilityLabel": [
+              "BRIO Urbano Apartment",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "8,8 Tuyệt vời 66 đánh giá",
+              "3,4km từ trung tâm",
+              "Cách biển 0,8km",
+              "Giá chỉ có trên điện thoại",
+              "1 căn hộ nguyên căn – 32 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 1314000 VND",
+              "Giá hiện tại là 1182600 VND",
+              "Đã bao gồm thuế và phí",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 1,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "My Khe Ocean View Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/915831873.jpg?k=07cd0c47255c21a6a2255b79bc50d0cc02ddb62b343c5769c626720775aef614&o=",
+            "price": 1282500,
+            "rating": 10,
+            "address": null,
+            "item_id": "17219106",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "17219106",
+            "accessibilityLabel": [
+              "My Khe Ocean View Apartment",
+              "10 Xuất sắc 2 đánh giá",
+              "3,4km từ trung tâm",
+              "Giáp biển",
+              "Giá chỉ có trên điện thoại",
+              "1 căn hộ nguyên căn – 68 m² : 2 giường • 2 phòng ngủ • 2 phòng tắm",
+              "Giá gốc là 2850000 VND",
+              "Giá hiện tại là 2565000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 1 với giá này"
+            ],
+            "position": 2,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hyatt Regency Danang Resort and Spa",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/675791164.jpg?k=24603131717d4755971fc5480b1281dd3e43395c58d8ec2cbe1a7cfa5c43ee8d&o=",
+            "price": 3700000,
+            "rating": 8.7,
+            "address": null,
+            "item_id": "345059",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "345059",
+            "accessibilityLabel": [
+              "Hyatt Regency Danang Resort and Spa",
+              "5 trên 5 sao",
+              "8,7 Tuyệt vời 1470 đánh giá",
+              "7,8km từ trung tâm",
+              "Giáp biển",
+              "1 phòng khách sạn : 2 giường",
+              "7400000 VND",
+              "+991600 VND thuế và phí"
+            ],
+            "position": 3,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "DAO NGOC Hotel and Apartment Da Nang",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/916825767.jpg?k=63c50754d129967df5dbe20b543b44e9bdc90c86e2790571c615ebc19e0998aa&o=",
+            "price": 563333,
+            "rating": 10,
+            "address": null,
+            "item_id": "16998071",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "16998071",
+            "accessibilityLabel": [
+              "DAO NGOC Hotel and Apartment Da Nang",
+              "3 trên 5 sao",
+              "10 Xuất sắc 9 đánh giá",
+              "3,4km từ trung tâm",
+              "Cách biển 0,8km",
+              "Ưu Đãi Cuối Năm",
+              "1 studio nguyên căn – 18 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 2166666 VND",
+              "Giá hiện tại là 1126666 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 4,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Hilton Garden Inn Da Nang",
+            "star": 4,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/498851164.jpg?k=84c48574c49208be9366c0dbe034357f40c6c08e00666f50ade84f4ee67a5cd9&o=",
+            "price": 1831410,
+            "rating": 8.7,
+            "address": null,
+            "item_id": "9498109",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "9498109",
+            "accessibilityLabel": [
+              "Hilton Garden Inn Da Nang",
+              "4 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "8,7 Tuyệt vời 842 đánh giá",
+              "3,2km từ trung tâm",
+              "Giáp biển",
+              "Chứng chỉ bền vững",
+              "1 phòng khách sạn : 1 giường",
+              "3662820 VND",
+              "Đã bao gồm thuế và phí"
+            ],
+            "position": 5,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Eleva Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/672445239.jpg?k=5088be479de7b7c7742058c6d70ed94c039d76a9a702764fadfd5d9676fd1ec4&o=",
+            "price": 676800,
+            "rating": 7.9,
+            "address": null,
+            "item_id": "13971136",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "13971136",
+            "accessibilityLabel": [
+              "Eleva Apartment",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "7,9 Tốt 102 đánh giá",
+              "3,2km từ trung tâm",
+              "Giáp biển",
+              "Giá chỉ có trên điện thoại",
+              "1 studio nguyên căn – 30 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 2880000 VND",
+              "Giá hiện tại là 1353600 VND",
+              "Đã bao gồm thuế và phí",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 6,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "M Hotel Danang",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/587384552.jpg?k=e067cbd12937507a499b127b6f7c5b0a4463160638ff76518b07a520aa3f1c62&o=",
+            "price": 3109913,
+            "rating": 9.3,
+            "address": null,
+            "item_id": "11496834",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "11496834",
+            "accessibilityLabel": [
+              "M Hotel Danang",
+              "5 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "9,3 Tuyệt hảo 3206 đánh giá",
+              "3,6km từ trung tâm",
+              "Giáp biển",
+              "Bao bữa sáng",
+              "1 phòng khách sạn : 2 giường",
+              "6219826 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí"
+            ],
+            "position": 7,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Phu My Hai Hotel",
+            "star": 2,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/524217049.jpg?k=381dff7c9042bdc62911e2c46c18f114e8165f86cf7db87309ff2daa158dbfbf&o=",
+            "price": 396000,
+            "rating": 8.7,
+            "address": null,
+            "item_id": "11440047",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "11440047",
+            "accessibilityLabel": [
+              "Phu My Hai Hotel",
+              "2 trên 5 sao",
+              "8,7 Tuyệt vời 51 đánh giá",
+              "Vịnh Đà Nẵng • 1,9km từ trung tâm",
+              "Giáp biển",
+              "1 phòng khách sạn : 1 giường",
+              "792000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 8,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "name": "Lumina Star Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/850371012.jpg?k=800f62b36ad45875cf35d026e153a90675a467592dbbcf9cc0af729c5e359b06&o=",
+            "price": 405000,
+            "rating": 7.7,
+            "address": null,
+            "item_id": "15777609",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "15777609",
+            "accessibilityLabel": [
+              "Lumina Star Hotel",
+              "3 trên 5 sao",
+              "7,7 Tốt 158 đánh giá",
+              "2,5km từ trung tâm",
+              "Cách biển 0,5km",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 1800000 VND",
+              "Giá hiện tại là 810000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 9,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "14762177",
+          "17219106",
+          "345059",
+          "16998071",
+          "9498109",
+          "13971136",
+          "11496834",
+          "11440047",
+          "15777609"
+        ],
+        "items": [
+          {
+            "name": "BRIO Urbano Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/733805119.jpg?k=6b4ec3789a08ec24534f7942a7a53e050a4b06cc7906fbb8ab80474c52397e3b&o=",
+            "price": 591300,
+            "rating": 8.8,
+            "address": null,
+            "item_id": "14762177",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "14762177",
+            "accessibilityLabel": [
+              "BRIO Urbano Apartment",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "8,8 Tuyệt vời 66 đánh giá",
+              "3,4km từ trung tâm",
+              "Cách biển 0,8km",
+              "Giá chỉ có trên điện thoại",
+              "1 căn hộ nguyên căn – 32 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 1314000 VND",
+              "Giá hiện tại là 1182600 VND",
+              "Đã bao gồm thuế và phí",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 1,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "My Khe Ocean View Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/915831873.jpg?k=07cd0c47255c21a6a2255b79bc50d0cc02ddb62b343c5769c626720775aef614&o=",
+            "price": 1282500,
+            "rating": 10,
+            "address": null,
+            "item_id": "17219106",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "17219106",
+            "accessibilityLabel": [
+              "My Khe Ocean View Apartment",
+              "10 Xuất sắc 2 đánh giá",
+              "3,4km từ trung tâm",
+              "Giáp biển",
+              "Giá chỉ có trên điện thoại",
+              "1 căn hộ nguyên căn – 68 m² : 2 giường • 2 phòng ngủ • 2 phòng tắm",
+              "Giá gốc là 2850000 VND",
+              "Giá hiện tại là 2565000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 1 với giá này"
+            ],
+            "position": 2,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hyatt Regency Danang Resort and Spa",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/675791164.jpg?k=24603131717d4755971fc5480b1281dd3e43395c58d8ec2cbe1a7cfa5c43ee8d&o=",
+            "price": 3700000,
+            "rating": 8.7,
+            "address": null,
+            "item_id": "345059",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "345059",
+            "accessibilityLabel": [
+              "Hyatt Regency Danang Resort and Spa",
+              "5 trên 5 sao",
+              "8,7 Tuyệt vời 1470 đánh giá",
+              "7,8km từ trung tâm",
+              "Giáp biển",
+              "1 phòng khách sạn : 2 giường",
+              "7400000 VND",
+              "+991600 VND thuế và phí"
+            ],
+            "position": 3,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "DAO NGOC Hotel and Apartment Da Nang",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/916825767.jpg?k=63c50754d129967df5dbe20b543b44e9bdc90c86e2790571c615ebc19e0998aa&o=",
+            "price": 563333,
+            "rating": 10,
+            "address": null,
+            "item_id": "16998071",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "16998071",
+            "accessibilityLabel": [
+              "DAO NGOC Hotel and Apartment Da Nang",
+              "3 trên 5 sao",
+              "10 Xuất sắc 9 đánh giá",
+              "3,4km từ trung tâm",
+              "Cách biển 0,8km",
+              "Ưu Đãi Cuối Năm",
+              "1 studio nguyên căn – 18 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 2166666 VND",
+              "Giá hiện tại là 1126666 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 4,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "Hilton Garden Inn Da Nang",
+            "star": 4,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/498851164.jpg?k=84c48574c49208be9366c0dbe034357f40c6c08e00666f50ade84f4ee67a5cd9&o=",
+            "price": 1831410,
+            "rating": 8.7,
+            "address": null,
+            "item_id": "9498109",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "9498109",
+            "accessibilityLabel": [
+              "Hilton Garden Inn Da Nang",
+              "4 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "8,7 Tuyệt vời 842 đánh giá",
+              "3,2km từ trung tâm",
+              "Giáp biển",
+              "Chứng chỉ bền vững",
+              "1 phòng khách sạn : 1 giường",
+              "3662820 VND",
+              "Đã bao gồm thuế và phí"
+            ],
+            "position": 5,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Eleva Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/672445239.jpg?k=5088be479de7b7c7742058c6d70ed94c039d76a9a702764fadfd5d9676fd1ec4&o=",
+            "price": 676800,
+            "rating": 7.9,
+            "address": null,
+            "item_id": "13971136",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "13971136",
+            "accessibilityLabel": [
+              "Eleva Apartment",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "7,9 Tốt 102 đánh giá",
+              "3,2km từ trung tâm",
+              "Giáp biển",
+              "Giá chỉ có trên điện thoại",
+              "1 studio nguyên căn – 30 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 2880000 VND",
+              "Giá hiện tại là 1353600 VND",
+              "Đã bao gồm thuế và phí",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 6,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "M Hotel Danang",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/587384552.jpg?k=e067cbd12937507a499b127b6f7c5b0a4463160638ff76518b07a520aa3f1c62&o=",
+            "price": 3109913,
+            "rating": 9.3,
+            "address": null,
+            "item_id": "11496834",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "11496834",
+            "accessibilityLabel": [
+              "M Hotel Danang",
+              "5 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "9,3 Tuyệt hảo 3206 đánh giá",
+              "3,6km từ trung tâm",
+              "Giáp biển",
+              "Bao bữa sáng",
+              "1 phòng khách sạn : 2 giường",
+              "6219826 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí"
+            ],
+            "position": 7,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Phu My Hai Hotel",
+            "star": 2,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/524217049.jpg?k=381dff7c9042bdc62911e2c46c18f114e8165f86cf7db87309ff2daa158dbfbf&o=",
+            "price": 396000,
+            "rating": 8.7,
+            "address": null,
+            "item_id": "11440047",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "11440047",
+            "accessibilityLabel": [
+              "Phu My Hai Hotel",
+              "2 trên 5 sao",
+              "8,7 Tuyệt vời 51 đánh giá",
+              "Vịnh Đà Nẵng • 1,9km từ trung tâm",
+              "Giáp biển",
+              "1 phòng khách sạn : 1 giường",
+              "792000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 8,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "name": "Lumina Star Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/850371012.jpg?k=800f62b36ad45875cf35d026e153a90675a467592dbbcf9cc0af729c5e359b06&o=",
+            "price": 405000,
+            "rating": 7.7,
+            "address": null,
+            "item_id": "15777609",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "15777609",
+            "accessibilityLabel": [
+              "Lumina Star Hotel",
+              "3 trên 5 sao",
+              "7,7 Tốt 158 đánh giá",
+              "2,5km từ trung tâm",
+              "Cách biển 0,5km",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 1800000 VND",
+              "Giá hiện tại là 810000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 9,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "location": "Đà Nẵng",
+        "adults": 2,
+        "checkin_date": "2026-10-10",
+        "checkout_date": "2026-10-12"
+      },
+      "timestamp": "2026-09-16T00:09:11.857041+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 6
+    },
+    {
+      "domain": "hotel",
+      "name": "get_hotel_room_list_tool",
+      "arguments": {
+        "checkin_date": "2026-10-10",
+        "adults": 2,
+        "hotel_id": "14762177",
+        "checkout_date": "2026-10-12"
+      },
+      "timestamp": "2026-09-16T00:09:11.857041+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 15
+    },
+    {
+      "domain": "hotel",
+      "name": "get_hotel_reviews_tool",
+      "arguments": {
+        "hotel_id": "14762177"
+      },
+      "timestamp": "2026-09-16T00:09:11.857041+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 24
+    },
+    {
+      "domain": "hotel",
+      "name": "get_hotel_facility_tool",
+      "arguments": {
+        "hotel_id": "14762177"
+      },
+      "timestamp": "2026-09-16T00:09:11.857041+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 35
+    },
+    {
+      "domain": "hotel",
+      "name": "get_hotel_policy_tool",
+      "arguments": {
+        "hotel_id": "14762177"
+      },
+      "timestamp": "2026-09-16T00:09:11.857041+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 35
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "hotel",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là thông tin chi tiết về tiện nghi và chính sách của khách sạn **BRIO Urbano Apartment** (ID: 14762177):\\n\\n### **1. Tiện nghi khách sạn**\\n*   **Điểm nổi bật:** Phòng tắm riêng, Máy điều hòa, WiFi miễn phí, Nhà bếp, TV màn hình phẳng, Máy giặt, Vòi sen, Thang máy.\\n*   **Phòng tắm & Vệ sinh:** Khăn tắm, Giấy vệ sinh, Phòng tắm riêng, Đồ vệ sinh cá nhân miễn phí, Máy sấy tóc, Vòi sen.\\n*   **Nhà bếp & Thiết bị:** Nhà bếp riêng, Dụng cụ nhà bếp, Ấm đun nước điện, Lò vi sóng, Tủ lạnh, Máy giặt.\\n*   **Giải trí & Kết nối:** TV màn hình phẳng, Dịch vụ Internet / Wi-Fi miễn phí.\\n*   **An ninh & Tiện ích chung:** Điều hòa nhiệt độ, Cấm hút thuốc toàn bộ khuôn viên, Phòng cách âm, Thang máy, Bảo vệ 24/7, Hệ thống CCTV, Bình chữa cháy, Thiết bị báo cháy.\\n\\n---\\n\\n### **2. Chính sách khách sạn**\\n*   **Trẻ em & Giường phụ:**\\n    *   Trẻ em ở mọi độ tuổi đều có thể lưu trú tại đây.\\n    *   Hiện không có sẵn nôi (cũi) hoặc giường phụ.\\n    *   Số lượng khách tối đa: 4 người.\\n*   **Internet:** Wi-Fi khả dụng trong phòng và hoàn toàn miễn phí.\\n*   **Vật nuôi:** Không cho phép mang theo vật nuôi.', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [
+        "(soft) [d3df3af2-8d2a-5873-b79f-a1af0aca664e] Thích khách sạn gần biển"
+      ],
+      "domain_action": "get_hotel_details"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "hotel"
+    ]
+  },
+  "final_answer": "Dưới đây là thông tin chi tiết về **tiện nghi** và **chính sách** của khách sạn **BRIO Urbano Apartment** (ID: `14762177`):\n\n---\n\n### **1. Tiện nghi khách sạn**\n* **Điểm nổi bật:** Phòng tắm riêng, Máy điều hòa, WiFi miễn phí, Nhà bếp riêng, TV màn hình phẳng, Máy giặt, Vòi sen, Thang máy.\n* **Phòng tắm & Vệ sinh:** Khăn tắm, Giấy vệ sinh, Phòng tắm riêng, Đồ vệ sinh cá nhân miễn phí, Máy sấy tóc, Vòi sen.\n* **Nhà bếp & Thiết bị:** Nhà bếp riêng, Dụng cụ nhà bếp, Ấm đun nước điện, Lò vi sóng, Tủ lạnh, Máy giặt.\n* **Giải trí & Kết nối:** TV màn hình phẳng, Dịch vụ Internet / Wi-Fi miễn phí.\n* **An ninh & Tiện ích chung:** Điều hòa nhiệt độ, Cấm hút thuốc toàn bộ khuôn viên, Phòng cách âm, Thang máy, Bảo vệ 24/7, Hệ thống CCTV, Bình chữa cháy, Thiết bị báo cháy.\n\n---\n\n### **2. Chính sách khách sạn**\n* **Trẻ em & Giường phụ:**\n  * Trẻ em ở mọi độ tuổi đều có thể lưu trú tại đây.\n  * Hiện không có sẵn nôi (cũi) hoặc giường phụ.\n  * Số lượng khách tối đa trong căn hộ: 4 người.\n* **Internet:** Wi-Fi khả dụng trong phòng và hoàn toàn miễn phí.\n* **Vật nuôi:** Không cho phép mang theo vật nuôi.\n\nNếu bạn cần hỗ trợ thêm thông tin hoặc muốn tiến hành đặt phòng, vui lòng cho tôi biết!",
+  "stm": {
+    "summary": "Bản tóm tắt cập nhật:\n\n- **Yêu cầu:** Người dùng tìm khách sạn tại Đà Nẵng cho 2 người lớn, check-in 10/10/2026, check-out 12/10/2026, ưu tiên chỗ nghỉ gần hoặc giáp biển.\n- **Trạng thái:** \n  - Trợ lý đã đề xuất 9 lựa chọn khách sạn/căn hộ phù hợp.\n  - Theo yêu cầu của người dùng, trợ lý đã tra cứu và hiển thị danh sách các loại phòng khả dụng (Căn hộ Tiêu chuẩn, Superior 1 PN có ban công, Căn hộ Áp mái,...) kèm chính sách giá và hủy phòng tại **BRIO Urbano Apartment** (ID: `14762177`).\n  - Chưa có khách sạn hoặc loại phòng nào được chọn chốt hoặc từ chối.",
+    "message_count": 8,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "c347eb71-18b0-4aa4-ba2d-a95aaa2c5955",
+    "expected_action": "NO_STORE",
+    "db_mutations": [],
+    "audits": [],
+    "seeded_status": {
+      "m_hotel_beach": {
+        "status": "active",
+        "memory_id": "d3df3af2-8d2a-5873-b79f-a1af0aca664e",
+        "memory_text": "Thích khách sạn gần biển",
+        "supersedes_memory_id": null
+      },
+      "m_hotel_other_user": {
+        "status": "active",
+        "memory_id": "32a9a8e6-da40-5f92-8f2c-f35b85755490",
+        "memory_text": "Memory user khác — thích resort cao cấp",
+        "supersedes_memory_id": null
+      },
+      "m_hotel_superseded": {
+        "status": "superseded",
+        "memory_id": "f49f182e-f4c4-57a2-8f74-b17b464fd403",
+        "memory_text": "Preference cũ đã superseded — thích hostel",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "c347eb71-18b0-4aa4-ba2d-a95aaa2c5955",
+      "status": "skipped",
+      "error_summary": null,
+      "created_at": "2026-09-16T07:08:47.106880+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "hotel"
+        ],
+        "actual": [
+          "hotel"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "SKIP",
+      "detail": "no expected_applicability",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "no new long-term memories stored",
+      "evidence": {}
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "hotel_assistant",
+          "memory_recall_hotel",
+          "hotel_chat",
+          "search_hotels_tool",
+          "search_hotels_tool",
+          "hotel_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize",
+          "memory_recall_global",
+          "primary_assistant",
+          "memory_recall_hotel",
+          "hotel_chat",
+          "get_hotel_room_list_tool",
+          "get_hotel_room_list_tool",
+          "hotel_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize",
+          "memory_recall_global",
+          "primary_assistant",
+          "memory_recall_hotel",
+          "hotel_chat",
+          "get_hotel_reviews_tool",
+          "get_hotel_reviews_tool",
+          "hotel_chat",
+          "join_results",
+          "primary_assistant",
+          "summarize_conversation",
+          "memory_finalize",
+          "memory_recall_global",
+          "primary_assistant",
+          "hotel_assistant",
+          "memory_recall_hotel",
+          "hotel_chat",
+          "tools",
+          "get_hotel_facility_tool",
+          "get_hotel_policy_tool",
+          "hotel_chat",
+          "join_results",
+          "primary_assistant",
+          "summarize_conversation",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "hotel_assistant",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "hotel_assistant",
+      "graph": "primary",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "memory_recall_hotel",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_hotel_beach"
+        ],
+        "applicability": {
+          "m_hotel_beach": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_hotel_beach": "reconciled: beach preference has no search_hotels tool field (llm: The preference for hotels near the beach is relevant to ranking hotel search results, but search_hotels has no direct beach filter/field to map this preference to.; rule: beach preference has no search_hotels tool field)"
+        },
+        "applied_to_context": [
+          "m_hotel_beach"
+        ]
+      }
+    },
+    {
+      "seq": 5,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "search_hotels_tool",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [
+        {
+          "name": "search_hotels_tool",
+          "arguments": {
+            "location": "Đà Nẵng",
+            "adults": 2,
+            "checkin_date": "2026-10-10",
+            "checkout_date": "2026-10-12"
+          }
+        }
+      ],
+      "parent_chat_node": "hotel_chat"
+    },
+    {
+      "seq": 7,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 8,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 9,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 11,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 12,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 13,
+      "node": "memory_recall_hotel",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_hotel_beach"
+        ],
+        "applicability": {
+          "m_hotel_beach": "irrelevant"
+        },
+        "applicability_reasons": {
+          "m_hotel_beach": "reconciled: The memory expresses a preference for beachfront hotels, which is a hotel-level preference. For the current action (select_room/listing rooms of a specific hotel), the hotel is already chosen, making hotel location preferences unusable for this action. (llm: The memory expresses a preference for beachfront hotels, which is a hotel-level preference. For the current action (select_room/listing rooms of a specific hotel), the hotel is already chosen, making hotel location preferences unusable for this action.; rule: default uncertain (no specific tool-field rule matched))"
+        },
+        "applied_to_context": []
+      }
+    },
+    {
+      "seq": 14,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 15,
+      "node": "get_hotel_room_list_tool",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [
+        {
+          "name": "get_hotel_room_list_tool",
+          "arguments": {
+            "checkin_date": "2026-10-10",
+            "adults": 2,
+            "hotel_id": "14762177",
+            "checkout_date": "2026-10-12"
+          }
+        }
+      ],
+      "parent_chat_node": "hotel_chat"
+    },
+    {
+      "seq": 16,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 17,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 18,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 19,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 20,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 21,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 22,
+      "node": "memory_recall_hotel",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_hotel_beach"
+        ],
+        "applicability": {
+          "m_hotel_beach": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_hotel_beach": "reconciled: Sở thích khách sạn gần biển không phải là tham số truyền vào action get_reviews, nhưng có thể cần cân nhắc khi đọc và phân tích thông tin đánh giá của khách sạn. (llm: Sở thích khách sạn gần biển không phải là tham số truyền vào action get_reviews, nhưng có thể cần cân nhắc khi đọc và phân tích thông tin đánh giá của khách sạn.; rule: default uncertain (no specific tool-field rule matched))"
+        },
+        "applied_to_context": [
+          "m_hotel_beach"
+        ]
+      }
+    },
+    {
+      "seq": 23,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 24,
+      "node": "get_hotel_reviews_tool",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [
+        {
+          "name": "get_hotel_reviews_tool",
+          "arguments": {
+            "hotel_id": "14762177"
+          }
+        }
+      ],
+      "parent_chat_node": "hotel_chat"
+    },
+    {
+      "seq": 25,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 26,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 27,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 28,
+      "node": "summarize_conversation",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 29,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 30,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 31,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 32,
+      "node": "hotel_assistant",
+      "graph": "primary",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 33,
+      "node": "memory_recall_hotel",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [
+          "m_hotel_beach"
+        ],
+        "applicability": {
+          "m_hotel_beach": "uncertain"
+        },
+        "applicability_reasons": {
+          "m_hotel_beach": "reconciled: The preference for hotels near the beach cannot be passed as a parameter to get_hotel_details, but it may be useful when reviewing the hotel's location and details. (llm: The preference for hotels near the beach cannot be passed as a parameter to get_hotel_details, but it may be useful when reviewing the hotel's location and details.; rule: default uncertain (no specific tool-field rule matched))"
+        },
+        "applied_to_context": [
+          "m_hotel_beach"
+        ]
+      }
+    },
+    {
+      "seq": 34,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 35,
+      "node": "tools",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [
+        {
+          "name": "get_hotel_facility_tool",
+          "arguments": {
+            "hotel_id": "14762177"
+          }
+        },
+        {
+          "name": "get_hotel_policy_tool",
+          "arguments": {
+            "hotel_id": "14762177"
+          }
+        }
+      ],
+      "parent_chat_node": "hotel_chat"
+    },
+    {
+      "seq": 36,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 37,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 38,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 39,
+      "node": "summarize_conversation",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 40,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

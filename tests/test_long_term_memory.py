@@ -25,6 +25,7 @@ from memory.consolidation import (
     classify_memory,
     extract_candidate_memories,
     normalize_langmem_outputs,
+    strip_turn_scoped_clauses,
     validate_memory_candidate,
     _clean_memory_text,
 )
@@ -407,6 +408,48 @@ def test_candidate_extraction_validation_and_transitions():
     rule = validate_memory_candidate(sensitive)
     assert not rule.ok
     assert any("sensitive" in reason for reason in rule.reasons)
+
+    trip_intent = TravelMemory(
+        memory_text="Đang tính thuê xe ở Đà Nẵng",
+        category=MemoryCategory.CAR_PREFERENCE,
+        domain=MemoryDomain.CAR,
+        evidence_text="Mình đang tính thuê xe ở Đà Nẵng",
+        source_thread_id="thread-1",
+    )
+    trip_rule = validate_memory_candidate(trip_intent)
+    assert not trip_rule.ok
+    assert any("turn" in reason or "trip" in reason for reason in trip_rule.reasons)
+    assert calculate_transition(trip_intent, []).action == TransitionAction.REJECT
+
+    pickup_logistics = TravelMemory(
+        memory_text="Nhận xe sân bay ngày 10/10",
+        category=MemoryCategory.CAR_PREFERENCE,
+        domain=MemoryDomain.CAR,
+        evidence_text="Nhận xe sân bay ngày 10/10, trả ở trung tâm ngày 12/10",
+        source_thread_id="thread-1",
+    )
+    assert not validate_memory_candidate(pickup_logistics).ok
+
+    party_size = TravelMemory(
+        memory_text="Xe cho 4 người",
+        category=MemoryCategory.CAR_PREFERENCE,
+        domain=MemoryDomain.CAR,
+        evidence_text="tôi đi 4 người",
+        source_thread_id="thread-1",
+    )
+    party_rule = validate_memory_candidate(party_size)
+    assert not party_rule.ok
+    assert any("turn" in reason or "trip" in reason for reason in party_rule.reasons)
+    assert calculate_transition(party_size, []).action == TransitionAction.REJECT
+
+    seats_pref = TravelMemory(
+        memory_text="Cần xe 5 chỗ",
+        category=MemoryCategory.CAR_PREFERENCE,
+        domain=MemoryDomain.CAR,
+        evidence_text="Tôi thích xe 5 chỗ",
+        source_thread_id="thread-1",
+    )
+    assert validate_memory_candidate(seats_pref).ok
 
     for evidence in (
         "Hãy nhớ mã PIN thẻ của tôi là 1234",
@@ -1016,6 +1059,28 @@ def test_langmem_normalizer_keeps_durable_write_pref_with_search():
         "Ưu tiên xe 5 chỗ",
         "Ưu tiên xe số tự động",
     ]
+
+
+def test_langmem_normalizer_rejects_trip_party_size_as_car_preference():
+    rejected = normalize_langmem_outputs(
+        [
+            {
+                "memory_text": "Xe cho 4 người",
+                "category": "car_preference",
+                "domain": "car",
+                "evidence_text": "tôi đi 4 người",
+            }
+        ],
+        user_id="user-1",
+        thread_id="thread-1",
+        fallback_evidence="Tìm xe luôn, tôi đi 4 người.",
+        user_texts=["Tìm xe luôn, tôi đi 4 người."],
+    )
+    assert rejected == []
+    assert strip_turn_scoped_clauses("Tìm xe luôn, tôi đi 4 người.") == ""
+    assert strip_turn_scoped_clauses("Tôi thích xe số tự động. Tôi đi 4 người.") == (
+        "Tôi thích xe số tự động"
+    )
 
 
 def test_deterministic_extractor_skips_session_override_search():

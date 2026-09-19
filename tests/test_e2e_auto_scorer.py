@@ -469,12 +469,12 @@ def test_auto_scorer_summary_hotel_path_and_context() -> None:
         ],
         "domain_recall": {
             "hotel": {
-                "candidate_pool_ids": ["m_quiet", "m_avoid_groups"],
+                "candidate_pool_ids": ["m_beach", "m_budget"],
                 "applicability": {
-                    "m_quiet": "uncertain",
-                    "m_avoid_groups": "uncertain",
+                    "m_beach": "uncertain",
+                    "m_budget": "overridden",
                 },
-                "final_context_ids": ["m_quiet", "m_avoid_groups"],
+                "final_context_ids": ["m_beach"],
             }
         },
         "tools": [
@@ -488,7 +488,7 @@ def test_auto_scorer_summary_hotel_path_and_context() -> None:
             }
         ],
         "finalize": {"db_mutations": []},
-        "stm": {"summary": "Ở Đà Nẵng 10–12/10, 2 người.", "message_count": 2},
+        "stm": {"summary": "Ở Đà Nẵng 10–12/10, 2 người, ngân sách 1–2 triệu/đêm.", "message_count": 2},
     }
     scores = score_trace(case, trace)
     assert scores.routing_accuracy.status == ScoreStatus.PASS
@@ -923,9 +923,9 @@ def _tools_hotel_trace() -> dict:
         },
         "domain_recall": {
             "hotel": {
-                "candidate_pool_ids": ["m_hotel_quiet"],
-                "applicability": {"m_hotel_quiet": "apply"},
-                "final_context_ids": ["m_hotel_quiet"],
+                "candidate_pool_ids": ["m_hotel_beach"],
+                "applicability": {"m_hotel_beach": "apply"},
+                "final_context_ids": ["m_hotel_beach"],
             }
         },
         "tools": [
