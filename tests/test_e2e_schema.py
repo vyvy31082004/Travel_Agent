@@ -31,6 +31,7 @@ ALL_CASE_FILES = [
     "e2e_write_car_insert_001.yaml",
     "e2e_write_excursion_supersede_001.yaml",
     "e2e_write_global_name_001.yaml",
+    "e2e_write_global_name_supersede_001.yaml",
     "e2e_write_flight_reject_001.yaml",
     "e2e_global_profile_name_001.yaml",
     "e2e_trip_plan_001.yaml",
@@ -59,6 +60,7 @@ WRITE_CASE_IDS = {
     "e2e_write_car_insert_001",
     "e2e_write_excursion_supersede_001",
     "e2e_write_global_name_001",
+    "e2e_write_global_name_supersede_001",
     "e2e_write_flight_reject_001",
 }
 
@@ -116,5 +118,5 @@ def test_e2e_fixture_validates(case_file: str) -> None:
 
 def test_manifest_loads_all_cases() -> None:
     cases = load_cases_from_dir(DEFAULT_FIXTURE_DIR)
-    assert len(cases) == 27
+    assert len(cases) == 28
     assert {case.id for case in cases} == set(path.replace(".yaml", "") for path in ALL_CASE_FILES)

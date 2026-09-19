@@ -2,7 +2,8 @@ import os
 import sys
 from pathlib import Path
 
-os.environ.setdefault("RAPIDAPI_KEY", "test-rapidapi-key")
+if not os.environ.get("RAPIDAPI_KEY", "").strip():
+    os.environ["RAPIDAPI_KEY"] = "test-rapidapi-key"
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 import utils.api_client_car as car
@@ -36,6 +37,7 @@ def test_car_booking_get_retries_429_via_shared_limiter(monkeypatch):
     import utils.rapidapi_limiter as limiter
 
     monkeypatch.setattr(limiter.time, "sleep", lambda *_: None)
+    monkeypatch.setattr(car, "RAPIDAPI_KEY", "test-rapidapi-key")
     monkeypatch.setattr(car.requests, "get", fake_get)
 
     result = car._booking_get("/geocode/search", {"q": "Da Nang"})
@@ -55,6 +57,7 @@ def test_car_booking_get_uses_call_with_rate_limit_retry(monkeypatch):
         return original(fn, **kwargs)
 
     monkeypatch.setattr(limiter, "call_with_rate_limit_retry", spy)
+    monkeypatch.setattr(car, "RAPIDAPI_KEY", "test-rapidapi-key")
     monkeypatch.setattr(
         car.requests,
         "get",

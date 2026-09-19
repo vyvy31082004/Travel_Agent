@@ -1,0 +1,1063 @@
+{
+  "metadata": {
+    "case_id": "e2e_write_global_name_supersede_001",
+    "run_id": "4a2ab59989bf",
+    "started_at": "2026-09-17T02:44:14.180621+00:00",
+    "finished_at": "2026-09-17T02:45:23.595749+00:00",
+    "user_id": "e2e-e2e_write_global_name_supersede_001:user_a",
+    "thread_id": "e2e-e2e_write_global_name_supersede_001-4a2ab59989bf",
+    "model": "gemini-2.5-flash",
+    "prompt_version": "trustmem-verifier-v3",
+    "git_commit": "97ab83f5f8d40d14b5f7e335eadad0c76323d524",
+    "fixture_to_uuid": {
+      "m_name_lan": "5ee36d35-0336-5d3f-9de5-51e79b73cf03",
+      "m_hotel_other_user": "e3dfdb5e-bcd9-5975-97cc-dae3df5d89a4",
+      "m_hotel_superseded": "6bb2b6d0-2588-54c5-962b-7bac6286e8d8"
+    },
+    "postgres_persist": false,
+    "teardown": true,
+    "fresh_seed": true
+  },
+  "input": {
+    "messages": [
+      "Từ giờ hãy nhớ tên tôi là Vy. Tìm khách sạn ở Đà Nẵng từ 10–12/10 cho 2 người."
+    ],
+    "resolved_dates": {
+      "today": "2026-09-17"
+    }
+  },
+  "turns": [
+    {
+      "turn": 1,
+      "user_message": "Từ giờ hãy nhớ tên tôi là Vy. Tìm khách sạn ở Đà Nẵng từ 10–12/10 cho 2 người.",
+      "answer": "Chào chị Vy, em đã ghi nhớ tên của chị rồi ạ! \n\nDưới đây là danh sách các khách sạn tại Đà Nẵng cho 2 người từ ngày **10/10/2026 đến 12/10/2026** (2 đêm):\n\n1. **Premier Village Đà Nẵng** (ID: `17247150`)\n   - **Hạng sao:** 5 sao | **Đánh giá:** 10/10 (Xuất sắc)\n   - **Vị trí:** Cách trung tâm 4,5 km, giáp biển.\n   - **Loại phòng:** Biệt thự nguyên căn (441 m²) – 4 phòng ngủ, 1 phòng khách, 4 phòng tắm.\n   - **Giá hiện tại:** 26.400.000 VND (Đã bao gồm thuế, phí; Hủy miễn phí, không cần thanh toán trước).\n   - ![Premier Village Đà Nẵng](https://cf.bstatic.com/xdata/images/hotel/square500/917453565.jpg?k=eb231168692386cecec523c1959ca42f20b75f5b082da87da7037bb12b644c8f&o=)\n\n2. **Mercure Danang French Village Bana Hills** (ID: `1395573`)\n   - **Hạng sao:** 4 sao | **Đánh giá:** 7.9/10 (Tốt)\n   - **Vị trí:** Cách trung tâm 24,9 km (Bà Nà Hills).\n   - **Bao gồm:** Bữa sáng.\n   - **Giá:** 3.415.572 VND / đêm.\n   - ![Mercure Danang French Village Bana Hills](https://cf.bstatic.com/xdata/images/hotel/square500/875068084.jpg?k=49384355b09fcf743d653fc7913f4024bb6f048c9d05ce07b518b65af14c1b27&o=)\n\n3. **BRIO Urbano Apartment** (ID: `14762177`)\n   - **Đánh giá:** 8.8/10 (Tuyệt vời)\n   - **Vị trí:** Cách trung tâm 3,4 km, cách biển 0,8 km.\n   - **Loại phòng:** Căn hộ nguyên căn (32 m²) – 1 phòng ngủ, 1 phòng tắm.\n   - **Giá:** 591.300 VND / đêm (Tổng giá gói: 1.182.600 VND đã bao gồm thuế, phí).\n   - ![BRIO Urbano Apartment](https://cf.bstatic.com/xdata/images/hotel/square500/733805119.jpg?k=6b4ec3789a08ec24534f7942a7a53e050a4b06cc7906fbb8ab80474c52397e3b&o=)\n\n4. **Hyatt Regency Danang Resort and Spa** (ID: `345059`)\n   - **Hạng sao:** 5 sao | **Đánh giá:** 8.7/10 (Tuyệt vời)\n   - **Vị trí:** Cách trung tâm 7,8 km, giáp biển.\n   - **Loại phòng:** 1 phòng khách sạn (2 giường).\n   - **Giá:** 3.550.000 VND / đêm.\n   - ![Hyatt Regency Danang Resort and Spa](https://cf.bstatic.com/xdata/images/hotel/square500/675791164.jpg?k=24603131717d4755971fc5480b1281dd3e43395c58d8ec2cbe1a7cfa5c43ee8d&o=)\n\n5. **Eleva Apartment** (ID: `13971136`)\n   - **Đánh giá:** 7.9/10 (Tốt)\n   - **Vị trí:** Cách trung tâm 3,2 km, giáp biển.\n   - **Loại phòng:** Studio nguyên căn (30 m²).\n   - **Giá:** 676.800 VND / đêm (Tổng giá gói: 1.353.600 VND đã bao gồm thuế, phí).\n   - ![Eleva Apartment](https://cf.bstatic.com/xdata/images/hotel/square500/672445239.jpg?k=5088be479de7b7c7742058c6d70ed94c039d76a9a702764fadfd5d9676fd1ec4&o=)\n\n6. **M Hotel Danang** (ID: `11496834`)\n   - **Hạng sao:** 5 sao | **Đánh giá:** 9.3/10 (Tuyệt hảo)\n   - **Vị trí:** Cách trung tâm 3,6 km, giáp biển.\n   - **Bao gồm:** Bữa sáng, Hủy miễn phí.\n   - **Giá:** 3.156.415 VND / đêm.\n   - ![M Hotel Danang](https://cf.bstatic.com/xdata/images/hotel/square500/587384552.jpg?k=e067cbd12937507a499b127b6f7c5b0a4463160638ff76518b07a520aa3f1c62&o=)\n\n7. **Lumina Star Hotel** (ID: `15777609`)\n   - **Hạng sao:** 3 sao | **Đánh giá:** 7.7/10 (Tốt)\n   - **Vị trí:** Cách trung tâm 2,5 km, cách biển 0,5 km.\n   - **Chính sách:** Hủy miễn phí, không cần thanh toán trước.\n   - **Giá:** 320.000 VND / đêm (Tổng giá gói: 640.000 VND đã bao gồm thuế, phí).\n   - ![Lumina Star Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/850371012.jpg?k=800f62b36ad45875cf35d026e153a90675a467592dbbcf9cc0af729c5e359b06&o=)\n\n8. **Cỏ Lá Homestay** (ID: `14675223`)\n   - **Đánh giá:** 9.3/10 (Tuyệt hảo)\n   - **Vị trí:** Tại trung tâm thành phố, cách biển 2,7 km.\n   - **Loại phòng:** 1 phòng riêng (1 giường).\n   - **Giá:** 450.000 VND / đêm (Tổng giá gói: 900.000 VND đã bao gồm thuế, phí, Hủy miễn phí).\n   - ![Cỏ Lá Homestay](https://cf.bstatic.com/xdata/images/hotel/square500/880151845.jpg?k=a9572918df3428931df60f75a131f63de99da292772bb4014eaf8b42a6b54168&o=)\n\n9. **Hilton Garden Inn Da Nang** (ID: `9498109`)\n   - **Hạng sao:** 4 sao | **Đánh giá:** 8.7/10 (Tuyệt vời)\n   - **Vị trí:** Cách trung tâm 3,2 km, giáp biển.\n   - **Giá:** 1.831.410 VND / đêm (Tổng giá gói: 3.662.820 VND đã bao gồm thuế, phí).\n   - ![Hilton Garden Inn Da Nang](https://cf.bstatic.com/xdata/images/hotel/square500/498851164.jpg?k=84c48574c49208be9366c0dbe034357f40c6c08e00666f50ade84f4ee67a5cd9&o=)\n\n10. **La Palma Boutique Hotel Da Nang** (ID: `16058028`)\n    - **Hạng sao:** 3 sao | **Đánh giá:** 8.6/10 (Tuyệt vời)\n    - **Vị trí:** Cách trung tâm 2,5 km, cách biển 450 m.\n    - **Chính sách:** Hủy miễn phí, không cần thanh toán trước.\n    - **Giá:** 702.000 VND / đêm (Tổng giá gói: 1.404.000 VND đã bao gồm thuế, phí).\n    - ![La Palma Boutique Hotel Da Nang](https://cf.bstatic.com/xdata/images/hotel/square500/865932483.jpg?k=8a93830f4b0b9a1bec0cebc2c66a9f4a421d1ccf6b6054b0fe257a05306933c7&o=)\n\nChị Vy muốn xem thêm thông tin chi tiết hoặc đặt chỗ cho khách sạn nào trong danh sách trên ạ?",
+      "summarize_forced": false,
+      "scored": true,
+      "nodes": [
+        "memory_recall_global",
+        "primary_assistant",
+        "hotel_assistant",
+        "join_results",
+        "primary_assistant",
+        "memory_finalize"
+      ],
+      "message_count": 4
+    }
+  ],
+  "global_recall": {
+    "memory_context": "[5ee36d35-0336-5d3f-9de5-51e79b73cf03] Tên tôi là Lan",
+    "recalled_memory_ids": [
+      "5ee36d35-0336-5d3f-9de5-51e79b73cf03"
+    ],
+    "recalled_fixture_ids": [
+      "m_name_lan"
+    ]
+  },
+  "primary_route": {
+    "delegated_domains": [
+      "hotel"
+    ],
+    "delegation_tool_calls": [
+      {
+        "name": "ToHotelAssistant",
+        "args": {
+          "request": "Tìm khách sạn ở Đà Nẵng từ ngày 10/10/2026 đến 12/10/2026 cho 2 người."
+        },
+        "timestamp": "2026-09-17T02:45:23.595749+00:00"
+      }
+    ],
+    "node_updates": [
+      "memory_recall_global",
+      "primary_assistant",
+      "hotel_assistant",
+      "memory_recall_hotel",
+      "hotel_chat",
+      "search_hotels_tool",
+      "hotel_chat",
+      "join_results",
+      "primary_assistant",
+      "memory_finalize"
+    ]
+  },
+  "domain_recall": {
+    "hotel": {
+      "candidate_pool_ids": [],
+      "applicability": {},
+      "applicability_reasons": {},
+      "final_context_ids": [],
+      "applied_constraints": []
+    }
+  },
+  "tools": [
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "adults": 2,
+        "location": "Đà Nẵng",
+        "checkin_date": "2026-10-10",
+        "checkout_date": "2026-10-12",
+        "destination": "Đà Nẵng",
+        "check_in": "2026-10-10",
+        "check_out": "2026-10-12"
+      },
+      "timestamp": "2026-09-17T02:45:23.595749+00:00",
+      "raw_result": {
+        "search_id": "0bc40a8e-bfe4-45cc-bf8c-5d259c585c1b",
+        "domain": "hotel",
+        "displayed_item_ids": [
+          "17247150",
+          "1395573",
+          "14762177",
+          "345059",
+          "13971136",
+          "11496834",
+          "15777609",
+          "14675223",
+          "9498109",
+          "16058028"
+        ],
+        "labels": [],
+        "total_results": 10
+      },
+      "normalized_result": {
+        "search_id": "0bc40a8e-bfe4-45cc-bf8c-5d259c585c1b",
+        "request_id": "req_hotel_feab843f",
+        "domain": "hotel",
+        "total_results": 10,
+        "items": [
+          {
+            "name": "Premier Village Đà Nẵng",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/917453565.jpg?k=eb231168692386cecec523c1959ca42f20b75f5b082da87da7037bb12b644c8f&o=",
+            "price": 13200000,
+            "rating": 10,
+            "address": null,
+            "item_id": "17247150",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "17247150",
+            "accessibilityLabel": [
+              "Premier Village Đà Nẵng",
+              "5 trên 5 sao",
+              "10 Xuất sắc 1 đánh giá",
+              "4,5km từ trung tâm",
+              "Giáp biển",
+              "Ưu Đãi Cuối Năm",
+              "1 biệt thự nguyên căn – 441 m² : 8 giường • 4 phòng ngủ • 1 phòng khách • 4 phòng tắm",
+              "Giá gốc là 88000000 VND",
+              "Giá hiện tại là 26400000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 1 với giá này"
+            ],
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Mercure Danang French Village Bana Hills",
+            "star": 4,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/875068084.jpg?k=49384355b09fcf743d653fc7913f4024bb6f048c9d05ce07b518b65af14c1b27&o=",
+            "price": 3415572,
+            "rating": 7.9,
+            "address": null,
+            "item_id": "1395573",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "1395573",
+            "accessibilityLabel": [
+              "Mercure Danang French Village Bana Hills",
+              "4 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "7,9 Tốt 3936 đánh giá",
+              "24,9km từ trung tâm",
+              "Chứng chỉ bền vững",
+              "Bao bữa sáng",
+              "1 phòng khách sạn : 1 giường",
+              "6831144 VND",
+              "+915373 VND thuế và phí"
+            ],
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "BRIO Urbano Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/733805119.jpg?k=6b4ec3789a08ec24534f7942a7a53e050a4b06cc7906fbb8ab80474c52397e3b&o=",
+            "price": 591300,
+            "rating": 8.8,
+            "address": null,
+            "item_id": "14762177",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "14762177",
+            "accessibilityLabel": [
+              "BRIO Urbano Apartment",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "8,8 Tuyệt vời 66 đánh giá",
+              "3,4km từ trung tâm",
+              "Cách biển 0,8km",
+              "Giá chỉ có trên điện thoại",
+              "1 căn hộ nguyên căn – 32 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 1314000 VND",
+              "Giá hiện tại là 1182600 VND",
+              "Đã bao gồm thuế và phí",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hyatt Regency Danang Resort and Spa",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/675791164.jpg?k=24603131717d4755971fc5480b1281dd3e43395c58d8ec2cbe1a7cfa5c43ee8d&o=",
+            "price": 3550000,
+            "rating": 8.7,
+            "address": null,
+            "item_id": "345059",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "345059",
+            "accessibilityLabel": [
+              "Hyatt Regency Danang Resort and Spa",
+              "5 trên 5 sao",
+              "8,7 Tuyệt vời 1465 đánh giá",
+              "7,8km từ trung tâm",
+              "Giáp biển",
+              "1 phòng khách sạn : 2 giường",
+              "7100000 VND",
+              "+951400 VND thuế và phí"
+            ],
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Eleva Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/672445239.jpg?k=5088be479de7b7c7742058c6d70ed94c039d76a9a702764fadfd5d9676fd1ec4&o=",
+            "price": 676800,
+            "rating": 7.9,
+            "address": null,
+            "item_id": "13971136",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "13971136",
+            "accessibilityLabel": [
+              "Eleva Apartment",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "7,9 Tốt 102 đánh giá",
+              "3,2km từ trung tâm",
+              "Giáp biển",
+              "Giá chỉ có trên điện thoại",
+              "1 studio nguyên căn – 30 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 2880000 VND",
+              "Giá hiện tại là 1353600 VND",
+              "Đã bao gồm thuế và phí",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "M Hotel Danang",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/587384552.jpg?k=e067cbd12937507a499b127b6f7c5b0a4463160638ff76518b07a520aa3f1c62&o=",
+            "price": 3156415,
+            "rating": 9.3,
+            "address": null,
+            "item_id": "11496834",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "11496834",
+            "accessibilityLabel": [
+              "M Hotel Danang",
+              "5 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "9,3 Tuyệt hảo 3210 đánh giá",
+              "3,6km từ trung tâm",
+              "Giáp biển",
+              "Bao bữa sáng",
+              "1 phòng khách sạn : 2 giường",
+              "6312830 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí"
+            ],
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Lumina Star Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/850371012.jpg?k=800f62b36ad45875cf35d026e153a90675a467592dbbcf9cc0af729c5e359b06&o=",
+            "price": 320000,
+            "rating": 7.7,
+            "address": null,
+            "item_id": "15777609",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "15777609",
+            "accessibilityLabel": [
+              "Lumina Star Hotel",
+              "3 trên 5 sao",
+              "7,7 Tốt 159 đánh giá",
+              "2,5km từ trung tâm",
+              "Cách biển 0,5km",
+              "Ưu Đãi Trong Thời Gian Có Hạn",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 2000000 VND",
+              "Giá hiện tại là 640000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "Cỏ Lá Homestay",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/880151845.jpg?k=a9572918df3428931df60f75a131f63de99da292772bb4014eaf8b42a6b54168&o=",
+            "price": 450000,
+            "rating": 9.3,
+            "address": null,
+            "item_id": "14675223",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "14675223",
+            "accessibilityLabel": [
+              "Cỏ Lá Homestay",
+              "9,3 Tuyệt hảo 38 đánh giá",
+              "Tại trung tâm thành phố",
+              "Cách biển 2,7km",
+              "1 phòng riêng : 1 giường",
+              "900000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Chúng tôi còn 1 với giá này"
+            ],
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Hilton Garden Inn Da Nang",
+            "star": 4,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/498851164.jpg?k=84c48574c49208be9366c0dbe034357f40c6c08e00666f50ade84f4ee67a5cd9&o=",
+            "price": 1831410,
+            "rating": 8.7,
+            "address": null,
+            "item_id": "9498109",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "9498109",
+            "accessibilityLabel": [
+              "Hilton Garden Inn Da Nang",
+              "4 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "8,7 Tuyệt vời 842 đánh giá",
+              "3,2km từ trung tâm",
+              "Giáp biển",
+              "Chứng chỉ bền vững",
+              "1 phòng khách sạn : 1 giường",
+              "3662820 VND",
+              "Đã bao gồm thuế và phí"
+            ],
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "name": "La Palma Boutique Hotel Da Nang",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/865932483.jpg?k=8a93830f4b0b9a1bec0cebc2c66a9f4a421d1ccf6b6054b0fe257a05306933c7&o=",
+            "price": 702000,
+            "rating": 8.6,
+            "address": null,
+            "item_id": "16058028",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "16058028",
+            "accessibilityLabel": [
+              "La Palma Boutique Hotel Da Nang",
+              "3 trên 5 sao",
+              "8,6 Tuyệt vời 80 đánh giá",
+              "2,5km từ trung tâm",
+              "Cách biển 450m",
+              "Giá chỉ có trên điện thoại",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 2400000 VND",
+              "Giá hiện tại là 1404000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 4 với giá này"
+            ],
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          }
+        ],
+        "labels": []
+      },
+      "error": null,
+      "inferred": true,
+      "execution_seq": 6,
+      "display_decisions": {
+        "displayed_item_ids": [
+          "17247150",
+          "1395573",
+          "14762177",
+          "345059",
+          "13971136",
+          "11496834",
+          "15777609",
+          "14675223",
+          "9498109",
+          "16058028"
+        ],
+        "items": [
+          {
+            "name": "Premier Village Đà Nẵng",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/917453565.jpg?k=eb231168692386cecec523c1959ca42f20b75f5b082da87da7037bb12b644c8f&o=",
+            "price": 13200000,
+            "rating": 10,
+            "address": null,
+            "item_id": "17247150",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "17247150",
+            "accessibilityLabel": [
+              "Premier Village Đà Nẵng",
+              "5 trên 5 sao",
+              "10 Xuất sắc 1 đánh giá",
+              "4,5km từ trung tâm",
+              "Giáp biển",
+              "Ưu Đãi Cuối Năm",
+              "1 biệt thự nguyên căn – 441 m² : 8 giường • 4 phòng ngủ • 1 phòng khách • 4 phòng tắm",
+              "Giá gốc là 88000000 VND",
+              "Giá hiện tại là 26400000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 1 với giá này"
+            ],
+            "position": 1,
+            "api_position": 1,
+            "eligible": true
+          },
+          {
+            "name": "Mercure Danang French Village Bana Hills",
+            "star": 4,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/875068084.jpg?k=49384355b09fcf743d653fc7913f4024bb6f048c9d05ce07b518b65af14c1b27&o=",
+            "price": 3415572,
+            "rating": 7.9,
+            "address": null,
+            "item_id": "1395573",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "1395573",
+            "accessibilityLabel": [
+              "Mercure Danang French Village Bana Hills",
+              "4 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "7,9 Tốt 3936 đánh giá",
+              "24,9km từ trung tâm",
+              "Chứng chỉ bền vững",
+              "Bao bữa sáng",
+              "1 phòng khách sạn : 1 giường",
+              "6831144 VND",
+              "+915373 VND thuế và phí"
+            ],
+            "position": 2,
+            "api_position": 2,
+            "eligible": true
+          },
+          {
+            "name": "BRIO Urbano Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/733805119.jpg?k=6b4ec3789a08ec24534f7942a7a53e050a4b06cc7906fbb8ab80474c52397e3b&o=",
+            "price": 591300,
+            "rating": 8.8,
+            "address": null,
+            "item_id": "14762177",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "14762177",
+            "accessibilityLabel": [
+              "BRIO Urbano Apartment",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "8,8 Tuyệt vời 66 đánh giá",
+              "3,4km từ trung tâm",
+              "Cách biển 0,8km",
+              "Giá chỉ có trên điện thoại",
+              "1 căn hộ nguyên căn – 32 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 1314000 VND",
+              "Giá hiện tại là 1182600 VND",
+              "Đã bao gồm thuế và phí",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 3,
+            "api_position": 3,
+            "eligible": true
+          },
+          {
+            "name": "Hyatt Regency Danang Resort and Spa",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/675791164.jpg?k=24603131717d4755971fc5480b1281dd3e43395c58d8ec2cbe1a7cfa5c43ee8d&o=",
+            "price": 3550000,
+            "rating": 8.7,
+            "address": null,
+            "item_id": "345059",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "345059",
+            "accessibilityLabel": [
+              "Hyatt Regency Danang Resort and Spa",
+              "5 trên 5 sao",
+              "8,7 Tuyệt vời 1465 đánh giá",
+              "7,8km từ trung tâm",
+              "Giáp biển",
+              "1 phòng khách sạn : 2 giường",
+              "7100000 VND",
+              "+951400 VND thuế và phí"
+            ],
+            "position": 4,
+            "api_position": 4,
+            "eligible": true
+          },
+          {
+            "name": "Eleva Apartment",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/672445239.jpg?k=5088be479de7b7c7742058c6d70ed94c039d76a9a702764fadfd5d9676fd1ec4&o=",
+            "price": 676800,
+            "rating": 7.9,
+            "address": null,
+            "item_id": "13971136",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "13971136",
+            "accessibilityLabel": [
+              "Eleva Apartment",
+              "3 trên 5 cho xếp hạng chỗ nghỉ",
+              "7,9 Tốt 102 đánh giá",
+              "3,2km từ trung tâm",
+              "Giáp biển",
+              "Giá chỉ có trên điện thoại",
+              "1 studio nguyên căn – 30 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm",
+              "Giá gốc là 2880000 VND",
+              "Giá hiện tại là 1353600 VND",
+              "Đã bao gồm thuế và phí",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 5,
+            "api_position": 5,
+            "eligible": true
+          },
+          {
+            "name": "M Hotel Danang",
+            "star": 5,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/587384552.jpg?k=e067cbd12937507a499b127b6f7c5b0a4463160638ff76518b07a520aa3f1c62&o=",
+            "price": 3156415,
+            "rating": 9.3,
+            "address": null,
+            "item_id": "11496834",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "11496834",
+            "accessibilityLabel": [
+              "M Hotel Danang",
+              "5 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "9,3 Tuyệt hảo 3210 đánh giá",
+              "3,6km từ trung tâm",
+              "Giáp biển",
+              "Bao bữa sáng",
+              "1 phòng khách sạn : 2 giường",
+              "6312830 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí"
+            ],
+            "position": 6,
+            "api_position": 6,
+            "eligible": true
+          },
+          {
+            "name": "Lumina Star Hotel",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/850371012.jpg?k=800f62b36ad45875cf35d026e153a90675a467592dbbcf9cc0af729c5e359b06&o=",
+            "price": 320000,
+            "rating": 7.7,
+            "address": null,
+            "item_id": "15777609",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "15777609",
+            "accessibilityLabel": [
+              "Lumina Star Hotel",
+              "3 trên 5 sao",
+              "7,7 Tốt 159 đánh giá",
+              "2,5km từ trung tâm",
+              "Cách biển 0,5km",
+              "Ưu Đãi Trong Thời Gian Có Hạn",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 2000000 VND",
+              "Giá hiện tại là 640000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 2 với giá này"
+            ],
+            "position": 7,
+            "api_position": 7,
+            "eligible": true
+          },
+          {
+            "name": "Cỏ Lá Homestay",
+            "star": 0,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/880151845.jpg?k=a9572918df3428931df60f75a131f63de99da292772bb4014eaf8b42a6b54168&o=",
+            "price": 450000,
+            "rating": 9.3,
+            "address": null,
+            "item_id": "14675223",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "budget",
+            "external_hotel_id": "14675223",
+            "accessibilityLabel": [
+              "Cỏ Lá Homestay",
+              "9,3 Tuyệt hảo 38 đánh giá",
+              "Tại trung tâm thành phố",
+              "Cách biển 2,7km",
+              "1 phòng riêng : 1 giường",
+              "900000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Chúng tôi còn 1 với giá này"
+            ],
+            "position": 8,
+            "api_position": 8,
+            "eligible": true
+          },
+          {
+            "name": "Hilton Garden Inn Da Nang",
+            "star": 4,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/498851164.jpg?k=84c48574c49208be9366c0dbe034357f40c6c08e00666f50ade84f4ee67a5cd9&o=",
+            "price": 1831410,
+            "rating": 8.7,
+            "address": null,
+            "item_id": "9498109",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "luxury",
+            "external_hotel_id": "9498109",
+            "accessibilityLabel": [
+              "Hilton Garden Inn Da Nang",
+              "4 trên 5 sao",
+              "Đây là chỗ nghỉ Ưu tiên",
+              "8,7 Tuyệt vời 842 đánh giá",
+              "3,2km từ trung tâm",
+              "Giáp biển",
+              "Chứng chỉ bền vững",
+              "1 phòng khách sạn : 1 giường",
+              "3662820 VND",
+              "Đã bao gồm thuế và phí"
+            ],
+            "position": 9,
+            "api_position": 9,
+            "eligible": true
+          },
+          {
+            "name": "La Palma Boutique Hotel Da Nang",
+            "star": 3,
+            "photo": "https://cf.bstatic.com/xdata/images/hotel/square500/865932483.jpg?k=8a93830f4b0b9a1bec0cebc2c66a9f4a421d1ccf6b6054b0fe257a05306933c7&o=",
+            "price": 702000,
+            "rating": 8.6,
+            "address": null,
+            "item_id": "16058028",
+            "currency": "VND",
+            "location": "Đà Nẵng",
+            "price_tier": "mid",
+            "external_hotel_id": "16058028",
+            "accessibilityLabel": [
+              "La Palma Boutique Hotel Da Nang",
+              "3 trên 5 sao",
+              "8,6 Tuyệt vời 80 đánh giá",
+              "2,5km từ trung tâm",
+              "Cách biển 450m",
+              "Giá chỉ có trên điện thoại",
+              "1 phòng khách sạn : 1 giường",
+              "Giá gốc là 2400000 VND",
+              "Giá hiện tại là 1404000 VND",
+              "Đã bao gồm thuế và phí",
+              "Hủy miễn phí",
+              "Không cần thanh toán trước",
+              "Chúng tôi còn 4 với giá này"
+            ],
+            "position": 10,
+            "api_position": 10,
+            "eligible": true
+          }
+        ]
+      }
+    },
+    {
+      "domain": "hotel",
+      "name": "search_hotels_tool",
+      "arguments": {
+        "location": "Đà Nẵng",
+        "checkin_date": "2026-10-10",
+        "checkout_date": "2026-10-12",
+        "adults": 2
+      },
+      "timestamp": "2026-09-17T02:45:23.595749+00:00",
+      "raw_result": null,
+      "normalized_result": null,
+      "error": null,
+      "inferred": true,
+      "inferred_from": "execution_path",
+      "execution_seq": 6
+    }
+  ],
+  "sub_agents": [
+    {
+      "domain": "hotel",
+      "summary": "[{'type': 'text', 'text': 'Dưới đây là danh sách khách sạn tại Đà Nẵng từ ngày 10/10/2026 đến 12/10/2026 cho 2 người lớn:\\n\\n*   **Premier Village Đà Nẵng** (ID: 17247150)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 13200000 VND\\n    *   Đánh giá: 10\\n    *   Hạng sao: 5\\n    *   accessibilityLabel:\\n        *   Premier Village Đà Nẵng\\n        *   5 trên 5 sao\\n        *   10 Xuất sắc 1 đánh giá\\n        *   4,5km từ trung tâm\\n        *   Giáp biển\\n        *   Ưu Đãi Cuối Năm\\n        *   1 biệt thự nguyên căn – 441 m² : 8 giường • 4 phòng ngủ • 1 phòng khách • 4 phòng tắm\\n        *   Giá gốc là 88000000 VND\\n        *   Giá hiện tại là 26400000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chúng tôi còn 1 với giá này\\n    *   ![Premier Village Đà Nẵng](https://cf.bstatic.com/xdata/images/hotel/square500/917453565.jpg?k=eb231168692386cecec523c1959ca42f20b75f5b082da87da7037bb12b644c8f&o=)\\n\\n*   **Mercure Danang French Village Bana Hills** (ID: 1395573)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 3415572 VND\\n    *   Đánh giá: 7.9\\n    *   Hạng sao: 4\\n    *   accessibilityLabel:\\n        *   Mercure Danang French Village Bana Hills\\n        *   4 trên 5 sao\\n        *   Đây là chỗ nghỉ Ưu tiên\\n        *   7,9 Tốt 3936 đánh giá\\n        *   24,9km từ trung tâm\\n        *   Chứng chỉ bền vững\\n        *   Bao bữa sáng\\n        *   1 phòng khách sạn : 1 giường\\n        *   6831144 VND\\n        *   +915373 VND thuế và phí\\n    *   ![Mercure Danang French Village Bana Hills](https://cf.bstatic.com/xdata/images/hotel/square500/875068084.jpg?k=49384355b09fcf743d653fc7913f4024bb6f048c9d05ce07b518b65af14c1b27&o=)\\n\\n*   **BRIO Urbano Apartment** (ID: 14762177)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 591300 VND\\n    *   Đánh giá: 8.8\\n    *   Hạng sao: 0\\n    *   accessibilityLabel:\\n        *   BRIO Urbano Apartment\\n        *   3 trên 5 cho xếp hạng chỗ nghỉ\\n        *   8,8 Tuyệt vời 66 đánh giá\\n        *   3,4km từ trung tâm\\n        *   Cách biển 0,8km\\n        *   Giá chỉ có trên điện thoại\\n        *   1 căn hộ nguyên căn – 32 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm\\n        *   Giá gốc là 1314000 VND\\n        *   Giá hiện tại là 1182600 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Chúng tôi còn 2 với giá này\\n    *   ![BRIO Urbano Apartment](https://cf.bstatic.com/xdata/images/hotel/square500/733805119.jpg?k=6b4ec3789a08ec24534f7942a7a53e050a4b06cc7906fbb8ab80474c52397e3b&o=)\\n\\n*   **Hyatt Regency Danang Resort and Spa** (ID: 345059)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 3550000 VND\\n    *   Đánh giá: 8.7\\n    *   Hạng sao: 5\\n    *   accessibilityLabel:\\n        *   Hyatt Regency Danang Resort and Spa\\n        *   5 trên 5 sao\\n        *   8,7 Tuyệt vời 1465 đánh giá\\n        *   7,8km từ trung tâm\\n        *   Giáp biển\\n        *   1 phòng khách sạn : 2 giường\\n        *   7100000 VND\\n        *   +951400 VND thuế và phí\\n    *   ![Hyatt Regency Danang Resort and Spa](https://cf.bstatic.com/xdata/images/hotel/square500/675791164.jpg?k=24603131717d4755971fc5480b1281dd3e43395c58d8ec2cbe1a7cfa5c43ee8d&o=)\\n\\n*   **Eleva Apartment** (ID: 13971136)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 676800 VND\\n    *   Đánh giá: 7.9\\n    *   Hạng sao: 0\\n    *   accessibilityLabel:\\n        *   Eleva Apartment\\n        *   3 trên 5 cho xếp hạng chỗ nghỉ\\n        *   7,9 Tốt 102 đánh giá\\n        *   3,2km từ trung tâm\\n        *   Giáp biển\\n        *   Giá chỉ có trên điện thoại\\n        *   1 studio nguyên căn – 30 m² : 1 giường • 1 phòng ngủ • 1 phòng tắm\\n        *   Giá gốc là 2880000 VND\\n        *   Giá hiện tại là 1353600 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Chúng tôi còn 2 với giá này\\n    *   ![Eleva Apartment](https://cf.bstatic.com/xdata/images/hotel/square500/672445239.jpg?k=5088be479de7b7c7742058c6d70ed94c039d76a9a702764fadfd5d9676fd1ec4&o=)\\n\\n*   **M Hotel Danang** (ID: 11496834)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 3156415 VND\\n    *   Đánh giá: 9.3\\n    *   Hạng sao: 5\\n    *   accessibilityLabel:\\n        *   M Hotel Danang\\n        *   5 trên 5 sao\\n        *   Đây là chỗ nghỉ Ưu tiên\\n        *   9,3 Tuyệt hảo 3210 đánh giá\\n        *   3,6km từ trung tâm\\n        *   Giáp biển\\n        *   Bao bữa sáng\\n        *   1 phòng khách sạn : 2 giường\\n        *   6312830 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n    *   ![M Hotel Danang](https://cf.bstatic.com/xdata/images/hotel/square500/587384552.jpg?k=e067cbd12937507a499b127b6f7c5b0a4463160638ff76518b07a520aa3f1c62&o=)\\n\\n*   **Lumina Star Hotel** (ID: 15777609)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 320000 VND\\n    *   Đánh giá: 7.7\\n    *   Hạng sao: 3\\n    *   accessibilityLabel:\\n        *   Lumina Star Hotel\\n        *   3 trên 5 sao\\n        *   7,7 Tốt 159 đánh giá\\n        *   2,5km từ trung tâm\\n        *   Cách biển 0,5km\\n        *   Ưu Đãi Trong Thời Gian Có Hạn\\n        *   1 phòng khách sạn : 1 giường\\n        *   Giá gốc là 2000000 VND\\n        *   Giá hiện tại là 640000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chúng tôi còn 2 với giá này\\n    *   ![Lumina Star Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/850371012.jpg?k=800f62b36ad45875cf35d026e153a90675a467592dbbcf9cc0af729c5e359b06&o=)\\n\\n*   **Cỏ Lá Homestay** (ID: 14675223)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 450000 VND\\n    *   Đánh giá: 9.3\\n    *   Hạng sao: 0\\n    *   accessibilityLabel:\\n        *   Cỏ Lá Homestay\\n        *   9,3 Tuyệt hảo 38 đánh giá\\n        *   Tại trung tâm thành phố\\n        *   Cách biển 2,7km\\n        *   1 phòng riêng : 1 giường\\n        *   900000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Chúng tôi còn 1 với giá này\\n    *   ![Cỏ Lá Homestay](https://cf.bstatic.com/xdata/images/hotel/square500/880151845.jpg?k=a9572918df3428931df60f75a131f63de99da292772bb4014eaf8b42a6b54168&o=)\\n\\n*   **Hilton Garden Inn Da Nang** (ID: 9498109)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 1831410 VND\\n    *   Đánh giá: 8.7\\n    *   Hạng sao: 4\\n    *   accessibilityLabel:\\n        *   Hilton Garden Inn Da Nang\\n        *   4 trên 5 sao\\n        *   Đây là chỗ nghỉ Ưu tiên\\n        *   8,7 Tuyệt vời 842 đánh giá\\n        *   3,2km từ trung tâm\\n        *   Giáp biển\\n        *   Chứng chỉ bền vững\\n        *   1 phòng khách sạn : 1 giường\\n        *   3662820 VND\\n        *   Đã bao gồm thuế và phí\\n    *   ![Hilton Garden Inn Da Nang](https://cf.bstatic.com/xdata/images/hotel/square500/498851164.jpg?k=84c48574c49208be9366c0dbe034357f40c6c08e00666f50ade84f4ee67a5cd9&o=)\\n\\n*   **La Palma Boutique Hotel Da Nang** (ID: 16058028)\\n    *   Địa điểm: Đà Nẵng\\n    *   Giá: 702000 VND\\n    *   Đánh giá: 8.6\\n    *   Hạng sao: 3\\n    *   accessibilityLabel:\\n        *   La Palma Boutique Hotel Da Nang\\n        *   3 trên 5 sao\\n        *   8,6 Tuyệt vời 80 đánh giá\\n        *   2,5km từ trung tâm\\n        *   Cách biển 450m\\n        *   Giá chỉ có trên điện thoại\\n        *   1 phòng khách sạn : 1 giường\\n        *   Giá gốc là 2400000 VND\\n        *   Giá hiện tại là 1404000 VND\\n        *   Đã bao gồm thuế và phí\\n        *   Hủy miễn phí\\n        *   Không cần thanh toán trước\\n        *   Chúng tôi còn 4 với giá này\\n    *   ![La Palma Boutique Hotel Da Nang](https://cf.bstatic.com/xdata/images/hotel/square500/865932483.jpg?k=8a93830f4b0b9a1bec0cebc2c66a9f4a421d1ccf6b6054b0fe257a05306933c7&o=)', 'extras': {'signature': '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'}}]",
+      "warnings": [],
+      "applied_constraints": [],
+      "domain_action": "search_hotels"
+    }
+  ],
+  "join": {
+    "branch_count": 1,
+    "merged_domains": [
+      "hotel"
+    ]
+  },
+  "final_answer": "Chào chị Vy, em đã ghi nhớ tên của chị rồi ạ! \n\nDưới đây là danh sách các khách sạn tại Đà Nẵng cho 2 người từ ngày **10/10/2026 đến 12/10/2026** (2 đêm):\n\n1. **Premier Village Đà Nẵng** (ID: `17247150`)\n   - **Hạng sao:** 5 sao | **Đánh giá:** 10/10 (Xuất sắc)\n   - **Vị trí:** Cách trung tâm 4,5 km, giáp biển.\n   - **Loại phòng:** Biệt thự nguyên căn (441 m²) – 4 phòng ngủ, 1 phòng khách, 4 phòng tắm.\n   - **Giá hiện tại:** 26.400.000 VND (Đã bao gồm thuế, phí; Hủy miễn phí, không cần thanh toán trước).\n   - ![Premier Village Đà Nẵng](https://cf.bstatic.com/xdata/images/hotel/square500/917453565.jpg?k=eb231168692386cecec523c1959ca42f20b75f5b082da87da7037bb12b644c8f&o=)\n\n2. **Mercure Danang French Village Bana Hills** (ID: `1395573`)\n   - **Hạng sao:** 4 sao | **Đánh giá:** 7.9/10 (Tốt)\n   - **Vị trí:** Cách trung tâm 24,9 km (Bà Nà Hills).\n   - **Bao gồm:** Bữa sáng.\n   - **Giá:** 3.415.572 VND / đêm.\n   - ![Mercure Danang French Village Bana Hills](https://cf.bstatic.com/xdata/images/hotel/square500/875068084.jpg?k=49384355b09fcf743d653fc7913f4024bb6f048c9d05ce07b518b65af14c1b27&o=)\n\n3. **BRIO Urbano Apartment** (ID: `14762177`)\n   - **Đánh giá:** 8.8/10 (Tuyệt vời)\n   - **Vị trí:** Cách trung tâm 3,4 km, cách biển 0,8 km.\n   - **Loại phòng:** Căn hộ nguyên căn (32 m²) – 1 phòng ngủ, 1 phòng tắm.\n   - **Giá:** 591.300 VND / đêm (Tổng giá gói: 1.182.600 VND đã bao gồm thuế, phí).\n   - ![BRIO Urbano Apartment](https://cf.bstatic.com/xdata/images/hotel/square500/733805119.jpg?k=6b4ec3789a08ec24534f7942a7a53e050a4b06cc7906fbb8ab80474c52397e3b&o=)\n\n4. **Hyatt Regency Danang Resort and Spa** (ID: `345059`)\n   - **Hạng sao:** 5 sao | **Đánh giá:** 8.7/10 (Tuyệt vời)\n   - **Vị trí:** Cách trung tâm 7,8 km, giáp biển.\n   - **Loại phòng:** 1 phòng khách sạn (2 giường).\n   - **Giá:** 3.550.000 VND / đêm.\n   - ![Hyatt Regency Danang Resort and Spa](https://cf.bstatic.com/xdata/images/hotel/square500/675791164.jpg?k=24603131717d4755971fc5480b1281dd3e43395c58d8ec2cbe1a7cfa5c43ee8d&o=)\n\n5. **Eleva Apartment** (ID: `13971136`)\n   - **Đánh giá:** 7.9/10 (Tốt)\n   - **Vị trí:** Cách trung tâm 3,2 km, giáp biển.\n   - **Loại phòng:** Studio nguyên căn (30 m²).\n   - **Giá:** 676.800 VND / đêm (Tổng giá gói: 1.353.600 VND đã bao gồm thuế, phí).\n   - ![Eleva Apartment](https://cf.bstatic.com/xdata/images/hotel/square500/672445239.jpg?k=5088be479de7b7c7742058c6d70ed94c039d76a9a702764fadfd5d9676fd1ec4&o=)\n\n6. **M Hotel Danang** (ID: `11496834`)\n   - **Hạng sao:** 5 sao | **Đánh giá:** 9.3/10 (Tuyệt hảo)\n   - **Vị trí:** Cách trung tâm 3,6 km, giáp biển.\n   - **Bao gồm:** Bữa sáng, Hủy miễn phí.\n   - **Giá:** 3.156.415 VND / đêm.\n   - ![M Hotel Danang](https://cf.bstatic.com/xdata/images/hotel/square500/587384552.jpg?k=e067cbd12937507a499b127b6f7c5b0a4463160638ff76518b07a520aa3f1c62&o=)\n\n7. **Lumina Star Hotel** (ID: `15777609`)\n   - **Hạng sao:** 3 sao | **Đánh giá:** 7.7/10 (Tốt)\n   - **Vị trí:** Cách trung tâm 2,5 km, cách biển 0,5 km.\n   - **Chính sách:** Hủy miễn phí, không cần thanh toán trước.\n   - **Giá:** 320.000 VND / đêm (Tổng giá gói: 640.000 VND đã bao gồm thuế, phí).\n   - ![Lumina Star Hotel](https://cf.bstatic.com/xdata/images/hotel/square500/850371012.jpg?k=800f62b36ad45875cf35d026e153a90675a467592dbbcf9cc0af729c5e359b06&o=)\n\n8. **Cỏ Lá Homestay** (ID: `14675223`)\n   - **Đánh giá:** 9.3/10 (Tuyệt hảo)\n   - **Vị trí:** Tại trung tâm thành phố, cách biển 2,7 km.\n   - **Loại phòng:** 1 phòng riêng (1 giường).\n   - **Giá:** 450.000 VND / đêm (Tổng giá gói: 900.000 VND đã bao gồm thuế, phí, Hủy miễn phí).\n   - ![Cỏ Lá Homestay](https://cf.bstatic.com/xdata/images/hotel/square500/880151845.jpg?k=a9572918df3428931df60f75a131f63de99da292772bb4014eaf8b42a6b54168&o=)\n\n9. **Hilton Garden Inn Da Nang** (ID: `9498109`)\n   - **Hạng sao:** 4 sao | **Đánh giá:** 8.7/10 (Tuyệt vời)\n   - **Vị trí:** Cách trung tâm 3,2 km, giáp biển.\n   - **Giá:** 1.831.410 VND / đêm (Tổng giá gói: 3.662.820 VND đã bao gồm thuế, phí).\n   - ![Hilton Garden Inn Da Nang](https://cf.bstatic.com/xdata/images/hotel/square500/498851164.jpg?k=84c48574c49208be9366c0dbe034357f40c6c08e00666f50ade84f4ee67a5cd9&o=)\n\n10. **La Palma Boutique Hotel Da Nang** (ID: `16058028`)\n    - **Hạng sao:** 3 sao | **Đánh giá:** 8.6/10 (Tuyệt vời)\n    - **Vị trí:** Cách trung tâm 2,5 km, cách biển 450 m.\n    - **Chính sách:** Hủy miễn phí, không cần thanh toán trước.\n    - **Giá:** 702.000 VND / đêm (Tổng giá gói: 1.404.000 VND đã bao gồm thuế, phí).\n    - ![La Palma Boutique Hotel Da Nang](https://cf.bstatic.com/xdata/images/hotel/square500/865932483.jpg?k=8a93830f4b0b9a1bec0cebc2c66a9f4a421d1ccf6b6054b0fe257a05306933c7&o=)\n\nChị Vy muốn xem thêm thông tin chi tiết hoặc đặt chỗ cho khách sạn nào trong danh sách trên ạ?",
+  "stm": {
+    "summary": null,
+    "message_count": 4,
+    "summarized_after_turn": null
+  },
+  "finalize": {
+    "memory_job_id": "5bb80671-c92d-4040-bf4a-707440b7feab",
+    "expected_action": "SUPERSEDE",
+    "db_mutations": [
+      {
+        "memory_id": "00c399eb-28c7-4f2c-94f2-0b4f36d990a6",
+        "memory_text": "tên tôi là Vy",
+        "source_thread_id": "e2e-e2e_write_global_name_supersede_001-4a2ab59989bf",
+        "status": "active",
+        "category": "profile_fact",
+        "domain": "general",
+        "family": "profile_facts",
+        "supersedes_memory_id": "5ee36d35-0336-5d3f-9de5-51e79b73cf03"
+      }
+    ],
+    "audits": [
+      {
+        "audit_id": "e8c37c2f-be19-48da-b1c7-0dad22e74425",
+        "job_id": "5bb80671-c92d-4040-bf4a-707440b7feab",
+        "decision": "approve",
+        "proposed_transition": {
+          "action": "supersede",
+          "reasons": [
+            "relation_supersedes"
+          ],
+          "candidate": {
+            "domain": "general",
+            "family": "profile_facts",
+            "status": "active",
+            "user_id": "e2e-e2e_write_global_name_supersede_001:user_a",
+            "category": "profile_fact",
+            "metadata": {},
+            "valid_to": null,
+            "condition": null,
+            "memory_id": null,
+            "created_at": null,
+            "updated_at": null,
+            "valid_from": null,
+            "memory_text": "tên tôi là Vy",
+            "evidence_text": "Từ giờ hãy nhớ tên tôi là Vy",
+            "source_thread_id": "e2e-e2e_write_global_name_supersede_001-4a2ab59989bf",
+            "supersedes_memory_id": null
+          },
+          "existing_memory_id": "5ee36d35-0336-5d3f-9de5-51e79b73cf03"
+        },
+        "rule_result": {
+          "reasons": [
+            "relation_supersedes"
+          ]
+        },
+        "verifier_result": {
+          "mode": "trustmem",
+          "model": "gemini-2.5-flash",
+          "reasons": [
+            "relation_supersedes"
+          ],
+          "decision": "approve",
+          "dimensions": {
+            "coverage": {
+              "score": 1.0,
+              "passed": true,
+              "reason": "The candidate fully covers the durable user fact \"tên tôi là Vy\" from the chunk.",
+              "threshold": 0.8
+            },
+            "faithfulness": {
+              "score": 1.0,
+              "passed": true,
+              "reason": "The new memory \"tên tôi là Vy\" is directly supported by the user's utterance \"Từ giờ hãy nhớ tên tôi là Vy\" in the chunk and is a durable profile fact.",
+              "threshold": 0.95
+            },
+            "preservation": {
+              "score": 1.0,
+              "passed": true,
+              "reason": "The old memory \"Tên tôi là Lan\" is correctly superseded and marked as such in M_new, preserving history without incorrect deletion or distortion.",
+              "threshold": 0.9
+            }
+          },
+          "prompt_version": "trustmem-verifier-v3",
+          "fallback_reason": null
+        },
+        "affected_memory_ids": [
+          "5ee36d35-0336-5d3f-9de5-51e79b73cf03",
+          "00c399eb-28c7-4f2c-94f2-0b4f36d990a6"
+        ],
+        "created_at": "2026-09-17T09:45:23.568659+07:00"
+      }
+    ],
+    "seeded_status": {
+      "m_hotel_other_user": {
+        "status": "active",
+        "memory_id": "e3dfdb5e-bcd9-5975-97cc-dae3df5d89a4",
+        "memory_text": "Memory user khác — thích resort cao cấp",
+        "supersedes_memory_id": null
+      },
+      "m_hotel_superseded": {
+        "status": "superseded",
+        "memory_id": "6bb2b6d0-2588-54c5-962b-7bac6286e8d8",
+        "memory_text": "Preference cũ đã superseded — thích hostel",
+        "supersedes_memory_id": null
+      },
+      "m_name_lan": {
+        "status": "superseded",
+        "memory_id": "5ee36d35-0336-5d3f-9de5-51e79b73cf03",
+        "memory_text": "Tên tôi là Lan",
+        "supersedes_memory_id": null
+      }
+    },
+    "memory_job": {
+      "job_id": "5bb80671-c92d-4040-bf4a-707440b7feab",
+      "status": "completed",
+      "error_summary": null,
+      "created_at": "2026-09-17T09:45:03.858751+07:00"
+    }
+  },
+  "auto_scores": {
+    "routing_accuracy": {
+      "status": "PASS",
+      "detail": "delegated domains match",
+      "evidence": {
+        "expected": [
+          "hotel"
+        ],
+        "actual": [
+          "hotel"
+        ]
+      }
+    },
+    "tool_call_correctness": {
+      "status": "PASS",
+      "detail": "all expected tools called with required arguments",
+      "evidence": {}
+    },
+    "context_recall_precision": {
+      "status": "PASS",
+      "detail": "context recall/precision satisfied",
+      "evidence": {}
+    },
+    "applicability_correctness": {
+      "status": "SKIP",
+      "detail": "no expected_applicability",
+      "evidence": {}
+    },
+    "cross_user_inactive_leakage": {
+      "status": "PASS",
+      "detail": "no cross-user/inactive leakage detected",
+      "evidence": {}
+    },
+    "finalize_correctness": {
+      "status": "PASS",
+      "detail": "memory superseded",
+      "evidence": {
+        "count": 1
+      }
+    },
+    "execution_path": {
+      "status": "PASS",
+      "detail": "execution path satisfied",
+      "evidence": {
+        "visited": [
+          "memory_recall_global",
+          "primary_assistant",
+          "hotel_assistant",
+          "memory_recall_hotel",
+          "hotel_chat",
+          "search_hotels_tool",
+          "search_hotels_tool",
+          "hotel_chat",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ],
+        "required": [
+          "memory_recall_global",
+          "primary_assistant",
+          "hotel_assistant",
+          "memory_recall_hotel",
+          "hotel_chat",
+          "search_hotels_tool",
+          "join_results",
+          "primary_assistant",
+          "memory_finalize"
+        ]
+      }
+    },
+    "join_integrity": {
+      "status": "SKIP",
+      "detail": "single-domain route",
+      "evidence": {}
+    },
+    "trace_integrity": {
+      "status": "PASS",
+      "detail": "all auto checkpoints passed or skipped",
+      "evidence": {}
+    }
+  },
+  "human_review": {
+    "status": "pending",
+    "scores": null
+  },
+  "execution_path": [
+    {
+      "seq": 1,
+      "node": "memory_recall_global",
+      "graph": "primary",
+      "domain": null,
+      "tools": [],
+      "memory": {
+        "recalled_fixture_ids": [
+          "m_name_lan"
+        ],
+        "applicability": {}
+      }
+    },
+    {
+      "seq": 2,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 3,
+      "node": "hotel_assistant",
+      "graph": "primary",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 4,
+      "node": "memory_recall_hotel",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [],
+      "memory": {
+        "candidate_pool_ids": [],
+        "applicability": {},
+        "applicability_reasons": {},
+        "applied_to_context": []
+      }
+    },
+    {
+      "seq": 5,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 6,
+      "node": "search_hotels_tool",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": [
+        {
+          "name": "search_hotels_tool",
+          "arguments": {
+            "location": "Đà Nẵng",
+            "checkin_date": "2026-10-10",
+            "checkout_date": "2026-10-12",
+            "adults": 2
+          }
+        }
+      ],
+      "parent_chat_node": "hotel_chat"
+    },
+    {
+      "seq": 7,
+      "node": "hotel_chat",
+      "graph": "hotel_assistant",
+      "domain": "hotel",
+      "tools": []
+    },
+    {
+      "seq": 8,
+      "node": "join_results",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 9,
+      "node": "primary_assistant",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    },
+    {
+      "seq": 10,
+      "node": "memory_finalize",
+      "graph": "primary",
+      "domain": null,
+      "tools": []
+    }
+  ]
+}

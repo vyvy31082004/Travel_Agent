@@ -21,6 +21,7 @@
     {"id": "e2e_write_car_insert_001", "file": "e2e_write_car_insert_001.yaml", "tags": ["write", "memory", "car"]},
     {"id": "e2e_write_excursion_supersede_001", "file": "e2e_write_excursion_supersede_001.yaml", "tags": ["write", "memory", "excursion"]},
     {"id": "e2e_write_global_name_001", "file": "e2e_write_global_name_001.yaml", "tags": ["write", "memory", "hotel", "profile"]},
+    {"id": "e2e_write_global_name_supersede_001", "file": "e2e_write_global_name_supersede_001.yaml", "tags": ["write", "memory", "hotel", "profile", "global_recall", "supersede"]},
     {"id": "e2e_write_flight_reject_001", "file": "e2e_write_flight_reject_001.yaml", "tags": ["write", "memory", "flight", "reject"]},
     {"id": "e2e_global_profile_name_001", "file": "e2e_global_profile_name_001.yaml", "tags": ["hotel", "memory", "profile", "global_recall"]},
     {"id": "e2e_tools_hotel_001", "file": "e2e_tools_hotel_001.yaml", "tags": ["tools", "live", "hotel"]},
