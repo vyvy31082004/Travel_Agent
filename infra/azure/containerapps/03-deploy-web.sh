@@ -176,6 +176,14 @@ for attempt in $(seq 1 60); do
     --output tsv | tr -d '\r')"
   echo "Web runningStatus=${running_status} (${attempt}/60)"
   if [[ "${running_status}" == "Running" ]]; then
+    # Force ingress to the newest revision. A manual Portal "Edit and deploy" can
+    # leave an explicit revisionName traffic entry behind, which would keep traffic
+    # on the old revision and make the CI verification step fail.
+    az containerapp ingress traffic set \
+      --name "${WEB_APP_NAME}" \
+      --resource-group "${AZURE_RESOURCE_GROUP}" \
+      --revision-weight latest=100 \
+      --only-show-errors >/dev/null
     exit 0
   fi
   sleep 10
