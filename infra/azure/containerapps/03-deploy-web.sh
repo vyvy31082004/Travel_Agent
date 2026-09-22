@@ -176,14 +176,29 @@ for attempt in $(seq 1 60); do
     --output tsv | tr -d '\r')"
   echo "Web runningStatus=${running_status} (${attempt}/60)"
   if [[ "${running_status}" == "Running" ]]; then
-    # Force ingress to the newest revision. A manual Portal "Edit and deploy" can
-    # leave an explicit revisionName traffic entry behind, which would keep traffic
-    # on the old revision and make the CI verification step fail.
-    az containerapp ingress traffic set \
-      --name "${WEB_APP_NAME}" \
-      --resource-group "${AZURE_RESOURCE_GROUP}" \
-      --revision-weight latest=100 \
-      --only-show-errors >/dev/null
+    # Route ingress to the newest revision. An explicit revisionName entry left behind
+    # by a manual Portal "Edit and deploy" would otherwise keep traffic on the old
+    # revision and make the CI verification step fail.
+    # `az containerapp update` returns before its provisioning operation settles, so a
+    # modify call issued immediately after it fails with ContainerAppOperationInProgress.
+    # Retry until the in-flight operation has completed.
+    traffic_applied="no"
+    for traffic_attempt in $(seq 1 24); do
+      if az containerapp ingress traffic set \
+        --name "${WEB_APP_NAME}" \
+        --resource-group "${AZURE_RESOURCE_GROUP}" \
+        --revision-weight latest=100 \
+        --only-show-errors >/dev/null 2>&1; then
+        traffic_applied="yes"
+        break
+      fi
+      echo "Web traffic switch pending (${traffic_attempt}/24)"
+      sleep 5
+    done
+    if [[ "${traffic_applied}" != "yes" ]]; then
+      echo "Failed to route traffic to the latest revision of ${WEB_APP_NAME}." >&2
+      exit 1
+    fi
     exit 0
   fi
   sleep 10
